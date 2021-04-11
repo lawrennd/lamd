@@ -40,7 +40,7 @@ CONSOLE_SCRIPTS = [
     'mdpp=makemd.mdpp:main',
     'flags=makemd.flags:main',
     'dependencies=makemd.dependencies:main',
-    'talkfield=makemd.talkfield:main',
+    'mdfield=makemd.mdfield:main',
     'maketalk=makemd.maketalk:main',
     'makecv=makemd.makecv:main',
     ]
