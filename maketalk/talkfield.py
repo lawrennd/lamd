@@ -3,6 +3,7 @@
 import sys
 import os
 import ndlpy.talk as nt
+import ndlpy.yaml as ny
 
 
 def main(args=None):
@@ -12,7 +13,7 @@ def main(args=None):
 
     try:
         answer = nt.talk_field(field, filename)
-    except nt.FileFormatError:
+    except ny.FileFormatError:
         if field in defaults:
             answer= defaults[field]
         else:
