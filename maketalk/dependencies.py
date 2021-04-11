@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-import _python.ndltalk as nt
+import ndlpy.talk as nt
 
 def main(args=None):
     parser = argparse.ArgumentParser()
