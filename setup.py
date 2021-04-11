@@ -32,9 +32,9 @@ EXTRAS = {
     # 'fancy feature': ['django'],
 }
 
-DEPENDENCY_LINKS = {
+DEPENDENCY_LINKS = [
     'git+ssh://git@github.com/lawrennd/ndlpy.git#egg=ndlpy-0.1.0',
-}
+]
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------
 # Except, perhaps the License and Trove Classifiers!
