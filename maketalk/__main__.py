@@ -1,1 +1,1 @@
-from . import flags
+from flags import main as flags
