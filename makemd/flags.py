@@ -73,6 +73,7 @@ def main():
     except ny.FileFormatError:
         layout = 'talk'
 
+    prefix = ''
     if layout == 'lecture':
         prefix = ''
         if week>0:
