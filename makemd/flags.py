@@ -9,7 +9,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("output",
                         type=str,
-                        choices=['pp', 'post', 'docx', 'pptx', 'prefix', 'reveal'],
+                        choices=['pp', 'post', 'docx', 'pptx', 'prefix', 'reveal', 'cv'],
                         help="The type of output file (post is for a jekyll post, docx for word, pptx for powerpoint)")
     parser.add_argument("base",
                         type=str,
@@ -105,6 +105,9 @@ def main():
         prefix += '-'
     elif layout == 'dataset':
         prefix = ''
+    elif layout == 'cv':
+        prefix = date
+        prefix += '-'
 
     out = prefix + args.base
 
