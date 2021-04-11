@@ -36,8 +36,14 @@ DEPENDENCY_LINKS = [
     'git+ssh://git@github.com/lawrennd/ndlpy.git#egg=ndlpy-0.1.0',
 ]
 
+CONSOLE_SCRIPTS = [
+    'mdpp=maketalk.mdpp:main',
+    'flags=maketalk.flags:main',
+    'dependencies=maketalk.dependencies:main',
+    'talkfield=maketalk.talkfield:main',
+    ]
 ENTRY_POINTS = {
-    'console_scripts': ['mdpp=maketalk.mdpp:main', 'flags=maketalk.flags:main'],
+    'console_scripts': CONSOLE_SCRIPTS,
 }
 
 # The rest you shouldn't have to touch too much :)
