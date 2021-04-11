@@ -6,9 +6,9 @@ import ndlpy.talk as nt
 import ndlpy.yaml as ny
 
 
-def main(args=None):
-    field = args[0]
-    filename = args[1]
+def main():
+    field = sys.argv[1]
+    filename = sys.argv[2]
 
 
     try:
@@ -26,4 +26,4 @@ def main(args=None):
             
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    sys.exit(main())
