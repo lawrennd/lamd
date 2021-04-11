@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
 import sys
-import _python.ndltalk as nt
+import ndlpy.talk as nt
 
-filename = sys.argv[1]
-diagrams = nt.extract_diagrams(filename)
-print(' '.join(diagrams))
+def main(args=None):
+    filename = args[0]
+    diagrams = nt.extract_diagrams(filename)
+    print(' '.join(diagrams))
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

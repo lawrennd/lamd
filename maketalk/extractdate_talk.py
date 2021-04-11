@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 
 import sys
-import _python.ndltalk as nt
+import ndlpy.talk as nt
 
-filename = sys.argv[1]
-fields = nt.header_fields(filename)
-print(fields['date'])
-            
+def main(args=None):
+    filename = args[0]
+    fields = nt.header_fields(filename)
+    print(fields['date'])
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
+
+    
