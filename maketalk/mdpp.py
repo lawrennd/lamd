@@ -2,7 +2,6 @@
 # Markdown Preprocessor for talks.
 # Requries gpp (the generic preprocessor) to be installed.
 
-import os
 import argparse
 import yaml
 import ndlpy.talk as nt
@@ -162,6 +161,7 @@ def main(args=None):
 
     header = {}
     default_file = '_config.yml'
+    import os
     if os.path.isfile(default_file):
         md= open(default_file, 'r')
         text = md.read()
