@@ -37,7 +37,7 @@ DEPENDENCY_LINKS = [
 ]
 
 ENTRY_POINTS = {
-    'console_scripts': ['mdpp=maketalk:mdpp', 'flags=maketalk:flags'],
+    'console_scripts': ['mdpp=maketalk:mdpp', 'flags=flags:main'],
 }
 
 # The rest you shouldn't have to touch too much :)
