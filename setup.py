@@ -41,6 +41,7 @@ CONSOLE_SCRIPTS = [
     'flags=maketalk.flags:main',
     'dependencies=maketalk.dependencies:main',
     'talkfield=maketalk.talkfield:main',
+    'maketalk=maketalk.maketalk:main',
     ]
 ENTRY_POINTS = {
     'console_scripts': CONSOLE_SCRIPTS,
