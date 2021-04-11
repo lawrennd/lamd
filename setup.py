@@ -24,7 +24,7 @@ VERSION = '0.1.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'git+git://github.com/lawrennd/ndlpy.git',
+    'ndlpy',
 ]
 
 # What packages are optional?
@@ -32,6 +32,9 @@ EXTRAS = {
     # 'fancy feature': ['django'],
 }
 
+DEPENDENCY_LINKS = {
+    'git+ssh://git@github.com/lawrennd/ndlpy.git#egg=ndlpy-0.1.0',
+}
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------
 # Except, perhaps the License and Trove Classifiers!
@@ -115,6 +118,7 @@ setup(
     install_requires=REQUIRED,
     extras_require=EXTRAS,
     include_package_data=True,
+    dependency_links=DEPENDENCY_LINKS,
     license='MIT',
     classifiers=[
         # Trove classifiers
