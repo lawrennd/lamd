@@ -14,9 +14,9 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'maketalk'
+NAME = 'makemd'
 DESCRIPTION = 'Package for converting collection of markdown files and macros into talks and notes.'
-URL = 'https://github.com/lawrennd/maketalk'
+URL = 'https://github.com/lawrennd/makemd'
 EMAIL = 'lawrennd@gmail.com'
 AUTHOR = 'Neil D. Lawrence'
 REQUIRES_PYTHON = '>=3.6.0'
@@ -37,11 +37,12 @@ DEPENDENCY_LINKS = [
 ]
 
 CONSOLE_SCRIPTS = [
-    'mdpp=maketalk.mdpp:main',
-    'flags=maketalk.flags:main',
-    'dependencies=maketalk.dependencies:main',
-    'talkfield=maketalk.talkfield:main',
-    'maketalk=maketalk.maketalk:main',
+    'mdpp=makemd.mdpp:main',
+    'flags=makemd.flags:main',
+    'dependencies=makemd.dependencies:main',
+    'talkfield=makemd.talkfield:main',
+    'maketalk=makemd.maketalk:main',
+    'makecv=makemd.makecv:main',
     ]
 ENTRY_POINTS = {
     'console_scripts': CONSOLE_SCRIPTS,
