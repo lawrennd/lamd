@@ -4,7 +4,7 @@ import os
 import argparse
 
 
-def main(args=None):
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("filename",
                         type=str,
@@ -25,4 +25,4 @@ def main(args=None):
     os.system('make all')
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    sys.exit(main())

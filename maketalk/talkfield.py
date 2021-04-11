@@ -10,7 +10,6 @@ def main():
     field = sys.argv[1]
     filename = sys.argv[2]
 
-
     try:
         answer = nt.talk_field(field, filename)
     except ny.FileFormatError:

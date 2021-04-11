@@ -5,7 +5,7 @@ import os
 import ndlpy.talk as nt
 import ndlpy.yaml as ny
 
-def main(args=None):
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("output",
                         type=str,
@@ -157,4 +157,4 @@ def main(args=None):
         print(lines)
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    sys.exit(main())

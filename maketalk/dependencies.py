@@ -3,7 +3,7 @@
 import argparse
 import ndlpy.talk as nt
 
-def main(args=None):
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("dependency",
                         type=str,
@@ -43,5 +43,5 @@ def main(args=None):
         print(' '.join(listfiles))
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    sys.exit(main())
     
