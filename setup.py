@@ -43,6 +43,7 @@ CONSOLE_SCRIPTS = [
     'mdfield=makemd.mdfield:main',
     'maketalk=makemd.maketalk:main',
     'makecv=makemd.makecv:main',
+    'mdlist=makemd.mdlist:main',
     ]
 ENTRY_POINTS = {
     'console_scripts': CONSOLE_SCRIPTS,
