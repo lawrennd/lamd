@@ -178,7 +178,7 @@ def main():
     tmp_file += '.gpp.markdown'
     
     with open(tmp_file,'w') as fd:
-        post.dump(fd)
+        fm.dump(post, fd)
 
 
     import os
