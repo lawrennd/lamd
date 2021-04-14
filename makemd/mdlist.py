@@ -33,12 +33,13 @@ def main():
             csv_entries = csv.DictReader(file)
             entries += csv_entries
 
-    print(entries)
+    text = ''
+    if output=="talks":
+        for entry in entries:
+            text +=  "* **{venue}**, {month}, {year}\n".format(venue=entry['venue'], month=entry['data'].strftime('%m'), month=entry['data'].strftime('%Y'))
 
 
-        
-    #fields = ny.header_fields(filename)
-
+    print(text)
 
 if __name__ == "__main__":
     sys.exit(main())
