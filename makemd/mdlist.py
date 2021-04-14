@@ -36,7 +36,7 @@ def main():
             entries += csv_entries
 
     text = ''
-    if output=="talks":
+    if args.output=="talks":
         for entry in entries:
             text +=  "* **{venue}**, {month}, {year}\n".format(venue=entry['venue'], month=entry['data'].strftime('%m'), year=entry['data'].strftime('%Y'))
 
