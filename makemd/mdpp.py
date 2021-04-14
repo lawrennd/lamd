@@ -173,16 +173,13 @@ def main():
         writepost.metadata.update(post.metadata)
         writepost.content = post.content
 
-    print(before_text)
-    print(after_text)
-        
     writepost.content = before_text + writepost.content + after_text
         
     tmp_file, ext = os.path.splitext(args.filename)
     tmp_file += '.gpp.markdown'
     
     with open(tmp_file,'wb') as fd:
-        fm.dump(post, fd, sort_keys=False, default_flow_style=False)
+        fm.dump(writepost, fd, sort_keys=False, default_flow_style=False)
 
 
     import os
