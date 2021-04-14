@@ -38,7 +38,7 @@ def main():
     text = ''
     if args.output=="talks":
         for entry in entries:
-            text +=  "* **{venue}**, {month}, {year}\n".format(venue=entry['venue'], month=entry['data'].strftime('%m'), year=entry['data'].strftime('%Y'))
+            text +=  "* **{venue}**, {month}, {year}\n".format(venue=entry['venue'], month=entry['date'].strftime('%m'), year=entry['date'].strftime('%Y'))
 
 
     print(text)
