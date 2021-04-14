@@ -27,7 +27,7 @@ def main():
         if ext == 'yaml':
             metadata, _ = fm.parse(file.read())
             entries.append(metadata)
-        elif ext = 'csv':
+        elif ext == 'csv':
             csv_entries = csv.DictReader(file)
             entries += csv_entries
 
