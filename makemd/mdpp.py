@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 # Markdown Preprocessor for talks.
-# Requries gpp (the generic preprocessor) to be installed.
+# Requries gpp (the generic preprocessor) to be installed https://math.berkeley.edu/~auroux/software/gpp.html.
 
 import argparse
 import yaml
+import configparser
+import frontmatter as fm
+
 import ndlpy.talk as nt
-import ndlpy.yaml as ny
+
 
 
 def main():
+
     parser = argparse.ArgumentParser()
 
     parser.add_argument("filename", type=str,
@@ -152,39 +156,27 @@ def main():
     else:
         after_text = ''
 
-    if args.no_header:
-        md= open(args.filename, 'r')
-        body = md.read()
-        md.close()
-    else:
-        headertxt,bodytxt = ny.extract_header_body(args.filename)
-
-    header = {}
     default_file = '_config.yml'
     import os
     if os.path.isfile(default_file):
-        md= open(default_file, 'r')
-        text = md.read()
-        md.close()
-        header.update(yaml.load(text, Loader=yaml.FullLoader))
+        with open(default_file, 'r') as f:
+            writepost = fm.load(f)
+        
+    if args.no_header:
+        with open(args.filename) as f:
+            writepost.content = f.read()
+            
+    else:
+        with open(args.filename) as f:
+            post = fm.load(f)
+        writepost.metadata.update(post.metadata)
+        writepost.content = post.content
 
-    header.update(yaml.load(headertxt, Loader=yaml.FullLoader))
-    headertxt = yaml.dump(header)
 
-    if args.whitespace:
-       print("Whitespace is true")
-
-
-    tmp_file = args.filename + 'tmp.md'
+    tmp_file = args.filename + '.gpp.markdown'
+    
     with open(tmp_file,'w') as fd:
-       if not args.no_header:
-          fd.write('---\n')
-          fd.write(headertxt)
-          fd.write('---\n')
-
-       fd.write(before_text)
-       fd.write(bodytxt)
-       fd.write(after_text)
+        post.dump(fd)
 
 
     import os
