@@ -48,7 +48,7 @@ def main():
                 text +=  "* *{venue}*, {month}, {year}\n".format(venue=entry['venue'], month=entry['date'].strftime('%B'), year=year)
 
 
-    with open(args.output, 'wb') as f:
+    with open(args.output, 'w', encoding='utf-8') as f:
         f.write(text)
 
 if __name__ == "__main__":
