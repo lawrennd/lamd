@@ -9,6 +9,8 @@ import frontmatter as fm
 
 import ndlpy.talk as nt
 
+sinceyear = 2016
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("output",
@@ -38,7 +40,9 @@ def main():
     text = ''
     if args.output=="talks":
         for entry in entries:
-            text +=  "* *{venue}*, {month}, {year}\n".format(venue=entry['venue'], month=entry['date'].strftime('%B'), year=entry['date'].strftime('%Y'))
+            year = int(entry['date'].strftime('%Y'))
+            if year>=since_year:
+                text +=  "* *{venue}*, {month}, {year}\n".format(venue=entry['venue'], month=entry['date'].strftime('%B'), year=year)
 
 
     print(text)
