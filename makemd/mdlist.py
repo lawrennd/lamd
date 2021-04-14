@@ -13,10 +13,13 @@ since_year = 2016
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("output",
+    parser.add_argument("listtype",
                         type=str,
                         choices=['talks', 'grants', 'extalks', 'teaching', 'students', 'exstudents', 'pdras', 'expdras'],
                         help="The type of output markdown list")
+
+    parser.add_argument("-o", "--output", type=str,
+                        help="Output filename")
 
     parser.add_argument('file', type=argparse.FileType('r'), nargs='+',
                         help="The file names to read in")
@@ -38,14 +41,15 @@ def main():
             entries += csv_entries
 
     text = ''
-    if args.output=="talks":
+    if args.listtype=="talks":
         for entry in entries:
             year = int(entry['date'].strftime('%Y'))
             if year>=since_year:
                 text +=  "* *{venue}*, {month}, {year}\n".format(venue=entry['venue'], month=entry['date'].strftime('%B'), year=year)
 
 
-    print(text)
+    with open(args.output, 'wb') as f:
+        f.write(text)
 
 if __name__ == "__main__":
     sys.exit(main())
