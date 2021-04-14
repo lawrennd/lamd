@@ -173,7 +173,8 @@ def main():
         writepost.content = post.content
 
 
-    tmp_file = args.filename + '.gpp.markdown'
+    tmp_file, ext = os.path.splitext(args.filename)
+    tmp_file += '.gpp.markdown'
     
     with open(tmp_file,'w') as fd:
         post.dump(fd)
