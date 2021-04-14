@@ -26,6 +26,7 @@ def main():
         name, ext = os.path.splitext(file.name)
         print(name, ext)
         if ext == 'yaml' or ext == 'md' or ext == 'markdown':
+            print(file.read())
             metadata, _ = fm.parse(file.read())
             print(metadata)
             entries.append(metadata)
