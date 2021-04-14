@@ -2,9 +2,10 @@
 # Markdown Preprocessor for talks.
 # Requries gpp (the generic preprocessor) to be installed https://math.berkeley.edu/~auroux/software/gpp.html.
 
+import sys
+import os
+
 import argparse
-import yaml
-import configparser
 import frontmatter as fm
 
 import ndlpy.talk as nt
@@ -157,7 +158,6 @@ def main():
         after_text = ''
 
     default_file = '_config.yml'
-    import os
     if os.path.isfile(default_file):
         with open(default_file, 'r') as f:
             writepost = fm.load(f)
