@@ -24,6 +24,7 @@ def main():
     entries = []
     for file in args.file:
         name, ext = os.path.splitext(file.name)
+        print(name, ext)
         if ext == 'yaml' or ext == 'md' or ext == 'markdown':
             metadata, _ = fm.parse(file.read())
             entries.append(metadata)
