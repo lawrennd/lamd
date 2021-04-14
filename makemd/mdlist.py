@@ -26,10 +26,7 @@ def main():
         name, ext = os.path.splitext(file.name)
         ext = ext[1:]
         if ext == 'yaml' or ext == 'md' or ext == 'markdown':
-            print("Markdown")
-            print(file.read())
             metadata, _ = fm.parse(file.read())
-            print(metadata)
             entries.append(metadata)
         elif ext == 'csv':
             csv_entries = csv.DictReader(file)
