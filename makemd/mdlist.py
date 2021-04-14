@@ -28,7 +28,7 @@ def main():
     for file in args.file:
         name, ext = os.path.splitext(file.name)
         ext = ext[1:]
-        if ext == 'yaml' or ext == 'md' or ext == 'markdown':
+        if ext == 'yaml' or ext == 'md' or ext == 'markdown' or ext == 'html':
             metadata, _ = fm.parse(file.read())
             file.close()
             entries.append(metadata)
