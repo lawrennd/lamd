@@ -2,6 +2,7 @@
 
 import sys
 import os
+import csv
 import argparse
 
 import frontmatter as fm
