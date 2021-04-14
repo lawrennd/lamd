@@ -24,7 +24,7 @@ def main():
     entries = []
     for file in args.file:
         name, ext = os.path.splitext(file.name)
-        print(name, ext)
+        ext = ext[1:]
         if ext == 'yaml' or ext == 'md' or ext == 'markdown':
             print("Markdown")
             print(file.read())
