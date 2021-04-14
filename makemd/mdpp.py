@@ -173,6 +173,9 @@ def main():
         writepost.metadata.update(post.metadata)
         writepost.content = post.content
 
+    print(before_text)
+    print(after_text)
+        
     writepost.content = before_text + writepost.content + after_text
         
     tmp_file, ext = os.path.splitext(args.filename)
