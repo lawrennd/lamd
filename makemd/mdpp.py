@@ -173,7 +173,8 @@ def main():
         writepost.metadata.update(post.metadata)
         writepost.content = post.content
 
-
+    writepost.content = before_text + writepost.content + after_text
+        
     tmp_file, ext = os.path.splitext(args.filename)
     tmp_file += '.gpp.markdown'
     
