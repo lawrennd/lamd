@@ -27,6 +27,7 @@ def main():
         print(name, ext)
         if ext == 'yaml' or ext == 'md' or ext == 'markdown':
             metadata, _ = fm.parse(file.read())
+            print(metadata)
             entries.append(metadata)
         elif ext == 'csv':
             csv_entries = csv.DictReader(file)
