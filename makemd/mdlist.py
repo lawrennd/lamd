@@ -9,7 +9,7 @@ import frontmatter as fm
 
 import ndlpy.talk as nt
 
-sinceyear = 2016
+since_year = 2016
 
 def main():
     parser = argparse.ArgumentParser()
