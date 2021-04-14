@@ -28,9 +28,11 @@ def main():
         ext = ext[1:]
         if ext == 'yaml' or ext == 'md' or ext == 'markdown':
             metadata, _ = fm.parse(file.read())
+            file.close()
             entries.append(metadata)
         elif ext == 'csv':
             csv_entries = csv.DictReader(file)
+            file.close()
             entries += csv_entries
 
     text = ''
