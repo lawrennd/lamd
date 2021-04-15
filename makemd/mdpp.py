@@ -134,6 +134,7 @@ def main():
 
     if args.include_path:
         arglist.append('-I{include}'.format(include=args.include_path))
+    arglist.append('-I.')
     if args.output:
         arglist.append('-o {}'.format(args.output))
 
