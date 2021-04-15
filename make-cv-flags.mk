@@ -17,6 +17,7 @@ PREFIX=$(shell flags prefix ${BASE})
 # Local calls for the preprocessor and inkscape
 INKSCAPE=inkscape #/Applications/Inkscape.app/Contents/Resources/bin/inkscape
 PP=mdpp
+FIND=gfind
 
 PPFLAGS=-T 
 PPFLAGS=$(shell flags pp $(BASE))
@@ -39,5 +40,15 @@ PPTXFLAGS=$(shell flags pptx $(BASE))
 DOCXFLAGS=$(shell flags docx $(BASE))
 SFLAGS=$(shell flags reveal $(BASE))
 
+TALKSDIR=/Users/neil/lawrennd/talks/_posts
+GROUPDIR=/Users/neil/mlatcl/mlatcl.github.io/_people
+DATADIR=/Users/neil/lawrennd/data
+PROJECTSDIR=${DATADIR}
+
+TALKLISTFILES=$(shell ${FIND} ${TALKSDIR} -type f)
+TEACHINGLISTFILES=${PROJECTSDIR}/teaching.csv
+PROJECTLISTFILES=${PROJECTSDIR}/grants.csv
+MEETINGLISTFILES=${PROJECTSDIR}/workshops.csv
+GROUPLISTFILES=$(shell ${FIND} ${GROUPDIR} -type f) ${DATADIR}/students.csv ${DATADIR}/ras.csv
 
 ALL=$(shell dependencies all $(BASE).md)

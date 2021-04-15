@@ -8,6 +8,7 @@ all: $(ALL)
 ##${BASE}.notes.tex ${BASE}.notes.pdf 
 
 
+include ../make-lists.mk
 include ../make-tex.mk
 include ../make-docx.mk
 
