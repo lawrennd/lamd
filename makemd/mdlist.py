@@ -18,7 +18,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("listtype",
                         type=str,
-                        choices=['talks', 'grants', 'meetings', 'extalks', 'teaching', 'students', 'exstudents', 'pdras', 'expdras'],
+                        choices=['talks', 'grants', 'meetings', 'extalks', 'teaching', 'students', 'exstudents', 'pdras', 'expdras', 'exgrants'],
                         help="The type of output markdown list")
 
     parser.add_argument("-o", "--output", type=str,
@@ -99,7 +99,14 @@ def main():
         for index, entry in df.iterrows():
             if not entry['visitor'] and not entry['student'] and (entry['supervisor']=='ndl21' or isinstance(entry['supervisor'], list) and 'ndl21' in entry['supervisor']):
                 text +=  "* {given} {family}\n".format(**entry)
-                
+
+    elif args.listtype=='exgrants':
+        text += ''
+    elif args.listtype=='exstudents':
+        text += ''
+    elif args.listtype=='expdras':
+        text += ''
+
         
     with open(args.output, 'w', encoding='utf-8') as f:
         f.write(text)
