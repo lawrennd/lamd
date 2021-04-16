@@ -56,12 +56,12 @@ def main():
             entry['year'] = entry['date'].year
             entry['month_name'] = entry['date'].month_name()
             if entry['year']>=since_year:
-                text +=  template['talk'].format(**entry)
+                text +=  templates['talk'].format(**entry)
     elif args.listtype=='grants':
         df = df.sort_values(by=['start','end'], ascending=False)
         for index, entry in df.iterrows():
             if int(entry['end'])>=now_year:
-                text +=  template['grant'].format(**entry)
+                text +=  templates['grant'].format(**entry)
 
     elif args.listtype=='meetings':
         df = df.sort_values(by=['year'], ascending=False)
@@ -116,7 +116,7 @@ def main():
                 and (entry['supervisor']=='ndl21'
                      or isinstance(entry['supervisor'], list)
                      and 'ndl21' in entry['supervisor'])):
-                text +=  template['student'].format(**entry)
+                text +=  templates['student'].format(**entry)
 
     elif args.listtype=='expdras':
         df['date'] = pd.to_datetime(df['start'])
@@ -129,7 +129,7 @@ def main():
                 and (entry['supervisor']=='ndl21'
                      or isinstance(entry['supervisor'], list)
                      and 'ndl21' in entry['supervisor'])):
-                text += template['pdra'].format(**entry)
+                text += templates['pdra'].format(**entry)
 
     if args.output is not None:
         with open(args.output, 'w', encoding='utf-8') as f:
