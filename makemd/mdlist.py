@@ -8,9 +8,8 @@ import argparse
 import datetime
 
 import pandas as pd
-import frontmatter as fm
 
-import ndlpy.talk as nt
+import ndlpy.data as nd
 
 since_year = 2001
 
@@ -18,7 +17,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("listtype",
                         type=str,
-                        choices=['talks', 'grants', 'meetings', 'extalks', 'teaching', 'students', 'exstudents', 'pdras', 'expdras', 'exgrants'],
+                        choices=['talks', 'grants', 'meetings',
+                                 'extalks', 'teaching', 'students',
+                                 'exstudents', 'pdras', 'expdras', 'exgrants'],
                         help="The type of output markdown list")
 
     parser.add_argument("-o", "--output", type=str,
@@ -40,22 +41,7 @@ def main():
     else:
         since_year = now_year - 5
         
-    entries = []
-    for file in args.file:
-        with open(file, 'r') as file:
-            name, ext = os.path.splitext(file.name)
-            ext = ext[1:]
-            if ext == 'yaml' or ext == 'md' or ext == 'markdown' or ext == 'html':
-                metadata, _ = fm.parse(file.read())
-                metadata['filename'] = file.name
-                entries.append(metadata)
-                if 'date' not in metadata and 'published' in metadata:
-                    metadata['date'] = metadata['published']
-            elif ext == 'csv':
-                csv_entries = csv.DictReader(file, quotechar='"')
-                entries += csv_entries
-
-    df = pd.DataFrame(entries)
+    df = pd.DataFrame(nd.loaddata(args.file))
     text = ''
 
     if args.listtype=="talks":
@@ -103,7 +89,13 @@ def main():
     elif args.listtype=='exgrants':
         text += ''
     elif args.listtype=='exstudents':
-        text += ''
+        df['date'] = pd.to_datetime(df['start'])
+
+        df = df.sort_values(by=['end'], ascending=False)
+        df = df.fillna(False)
+        for index, entry in df.iterrows():
+            if not entry['visitor'] and entry['student'] and (entry['supervisor']=='ndl21' or isinstance(entry['supervisor'], list) and 'ndl21' in entry['supervisor']):
+                text +=  "* {given} {family}\n".format(**entry)
     elif args.listtype=='expdras':
         text += ''
 
