@@ -83,7 +83,7 @@ def main():
                 and entry['student']
                 and (entry['supervisor']=='ndl21'
                      or isinstance(entry['supervisor'], list)
-                and 'ndl21' in entry['supervisor']):
+                     and 'ndl21' in entry['supervisor'])):
                 text += templates['pdra'].format(**entry)
 
     elif args.listtype=='pdras':
@@ -96,7 +96,7 @@ def main():
                 and not entry['student']
                 and (entry['supervisor']=='ndl21'
                      or isinstance(entry['supervisor'], list)
-                and 'ndl21' in entry['supervisor']):
+                     and 'ndl21' in entry['supervisor'])):
                 text +=  templates['pdra'].format(**entry)
 
     elif args.listtype=='exgrants':
@@ -115,7 +115,7 @@ def main():
                 and entry['student']
                 and (entry['supervisor']=='ndl21'
                      or isinstance(entry['supervisor'], list)
-                and 'ndl21' in entry['supervisor']):
+                     and 'ndl21' in entry['supervisor'])):
                 text +=  template['student'].format(**entry)
 
     elif args.listtype=='expdras':
@@ -128,7 +128,7 @@ def main():
                 and not entry['student']
                 and (entry['supervisor']=='ndl21'
                      or isinstance(entry['supervisor'], list)
-                and 'ndl21' in entry['supervisor']):
+                     and 'ndl21' in entry['supervisor'])):
                 text += template['pdra'].format(**entry)
 
     print(args.output)
