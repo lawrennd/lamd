@@ -131,7 +131,6 @@ def main():
                      and 'ndl21' in entry['supervisor'])):
                 text += template['pdra'].format(**entry)
 
-    print(args.output)
     if args.output is not None:
         with open(args.output, 'w', encoding='utf-8') as f:
             f.write(text)
