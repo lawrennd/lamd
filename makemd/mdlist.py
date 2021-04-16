@@ -124,7 +124,7 @@ def main():
         df = df.sort_values(by=['start'], ascending=False)
         df = df.fillna(False)
         for index, entry in df.iterrows():
-            if not entry['visitor']
+            if (not entry['visitor']
                 and not entry['student']
                 and (entry['supervisor']=='ndl21'
                      or isinstance(entry['supervisor'], list)
