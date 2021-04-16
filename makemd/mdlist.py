@@ -11,8 +11,7 @@ import ndlpy.data as nd
 
 since_year = 2001
 
-templates =
-{
+templates = {
     'pdra' : "* {given} {family}\n",
     'grant' : "* {title}, {currency}{amount}, from {start} to {end} funded by {funders} {number} {description}\n",
     'student' : "* {given} {family}\n",
