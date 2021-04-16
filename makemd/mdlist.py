@@ -2,17 +2,23 @@
 
 import sys
 import os
-import csv
-import argparse
-
 import datetime
 
+import argparse
 import pandas as pd
 
 import ndlpy.data as nd
 
 since_year = 2001
 
+templates =
+{
+    'pdra' : "* {given} {family}\n",
+    'grant' : "* {title}, {currency}{amount}, from {start} to {end} funded by {funders} {number} {description}\n",
+    'student' : "* {given} {family}\n",
+    'talk' : "* {title}, *{venue}*, {month_name}, {year}\n"
+}
+    
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("listtype",
@@ -51,12 +57,12 @@ def main():
             entry['year'] = entry['date'].year
             entry['month_name'] = entry['date'].month_name()
             if entry['year']>=since_year:
-                text +=  "* {title}, *{venue}*, {month_name}, {year}\n".format(**entry)
+                text +=  template['talk'].format(**entry)
     elif args.listtype=='grants':
         df = df.sort_values(by=['start','end'], ascending=False)
         for index, entry in df.iterrows():
             if int(entry['end'])>=now_year:
-                text +=  "* {title}, {currency}{amount}, from {start} to {end} funded by {funders} {number} {description}\n".format(**entry)
+                text +=  template['grant'].format(**entry)
 
     elif args.listtype=='meetings':
         df = df.sort_values(by=['year'], ascending=False)
@@ -74,8 +80,12 @@ def main():
         df = df.sort_values(by=['start'], ascending=False)
         df = df.fillna(False)
         for index, entry in df.iterrows():
-            if not entry['visitor'] and entry['student'] and (entry['supervisor']=='ndl21' or isinstance(entry['supervisor'], list) and 'ndl21' in entry['supervisor']):
-                text +=  "* {given} {family}\n".format(**entry)
+            if (not entry['visitor']
+                and entry['student']
+                and (entry['supervisor']=='ndl21'
+                     or isinstance(entry['supervisor'], list)
+                and 'ndl21' in entry['supervisor']):
+                text += templates['pdra'].format(**entry)
 
     elif args.listtype=='pdras':
         df['date'] = pd.to_datetime(df['start'])
@@ -83,25 +93,51 @@ def main():
         df = df.sort_values(by=['start'], ascending=False)
         df = df.fillna(False)
         for index, entry in df.iterrows():
-            if not entry['visitor'] and not entry['student'] and (entry['supervisor']=='ndl21' or isinstance(entry['supervisor'], list) and 'ndl21' in entry['supervisor']):
-                text +=  "* {given} {family}\n".format(**entry)
+            if (not entry['visitor']
+                and not entry['student']
+                and (entry['supervisor']=='ndl21'
+                     or isinstance(entry['supervisor'], list)
+                and 'ndl21' in entry['supervisor']):
+                text +=  templates['pdra'].format(**entry)
 
     elif args.listtype=='exgrants':
-        text += ''
+        df = df.sort_values(by=['start','end'], ascending=False)
+        for index, entry in df.iterrows():
+            if int(entry['end'])<now_year:
+                text +=  templates['grant'].format(**entry)
+
     elif args.listtype=='exstudents':
         df['date'] = pd.to_datetime(df['start'])
 
         df = df.sort_values(by=['end'], ascending=False)
         df = df.fillna(False)
         for index, entry in df.iterrows():
-            if not entry['visitor'] and entry['student'] and (entry['supervisor']=='ndl21' or isinstance(entry['supervisor'], list) and 'ndl21' in entry['supervisor']):
-                text +=  "* {given} {family}\n".format(**entry)
-    elif args.listtype=='expdras':
-        text += ''
+            if (not entry['visitor']
+                and entry['student']
+                and (entry['supervisor']=='ndl21'
+                     or isinstance(entry['supervisor'], list)
+                and 'ndl21' in entry['supervisor']):
+                text +=  template['student'].format(**entry)
 
+    elif args.listtype=='expdras':
+        df['date'] = pd.to_datetime(df['start'])
         
-    with open(args.output, 'w', encoding='utf-8') as f:
-        f.write(text)
+        df = df.sort_values(by=['start'], ascending=False)
+        df = df.fillna(False)
+        for index, entry in df.iterrows():
+            if not entry['visitor']
+                and not entry['student']
+                and (entry['supervisor']=='ndl21'
+                     or isinstance(entry['supervisor'], list)
+                and 'ndl21' in entry['supervisor']):
+                text += template['pdra'].format(**entry)
+
+    print(args.output)
+    if args.output is not None:
+        with open(args.output, 'w', encoding='utf-8') as f:
+            f.write(text)
+    else:
+        print(text)
 
 if __name__ == "__main__":
     sys.exit(main())
