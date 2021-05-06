@@ -164,7 +164,7 @@ def main():
         with open(default_file, 'r') as f:
             writepost = fm.load(f)
     else:
-        writepost = fm.parse("""ghub:""")
+        writepost = fm.loads("")
         
     if args.no_header:
         with open(args.filename) as f:
