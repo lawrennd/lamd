@@ -7,9 +7,7 @@ import sys
 import argparse
 import frontmatter as fm
 
-import ndlpy.talk as nt
-
-
+import ndlpy.yaml as ny
 
 def main():
 
@@ -78,9 +76,9 @@ def main():
 
     args = parser.parse_args()
 
-    diagrams_dir = '../slides/diagrams'
-    scripts_dir = '../scripts'
-    write_diagrams_dir = '../slides/diagrams'
+    diagrams_dir = ny.defaults['diagramdir']
+    scripts_dir = ny.defaults['scriptdir']
+    write_diagrams_dir = ny.defaults['writediagramdir']
     if args.diagrams_dir:
         diagrams_dir = args.diagrams_dir
 

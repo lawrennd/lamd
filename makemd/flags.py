@@ -103,6 +103,10 @@ def main():
     elif layout == 'talk':
         prefix = date
         prefix += '-'
+    elif layout == 'example':
+        prefix = ''
+    elif layout == 'software':
+        prefix = ''
     elif layout == 'dataset':
         prefix = ''
     elif layout == 'cv':
