@@ -76,7 +76,8 @@ def main():
 
     args = parser.parse_args()
 
-    diagrams_dir = ny.defaults['diagramdir']
+    url = ny.defaults['url'] + ny.defaults['baseurl']
+    diagrams_dir =  url + ny.defaults['diagramdir']
     scripts_dir = ny.defaults['scriptdir']
     write_diagrams_dir = ny.defaults['writediagramdir']
     if args.diagrams_dir:
