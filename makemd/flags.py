@@ -103,6 +103,8 @@ def main():
     elif layout == 'talk':
         prefix = date
         prefix += '-'
+    elif layout == 'notebook':
+        prefix = ''
     elif layout == 'example':
         prefix = ''
     elif layout == 'software':
