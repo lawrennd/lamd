@@ -10,6 +10,8 @@ import frontmatter as fm
 
 import ndlpy.yaml as ny
 
+INCLUDE = os.path.join(os.path.dirname(__file__), "macros")
+
 def main():
 
     parser = argparse.ArgumentParser()
@@ -132,10 +134,10 @@ def main():
     arglist.append('-DscriptsDir={scripts_dir}'.format(scripts_dir=scripts_dir))
     arglist.append('-DwriteDiagramsDir={write_diagrams_dir}'.format(write_diagrams_dir=write_diagrams_dir))
 
+    arglist.append('-I.')
     if args.include_path:
         arglist.append('-I{include}'.format(include=args.include_path))
-    arglist.append('-I.')
-    arglist.append("-I{macro_dir}".format(macro_dir=os.path.join(os.path.dirname(__file__), "macros")))
+    arglist.append("-I{macro_dir}".format(macro_dir=INCLUDE))
     if args.output:
         arglist.append('-o {}'.format(args.output))
 
