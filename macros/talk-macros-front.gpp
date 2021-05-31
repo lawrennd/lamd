@@ -7,14 +7,6 @@
 \define{\concat{argone}{argtwo}}{\argone\argtwo}
 \define{\githubdir}{}
 
-\define{\cyanColor}{cyan}
-\define{\magentaColor}{magenta}
-\define{\yellowColor}{yellow}
-\define{\redColor}{red}
-\define{\greenColor}{green}
-\define{\blueColor}{blue}
-\define{\blackColor}{black}
-\define{\whiteColor}{white}
-
+\define{\addDownload{name}}{\ifndef{downloadList}\defeval{\downloadList}{\name}\else\defeval{\downloadList}{\downloadList,\name}\endif}
 
 \endif

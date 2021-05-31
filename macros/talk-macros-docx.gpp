@@ -12,8 +12,8 @@
 
 \define{\href{link}{label}}{[\label](\link)}
 
-\define{\includediagram{filename}{align}{class}{style}}{![](\filename.png)}
-\define{\includediagramclass{filename}{align}{class}{style}}{![](\filename.png)}
+\define{\includediagram{filename}{width}{class}{style}}{![](\filename.emf)}
+\define{\includediagramclass{filename}{width}{class}{style}}{![](\filename.emf)}
 
 
 \define{\colorcyan{block}}{{\color{\cyanColor} \block}}
@@ -23,9 +23,26 @@
 \define{\colorgreen{block}}{{\color{\greenColor} \block}}
 \define{\colorblue{block}}{{\color{\blueColor} \block}}
 
-\define{\section{text}}{# \text}
-\define{\subsection{text}}{## \text}
-\define{\subsubsection{text}}{### \text}
+\define{\section{text}}{# \text
+
+\ifdef{editText}\editText\undef{editText}\endif
+
+}
+\define{\subsection{text}}{## \text
+
+\ifdef{editText}\editText\undef{editText}\endif
+
+}
+\define{\subsubsection{text}}{### \text
+
+\ifdef{editText}\editText\undef{editText}\endif
+
+}
+\define{\editlink}{\ifdef{editText}
+
+\editText\undef{editText}\endif
+
+}
 
 \define{\xrightarrow{block}}{\rightarrow{\block}}
 
@@ -40,14 +57,18 @@
 \endif
 }
 
-\define{\table{block}{options}}{
-\define{inFloat}
-\block
-\undef{inFloat}
-\ifdef{storeCaption}
-Store Caption: \storeCaption
-\undef{storeCaption}
-\endif
+\defeval{\figure{contents}{captionContents}{ref}}{
+\contents
+
+Figure: *\captionContents*
+}
+
+
+\define{\table{contents}{captionContents}{ref}}{
+Table: *\captionContents*
+
+\contents
+
 }
 
 
@@ -63,8 +84,8 @@ Store Caption: \storeCaption
 
 }
 
+\define{\columns{one}{two}{width1}{width2}}{<table><tr><td width="\width1">\one</td><td width="\width2">\two</td></tr></table>}
+\define{\threeColumns{one}{two}{three}{width1}{width2}{width3}}{<table><tr><td width="\width1">\one</td><td width="\width2">\two</td><td width="\width3">\three</td></tr></table>}
 
-
-\include{talk-notation.tex}
 
 \endif

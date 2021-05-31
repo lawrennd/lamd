@@ -4,33 +4,20 @@
 
 
 <!-- Use HTML macros as the basis -->
-\include{talk-macros-slides-html}
+\include{talk-macros-slides-html.gpp}
 
-\define{\setupplotcode{block}}{```{.python}
-\block
-```}
-\define{\loadplotcode{object}{filename}}{```{.python}
-from \filename import \object
-```}
-\define{\plotcode{block}}{```{.python}
-\block
-```}
-\define{\setupdisplaycode{block}}{```{.python}
-\block
-```}
-\define{\displaycode{block}}{```{.python}
-\block
-```}
-\define{\setupcode{block}}{}
-\define{\loadcode{object}{filename}}{}
-\define{\setuphelpercode{block}}{}
-\define{\helpercode{block}}{}
-\define{\code{block}}{}
-\define{\matlabcode{block}}{}
 
-\define{\recommendation{text}}{}
-\define{\writeassignment{text}{question}{marks}}{}
-\define{\codeassignment{text}{question}{marks}}{}
+\define{\startanimation{group}{start}{finish}{name}}{}
+\define{\newframe{contents}{name}{style}}{\contents}
+\define{\endanimation}{}
+
+
+\defeval{\figure{contents}{captionContents}{label}}{
+\contents
+
+Figure: *\captionContents*}
+
+
 \define{\exercise{text}{answerstub}{codestub}}{### Exercise
 
 \text
