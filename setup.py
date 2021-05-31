@@ -32,6 +32,41 @@ EXTRAS = {
     # 'fancy feature': ['django'],
 }
 
+PACKAGE_DATA = {"makemd":
+	        [
+                    "macros/color-scheme.gpp",
+	            "macros/svgi-includes.gpp",
+                    "macros/talk-logos.gpp",	
+                    "macros/talk-macros-back.gpp",
+                    "macros/talk-macros-code.gpp",
+                    "macros/talk-macros-docx.gpp",
+                    "macros/talk-macros-draft.gpp",
+                    "macros/talk-macros-edit.gpp",
+                    "macros/talk-macros-exercises.gpp",
+                    "macros/talk-macros-front.gpp",
+                    "macros/talk-macros-html.gpp",
+                    "macros/talk-macros-include.gpp",
+                    "macros/talk-macros-ipynb.gpp",
+                    "macros/talk-macros-notes-docx.gpp",
+                    "macros/talk-macros-notes-html.gpp",
+                    "macros/talk-macros-notes-ipynb.gpp",
+                    "macros/talk-macros-notes-tex.gpp",
+                    "macros/talk-macros-notes.gpp",
+                    "macros/talk-macros-null.gpp",
+                    "macros/talk-macros-pptx.gpp",
+                    "macros/talk-macros-slides-html.gpp",
+                    "macros/talk-macros-slides-ipynb.gpp",
+                    "macros/talk-macros-slides-pptx.gpp",
+                    "macros/talk-macros-slides-svg.gpp",
+                    "macros/talk-macros-slides-tex.gpp",
+                    "macros/talk-macros-slides.gpp",
+                    "macros/talk-macros-svg.gpp",
+                    "macros/talk-macros-tex.gpp",
+                    "macros/talk-macros.gpp",
+                    "macros/talk-people.gpp",
+                ]
+                }
+
 DEPENDENCY_LINKS = [
     'git+ssh://git@github.com/lawrennd/ndlpy.git#egg=ndlpy-0.1.0',
 ]
@@ -123,6 +158,7 @@ setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
+    package_data=PACKAGE_DATA,
     # If your package is a single module, use this instead of 'packages':
     # py_modules=['mypackage'],
 
