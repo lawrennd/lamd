@@ -3,6 +3,7 @@
 # Requries gpp (the generic preprocessor) to be installed https://math.berkeley.edu/~auroux/software/gpp.html.
 
 import sys
+import os
 
 import argparse
 import frontmatter as fm
@@ -134,7 +135,7 @@ def main():
     if args.include_path:
         arglist.append('-I{include}'.format(include=args.include_path))
     arglist.append('-I.')
-    arglist.append('-I{macro_dir}'.format(macro_dir=os.path.join(os.path.dirname(__file__), "macros"))
+    arglist.append("-I{macro_dir}".format(macro_dir=os.path.join(os.path.dirname(__file__), "macros")))
     if args.output:
         arglist.append('-o {}'.format(args.output))
 
