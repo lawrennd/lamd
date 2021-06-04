@@ -13,9 +13,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-          architecture: x64
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+          architecture: x64  
       - run: sudo apt-get install gpp
       - run: pip install codecov
       - run: pip install coveralls
@@ -25,5 +23,7 @@ jobs:
       - run: pip install pods
       - run: coverage run code-tests.py
       - run: codecov
-      - run: coveralls
+#      - run: coveralls
+#        env:
+#            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
             
