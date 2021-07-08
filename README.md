@@ -6,7 +6,18 @@
 
 A set of scripts for converting markdown files into talks.
 
-Contains several scripts for doing the conversion.
+The scripts rely on the generic preprocessor, `gpp`, https://github.com/logological/gpp. On Linux it can be installed using
+
+```
+apt-get install gpp
+```
+
+And on OSX it's available through brew.
+
+```
+brew install gpp
+```
+The code wraps gpp and creates make files for doing the conversion. 
 
 * `maketalk`: for converting talk files from markdown to other formats.
 * `makecv`: for converting CVs from markdown to other formats.
