@@ -148,11 +148,16 @@ def main():
     else:
         before_text = ''
 
+        
     if args.replace_notation:
         before_text += '\n\n'
         with open('../_includes/talk-notation.tex', 'r') as fd:
             before_text += fd.read()
 
+    # Read in talk-macros.gpp which loads in the other macro files.
+    with open(os.path.join(INCLUDE, 'talk-macros.gpp')) as f:
+        before_text += f.read()
+            
 
     if args.include_after_body:
         with open(args.include_after_body, 'r') as fd:
@@ -162,7 +167,6 @@ def main():
 
     default_file = '_config.yml'
 
-    import os
     if os.path.isfile(default_file):
         with open(default_file, 'r') as f:
             writepost = fm.load(f)
@@ -188,7 +192,6 @@ def main():
         fm.dump(writepost, fd, sort_keys=False, default_flow_style=False)
 
 
-    import os
     runlist = ['gpp'] + arglist + [tmp_file]
     print(' '.join(runlist))
     os.system(' '.join(runlist))

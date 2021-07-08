@@ -71,6 +71,7 @@
 \define{\includeyoutube{id}{width}{height}{time}}{}
 \define{\includevimeo{id}{width}{height}{time}}{}
 \define{\includemp4{id}{width}{height}{time}}{}
+\define{\includeredditvideo{id}{width}{height}{time}}{}
 
 \define{\includeimg{filename}{width}{class}}{}
 

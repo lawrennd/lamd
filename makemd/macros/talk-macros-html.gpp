@@ -62,6 +62,9 @@ Store Caption: \storeCaption
 
 \define{\includeyoutube{id}{width}{height}{start}{end}}{<iframe width="\width" height="\height" src="https://www.youtube.com/embed/\id?start=\start" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>}
 
+\define{\includeredditvideo{id}{width}{height}{start}{end}}{<iframe id="reddit-embed" width="\width" height="\height" src="https://www.redditmedia.com/r/\id/?ref_source=embed&amp;ref=share&amp;embed=true" sandbox="allow-scripts allow-same-origin allow-popups" frameborder="0" scrolling="no"></iframe>}
+
+
 \define{\includebbcvideo{id}{width}{height}{start}{end}}{<iframe width="\width" height="\height" src="https://www.bbc.co.uk/programmes/\id?start=\start" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>}
 
 \define{\includevimeo{id}{width}{height}{start}{end}}{<iframe width="\width" height="\height" src="https://player.vimeo.com/video/\id#t=\start"  frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>}
@@ -92,7 +95,7 @@ Store Caption: \storeCaption
 \define{\inputdiagram{filename}}{\input{\filename.svg}}
 \define{\includehtml{filename}{width}{height}}{<iframe src="\filename" width="\width" height="\height" allowtransparency="true" frameborder="0">
 </iframe>}
-\define{\includehtml{filename}{width}{height}}{<iframe src="\filename" width="\width" height="\height" allowtransparency="true" frameborder="0">
+\define{\includeplotly{filename}{width}{height}}{<iframe src="\filename.html" width="\width" height="\height" allowtransparency="true" frameborder="0">
 </iframe>}
 
 
