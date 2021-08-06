@@ -36,7 +36,7 @@ def main():
         print(' '.join(listfiles))
 
     elif args.dependency == 'texdiagrams':
-        listfiles = nt.extract_diagrams(args.filename, absolute_path=False, diagram_exts=['svg'], diagrams_dir=diagrams_dir)
+        listfiles = nt.extract_diagrams(args.filename, absolute_path=False, diagram_exts=['pdf'], diagrams_dir=diagrams_dir)
         print(' '.join(listfiles))
         
     elif args.dependency == 'inputs':    
