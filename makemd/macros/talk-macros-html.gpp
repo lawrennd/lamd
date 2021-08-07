@@ -7,8 +7,10 @@
 
 \define{\linebreak}{<br>}
 
-\define{\href{link}{label}{other}}{<a href="\link" target="_blank" \other>\label</a>}
+\define{\hrefThree{link}{label}{other}}{<a href="\link" target="_blank" \other>\label</a>}
+\define{\href{link}{label}}{<a href="\link" target="_blank">\label</a>}
 
+\define{\html{block}}{\block}
 
 \define{\colorcyan{block}}{<font color="\cyanColor">\block</font>}
 \define{\colormagenta{block}}{<font color="\magentaColor">\block</font>}
