@@ -4,6 +4,7 @@
 
 \undef{caption}
 \undef{href}
+\define{\hrefThree{link}{label}{other}}{\href{link}{label}}
 \define{\div{contents}{class}{style}}{\block}
 \define{\centerdiv{block}}{\begin{center}
 \block
@@ -12,6 +13,8 @@
 \define{\span{block}{class}{style}}{\block}
 
 \define{\linebreak}{\\}
+
+\define{\tex{block}}{\block}
 
 \define{\colorcyan{block}}{{\color{\cyanColor} \block}}
 \define{\colormagenta{block}}{{\color{\magentaColor} \block}}

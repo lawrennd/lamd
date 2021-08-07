@@ -11,6 +11,7 @@
 }
 
 \define{\href{link}{label}}{[\label](\link)}
+\define{\hrefThree{link}{label}{other}}{[\label](\link)}
 
 \define{\includediagram{filename}{width}{class}{style}}{![](\filename.emf)}
 \define{\includediagramclass{filename}{width}{class}{style}}{![](\filename.emf)}

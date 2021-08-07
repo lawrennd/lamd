@@ -9,6 +9,8 @@
 
 \define{\href{link}{label}{other}}{}
 
+\define{\html{}}{}
+\define{\tex{}}{}
 
 \define{\colorcyan{block}}{}
 \define{\colormagenta{block}}{}
