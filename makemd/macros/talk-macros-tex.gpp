@@ -4,7 +4,7 @@
 
 \undef{caption}
 \undef{href}
-\define{\hrefThree{link}{label}{other}}{\href{link}{label}}
+\define{\hrefThree{link}{label}{other}}{\href{\link}{\label}}
 \define{\div{contents}{class}{style}}{\block}
 \define{\centerdiv{block}}{\begin{center}
 \block
@@ -34,6 +34,15 @@
 \caption{\captionContents}
 \label{\reference}
 \end{figure}
+}
+
+\define{\table{contents}{captionContents}{reference}}{\begin{table}[htb]
+\caption{\captionContents}
+\label{\reference}
+
+
+\contents
+\end{table}
 }
 
 

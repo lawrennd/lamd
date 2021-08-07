@@ -49,15 +49,16 @@ Figure: \captionContents
 </div>
 </div>}
 
-\defeval{\table{block}{options}}{
-\define{inFloat}
-\block
-\undef{inFloat}
-\ifdef{storeCaption}
-Store Caption: \storeCaption
-\undef{storeCaption}
-\endif
-}
+\defeval{\table{contents}{captionContents}{label}}{<div class="table">
+<div class="caption-frame" id="\concat{\label}{-caption}">
+Table: \captionContents
+</div>
+<div class="table-frame" id="\concat{\label}{-table}">
+\contents
+</div>
+<div class="magnify" id="\concat{\label}{-magnify}" onclick="magnifyFigure('\label')"><img class="img-button" src="{{ '/assets/images/Magnify_Large.svg' | relative_url }}" style="width:1.5ex"></div>
+</div>}
+
 
 
 \define{\includegooglebook{id}{page}}{<iframe frameborder="0" scrolling="no" style="border:0px" src="https://books.google.co.uk/books?id=\id&pg=\page&output=embed" width="700" height="500"></iframe>}
