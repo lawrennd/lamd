@@ -46,15 +46,6 @@
 }
 
 
-\define{\table{contents}{captionContents}{reference}}{\begin{table}[htb]
-\caption{\captionContents}
-
-\contents
-
-\label{\refeference}
-\end{table}
-}
-
 
 \define{\includediagram{filename}{width}{class}{style}}{\includegraphics[width=\width]{\filename.pdf}}
 \define{\includediagramclass{filename}{width}{class}}{\includegraphics[width=\width]{\filename.pdf}}
