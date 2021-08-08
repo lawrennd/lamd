@@ -11,6 +11,8 @@
 
 \define{\html{}}{}
 \define{\tex{}}{}
+\define{\docx{}}{}
+\define{\pptx{}}{}
 
 \define{\colorcyan{block}}{}
 \define{\colormagenta{block}}{}

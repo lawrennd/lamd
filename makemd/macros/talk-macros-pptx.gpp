@@ -11,9 +11,12 @@
 }
 
 \define{\href{link}{label}}{[\label](\link)}
+\define{\hrefThree{link}{label}{option}}{[\label](\link)}
 
 \define{\includediagram{filename}{width}{class}{style}}{![](\filename.emf)}
 \define{\includediagramclass{filename}{width}{class}{style}}{![](\filename.emf)}
+
+\define{\pptx{block}}{\block}
 
 \define{\includeyoutube{id}{width}{height}{start}{end}}{[![](https://img.youtube.com/vi/\id/0.jpg)](https://www.youtube.com/watch?v=\id\&t=\time)}
 \define{\includevimeo{id}{width}{height}{start}{end}}{[![](https://i.vimeocdn.com/video/\id_640x480.jpg)](https://vimeo.com/\id#t=\start)}
