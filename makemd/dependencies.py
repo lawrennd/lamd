@@ -8,7 +8,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("dependency",
                         type=str,
-                        choices=['all', 'diagrams', 'inputs', 'bibinputs', 'slidediagrams', 'texdiagrams'],
+                        choices=['all', 'diagrams', 'inputs', 'bibinputs', 'slidediagrams', 'texdiagrams', 'docxdiagrams'],
                         help="The type of dependency that is required")
     parser.add_argument("filename",
                         type=str,
@@ -37,6 +37,10 @@ def main():
 
     elif args.dependency == 'texdiagrams':
         listfiles = nt.extract_diagrams(args.filename, absolute_path=False, diagram_exts=['pdf'], diagrams_dir=diagrams_dir)
+        print(' '.join(listfiles))
+
+    elif args.dependency == 'docxdiagrams':
+        listfiles = nt.extract_diagrams(args.filename, absolute_path=False, diagram_exts=['emf'], diagrams_dir=diagrams_dir)
         print(' '.join(listfiles))
         
     elif args.dependency == 'inputs':    
