@@ -1,7 +1,7 @@
-# makemd
+# LaMD
 
 <p align="left">
-  <a href="https://github.com/lawrennd/makemd"><img alt="GitHub Actions status" src="https://github.com/lawrennd/makemd/workflows/code-tests/badge.svg"></a>
+  <a href="https://github.com/lawrennd/lamd"><img alt="GitHub Actions status" src="https://github.com/lawrennd/lamd/workflows/code-tests/badge.svg"></a>
 </p>
 
 A set of scripts for converting markdown files into talks.
