@@ -14,9 +14,9 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'makemd'
+NAME = 'lamd'
 DESCRIPTION = 'Package for converting collection of markdown files and macros into talks and notes.'
-URL = 'https://github.com/lawrennd/makemd'
+URL = 'https://github.com/lawrennd/lamd'
 EMAIL = 'lawrennd@gmail.com'
 AUTHOR = 'Neil D. Lawrence'
 REQUIRES_PYTHON = '>=3.6.0'
@@ -32,7 +32,7 @@ EXTRAS = {
     # 'fancy feature': ['django'],
 }
 
-PACKAGE_DATA = {"makemd":
+PACKAGE_DATA = {"lamd":
 	        [
                     "macros/color-scheme.gpp",
 	            "macros/svgi-includes.gpp",
@@ -72,13 +72,13 @@ DEPENDENCY_LINKS = [
 ]
 
 CONSOLE_SCRIPTS = [
-    'mdpp=makemd.mdpp:main',
-    'flags=makemd.flags:main',
-    'dependencies=makemd.dependencies:main',
-    'mdfield=makemd.mdfield:main',
-    'maketalk=makemd.maketalk:main',
-    'makecv=makemd.makecv:main',
-    'mdlist=makemd.mdlist:main',
+    'mdpp=lamd.mdpp:main',
+    'flags=lamd.flags:main',
+    'dependencies=lamd.dependencies:main',
+    'mdfield=lamd.mdfield:main',
+    'maketalk=lamd.maketalk:main',
+    'makecv=lamd.makecv:main',
+    'mdlist=lamd.mdlist:main',
     ]
 ENTRY_POINTS = {
     'console_scripts': CONSOLE_SCRIPTS,
