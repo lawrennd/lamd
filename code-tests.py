@@ -2,4 +2,4 @@
 
 import nose, warnings
 
-nose.main("makemd", defaultTest="makemd/tests", argv=["", ""])
+nose.main("lamd", defaultTest="lamd/tests", argv=["", ""])
