@@ -7,7 +7,15 @@
 
 \define{\linebreak}{}
 
-\define{\href{link}{label}{other}}{}
+\define{\href{link}{label}}{}
+\define{\hrefOther{link}{label}{other}}{}
+
+\define{\html{block}}{}
+\define{\tex{block}}{}
+\define{\ipynb{block}}{}
+\define{\docx{block}}{}
+\define{\pptx{block}}{}
+
 
 
 \define{\colorcyan{block}}{}
