@@ -6,6 +6,7 @@
 
 \undef{caption}
 \undef{href}
+\define{\hrefThree{link}{label}{other}}{\href{\link}{\label}}
 \define{\div{contents}{class}{style}}{\block}
 \define{\hrefOther{link}{label}{other}}{\href{\link}{\label}}
 \define{\centerdiv{block}}{\begin{center}
@@ -15,6 +16,8 @@
 \define{\span{block}{class}{style}}{\block}
 
 \define{\linebreak}{\\}
+
+\define{\tex{block}}{\block}
 
 \define{\colorcyan{block}}{{\color{\cyanColor} \block}}
 \define{\colormagenta{block}}{{\color{\magentaColor} \block}}
@@ -36,16 +39,14 @@
 \end{figure}
 }
 
-
 \define{\table{contents}{captionContents}{reference}}{\begin{table}[htb]
 \caption{\captionContents}
+\label{\reference}
+
 
 \contents
-
-\label{\refeference}
 \end{table}
 }
-
 
 \define{\includediagram{filename}{width}{class}{style}}{\includegraphics[width=\width]{\filename.pdf}}
 \define{\includediagramclass{filename}{width}{class}}{\includegraphics[width=\width]{\filename.pdf}}
