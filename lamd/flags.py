@@ -76,10 +76,10 @@ def main():
     prefix = ''
     if layout == 'lecture':
         prefix = ''
-        if week is not None and week is int:
+        if week is not None and isinstance(week, int):
             prefix += '{0:02}'.format(week)
-        if session is not None and session is int:
-            if week is not None and week is int:
+        if session is not None and isinstance(session, int):
+            if week is not None and isinstance(week, int):
                 prefix += '-'
             prefix += '{0:02}'.format(session)
         prefix += '-'
