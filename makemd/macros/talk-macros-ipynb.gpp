@@ -4,6 +4,8 @@
 
 \include{talk-macros-html.gpp}
 
+\define{\ipynb{block}}{\block}
+
 \define{\endCell}{\ifdef{inCell}\undef{inCell}:::\endif\ifdef{inMarkdownCell}\undef{inMarkdownCell}\endif\ifdef{inCodeCell}\undef{inCodeCell}\endif}
 
 \define{\startMarkdownCell}{\endCell

@@ -1,13 +1,17 @@
 \ifndef{talkMacrosHtml}
 \define{talkMacrosHtml}
 
+\define{\html{block}}{block}
+
 \define{\div{contents}{class}{style}}{<div class="\class" style="\style">\contents</div>}
 \define{\centerdiv{contents}{class}{style}}{<div class="centered \class" style="\style">\contents</div>}
 \define{\span{contents}{class}{style}}{<span class="\class" style="\style">\contents</span>}
 
 \define{\linebreak}{<br>}
 
-\define{\href{link}{label}{other}}{<a href="\link" target="_blank" \other>\label</a>}
+\define{\hrefOther{link}{label}{other}}{<a href="\link" target="_blank" \other>\label</a>}
+
+\define{\href{link}{label}}{<a href="\link" target="_blank">\label</a>}
 
 
 \define{\colorcyan{block}}{<font color="\cyanColor">\block</font>}

@@ -80,7 +80,12 @@ def main():
     args = parser.parse_args()
 
     url = ny.defaults['url'] + ny.defaults['baseurl']
-    diagrams_dir =  url + ny.defaults['diagramdir']
+    # For on line use the url to source diragrams.
+    if args.to == "html" or args.to=="ipynb":
+        diagrams_dir =  url + ny.defaults['diagramdir']
+    else:
+        diagrams_dir = ny.defaults['diagramdir']
+
     scripts_dir = ny.defaults['scriptdir']
     write_diagrams_dir = ny.defaults['writediagramdir']
     if args.diagrams_dir:

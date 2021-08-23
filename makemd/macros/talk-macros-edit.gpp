@@ -5,7 +5,7 @@
 \ifdef{DRAFT}
 \define{\editme}{\alignright{\href{file://\talksDir\file}{\file}}}
 \else
-\define{\editme}{\define{editText}{\alignright{\span{[}{editsection-bracket}\span{\href{\githubBaseUrl\file}{edit}{onclick="ga('send', 'event', 'Edit Page', 'Edit', '\githubBaseUrl\file', 13);"}}{editsection}\span{]}{editsection-bracket}}}}
+\define{\editme}{\define{editText}{\alignright{\span{[}{editsection-bracket}\span{\hrefOther{\githubBaseUrl\file}{edit}{onclick="ga('send', 'event', 'Edit Page', 'Edit', '\githubBaseUrl\file', 13);"}}{editsection}\span{]}{editsection-bracket}}}}
 \endif
 
 \endif
