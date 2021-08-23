@@ -6,8 +6,8 @@
 
 \undef{caption}
 \undef{href}
-\define{\hrefThree{link}{label}{other}}{\href{\link}{\label}}
 \define{\div{contents}{class}{style}}{\block}
+\define{\hrefThree{link}{label}{other}}{\href{\link}{\label}}
 \define{\hrefOther{link}{label}{other}}{\href{\link}{\label}}
 \define{\centerdiv{block}}{\begin{center}
 \block
