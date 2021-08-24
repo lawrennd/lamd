@@ -29,6 +29,9 @@ from \filename import \object\endif
 \pythonblockend}
 
 \define{\loadcode{object}{module}}{\pythonblockstart
+import \module
+\pythonblockend
+\pythonblockstart
 \ifdef{MAGICCODE}%load -n \module.\object\else
 from \module import \object\endif
 \pythonblockend}
