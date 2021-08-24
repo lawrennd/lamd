@@ -13,17 +13,24 @@
 \else\ifeq{\library}{lamd}\ifndef{lamdInstalled}\define{lamdInstalled}%pip install lamd\endif
 \else\ifeq{\library}{GPy}\ifndef{gpyInstalled}\define{gpyInstalled}%pip install gpy\endif
 \else\ifeq{\library}{EmuKit}\ifndef{emukitInstalled}\define{emukitInstalled}%pip install emukit\endif
+\else\ifeq{\library}{notutils}\ifndef{notutilsInstalled}\define{notutilsInstalled}%pip install notutils\endif
 \else%pip install \library
 \endif\endif\endif\endif\endif\endif\endif}}
 \define{\setupcode{block}}{\pythonblockstart
 \block
 \pythonblockend}
-\define{\loadcode{object}{filename}}{\pythonblockstart
+\define{\loadfilecode{object}{filename}}{\pythonblockstart
 \ifdef{MAGICCODE}%load -s \object \filename.py\else
 from \filename import \object\endif
 \pythonblockend}
+
 \define{\code{block}}{\pythonblockstart
 \block
+\pythonblockend}
+
+\define{\loadcode{object}{module}}{\pythonblockstart
+\ifdef{MAGICCODE}%load -n \module.\object\else
+from \module import \object\endif
 \pythonblockend}
 
 \define{\showcode{block}}{\pythonblockstart
