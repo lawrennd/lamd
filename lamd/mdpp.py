@@ -82,12 +82,12 @@ def main():
     url = ny.defaults['url'] + ny.defaults['baseurl']
     # For on line use the url to source diragrams.
     if args.to == "html" or args.to=="ipynb":
-        diagrams_dir =  url + ny.defaults['diagramdir']
+        diagrams_dir =  url + ny.defaults['diagramsdir']
     else:
-        diagrams_dir = ny.defaults['diagramdir']
+        diagrams_dir = ny.defaults['diagramsdir']
 
-    scripts_dir = ny.defaults['scriptdir']
-    write_diagrams_dir = ny.defaults['writediagramdir']
+    scripts_dir = ny.defaults['scriptsdir']
+    write_diagrams_dir = ny.defaults['writediagramsdir']
     if args.diagrams_dir:
         diagrams_dir = args.diagrams_dir
 
