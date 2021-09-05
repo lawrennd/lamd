@@ -6,16 +6,16 @@
 }
 \define{\downloadcode{filename}}{\downloadfile{https://raw.githubusercontent.com/lawrennd/talks/gh-pages/\filename.py}{\filename.py}}
 
-\define{\installcode{library}}{\code{\ifeq{\library}{pods}\ifndef{podsInstalled}\define{podsInstalled}%pip install pods\endif
-\else\ifeq{\library}{PyDeepGP}\ifndef{pydeepgpInstalled}\define{pydeepgpInstalled}%pip install --upgrade git+https://github.com/SheffieldML/PyDeepGP.git\endif
-\else\ifeq{\library}{mlai}\ifndef{mlaiInstalled}\define{mlaiInstalled}%pip install mlai\endif
-\else\ifeq{\library}{ndlpy}\ifndef{ndlpyInstalled}\define{ndlpyInstalled}%pip install ndlpy\endif
-\else\ifeq{\library}{lamd}\ifndef{lamdInstalled}\define{lamdInstalled}%pip install lamd\endif
-\else\ifeq{\library}{GPy}\ifndef{gpyInstalled}\define{gpyInstalled}%pip install gpy\endif
-\else\ifeq{\library}{EmuKit}\ifndef{emukitInstalled}\define{emukitInstalled}%pip install emukit\endif
-\else\ifeq{\library}{notutils}\ifndef{notutilsInstalled}\define{notutilsInstalled}%pip install notutils\endif
-\else%pip install \library
-\endif\endif\endif\endif\endif\endif\endif}}
+\define{\installcode{library}}{\ifeq{\library}{pods}\ifndef{podsInstalled}\define{podsInstalled}\code{%pip install pods}\endif
+\else\ifeq{\library}{PyDeepGP}\ifndef{pydeepgpInstalled}\define{pydeepgpInstalled}\code{%pip install --upgrade git+https://github.com/SheffieldML/PyDeepGP.git}\endif
+\else\ifeq{\library}{mlai}\ifndef{mlaiInstalled}\define{mlaiInstalled}\code{%pip install mlai}\endif
+\else\ifeq{\library}{ndlpy}\ifndef{ndlpyInstalled}\define{ndlpyInstalled}\code{%pip install ndlpy}\endif
+\else\ifeq{\library}{lamd}\ifndef{lamdInstalled}\define{lamdInstalled}\code{%pip install lamd}\endif
+\else\ifeq{\library}{GPy}\ifndef{gpyInstalled}\define{gpyInstalled}\code{%pip install gpy}\endif
+\else\ifeq{\library}{EmuKit}\ifndef{emukitInstalled}\define{emukitInstalled}\code{%pip install emukit}\endif
+\else\ifeq{\library}{notutils}\ifndef{notutilsInstalled}\define{notutilsInstalled}\code{%pip install notutils}\endif
+\else\code{%pip install \library}
+\endif\endif\endif\endif\endif\endif\endif\endif}
 \define{\setupcode{block}}{\pythonblockstart
 \block
 \pythonblockend}
