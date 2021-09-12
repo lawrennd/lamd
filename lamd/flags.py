@@ -63,7 +63,7 @@ def main():
     try:
         talkcss = ny.header_field('talkcss', fields)
     except ny.FileFormatError:
-        talkcss = '../assets/css/talks.css'
+        talkcss = 'https://inverseprobability.com/assets/css/talks.css'
     talkcssarg = """ --css {talkcss}""".format(talkcss=talkcss)
 
 
