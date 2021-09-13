@@ -4,6 +4,8 @@
 
 \defeval{\dianeCoylePicture{width}}{\circleHead{\diagramsDir/people/diane-coyle.png}{Diane Coyle}{\width}{https://www.polis.cam.ac.uk/Staff_and_Students/professor-diane-coyle}}
 
+\defeval{\joyceNabendePicture{width}}{\circleHead{\diagramsDir/people/joyce-nabende.jpg{Joyce Nakatumba-Nabende}{\width}{https://www.linkedin.com/in/jnakatumba/}}
+
 \defeval{\davidSpiegelhalterPicture{width}}{\circleHead{\diagramsDir/people/david-spiegelhalter.png}{David Spiegelhalter}{\width}{http://www.statslab.cam.ac.uk/~david/}}
 
 

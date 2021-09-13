@@ -11,7 +11,7 @@
 
 \define{\hrefOther{link}{label}{other}}{<a href="\link" target="_blank" \other>\label</a>}
 \define{\hrefThree{link}{label}{other}}{<a href="\link" target="_blank" \other>\label</a>}
-p
+
 \define{\href{link}{label}}{<a href="\link" target="_blank">\label</a>}
 
 \define{\html{block}}{\block}
