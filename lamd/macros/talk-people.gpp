@@ -4,7 +4,9 @@
 
 \defeval{\dianeCoylePicture{width}}{\circleHead{\diagramsDir/people/diane-coyle.png}{Diane Coyle}{\width}{https://www.polis.cam.ac.uk/Staff_and_Students/professor-diane-coyle}}
 
-\defeval{\joyceNabendePicture{width}}{\circleHead{\diagramsDir/people/joyce-nabende.jpg{Joyce Nakatumba-Nabende}{\width}{https://www.linkedin.com/in/jnakatumba/}}
+\defeval{\jimmyKinyonyiPicture{width}}{\circleHead{\diagramsDir/people/bagonza-jimmy-owa-kinyonyi.jpg}{Bagonza Jimmy Kinyonyi}{\width}{https://www.linkedin.com/in/bagonza-jimmy-kinyonyi-b73620125/}}
+
+\defeval{\joyceNabendePicture{width}}{\circleHead{\diagramsDir/people/joyce-nabende.jpg}{Joyce Nakatumba-Nabende}{\width}{https://www.linkedin.com/in/jnakatumba/}}
 
 \defeval{\davidSpiegelhalterPicture{width}}{\circleHead{\diagramsDir/people/david-spiegelhalter.png}{David Spiegelhalter}{\width}{http://www.statslab.cam.ac.uk/~david/}}
 
@@ -24,7 +26,7 @@
 \defeval{\zhenwenDaiPicture{width}}{\includeimg{\diagramsDir/people/zhenwen-dai.jpg}{Zhenwen Dai}{\width}}
 \defeval{\maxZwiesselePicture{width}}{\circleHead{\diagramsDir/people/max-zwiessele.jpg}{Max Zwiessele}{\width}}
 \defeval{\javierGonzalezPicture{width}}{\circleHead{\diagramsDir/people/javier-gonzalez.png}{Javier Gonzalez}{\width}{https://javiergonzalezh.github.io/}}
-\defeval{\michaelSmithPicture{width}}{\circleHead{\diagramsDir/people/michael-smith.png}{Michael T. Smith}{\width}}
+\defeval{\michaelSmithPicture{width}}{\circleHead{\diagramsDir/people/michael-t-smith.png}{Michael T. Smith}{\width}}
 \defeval{\michalisTitsiasPicture{width}}{\circleHead{\diagramsDir/people/michalis-titsias.jpg}{Michalis Titsias}{\width}}
 
 \defeval{\andreiPaleyesPicture{width}}{\circleHead{\diagramsDir/people/andrei-paleyes.jpg}{Andrei Paleyes}{\width}{https://www.linkedin.com/in/andreipaleyes}}
