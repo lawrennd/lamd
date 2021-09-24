@@ -34,7 +34,7 @@
 \defeval{\markPullinPicture{width}}{\circleHead{\diagramsDir/people/mark-pullin.jpg}{Mark Pullin}{\width}{https://www.linkedin.com/in/mark-pullin-47510b50/}}
 \defeval{\marenMahsereciPicture{width}}{\circleHead{\diagramsDir/people/maren-mahsereci.png}{Maren Mahsereci}{\width}{https://pn.is.tuebingen.mpg.de/person/mmahsereci}}
 
-\defeval{\adamHirstPicture{width}}{\circleHead{\diagramsDir/people/adam-hirst.jpg}{Adam Hirst}{\width}{https://www.linkedin.com/in/hirstadam/}}
+\defeval{\leahHirstPicture{width}}{\circleHead{\diagramsDir/people/person-placeholder.jpg}{Leah Hirst}{\width}{https://www.linkedin.com/in/leahhirst/}}
 
 \defeval{\cliffMccollumPicture{width}}{\circleHead{\diagramsDir/people/cliff-mccollum.jpg}{Cliff McCollum}{\width}{https://www.linkedin.com/in/cliffmccollum/}}
 \defeval{\tomBorchertPicture{width}}{\circleHead{\diagramsDir/people/tom-borchert.jpg}{Tom Borchert}{\width}{https://www.linkedin.com/in/tomborchert/}}
