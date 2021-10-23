@@ -96,8 +96,8 @@
 
 
 \define{\recommendation{text}}{}
-\define{\writeassignment{text}{question}{marks}}{}
-\define{\codeassignment{text}{question}{marks}}{}
+\define{\writeassignment{text}{marks}{answer}}{}
+\define{\codeassignment{text}{marks}{answer}}{}
 \define{\exercise{text}{answerstub}{codestub}}{}
 \define{\slides{text}}{}
 \define{\slidesincremental{text}}{}
