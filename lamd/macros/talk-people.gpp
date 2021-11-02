@@ -88,6 +88,7 @@
 \defeval{\martinMubangiziPicture{width}}{\circleHead{\diagramsDir/people/martin-mubangizi.png}{Martin Mubangizi}{\width}{https://www.linkedin.com/in/martin-mubangizi-24177111/}}
 \defeval{\morineAmutorinePicture{width}}{\circleHead{\diagramsDir/people/morine-amutorine.png}{Morine Amutorine}{\width}{https://www.linkedin.com/in/morine-amutorine/}}
 
+\defeval{\carlHenrikEkPicture{width}}{\circleHead{\diagramsDir/people/carl-henrik-ek.png}{Carl Henrik Ek}{\width}{https://carlhenrik.com}}
 \defeval{\nicLanePicture{width}}{\circleHead{\diagramsDir/people/nic-lane.jpg}{Nic Lane}{\width}{https://niclane.org}}
 \defeval{\ferencHuszarPicture{width}}{\circleHead{\diagramsDir/people/ferenc-huszar.jpg}{Ferenc Huszar}{\width}{https://www.inference.vc/about/}}
 
@@ -95,7 +96,14 @@
 
 \defeval{\robbieSavagePicture{width}}{\circleHead{\diagramsDir/people/robbie-savage.png}{Robbie Savage}{\width}{https://www.usefultalent.com/robbie-savage/}}
 
+
 \defeval{\jessicaMontgomeryPicture{width}}{\circleHead{\diagramsDir/people/jessica-montgomery.jpg}{Jessica Montgomery}{\width}{https://www.linkedin.com/in/jessica-montgomery-206256144/}}
+
+\defeval{\sylvieDelacroixPicture{width}}{\circleHead{\diagramsDir/people/sylvie-delacroix.jpg}{Sylvie Delacroix}{\width}{https://delacroix.uk/}}
+
+\defeval{\paulaBibbyPicture{width}}{\circleHead{\diagramsDir/governance/data-trusts-initiative-logo.jpg}{Paula Bibby}{\width}{https://www.linkedin.com/in/paula-bibby-7403285a/}}
+
+\defeval{\victorOhuruoguPicture{width}}{\circleHead{\diagramsDir/people/victor-ohuruogu.jpg}{Victor Ohuruogu}{\width}{https://www.linkedin.com/in/victor-ohuruogu-b3b4071b/}}
 
 \defeval{\sirLancelotTheBravePicture{width}}{\circleHead{\diagramsDir/people/sir-lancelot-the-brave.jpg}{Sir Lancelot the Brave}{\width}{https://en.wikipedia.org/wiki/Monty_Python_and_the_Holy_Grail}}
 
