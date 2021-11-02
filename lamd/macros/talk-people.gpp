@@ -23,7 +23,7 @@
 \defeval{\nicolasThinkingPicture{width}}{\circleHead{\diagramsDir/people/2013_03_28_180606.JPG}{300}{700}{1900}{200}{\width}}
 \defeval{\teoPicture{width}}{\circleHead{\diagramsDir/people/2013_03_28_180606.JPG}{300}{700}{1900}{200}{\width}}
 \defeval{\alanUnsurePicture{width}}{\circleHead{\diagramsDir/people/2013_03_28_180606.JPG}{1700}{350}{700}{350}{\width}}
-\defeval{\zhenwenDaiPicture{width}}{\includeimg{\diagramsDir/people/zhenwen-dai.jpg}{Zhenwen Dai}{\width}}
+\defeval{\zhenwenDaiPicture{width}}{\circleHead{\diagramsDir/people/zhenwen-dai.jpg}{Zhenwen Dai}{\width}}
 \defeval{\maxZwiesselePicture{width}}{\circleHead{\diagramsDir/people/max-zwiessele.jpg}{Max Zwiessele}{\width}}
 \defeval{\javierGonzalezPicture{width}}{\circleHead{\diagramsDir/people/javier-gonzalez.png}{Javier Gonzalez}{\width}{https://javiergonzalezh.github.io/}}
 \defeval{\michaelSmithPicture{width}}{\circleHead{\diagramsDir/people/michael-t-smith.png}{Michael T. Smith}{\width}}
