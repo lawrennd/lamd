@@ -1,6 +1,7 @@
 \ifndef{talkPeople}
 \define{talkPeople}
 
+\defeval{\vincentDutordoirPicture{width}}{\circleHead{\diagramsDir/people/vincent-dutordoir.png}{Vincent Dutordoir}{\width}{https://vdutor.github.io/}}
 
 \defeval{\dianeCoylePicture{width}}{\circleHead{\diagramsDir/people/diane-coyle.png}{Diane Coyle}{\width}{https://www.polis.cam.ac.uk/Staff_and_Students/professor-diane-coyle}}
 
