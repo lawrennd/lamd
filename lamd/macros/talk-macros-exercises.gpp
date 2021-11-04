@@ -22,7 +22,7 @@
 
 \define{\incrementQuestionCounter}{\ifdef{ASSIGNMENT}\defeval{\questionCounter}{\eval{\questionCounter+1}}\else\incrementExerciseCounter\defeval{\questionCounter}{\exerciseCounter}\endif}
 
-\defeval{\writeassignment{text}{marks}{answer}}{\incrementQuestionCounter\incrementQuestionMarkCounter{\marks}
+\define{\writeassignment{text}{marks}{answer}}{\incrementQuestionCounter\incrementQuestionMarkCounter{\marks}
 \subsubsection{\questionTitle \questionCounter}
 
 \text
