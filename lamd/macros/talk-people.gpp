@@ -91,7 +91,7 @@
 
 \defeval{\carlHenrikEkPicture{width}}{\circleHead{\diagramsDir/people/carl-henrik-ek.png}{Carl Henrik Ek}{\width}{https://carlhenrik.com}}
 \defeval{\nicLanePicture{width}}{\circleHead{\diagramsDir/people/nic-lane.jpg}{Nic Lane}{\width}{https://niclane.org}}
-\defeval{\ferencHuszarPicture{width}}{\circleHead{\diagramsDir/people/ferenc-huszar.jpg}{Ferenc Huszar}{\width}{https://www.inference.vc/about/}}
+\defeval{\ferencHuszarPicture{width}}{\circleHead{\diagramsDir/people/ferenc-huszar.jpg}{Ferenc Huszár}{\width}{https://www.inference.vc/about/}}
 
 
 
