@@ -9,6 +9,10 @@
 
 \defeval{\joyceNabendePicture{width}}{\circleHead{\diagramsDir/people/joyce-nabende.jpg}{Joyce Nakatumba-Nabende}{\width}{https://www.linkedin.com/in/jnakatumba/}}
 
+\defeval{\dianaRobinsonPicture{width}}{\circleHead{\diagramsDir/people/diana-robinson.jpg}{Diana Robinson}{\width}{https://www.linkedin.com/in/diana-robinson/}}
+
+\defeval{\sarahMorganPicture{width}}{\circleHead{\diagramsDir/people/sarah-morgan.jpg}{Sarah Morgan}{\width}{https://mlatcl.github.io/people/sarah-morgan.html}}
+
 \defeval{\davidSpiegelhalterPicture{width}}{\circleHead{\diagramsDir/people/david-spiegelhalter.png}{David Spiegelhalter}{\width}{http://www.statslab.cam.ac.uk/~david/}}
 
 
