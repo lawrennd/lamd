@@ -88,24 +88,35 @@ def main():
         prefix = ''
         if week>0:
             prefix += '{0:02}'.format(week)
+            prefix += '-'
         if session>0:
-            if week>0:
-                prefix += '-'
             prefix += '{0:02}'.format(session)
+            prefix += '-'
         if background>0:
-            if session>0:
-                if week>0:
-                    prefix += '-'
-                prefix += '{0:02}'.format(background)
-        prefix += '-'
+            prefix += '{0:02}'.format(background)
+            prefix += '-'
     elif layout == 'test':
         prefix = 'XXXX-XX-XX'
         prefix += '-'
     elif layout == 'talk':
         prefix = date
         prefix += '-'
+    elif layout == 'casestudy':
+        prefix = date
+        prefix += '-'
     elif layout == 'notebook':
         prefix = ''
+    elif layout == 'practical':
+        prefix = ''
+        if week>0:
+            prefix += '{0:02}'.format(week)
+            prefix += '-'
+        if session>0:
+            prefix += '{0:02}'.format(session)
+            prefix += '-'
+        if practical>0:
+            prefix += '{0:02}'.format(practical)
+            prefix += '-'
     elif layout == 'example':
         prefix = ''
     elif layout == 'software':
