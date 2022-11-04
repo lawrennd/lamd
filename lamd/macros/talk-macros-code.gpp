@@ -24,6 +24,7 @@
 from \filename import \object\endif
 \pythonblockend}
 
+
 \define{\code{block}}{\pythonblockstart
 \block
 \pythonblockend}
