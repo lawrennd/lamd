@@ -42,6 +42,13 @@ def main():
         sessionarg = ''
 
     try:
+        practical = int(ny.header_field('practical', fields))
+        practicalarg = """ --metadata practical={practical}""".format(practical=practical)
+    except ny.FileFormatError:
+        practical = 0
+        practicalarg = ''
+        
+    try:
         background = int(ny.header_field('background', fields))
         backgroundarg = """ --metadata background={background}""".format(background=background)
     except ny.FileFormatError:
@@ -151,7 +158,7 @@ def main():
         if ny.header_field('pdf', fields):
             lines += """ --metadata pdf={out}.pdf"""
         if args.output == 'post':
-            lines += weekarg + sessionarg + """ --metadata layout={layout}""".format(layout=layout)
+            lines += weekarg + sessionarg + practicalarg + """ --metadata layout={layout}""".format(layout=layout)
         if ny.header_field('ghub', fields):
             ghub = ny.header_field('ghub', fields)[0]
             lines += """ --metadata edit_url={local_edit}""".format(local_edit="https://github.com/{ghub_organization}/{ghub_repository}/edit/{ghub_branch}/{ghub_dir}/{base}.md".format(base=args.base, ghub_organization=ghub['organization'], ghub_repository=ghub['repository'], ghub_branch=ghub['branch'], ghub_dir=ghub['directory']))    
