@@ -24,12 +24,12 @@ VERSION = '0.1.3'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'ndlpy', 'python-frontmatter', 'pandas',
+    "ndlpy", "python-frontmatter", "pandas", "python-liquid",
 ]
 
 # What packages are optional?
 EXTRAS = {
-    # 'fancy feature': ['django'],
+    # "fancy feature": ["django"],
 }
 
 PACKAGE_DATA = {"lamd":
@@ -68,20 +68,20 @@ PACKAGE_DATA = {"lamd":
                 }
 
 DEPENDENCY_LINKS = [
-    'git+ssh://git@github.com/lawrennd/ndlpy.git#egg=ndlpy-0.1.0',
+    "git+ssh://git@github.com/lawrennd/ndlpy.git#egg=ndlpy-0.1.0",
 ]
 
 CONSOLE_SCRIPTS = [
-    'mdpp=lamd.mdpp:main',
-    'flags=lamd.flags:main',
-    'dependencies=lamd.dependencies:main',
-    'mdfield=lamd.mdfield:main',
-    'maketalk=lamd.maketalk:main',
-    'makecv=lamd.makecv:main',
-    'mdlist=lamd.mdlist:main',
+    "mdpp=lamd.mdpp:main",
+    "flags=lamd.flags:main",
+    "dependencies=lamd.dependencies:main",
+    "mdfield=lamd.mdfield:main",
+    "maketalk=lamd.maketalk:main",
+    "makecv=lamd.makecv:main",
+    "mdlist=lamd.mdlist:main",
     ]
 ENTRY_POINTS = {
-    'console_scripts': CONSOLE_SCRIPTS,
+    "console_scripts": CONSOLE_SCRIPTS,
 }
 
 # The rest you shouldn't have to touch too much :)
@@ -94,8 +94,8 @@ here = os.path.abspath(os.path.dirname(__file__))
 # Import the README and use it as the long-description.
 # Note: this will only work if 'README.md' is present in your MANIFEST.in file!
 try:
-    with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
-        long_description = '\n' + f.read()
+    with io.open(os.path.join(here, "README.md"), encoding="utf-8") as f:
+        long_description = "\n" + f.read()
 except FileNotFoundError:
     long_description = DESCRIPTION
 
@@ -103,16 +103,16 @@ except FileNotFoundError:
 about = {}
 if not VERSION:
     project_slug = NAME.lower().replace("-", "_").replace(" ", "_")
-    with open(os.path.join(here, project_slug, '__version__.py')) as f:
+    with open(os.path.join(here, project_slug, "__version__.py")) as f:
         exec(f.read(), about)
 else:
-    about['__version__'] = VERSION
+    about["__version__"] = VERSION
 
 
 class UploadCommand(Command):
     """Support setup.py upload."""
 
-    description = 'Build and publish the package.'
+    description = "Build and publish the package."
     user_options = []
 
     @staticmethod
@@ -128,20 +128,20 @@ class UploadCommand(Command):
 
     def run(self):
         try:
-            self.status('Removing previous builds…')
-            rmtree(os.path.join(here, 'dist'))
+            self.status("Removing previous builds…")
+            rmtree(os.path.join(here, "dist"))
         except OSError:
             pass
 
-        self.status('Building Source and Wheel (universal) distribution…')
-        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+        self.status("Building Source and Wheel (universal) distribution…")
+        os.system("{0} setup.py sdist bdist_wheel --universal".format(sys.executable))
 
-        self.status('Uploading the package to PyPI via Twine…')
-        os.system('twine upload dist/*')
+        self.status("Uploading the package to PyPI via Twine…")
+        os.system("twine upload dist/*")
 
-        self.status('Pushing git tags…')
-        os.system('git tag v{0}'.format(about['__version__']))
-        os.system('git push --tags')
+        self.status("Pushing git tags…")
+        os.system("git tag v{0}".format(about["__version__"]))
+        os.system("git push --tags")
 
         sys.exit()
 
@@ -149,37 +149,37 @@ class UploadCommand(Command):
 # Where the magic happens:
 setup(
     name=NAME,
-    version=about['__version__'],
+    version=about["__version__"],
     description=DESCRIPTION,
     long_description=long_description,
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     author=AUTHOR,
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
     package_data=PACKAGE_DATA,
-    # If your package is a single module, use this instead of 'packages':
-    # py_modules=['mypackage'],
+    # If your package is a single module, use this instead of "packages":
+    # py_modules=["mypackage"],
 
     entry_points=ENTRY_POINTS,          
     install_requires=REQUIRED,
     extras_require=EXTRAS,
     include_package_data=True,
     dependency_links=DEPENDENCY_LINKS,
-    license='MIT',
+    license="MIT",
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: PyPy'
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: Implementation :: CPython",
+        "Programming Language :: Python :: Implementation :: PyPy"
     ],
     # $ setup.py publish support.
     cmdclass={
-        'upload': UploadCommand,
+        "upload": UploadCommand,
     },
 )
