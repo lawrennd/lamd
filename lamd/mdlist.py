@@ -14,14 +14,18 @@ import ndlpy.data as nd
 
 since_year = 2001
 
-name_template = "{%if url %}[{%endif%}{{given}} {%if prefix%}{{prefix}} {%endif%}{{family}}{%if suffix %} {{suffix}}{%endif%}{%if url %}]({{ url }}){%endif%}"
-place_template = "{%if place %}, {{ place }}{%endif%}"
+list_name_template = "{%if name.website %}[{%endif%}{{name.given}} {%if name.prefix%}{{name.prefix}} {%endif%}{{name.family}}{%if name.suffix %} {{name.suffix}}{%endif%}{%if name.website %}]({{ name.website }}){%endif%}"
+name_template = "{%if website %}[{%endif%}{{given}} {%if prefix%}{{prefix}} {%endif%}{{family}}{%if suffix %} {{suffix}}{%endif%}{%if website %}]({{ website }}){%endif%}"
+position_template = "{%if position %}, {{ position }}{%endif%}"
+semester_term_template = "{%if semester %}, Semester {{ semester }}{%endif%}{%if term %}, {{ term }} Term{%endif%}"
+years_template = "{%if start %}{{ start | date: \"%B %Y\"}} - {%if end %}{{end | date: \"%B %Y\" }} {%endif%}{%endif%}"
 
 templates = {
-    'pdra' : pl.Template("* " + name_template + place_template + "\n"),
-    'grant' : pl.Template("* {{title}}, {{currency}}{{amount}}, from {{start}} to {{end}} funded by {{funders}} {{number}} {{description}}\n"),
-    'student' : pl.Template("* " + name_template + place_template + "\n"),
+    'pdra' : pl.Template("* " + name_template + position_template + "\n"),
+    'grant' : pl.Template("* {{title}}, {%if amount %}{{currency}}{{amount}},{%endif%} from {{start | date: \"%Y\"}} to {{end | date: \"%Y\"}} {%if funders %}funded by {{funders}} {{number}}{%endif%} {{description}}\n"),
+    'student' : pl.Template("* " + name_template + position_template + "\n"),
     'talk' : pl.Template("* {{title}}, *{{venue}}*, {{month_name}}, {{year}}\n"),
+    'teaching' : pl.Template("* " + years_template + "*{{ title }}*" + semester_term_template + ", {{ description | rstrip }} {%if with %}(with {%for name in with%}" + list_name_template + "{%unless forloop.last%}, {%endunless%}{%endfor%}){%endif%}\n"),
 }
 
 
@@ -30,7 +34,7 @@ def main():
     parser.add_argument("listtype",
                         type=str,
                         choices=['talks', 'grants', 'meetings',
-                                 'extalks', 'teaching', 'students',
+                                 'extalks', 'teaching', 'exteaching', 'students',
                                  'exstudents', 'pdras', 'expdras', 'exgrants'],
                         help="The type of output markdown list")
 
@@ -45,43 +49,37 @@ def main():
 
 
     args = parser.parse_args()
-    now = datetime.datetime.now()
-    now_year = now.year 
+    now = pd.to_datetime(datetime.datetime.now().date())
+    now_year = now.year
 
     if args.since_year:
-        since_year=now_year
+        since_year=datetime.date(year=args.since_year, month=1, day=1)
     else:
         since_year = now_year - 5
         
     df = pd.DataFrame(nd.loaddata(args.file))
+    if args.listtype in ['pdras', 'expdras', 'students', 'exstudents', 'grants', "exgrants", "teaching", "exteaching"]:
+        df = addcolumns(df, ['start', 'end'])
+        df['end'] = pd.to_datetime(df['end'])
+        df['start'] = pd.to_datetime(df['start'])
+        
     if args.listtype in ['pdras', 'expdras', 'students', 'exstudents']:
 
         # it's a person of some form, check if they are current
-        df = addcolumns(df, ['start', 'end', 'visitor',
+        df = addcolumns(df, ['visitor',
                              'student', 'pdra', 'supervisor'])
-        df['end'] = pd.to_datetime(df['end'])
-        df['start'] = pd.to_datetime(df['start'])
 
         df = df.rename(columns={'current': 'current_y_n'})
-        mask = ((df['current_y_n'][df['current_y_n'].notna()] == 'Y')
+        mask = ((df['current_y_n'])
                 | (df['start'][df['start'].notna()] < now)
                 & (df['end'][df['end'].notna()] > now))
         df['current'] = mask
-
-        df = df.rename(columns={'pdra': 'pdra_y_n'})
-        mask = (df['pdra_y_n'][df['pdra_y_n'].notna()] == 'Y')
-        df['pdra'] = mask
-
-        df = df.rename(columns={'student': 'student_y_n'})
-        mask = (df['student_y_n'][df['student_y_n'].notna()] == 'Y')
-        print(df['student_y_n'])
-        df['student'] = mask
         
         df['supervisor'] = df['supervisor'].fillna('ndl21')
         mask = (df['supervisor'].apply(pd.Series)=='ndl21').any(1)
         df['ndlsupervise'] = mask
-        print(df)
 
+    df = df.replace({np.nan:None})
     text = ''
 
 
@@ -98,20 +96,32 @@ def main():
     elif args.listtype=='grants':
         df = df.sort_values(by=['start','end'], ascending=False)
         for index, entry in df.iterrows():
-            if int(entry['end'])>=now_year:
+            if "end" not in entry or entry["end"] is None or entry['end']>=now:
                 text +=  templates['grant'].render(**entry)
 
     elif args.listtype=='exgrants':
         df = df.sort_values(by=['start','end'], ascending=False)
         for index, entry in df.iterrows():
-            if int(entry['end'])<now_year:
+            if entry['end']<now:
                 text +=  templates['grant'].render(**entry)
+
+    elif args.listtype=='teaching':
+        df = df.sort_values(by=['start','end', 'semester'], ascending=False)
+        for index, entry in df.iterrows():
+            if "end" not in entry or entry["end"] is None or entry['end']>=now:
+                text +=  templates['teaching'].render(**entry)
+                
+    elif args.listtype=='exteaching':
+        df = df.sort_values(by=['start','end'], ascending=False)
+        for index, entry in df.iterrows():
+            if "end" in entry and entry["end"] is not None and entry['end']<now:
+                text +=  templates['teaching'].render(**entry)
                 
     elif args.listtype=='meetings':
         df = df.sort_values(by=['year'], ascending=False)
         for index, entry in df.iterrows():
-            if int(entry['year'])>=since_year:
-                text +=  pl.Template("* {{title}} at {{place}}, {{month}} {{year}}").render(**entry)
+            if entry['year']>=since_year:
+                text +=  pl.Template("* {{title}} at {{venue}}, {{month}} {{year}}").render(**entry)
                 if len(entry['coorganisers'])>0:
                     text += pl.Template(" with {{coorganisers}}.\n").render(**entry)
                 else:
