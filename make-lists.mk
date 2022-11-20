@@ -11,6 +11,9 @@ current-grant-list.markdown: ${PROJECTLISTFILES}
 current-teaching-list.markdown: ${TEACHINGLISTFILES}
 	mdlist teaching $^ -o $@
 
+previous-teaching-list.markdown: ${TEACHINGLISTFILES}
+	mdlist exteaching $^ -o $@
+
 graduated-student-list.markdown: ${GROUPLISTFILES}
 	mdlist exstudents $^ -o $@
 

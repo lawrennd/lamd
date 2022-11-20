@@ -46,9 +46,9 @@ DATADIR=/Users/neil/lawrennd/data
 PROJECTSDIR=${DATADIR}
 
 TALKLISTFILES=$(shell ${FIND} ${TALKSDIR} -type f)
-TEACHINGLISTFILES=${PROJECTSDIR}/teaching.csv
-PROJECTLISTFILES=${PROJECTSDIR}/grants.csv
-MEETINGLISTFILES=${PROJECTSDIR}/workshops.csv
-GROUPLISTFILES=$(shell ${FIND} ${GROUPDIR} -type f) ${DATADIR}/students.csv ${DATADIR}/ras.csv
+TEACHINGLISTFILES=${PROJECTSDIR}/teaching.yaml
+PROJECTLISTFILES=${PROJECTSDIR}/grants.yaml
+MEETINGLISTFILES=${PROJECTSDIR}/workshops.yaml
+GROUPLISTFILES=$(shell ${FIND} ${GROUPDIR} -type f) ${DATADIR}/students.yaml ${DATADIR}/ras.yaml
 
 ALL=$(shell dependencies all $(BASE).md)
