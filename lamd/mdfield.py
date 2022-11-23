@@ -13,8 +13,8 @@ def main():
     try:
         answer = nt.talk_field(field, filename)
     except ny.FileFormatError:
-        if field in ny.defaults:
-            answer= ny.defaults[field]
+        if field in ny.config:
+            answer= ny.config[field]
         else:
             answer = ''
 

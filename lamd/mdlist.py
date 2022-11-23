@@ -17,7 +17,7 @@ since_year = 2001
 
 
 def main():
-    ext = ".liquid"
+    ext = ".md"
     env = load_template_env(ext=ext)
     
     parser = argparse.ArgumentParser()
