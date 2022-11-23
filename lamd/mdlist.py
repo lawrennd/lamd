@@ -14,22 +14,12 @@ import ndlpy.data as nd
 
 since_year = 2001
 
-list_name_template = "{%if name.website %}[{%endif%}{{name.given}} {%if name.prefix%}{{name.prefix}} {%endif%}{{name.family}}{%if name.suffix %} {{name.suffix}}{%endif%}{%if name.website %}]({{ name.website }}){%endif%}"
-name_template = "{%if website %}[{%endif%}{{given}} {%if prefix%}{{prefix}} {%endif%}{{family}}{%if suffix %} {{suffix}}{%endif%}{%if website %}]({{ website }}){%endif%}"
-position_template = "{%if position %}, {{ position }}{%endif%}"
-semester_term_template = "{%if semester %}, Semester {{ semester }}{%endif%}{%if term %}, {{ term }} Term{%endif%}"
-years_template = "{%if start %}{{ start | date: \"%B %Y\"}} - {%if end %}{{end | date: \"%B %Y\" }} {%endif%}{%endif%}"
-
-templates = {
-    'pdra' : pl.Template("* " + name_template + position_template + "\n"),
-    'grant' : pl.Template("* {{title}}, {%if amount %}{{currency}}{{amount}},{%endif%} from {{start | date: \"%Y\"}} to {{end | date: \"%Y\"}} {%if funders %}funded by {{funders}} {{number}}{%endif%} {{description}}\n"),
-    'student' : pl.Template("* " + name_template + position_template + "\n"),
-    'talk' : pl.Template("* {{title}}, *{{venue}}*, {{month_name}}, {{year}}\n"),
-    'teaching' : pl.Template("* " + years_template + "*{{ title }}*" + semester_term_template + ", {{ description | rstrip }} {%if with %}(with {%for name in with%}" + list_name_template + "{%unless forloop.last%}, {%endunless%}{%endfor%}){%endif%}\n"),
-}
 
 
 def main():
+    ext = ".liquid"
+    env = load_template_env(ext=ext)
+    
     parser = argparse.ArgumentParser()
     parser.add_argument("listtype",
                         type=str,
@@ -91,64 +81,69 @@ def main():
             entry['year'] = entry['date'].year
             entry['month_name'] = entry['date'].month_name()
             if entry['year']>=since_year:
-                text +=  templates['talk'].render(**entry)
+                text +=  env.get_template("talk" + ext).render(**entry)
+                text += "\n"
 
     elif args.listtype=='grants':
         df = df.sort_values(by=['start','end'], ascending=False)
         for index, entry in df.iterrows():
             if "end" not in entry or entry["end"] is None or entry['end']>=now:
-                text +=  templates['grant'].render(**entry)
+                text +=  env.get_template("grant" + ext).render(**entry)
+                text += "\n"
 
     elif args.listtype=='exgrants':
         df = df.sort_values(by=['start','end'], ascending=False)
         for index, entry in df.iterrows():
             if entry['end']<now:
-                text +=  templates['grant'].render(**entry)
+                text +=  env.get_template("grant" + ext).render(**entry)
+                text += "\n"
 
     elif args.listtype=='teaching':
         df = df.sort_values(by=['start','end', 'semester'], ascending=False)
         for index, entry in df.iterrows():
             if "end" not in entry or entry["end"] is None or entry['end']>=now:
-                text +=  templates['teaching'].render(**entry)
+                text +=  env.get_template("teaching" + ext).render(**entry)
+                text += "\n"
                 
     elif args.listtype=='exteaching':
         df = df.sort_values(by=['start','end'], ascending=False)
         for index, entry in df.iterrows():
             if "end" in entry and entry["end"] is not None and entry['end']<now:
-                text +=  templates['teaching'].render(**entry)
+                text +=  env.get_template("teaching" + ext).render(**entry)
+                text += "\n"
                 
     elif args.listtype=='meetings':
         df = df.sort_values(by=['year'], ascending=False)
         for index, entry in df.iterrows():
             if entry['year']>=since_year:
-                text +=  pl.Template("* {{title}} at {{venue}}, {{month}} {{year}}").render(**entry)
+                text += env.from_string("* {{title}} at {{place}}, {{month}} {{year}}").render(**entry)
                 if len(entry['coorganisers'])>0:
-                    text += pl.Template(" with {{coorganisers}}.\n").render(**entry)
+                    text += env.from_string(" with {{coorganisers}}.\n").render(**entry)
                 else:
                     text += ".\n"
 
     elif args.listtype=='students':        
         df = df.sort_values(by=['start'], ascending=False)
         for index, entry in df.iterrows():
-            if entry['current'] and entry['ndlsupervise'] and entry['student']:                text += templates['student'].render(**entry)
+            if entry['current'] and entry['ndlsupervise'] and entry['student']:                text += env.get_template("student" + ext).render(**entry)
 
     elif args.listtype=='pdras':
         df = df.sort_values(by=['start'], ascending=False)
         for index, entry in df.iterrows():
             if entry['current'] and entry['ndlsupervise'] and entry['pdra']:
-                text +=  templates['pdra'].render(**entry)
+                text +=  env.get_template("pdra" + ext).render(**entry)
 
     elif args.listtype=='exstudents':
         df = df.sort_values(by=['end'], ascending=False)
         for index, entry in df.iterrows():
             if not entry['current'] and entry['ndlsupervise'] and entry['student']:
-                text += templates['student'].render(**entry)
+                text += env.get_template("student" + ext).render(**entry)
 
     elif args.listtype=='expdras':
         df = df.sort_values(by=['end'], ascending=False)
         for index, entry in df.iterrows():
             if not entry['current'] and entry['ndlsupervise'] and entry['pdra']:
-                text +=  templates['pdra'].render(**entry)
+                text +=  env.get_template("pdra" + ext).render(**entry)
 
     if args.output is not None:
         with open(args.output, 'w', encoding='utf-8') as f:
@@ -165,5 +160,14 @@ def addcolumns(df, columns):
 
     return df
         
+def load_template_env(ext=".liquid"):
+    """Load in the templates to be used for lists."""
+    # Having trouble getting the template_path to contain multiple pats, so just providing one for the moment. See https://jg-rp.github.io/liquid/api/fileextensionloader
+    template_path = [
+        os.path.join(os.path.dirname(__file__), "templates"),
+    ]
+    env = pl.Environment(loader=pl.loaders.FileExtensionLoader(search_path=":".join(template_path), ext=ext))
+    return env
+
 if __name__ == "__main__":
     sys.exit(main())

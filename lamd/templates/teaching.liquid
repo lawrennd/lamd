@@ -1,0 +1,1 @@
+* {% include 'years' %} *{{ title }}* {% include 'semester_term' %}, {{ description | rstrip }} {%if with %}(with {%for name in with%}" {% include 'list_name' %}{%unless forloop.last%}, {%endunless%}{%endfor%}){%endif%}
