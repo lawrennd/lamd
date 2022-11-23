@@ -64,6 +64,17 @@ PACKAGE_DATA = {"lamd":
                     "macros/talk-macros-tex.gpp",
                     "macros/talk-macros.gpp",
                     "macros/talk-people.gpp",
+                    "templates/semester_term.liquid",
+                    "templates/pdra.liquid",
+                    "templates/talk.liquid",
+                    "templates/grant.liquid",
+                    "templates/position.liquid",
+                    "templates/teaching.liquid",
+                    "templates/list_name.liquid",
+                    "templates/publication.liquid",
+                    "templates/years.liquid",
+                    "templates/name.liquid",
+                    "templates/student.liquid",
                 ]
                 }
 

@@ -1,0 +1,1 @@
+* {{title}}, *{{venue}}*, {{month_name}}, {{year}}
