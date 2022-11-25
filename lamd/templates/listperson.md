@@ -1,14 +1,1 @@
-{%-if include.person.website-%}
-[
-{%-endif-%}
-{{ include.person.given }}
-{%if-include.person.prefix-%}
-{{ include.person.prefix }}
-{%-endif-%}
- {{ include.person.family}}
-{%-if include.person.suffix-%}
- {{suffix}}
-{%-endif-%}
-{%-if include.person.website-%}
-]({{ website }})
-{%-endif-%}
+{%if person%}{%-include extractperson -%}{% assign person=false%}{%endif%}{%if website or url%}[{%endif%}{{given}} {%if prefix%}{{prefix}} {%endif%}{{family}}{%if suffix %} {{suffix}}{%endif%}{%if website or url %}]({% if website %}{{ website }}{%else%}{{url}}{%endif%}){%endif%}
