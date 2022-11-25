@@ -2,6 +2,10 @@ invited-talk-list.markdown: ${TALKLISTFILES}
 	echo ${TALKLISTFILES}
 	mdlist talks $^ -o $@
 
+publication-list.markdown: ${PUBLICATIONLISTFILES}
+	echo ${PUBLICATIONLISTFILES}
+	mdlist publications $^ -o $@
+
 meetings-organised-list.markdown: ${MEETINGLISTFILES}
 	mdlist meetings $^ -o $@
 

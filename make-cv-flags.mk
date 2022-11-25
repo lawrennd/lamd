@@ -41,11 +41,13 @@ DOCXFLAGS=$(shell flags docx $(BASE))
 SFLAGS=$(shell flags reveal $(BASE))
 
 TALKSDIR=/Users/neil/lawrennd/talks/_posts
+PUBLICATIONSDIR=/Users/neil/lawrennd/publications/_posts
 GROUPDIR=/Users/neil/mlatcl/mlatcl.github.io/_people
 DATADIR=/Users/neil/lawrennd/data
 PROJECTSDIR=${DATADIR}
 
 TALKLISTFILES=$(shell ${FIND} ${TALKSDIR} -type f)
+PUBLICATIONLISTFILES=$(shell ${FIND} ${PUBLICATIONSDIR} -type f)
 TEACHINGLISTFILES=${PROJECTSDIR}/teaching.yaml
 PROJECTLISTFILES=${PROJECTSDIR}/grants.yaml
 MEETINGLISTFILES=${PROJECTSDIR}/workshops.yaml
