@@ -12,7 +12,9 @@ import liquid as pl
 
 import ndlpy.data as nd
 
-since_year = 2020
+publications_since_year = 2000
+meetings_since_year = 2022
+talks_since_year = 2020
 
 ## Preprocessors
 def convert_datetime(df, columns):
@@ -50,7 +52,6 @@ def convert_new_year_day(df, columns):
     for column in columns:
         if column in df.columns:
             df[column] = df[column].apply(lambda x: str(x) + "-01-01" if not pd.isna(x) else pd.NA)
-            print(df[column])
     return df
 
 def convert_new_year_eve(df, columns):
@@ -69,6 +70,10 @@ def monthname(df, source="date", month_column="month_name", year_column="year"):
     """Add month_name column and year column based on source field."""
     df[year_column] = df[source].apply(lambda x: x.year if x is not None else pd.NA)
     df[month_column] = df[source].apply(lambda x: x.month_name() if x is not None else pd.NA)
+    return df
+
+def addsupervisor(df, column, supervisor):
+    df[column] = df[column].fillna(supervisor)    
     return df
 
 ## Sorters
@@ -91,6 +96,7 @@ def recent(df, since_year, column="year"):
                 entry>=since_year
             except:
                 print(index, entry, type(entry))
+                raise(err)
         raise(err)
 
 def current(df, start="start", end="end"):
@@ -103,6 +109,13 @@ def former(df, end="end"):
     now = pd.to_datetime(datetime.datetime.now().date())
     return ((df[end] < now))
 
+def columnis(df, column, value):
+    """Filter on whether item is equal to a given value"""
+    return ((df[column]==value))
+
+def columncontains(df, column, value):
+    """Filter on whether column contains a given value"""
+    return (df[column].apply(pd.Series)==value).any(1)
 
 
 cvlists={
@@ -128,7 +141,7 @@ cvlists={
         "filter": {
             "f": recent,
             "args": {
-                "since_year": since_year,
+                "since_year": talks_since_year,
             },
         },
         "listtemplate": "listtalk",
@@ -157,7 +170,8 @@ cvlists={
         "filter": {
             "f": recent,
             "args": {
-                "since_year": since_year,
+                "since_year": publications_since_year,
+                "column": "year",
             },
         },
         "listtemplate": "listpaper",
@@ -204,6 +218,111 @@ cvlists={
         },
         "listtemplate": "listgrant",
     },
+    "teaching":{
+        "preprocessor": [
+            {
+                "f": convert_datetime,
+                "args": {
+                    "columns": ["start", "end"],
+                },
+            },
+        ],
+        "sorter": {
+            "f": descending,
+            "args": {
+                "by": ["start", "end", "semester"],
+            },
+        },
+        "filter": {
+            "f": current,
+            "args": {
+                "start": "start",
+                "end": "end",
+            },
+        },
+        "listtemplate": "listteaching",
+    },
+    "meetings":{
+        "preprocessor": [
+            {
+                "f": convert_datetime,
+                "args": {
+                    "columns": ["start", "end"],
+                },
+            },
+        ],
+        "sorter": {
+            "f": descending,
+            "args": {
+                "by": ["start", "end", "semester"],
+            },
+        },
+        "filter": {
+            "f": recent,
+            "args": {
+                "since_year": meetings_since_year,
+                "column": "year",
+            },
+        },
+        "listtemplate": "listmeeting",
+    },
+    "students": {
+        "preprocessor": [
+            # {
+            #     "f": convert_new_year_day,
+            #     "args": {
+            #         "columns": ["start"],
+            #     },
+            # },
+            # {
+            #     "f": convert_new_year_eve,
+            #     "args": {
+            #         "columns": ["end"],
+            #     },
+            # },
+            {
+                "f": convert_datetime,
+                "args": {
+                    "columns": ["start", "end"],
+                },
+            },
+        ],
+        "sorter": {
+            "f": descending,
+            "args": {
+                "by": ["start", "end"],
+            },
+        },
+        "augmentor": {
+            "f": addsupervisor,
+            "args": {
+                "supervisor": "ndl21",
+                "column": "supervisor",
+            },
+        },
+        "filter": {
+            "f": current,
+            "args": {
+                "start": "start",
+                "end": "end",
+            },
+        },
+        "filter": {
+            "f": columnis,
+            "args": {
+                "column": "position",
+                "value": "PhD Student",
+            },
+        },
+        "filter": {
+            "f": columncontains,
+            "args": {
+                "column": "supervisor",
+                "value": "ndl21",
+            },
+        },
+        "listtemplate": "liststudent",
+    },
 }
 cvlists["exgrants"] = cvlists["grants"].copy()
 cvlists["exgrants"]["filter"] = {
@@ -212,6 +331,16 @@ cvlists["exgrants"]["filter"] = {
         "end": "end",
         }
     }
+
+cvlists["exteaching"] = cvlists["teaching"].copy()
+cvlists["exteaching"]["filter"] = {
+    "f": former,
+    "args": {
+        "end": "end",
+        }
+    }
+
+
 
 def main():
     ext = ".md"
@@ -228,7 +357,13 @@ def main():
     parser.add_argument("-o", "--output", type=str,
                         help="Output filename")
 
-    parser.add_argument('-s', '--since-year', type=int, 
+    parser.add_argument('-m', '--meetings-since-year', type=int, 
+                        help="The year from which to include entries")
+
+    parser.add_argument('-p', '--publications-since-year', type=int, 
+                        help="The year from which to include entries")
+
+    parser.add_argument('-t', '--talks-since-year', type=int, 
                         help="The year from which to include entries")
 
     parser.add_argument('file', type=str, nargs='+',
@@ -239,33 +374,17 @@ def main():
     now = pd.to_datetime(datetime.datetime.now().date())
     now_year = now.year
 
-    if args.since_year:
-        since_year=datetime.date(year=args.since_year, month=1, day=1)
+    if args.meetings_since_year:
+        meetings_since_year=datetime.date(year=args.meetings_since_year, month=1, day=1)
     else:
-        since_year = now_year - 5
+        meetings_since_year = now_year - 5
+
+    if args.talks_since_year:
+        talks_since_year=datetime.date(year=args.talks_since_year, month=1, day=1)
+    else:
+        talks_since_year = now_year - 5
         
     df = pd.DataFrame(nd.loaddata(args.file))
-    if args.listtype in ['pdras', 'expdras', 'students', 'exstudents', "teaching", "exteaching"]:
-        df = addcolumns(df, ['start', 'end'])
-        df['end'] = pd.to_datetime(df['end'])
-        df['start'] = pd.to_datetime(df['start'])
-        
-    if args.listtype in ['pdras', 'expdras', 'students', 'exstudents']:
-
-        # it's a person of some form, check if they are current
-        df = addcolumns(df, ['visitor',
-                             'student', 'pdra', 'supervisor'])
-
-        df = df.rename(columns={'current': 'current_y_n'})
-        mask = ((df['current_y_n'])
-                | (df['start'][df['start'].notna()] < now)
-                & (df['end'][df['end'].notna()] > now))
-        df['current'] = mask
-        
-        df['supervisor'] = df['supervisor'].fillna('ndl21')
-        mask = (df['supervisor'].apply(pd.Series)=='ndl21').any(1)
-        df['ndlsupervise'] = mask
-
     text = ''
 
 
@@ -276,7 +395,6 @@ def main():
                 if type(calls) is not list:
                     calls = [calls]
                 for call in calls:
-                    print(call)
                     df = call["f"](df, **call["args"])
         filt = pd.Series(True, index=df.index)
         if "filter" in cvlists[args.listtype]:
@@ -292,7 +410,6 @@ def main():
                         try:
                             entry and newfilt[index]
                         except:
-                            print(index, entry, newfilt[index])
                             raise(err)
                     
         listtemplate = cvlists[args.listtype]["listtemplate"]
@@ -302,58 +419,29 @@ def main():
                 text += "\n"
 
 
-
-
-    if args.listtype=='teaching':
-        df = df.sort_values(by=['start','end', 'semester'], ascending=False)
-        for index, entry in df.iterrows():
-            if "end" not in entry or entry["end"] is None or entry['end']>=now:
-                print(os.path.curdir)
-                text +=  env.from_string("{% include 'teaching.md' %}").render(**entry)
-                text += "\n"
                 
-    elif args.listtype=='exteaching':
-        df = df.sort_values(by=['start','end'], ascending=False)
-        for index, entry in df.iterrows():
-            if "end" in entry and entry["end"] is not None and entry['end']<now:
-                text +=  env.get_template("teaching" + ext).render(**entry)
-                text += "\n"
                 
-    elif args.listtype=='meetings':
-        df = df.sort_values(by=['year'], ascending=False)
-        for index, entry in df.iterrows():
-            if entry['year']>=since_year:
-                text += env.from_string("* {{title}} at {{place}}, {{month}} {{year}}").render(**entry)
-                if len(entry['coorganisers'])>0:
-                    text += env.from_string(" with {{coorganisers}}.\n").render(**entry)
-                else:
-                    text += ".\n"
 
-    elif args.listtype=='students':        
-        df = df.sort_values(by=['start'], ascending=False)
-        for index, entry in df.iterrows():
-            if entry['current'] and entry['ndlsupervise'] and entry['student']:                text += env.get_template("student" + ext).render(**entry)
+    # elif args.listtype=='pdras':
+    #     df = df.sort_values(by=['start'], ascending=False)
+    #     for index, entry in df.iterrows():
+    #         if entry['current'] and entry['ndlsupervise'] and entry['pdra']:
+    #             text +=  env.get_template("pdra" + ext).render(**entry)
 
-    elif args.listtype=='pdras':
-        df = df.sort_values(by=['start'], ascending=False)
-        for index, entry in df.iterrows():
-            if entry['current'] and entry['ndlsupervise'] and entry['pdra']:
-                text +=  env.get_template("pdra" + ext).render(**entry)
+    # elif args.listtype=='exstudents':
+    #     df = df.sort_values(by=['end'], ascending=False)
+    #     for index, entry in df.iterrows():
+    #         if not entry['current'] and entry['ndlsupervise'] and entry['student']:
+    #             text += env.get_template("student" + ext).render(**entry)
 
-    elif args.listtype=='exstudents':
-        df = df.sort_values(by=['end'], ascending=False)
-        for index, entry in df.iterrows():
-            if not entry['current'] and entry['ndlsupervise'] and entry['student']:
-                text += env.get_template("student" + ext).render(**entry)
+    # elif args.listtype=='expdras':
+    #     df = df.sort_values(by=['end'], ascending=False)
+    #     for index, entry in df.iterrows():
+    #         if not entry['current'] and entry['ndlsupervise'] and entry['pdra']:
+    #             text +=  env.get_template("pdra" + ext).render(**entry)
 
-    elif args.listtype=='expdras':
-        df = df.sort_values(by=['end'], ascending=False)
-        for index, entry in df.iterrows():
-            if not entry['current'] and entry['ndlsupervise'] and entry['pdra']:
-                text +=  env.get_template("pdra" + ext).render(**entry)
-
-    elif args.listtype in ["publication", "journal", "book", "conference"]:
-        df = df.sort_values(by=["date"], ascending=False)
+    # elif args.listtype in ["publication", "journal", "book", "conference"]:
+    #     df = df.sort_values(by=["date"], ascending=False)
         
     if args.output is not None:
         with open(args.output, 'w', encoding='utf-8') as f:
