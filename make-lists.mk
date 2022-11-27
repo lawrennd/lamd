@@ -1,13 +1,13 @@
 invited-talk-list.markdown: ${TALKLISTFILES}
 	echo ${TALKLISTFILES}
-	mdlist talks $^ -o $@
+	mdlist talks $^ -o $@ -s ${TALKSINCE}
 
 publication-list.markdown: ${PUBLICATIONLISTFILES}
 	echo ${PUBLICATIONLISTFILES}
-	mdlist publications $^ -o $@
+	mdlist publications $^ -o $@ -s ${PUBLICATIONSINCE}
 
 meetings-organised-list.markdown: ${MEETINGLISTFILES}
-	mdlist meetings $^ -o $@
+	mdlist meetings $^ -o $@ -s ${MEETINGSINCE}
 
 current-grant-list.markdown: ${PROJECTLISTFILES}
 	mdlist grants $^ -o $@
@@ -18,10 +18,10 @@ current-teaching-list.markdown: ${TEACHINGLISTFILES}
 previous-teaching-list.markdown: ${TEACHINGLISTFILES}
 	mdlist exteaching $^ -o $@
 
-graduated-student-list.markdown: ${GROUPLISTFILES}
+graduated-student-list.markdown: ${EXSTUDENTFILES}
 	mdlist exstudents $^ -o $@
 
-former-pdra-list.markdown: ${GROUPLISTFILES}
+former-pdra-list.markdown: ${EXRAFILES}
 	mdlist expdras $^ -o $@
 
 previous-grant-list.markdown: ${PROJECTLISTFILES}

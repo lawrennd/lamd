@@ -30,6 +30,11 @@ PDSFLAGS=-s ${CITEFLAGS} --mathjax=${MATHJAX}
 
 CVDIR=$(shell mdfield cvdir $(BASE).md)
 
+TALKSINCE=$(shell mdfield talksince $(BASE).md)
+MEETINGSINCE=$(shell mdfield meetingsince $(BASE).md)
+PUBLICATIONSINCE=$(shell mdfield publicationsince $(BASE).md)
+
+SINCEFLAGS=--meta-data talkYearSince=${TALKSINCE} meetingYearSince=${MEETINGSINCE} publicationYearSince=${PUBLICATIONSINCE}
 
 DEPS=$(shell dependencies inputs $(BASE).md)
 DIAGDEPS=$(shell dependencies diagrams $(BASE).md)
@@ -51,6 +56,8 @@ PUBLICATIONLISTFILES=$(shell ${FIND} ${PUBLICATIONSDIR} -type f)
 TEACHINGLISTFILES=${PROJECTSDIR}/teaching.yaml
 PROJECTLISTFILES=${PROJECTSDIR}/grants.yaml
 MEETINGLISTFILES=${PROJECTSDIR}/workshops.yaml
-GROUPLISTFILES=$(shell ${FIND} ${GROUPDIR} -type f) ${DATADIR}/students.yaml ${DATADIR}/ras.yaml
+GROUPLISTFILES=$(shell ${FIND} ${GROUPDIR} -type f)  
+EXSTUDENTFILES=${DATADIR}/students.yaml
+EXRAFILES=${DATADIR}/ras.yaml
 
 ALL=$(shell dependencies all $(BASE).md)
