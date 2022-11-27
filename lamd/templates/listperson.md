@@ -1,1 +1,1 @@
-{%if person%}{%-include extractperson -%}{% assign person=false%}{%endif%}{%if website or url%}[{%endif%}{{given}} {%if prefix%}{{prefix}} {%endif%}{{family}}{%if suffix %} {{suffix}}{%endif%}{%if website or url %}]({% if website %}{{ website }}{%else%}{{url}}{%endif%}){%endif%}
+{%if person%}{%-include 'extractperson' -%}{% assign person=false%}{%endif%}{{given}} {%if prefix%}{{prefix}} {%endif%}{{family}}{%if suffix %} {{suffix}}{%endif%}
