@@ -12,9 +12,16 @@ import liquid as pl
 
 import ndlpy.data as nd
 
-publications_since_year = 2000
-meetings_since_year = 2022
-talks_since_year = 2020
+from .config import *
+from .log import Logger
+
+SINCE_YEAR = 2020
+
+log = Logger(
+    name=__name__,
+    level=config["logging"]["level"],
+    filename=config["logging"]["filename"]
+)
 
 ## Preprocessors
 def convert_datetime(df, columns):
@@ -33,7 +40,7 @@ def convert_int(df, columns):
         columns = [columns]
     for column in columns:
         if column in df.columns:
-            df[column] = pd.to_numeric(df[column], downcast="integer")
+            df[column] = pd.to_numeric(df[column]).apply(lambda x: int(x) if not pd.isna(x) else pd.NA).astype('Int64')
     return df
 
 def convert_string(df, columns):
@@ -54,23 +61,60 @@ def convert_new_year_day(df, columns):
             df[column] = df[column].apply(lambda x: str(x) + "-01-01" if not pd.isna(x) else pd.NA)
     return df
 
-def convert_new_year_eve(df, columns):
+def convert_year_iso(df, column="year", month=1, day=1):
     """Preprocessor to set string type on columns."""
-    if type(columns) is not list:
-        columns = [columns]
-    for column in columns:
-        if column in df.columns:
-            df[column] = df[column].apply(lambda x: str(x) + "-12-31" if not pd.isna(x) else pd.NA)
-            print(df[column])
+    def year_to_iso(field):
+        """Convert a year field to an iso date using the provided month and day."""
+        type_field = type(field)
+        if type_field is int: # Assume it is integer year
+            log.debug(f"Returning \"{type_field}\" from form \"{field}\"")
+            dt = datetime.datetime(year=field, month=month, day=day)
+        elif type_field is str: 
+            try:
+                year = int(field) # Try it as string year
+                log.debug(f"Returning \"{type_field}\" from form \"{field}\"")
+                dt = datetime.datetime(year=year, month=month, day=day)
+            except TypeError as e:
+                log.debug(f"Returning \"{type_field}\" from form \"{field}\"")
+                dt = datetime.datetime.strptime(field, "%Y-%m-%d") # Try it as string YYYY-MM-DD
+        elif type_field is datetime.date:
+            log.debug(f"Returning \"{type_field}\" from form \"{field}\"")
+            return field
+        else:
+            raise TypeError(f"Expecting type of int or str or datetime but found \"{type_field}\"")
+        return dt
+        
+    df[column] = df[column].apply(year_to_iso)
     return df
-
+        
+        
 
 ## Augmentors
-def monthname(df, source="date", month_column="month_name", year_column="year"):
-    """Add month_name column and year column based on source field."""
-    df[year_column] = df[source].apply(lambda x: x.year if x is not None else pd.NA)
+def addmonth(df, source="date", month_column="month"):
+    """Add month column based on source date field."""
     df[month_column] = df[source].apply(lambda x: x.month_name() if x is not None else pd.NA)
     return df
+
+def addyear(df, source="date", year_column="year"):
+    """Add year column and based on source date field."""
+    df[year_column] = df[source].apply(lambda x: x.year if x is not None else pd.NA)
+    return df
+
+def augmentmonth(df, source="date", month_column="month"):
+    """Augment the  month column based on source date field."""
+    for index, entry in df.iterrows():
+        if pd.isna(df.loc[index, month_column]) and not pd.isna(df.loc[index, source]):
+            df.loc[index, month_column] = df.loc[index, source].month_name()
+    return df
+
+def augmentyear(df, source="date", year_column="year"):
+    """Augment the year column based on source date field."""
+    for index, entry in df.iterrows():
+        if pd.isna(df.loc[index, year_column]) and not pd.isna(df.loc[index, source]):
+            df.loc[index, year_column] = df.loc[index, source].year
+    return df
+
+
 
 def addsupervisor(df, column, supervisor):
     df[column] = df[column].fillna(supervisor)    
@@ -86,62 +130,68 @@ def descending(df, by):
     return df.sort_values(by=by, ascending=False)
 
 ## Filters
-def recent(df, since_year, column="year"):
+def recent(df, column="year"):
     """Filter on year of item"""
-    try:
-        return df[column]>=since_year
-    except TypeError as err:
-        for index, entry in df[column].items():
-            try:
-                entry>=since_year
-            except:
-                print(index, entry, type(entry))
-                raise(err)
-        raise(err)
+    return df[column]>=SINCE_YEAR
 
-def current(df, start="start", end="end"):
+def current(df, start="start", end="end", current=None):
     """Filter on whether item is current"""
     now = pd.to_datetime(datetime.datetime.now().date())
-    return ((df[start] <= now) & (df[end] >= now))
+    within = ((df[start] <= now) & (pd.isna(df[end]) | (df[end] >= now)))
+    if current is not None:
+        return (within | (~df[current].isna() & df[current]))
+    else:
+        return within
 
 def former(df, end="end"):
     """Filter on whether item is current"""
     now = pd.to_datetime(datetime.datetime.now().date())
-    return ((df[end] < now))
+    return (df[end] < now)
 
 def columnis(df, column, value):
     """Filter on whether item is equal to a given value"""
-    return ((df[column]==value))
+    return (df[column]==value)
 
 def columncontains(df, column, value):
     """Filter on whether column contains a given value"""
-    return (df[column].apply(pd.Series)==value).any(1)
+    colis = columnis(df, column, value)
+    return (colis | df[column].apply(lambda x: (x==value).any() if type(x==value) is not bool else (x==value)))
 
 
 cvlists={
     "talks": {
-        "preprocessor": {
-            "f": convert_datetime,
-            "args": {
-                "columns": "date",
-            },    
-        },
+        "preprocessor": [
+            {
+                "f": convert_datetime,
+                "args": {
+                    "columns": "date",
+                },    
+            },
+        ],
         "sorter": {
             "f": descending,
             "args": {
                 "by": "date",
             },
         },
-        "augmentor": {
-            "f": monthname,
-            "args": {
-                "source": "date",
+        "augmentor": [
+            {
+                "f": addmonth,
+                "args": {
+                    "source": "date",
+                },
             },
-        },
+            {
+                "f": addyear,
+                "args": {
+                    "source": "date",
+                },
+            },
+        ],
         "filter": {
             "f": recent,
             "args": {
-                "since_year": talks_since_year,
+                "column": "year",
             },
         },
         "listtemplate": "listtalk",
@@ -161,16 +211,31 @@ cvlists={
                 },
             },
         ],
+        "augmentor": [
+            {
+                "f": augmentmonth,
+                "args": {
+                    "source": "published",
+                    "month_column": "month",
+                },
+            },
+            {
+                "f": augmentyear,
+                "args": {
+                    "source": "published",
+                    "year_column": "year",
+                },
+            },
+        ],
         "sorter": {
             "f": descending,
             "args": {
-                "by": "date",
+                "by": ["year", "published"],
             },
         },
         "filter": {
             "f": recent,
             "args": {
-                "since_year": publications_since_year,
                 "column": "year",
             },
         },
@@ -179,15 +244,19 @@ cvlists={
     "grants": {
         "preprocessor": [
             {
-                "f": convert_new_year_day,
+                "f": convert_year_iso,
                 "args": {
-                    "columns": ["start"],
+                    "column": "start",
+                    "month": 1,
+                    "day": 1,
                 },
             },
             {
-                "f": convert_new_year_eve,
+                "f": convert_year_iso,
                 "args": {
-                    "columns": ["end"],
+                    "column": "end",
+                    "month": 12,
+                    "day": 31,
                 },
             },
             {
@@ -260,7 +329,6 @@ cvlists={
         "filter": {
             "f": recent,
             "args": {
-                "since_year": meetings_since_year,
                 "column": "year",
             },
         },
@@ -268,18 +336,6 @@ cvlists={
     },
     "students": {
         "preprocessor": [
-            # {
-            #     "f": convert_new_year_day,
-            #     "args": {
-            #         "columns": ["start"],
-            #     },
-            # },
-            # {
-            #     "f": convert_new_year_eve,
-            #     "args": {
-            #         "columns": ["end"],
-            #     },
-            # },
             {
                 "f": convert_datetime,
                 "args": {
@@ -290,7 +346,7 @@ cvlists={
         "sorter": {
             "f": descending,
             "args": {
-                "by": ["start", "end"],
+                "by": ["start"],
             },
         },
         "augmentor": {
@@ -300,27 +356,30 @@ cvlists={
                 "column": "supervisor",
             },
         },
-        "filter": {
-            "f": current,
-            "args": {
-                "start": "start",
-                "end": "end",
+        "filter": [
+            {
+                "f": current,
+                "args": {
+                    "current": "current",
+                    "start": "start",
+                    "end": "end",
+                },
             },
-        },
-        "filter": {
-            "f": columnis,
-            "args": {
-                "column": "position",
-                "value": "PhD Student",
+            {
+                "f": columnis,
+                "args": {
+                    "column": "position",
+                    "value": "PhD Student",
+                },
             },
-        },
-        "filter": {
-            "f": columncontains,
-            "args": {
-                "column": "supervisor",
-                "value": "ndl21",
+            {
+                "f": columncontains,
+                "args": {
+                    "column": "supervisor",
+                    "value": "ndl21",
+                },
             },
-        },
+        ],
         "listtemplate": "liststudent",
     },
 }
@@ -337,9 +396,36 @@ cvlists["exteaching"]["filter"] = {
     "f": former,
     "args": {
         "end": "end",
-        }
     }
+}
 
+
+cvlists["pdras"] = cvlists["students"].copy()
+cvlists["pdras"]["listtemplate"] = "listpdra"
+cvlists["pdras"]["filter"] = [
+    {
+        "f": current,
+        "args": {
+            "current": "current",
+            "start": "start",
+            "end": "end",
+        },
+    },
+    {
+        "f": columnis,
+        "args": {
+            "column": "position",
+            "value": "Research Associate",
+        },
+    },
+    {
+        "f": columncontains,
+        "args": {
+            "column": "supervisor",
+            "value": "ndl21",
+        },
+    },
+]
 
 
 def main():
@@ -357,13 +443,7 @@ def main():
     parser.add_argument("-o", "--output", type=str,
                         help="Output filename")
 
-    parser.add_argument('-m', '--meetings-since-year', type=int, 
-                        help="The year from which to include entries")
-
-    parser.add_argument('-p', '--publications-since-year', type=int, 
-                        help="The year from which to include entries")
-
-    parser.add_argument('-t', '--talks-since-year', type=int, 
+    parser.add_argument('-s', '--since-year', type=int, 
                         help="The year from which to include entries")
 
     parser.add_argument('file', type=str, nargs='+',
@@ -374,22 +454,18 @@ def main():
     now = pd.to_datetime(datetime.datetime.now().date())
     now_year = now.year
 
-    if args.meetings_since_year:
-        meetings_since_year=datetime.date(year=args.meetings_since_year, month=1, day=1)
+    if args.since_year:
+        SINCE_YEAR=args.since_year
     else:
-        meetings_since_year = now_year - 5
+        SINCE_YEAR=now_year - 5
 
-    if args.talks_since_year:
-        talks_since_year=datetime.date(year=args.talks_since_year, month=1, day=1)
-    else:
-        talks_since_year = now_year - 5
         
     df = pd.DataFrame(nd.loaddata(args.file))
     text = ''
 
 
     if args.listtype in cvlists:
-        for op in ["preprocessor", "sorter", "augmentor"]:
+        for op in ["preprocessor", "augmentor", "sorter"]:
             if op in cvlists[args.listtype]:
                 calls = cvlists[args.listtype][op]
                 if type(calls) is not list:
@@ -403,24 +479,16 @@ def main():
                 calls = [calls]    
             for call in calls:
                 newfilt = call["f"](df, **call["args"])
-                try:
-                    filt = (filt & newfilt)
-                except TypeError as err:
-                    for index, entry in filt.items():
-                        try:
-                            entry and newfilt[index]
-                        except:
-                            raise(err)
+                filt = (filt & newfilt)
                     
         listtemplate = cvlists[args.listtype]["listtemplate"]
         for index, entry in df.iterrows():
-            if filt[index]:
-                text += env.get_template(listtemplate + ext).render(**entry)
+            if not pd.isna(filt[index]) and filt[index]:
+                kwargs = remove_nan(entry.to_dict())
+                text += env.get_template(listtemplate + ext).render(**kwargs)
                 text += "\n"
 
-
-                
-                
+               
 
     # elif args.listtype=='pdras':
     #     df = df.sort_values(by=['start'], ascending=False)
@@ -449,7 +517,19 @@ def main():
     else:
         print(text)
 
-
+def remove_nan(dictionary):
+    """Delete missing entries from dictionary"""
+    dictionary2 = dictionary.copy()
+    for key, entry in dictionary.items():
+        if type(entry) is dict:
+            dictionary2[key] = remove_nan(entry)
+        else:
+            isna = pd.isna(entry)
+            if type(isna) is bool and isna:
+                del(dictionary2[key])
+    return dictionary2
+                
+ 
 def addcolumns(df, columns):
     """Add empty column to data frame"""
     for column in columns:

@@ -1,1 +1,1 @@
-* {{title}}, *{{venue}}*, {{month_name}}, {{year}}
+* {{title}}, *{{venue}}*, {{ date | date: "%d %B %Y"}}

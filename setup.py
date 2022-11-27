@@ -69,6 +69,7 @@ PACKAGE_DATA = {"lamd":
                     "templates/listgrant.md",
                     "templates/listmeeting.md",
                     "templates/listpaper.md",
+                    "templates/listpdra.md",
                     "templates/listperson.md",
                     "templates/liststudent.md",
                     "templates/listteaching.md",

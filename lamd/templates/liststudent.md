@@ -1,1 +1,1 @@
-* {% include 'listperson' %}{% include 'position' %}
+* {% include 'listperson' %}

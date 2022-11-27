@@ -1,7 +1,2 @@
-{% if person.website %}{% assign website=person.website %}{%else%}{% assign website=false%}{%endif%}
-{% if person.url %}{% assign url=person.url%}{%else%}{% assign url=false%}{%endif%}
-{% if person.prefix %}{% assign prefix=person.prefix%}{%else%}{% assign prefix=false%}{%endif%}
-{% if person.given %}{% assign given=person.given%}{%else%}{% assign given=false%}{%endif%}
-{% if person.family %}{% assign family=person.family%}{%else%}{% assign family=false%}{%endif%}
-{% if person.suffix %}{% assign suffix=person.suffix%}{%else%}{% assign suffix=false%}{%endif%}
+{% if person.website %}{% assign website=person.website %}{%else%}{% assign website=false%}{%endif%}{% if person.url %}{% assign url=person.url%}{%else%}{% assign url=false%}{%endif%}{% if person.prefix %}{% assign prefix=person.prefix%}{%else%}{% assign prefix=false%}{%endif%}{% if person.given %}{% assign given=person.given%}{%else%}{% assign given=false%}{%endif%}{% if person.family %}{% assign family=person.family%}{%else%}{% assign family=false%}{%endif%}{% if person.suffix %}{% assign suffix=person.suffix%}{%else%}{% assign suffix=false%}{%endif%}
 

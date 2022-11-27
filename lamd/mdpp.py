@@ -73,6 +73,9 @@ def main():
     parser.add_argument("-r", "--replace-notation", default=False, action='store_true',
                         help="Whether to replace the latex macros in the files, or to retain them for later processing (default is False, retain them)")
 
+    parser.add_argument("-m", "--meta-data", nargs="*",
+                        help="Additional definitions to pass to the preprocessor")
+    
     parser.add_argument("-x", "--extract-material", type=str, default='all',
                         choices=['all', 'reading', 'references', 'exercises'],
                         help="Extract a subset of the material, e.g. reading matter, the references, etc.")
@@ -110,7 +113,10 @@ def main():
         arglist.append('-DEDIT=1')
     if args.draft:
         arglist.append('-DDRAFT=1')
-
+    if args.meta_data:
+        for a in args.meta_data:
+            arglist.append("-D" + a)
+    
     if args.extract_material is not None and args.code != 'all':
         pass
 
