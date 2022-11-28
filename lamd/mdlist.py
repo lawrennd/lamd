@@ -15,13 +15,23 @@ import ndlpy.data as nd
 from .config import *
 from .log import Logger
 
-SINCE_YEAR = 2020
+global SINCE_YEAR
 
 log = Logger(
     name=__name__,
     level=config["logging"]["level"],
     filename=config["logging"]["filename"]
 )
+
+
+
+def set_since_year(year):
+    global SINCE_YEAR
+    SINCE_YEAR=year
+
+def get_since_year():
+    global SINCE_YEAR
+    return SINCE_YEAR
 
 ## Preprocessors
 def convert_datetime(df, columns):
@@ -51,15 +61,6 @@ def convert_string(df, columns):
     for column in columns:
         if column in df.columns:
             df[column] = df[column].apply(lambda x: str(x) if not pd.isna(x) else pd.NA)
-    return df
-
-def convert_new_year_day(df, columns):
-    """Preprocessor to set string type on columns."""
-    if type(columns) is not list:
-        columns = [columns]
-    for column in columns:
-        if column in df.columns:
-            df[column] = df[column].apply(lambda x: str(x) + "-01-01" if not pd.isna(x) else pd.NA)
     return df
 
 def convert_year_iso(df, column="year", month=1, day=1):
@@ -138,7 +139,7 @@ def descending(df, by):
 ## Filters
 def recent(df, column="year"):
     """Filter on year of item"""
-    return df[column]>=SINCE_YEAR
+    return df[column]>=get_since_year()
 
 def current(df, start="start", end="end", current=None):
     """Filter on whether item is current"""
@@ -153,6 +154,13 @@ def former(df, end="end"):
     """Filter on whether item is current"""
     now = pd.to_datetime(datetime.datetime.now().date())
     return (df[end] < now)
+
+def onbool(df, column="current", invert=False):
+    """Filter on whether column is positive (or negative if inverted)"""
+    if invert:
+        return ~df[column]
+    else:
+        return df[column]
 
 def columnis(df, column, value):
     """Filter on whether item is equal to a given value"""
@@ -329,16 +337,16 @@ cvlists={
     "meetings":{
         "preprocessor": [
             {
-                "f": convert_datetime,
+                "f": convert_int,
                 "args": {
-                    "columns": ["start", "end"],
+                    "columns": ["year"],
                 },
             },
         ],
         "sorter": {
             "f": descending,
             "args": {
-                "by": ["start", "end", "semester"],
+                "by": ["year"],
             },
         },
         "filter": {
@@ -414,6 +422,23 @@ cvlists["exteaching"]["filter"] = {
     }
 }
 
+cvlists["exstudents"] = cvlists["students"].copy()
+del cvlists["exstudents"]["augmentor"]
+cvlists["exstudents"]["filter"] = [
+    {
+        "f": onbool,
+        "args": {
+            "column": "current",
+            "invert": True,
+        },
+    },
+    {
+        "f": onbool,
+        "args": {
+            "column": "student",
+        },
+    },
+]
 
 cvlists["pdras"] = cvlists["students"].copy()
 cvlists["pdras"]["listtemplate"] = "listpdra"
@@ -470,10 +495,10 @@ def main():
     now_year = now.year
 
     if args.since_year:
-        SINCE_YEAR=args.since_year
+        print("Since Year!")
+        set_since_year(args.since_year)
     else:
-        SINCE_YEAR=now_year - 5
-
+        set_since_year(now_year - 5)
         
     df = pd.DataFrame(nd.loaddata(args.file))
     text = ''
