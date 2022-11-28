@@ -43,6 +43,7 @@ def convert_int(df, columns):
             df[column] = pd.to_numeric(df[column]).apply(lambda x: int(x) if not pd.isna(x) else pd.NA).astype('Int64')
     return df
 
+
 def convert_string(df, columns):
     """Preprocessor to set string type on columns."""
     if type(columns) is not list:
@@ -90,30 +91,35 @@ def convert_year_iso(df, column="year", month=1, day=1):
         
 
 ## Augmentors
-def addmonth(df, source="date", month_column="month"):
+def addmonth(df, newcolumn="month", source="date"):
     """Add month column based on source date field."""
-    df[month_column] = df[source].apply(lambda x: x.month_name() if x is not None else pd.NA)
+    df[newcolumn] = df[source].apply(lambda x: x.month_name() if x is not None else pd.NA)
     return df
 
-def addyear(df, source="date", year_column="year"):
+def addyear(df, newcolumn="year", source="date"):
     """Add year column and based on source date field."""
-    df[year_column] = df[source].apply(lambda x: x.year if x is not None else pd.NA)
+    df[newcolumn] = df[source].apply(lambda x: x.year if x is not None else pd.NA)
     return df
 
-def augmentmonth(df, source="date", month_column="month"):
+def augmentmonth(df, newcolumn="month", source="date"):
     """Augment the  month column based on source date field."""
     for index, entry in df.iterrows():
-        if pd.isna(df.loc[index, month_column]) and not pd.isna(df.loc[index, source]):
-            df.loc[index, month_column] = df.loc[index, source].month_name()
+        if pd.isna(df.loc[index, newcolumn]) and not pd.isna(df.loc[index, source]):
+            df.loc[index, newcolumn] = df.loc[index, source].month_name()
     return df
 
-def augmentyear(df, source="date", year_column="year"):
+def augmentyear(df, newcolumn="year", source="date"):
     """Augment the year column based on source date field."""
     for index, entry in df.iterrows():
-        if pd.isna(df.loc[index, year_column]) and not pd.isna(df.loc[index, source]):
-            df.loc[index, year_column] = df.loc[index, source].year
+        if pd.isna(df.loc[index, newcolumn]) and not pd.isna(df.loc[index, source]):
+            df.loc[index, newcolumn] = df.loc[index, source].year
     return df
 
+def augmentcurrency(df, newcolumn="amountstr", source="amount", sf=0):
+    """Preprocessor to set integer type on columns."""
+    fstr=f"{{0:,.{sf}f}}"
+    df[newcolumn] = df[source].apply(lambda x: fstr.format(x))
+    return df
 
 
 def addsupervisor(df, column, supervisor):
@@ -216,14 +222,14 @@ cvlists={
                 "f": augmentmonth,
                 "args": {
                     "source": "published",
-                    "month_column": "month",
+                    "newcolumn": "month",
                 },
             },
             {
                 "f": augmentyear,
                 "args": {
                     "source": "published",
-                    "year_column": "year",
+                    "newcolumn": "year",
                 },
             },
         ],
@@ -269,6 +275,15 @@ cvlists={
                 "f": convert_int,
                 "args": {
                     "columns": "amount",
+                },
+            },
+        ],
+        "augmentor": [
+            {
+                "f": augmentcurrency,
+                "args": {
+                    "source": "amount",
+                    "newcolumn": "amountstr",
                 },
             },
         ],
