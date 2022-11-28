@@ -1,1 +1,1 @@
-* {{title}}, {%if amount %}{{currency}}{{amount}},{%endif%} from {{start | date: "%Y"}} to {{end | date: "%Y"}} {%if funders %}funded by {{funders}} {{number}}{%endif%} {{description}}\n
+* {{title}}, {%if amount %}{{currency}}{% if amountstr %}{{amountstr}}{%else%}{{amount}}{%endif%},{%endif%} from {{start | date: "%Y"}} to {{end | date: "%Y"}} {%if funders %}funded by {{funders}}{% if number %} {{number}}{%endif%}{%endif%}{% if decsription %}. {{description}}{%endif%}{% if role %} ({{role}}{%if collaborators %} with {{collaborators}}{%endif%}){%endif%}.\n
