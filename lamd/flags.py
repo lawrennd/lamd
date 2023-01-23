@@ -35,6 +35,13 @@ def main():
         weekarg = ''
 
     try:
+        topic = int(ny.header_field('topic', fields))
+        topicarg = """ --metadata topic={topic}""".format(topic=topic)
+    except ny.FileFormatError:
+        topic = None
+        topicarg = ''
+        
+    try:
         session = int(ny.header_field('session', fields))
         sessionarg = """ --metadata session={session}""".format(session=session)
     except ny.FileFormatError:
@@ -89,6 +96,12 @@ def main():
             if week is not None and isinstance(week, int) and week>0:
                 prefix += '-'
             prefix += '{0:02}'.format(session)
+        if len(prefix)>0:
+            prefix += '-'
+    elif layout == 'topic':
+        prefix = ''
+        if topic is not None and isinstance(topic, int) and topic>0:
+            prefix += '{0:02}'.format(topic)
         if len(prefix)>0:
             prefix += '-'
     elif layout == 'background':
