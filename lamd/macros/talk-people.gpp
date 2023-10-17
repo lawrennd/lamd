@@ -1,6 +1,13 @@
 \ifndef{talkPeople}
 \define{talkPeople}
 
+\defeval{\challengerMishraPicture{width}}{\circleHead{\diagramsDir/people/challenger-mishra.jpg}{Vincent Dutordoir}{\width}{https://acceleratescience.github.io/team/challenger-mishra.html}}
+\defeval{\vincentDutordoirPicture{width}}{\circleHead{\diagramsDir/people/soumya-banerjee.jpg}{Soumya Banerjee}{\width}{https://acceleratescience.github.io/team/soumya-banerjee.html}}
+\defeval{\samNallaperumaPicture{width}}{\circleHead{\diagramsDir/people/sam-nallaperuma.jpg}{Sam Nallaperuma}{\width}{https://acceleratescience.github.io/team/sam-nallaperuma.html}}
+\defeval{\sarahMorganPicture{width}}{\circleHead{\diagramsDir/people/sarah-morgan.jpg}{Sarah Morgan}{\width}{https://acceleratescience.github.io/team/sarah-morgan.html}}
+
+\defeval{\vincentDutordoirPicture{width}}{\circleHead{\diagramsDir/people/vincent-dutordoir.png}{Vincent Dutordoir}{\width}{https://vdutor.github.io/}}
+
 \defeval{\vincentDutordoirPicture{width}}{\circleHead{\diagramsDir/people/vincent-dutordoir.png}{Vincent Dutordoir}{\width}{https://vdutor.github.io/}}
 
 \defeval{\dianeCoylePicture{width}}{\circleHead{\diagramsDir/people/diane-coyle.png}{Diane Coyle}{\width}{https://www.polis.cam.ac.uk/Staff_and_Students/professor-diane-coyle}}
@@ -11,7 +18,6 @@
 
 \defeval{\dianaRobinsonPicture{width}}{\circleHead{\diagramsDir/people/diana-robinson.jpg}{Diana Robinson}{\width}{https://www.linkedin.com/in/diana-robinson/}}
 
-\defeval{\sarahMorganPicture{width}}{\circleHead{\diagramsDir/people/sarah-morgan.jpg}{Sarah Morgan}{\width}{https://mlatcl.github.io/people/sarah-morgan.html}}
 
 \defeval{\davidSpiegelhalterPicture{width}}{\circleHead{\diagramsDir/people/david-spiegelhalter.png}{David Spiegelhalter}{\width}{http://www.statslab.cam.ac.uk/~david/}}
 
