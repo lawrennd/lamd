@@ -29,56 +29,56 @@ def main():
 
     try:
         week = int(ny.header_field('week', fields))
-        weekarg = """ --metadata week={week}""".format(week=week)
+        weekarg = f" --metadata week={week}"
     except ny.FileFormatError:
-        week = 0
+        week = None
         weekarg = ''
 
     try:
         topic = int(ny.header_field('topic', fields))
-        topicarg = """ --metadata topic={topic}""".format(topic=topic)
+        topicarg = f" --metadata topic={topic}"
     except ny.FileFormatError:
         topic = None
         topicarg = ''
         
     try:
         session = int(ny.header_field('session', fields))
-        sessionarg = """ --metadata session={session}""".format(session=session)
+        sessionarg = f" --metadata session={session}"
     except ny.FileFormatError:
-        session = 0
+        session = None
         sessionarg = ''
 
     try:
         practical = int(ny.header_field('practical', fields))
-        practicalarg = """ --metadata practical={practical}""".format(practical=practical)
+        practicalarg = f" --metadata practical={practical}"
     except ny.FileFormatError:
-        practical = 0
+        practical = None
         practicalarg = ''
         
     try:
         background = int(ny.header_field('background', fields))
-        backgroundarg = """ --metadata background={background}""".format(background=background)
+        backgroundarg = f" --metadata background={background}"
     except ny.FileFormatError:
-        background = 0
+        background = None
         backgroundarg = ''
 
     try:
         revealjs_url = ny.header_field('revealjs_url', fields)
     except ny.FileFormatError:
         revealjs_url = 'https://unpkg.com/reveal.js@3.9.2'
-    revealjs_urlarg = """ --variable revealjs-url={revealjs_url}""".format(revealjs_url=revealjs_url)
+    revealjs_urlarg = f" --variable revealjs-url={revealjs_url}"
 
     try:
         talktheme = ny.header_field('talktheme', fields)
     except ny.FileFormatError:
         talktheme = 'black'
-    talkthemearg = """ --variable theme={talktheme}""".format(talktheme=talktheme)
+    talkthemearg = f" --variable theme={talktheme}"
 
     try:
         talkcss = ny.header_field('talkcss', fields)
     except ny.FileFormatError:
         talkcss = 'https://inverseprobability.com/assets/css/talks.css'
-    talkcssarg = """ --css {talkcss}""".format(talkcss=talkcss)
+    talkcssarg = f" --css {talkcss}"
 
 
 
@@ -106,13 +106,13 @@ def main():
             prefix += '-'
     elif layout == 'background':
         prefix = ''
-        if week>0:
+        if week is not None and week>0:
             prefix += '{0:02}'.format(week)
             prefix += '-'
-        if session>0:
+        if session is not None and session>0:
             prefix += '{0:02}'.format(session)
             prefix += '-'
-        if background>0:
+        if background is not None and background>0:
             prefix += '{0:02}'.format(background)
             prefix += '-'
     elif layout == 'test':
@@ -128,13 +128,13 @@ def main():
         prefix = ''
     elif layout == 'practical':
         prefix = ''
-        if week>0:
+        if week is not None and week>0:
             prefix += '{0:02}'.format(week)
             prefix += '-'
-        if session>0:
+        if session is not None and session>0:
             prefix += '{0:02}'.format(session)
             prefix += '-'
-        if practical>0:
+        if practical is not None and practical>0:
             prefix += '{0:02}'.format(practical)
             prefix += '-'
     elif layout == 'example':
@@ -171,7 +171,7 @@ def main():
         if ny.header_field('pdf', fields):
             lines += """ --metadata pdf={out}.pdf"""
         if args.output == 'post':
-            lines += weekarg + sessionarg + practicalarg + """ --metadata layout={layout}""".format(layout=layout)
+            lines += weekarg + topicarg + sessionarg + practicalarg + """ --metadata layout={layout}""".format(layout=layout)
         if ny.header_field('ghub', fields):
             ghub = ny.header_field('ghub', fields)[0]
             lines += """ --metadata edit_url={local_edit}""".format(local_edit="https://github.com/{ghub_organization}/{ghub_repository}/edit/{ghub_branch}/{ghub_dir}/{base}.md".format(base=args.base, ghub_organization=ghub['organization'], ghub_repository=ghub['repository'], ghub_branch=ghub['branch'], ghub_dir=ghub['directory']))    
