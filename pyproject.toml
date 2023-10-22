@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "lamd"
+version = "0.1.3"
+description = "Package for converting collection of markdown files and macros into talks and notes."
+authors = ["Neil D. Lawrence <lawrennd@gmail.com>"]
+homepage = "https://github.com/lawrennd/lamd"
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+ndlpy = { git = "https://github.com/lawrennd/ndlpy.git", branch = "main" } # You might need to specify a version if the repository has tags.
+python-frontmatter = "*"
+pandas = "*"
+python-liquid = "*"
+
+[tool.poetry.dev-dependencies]
+# Add your dev dependencies here if necessary
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+# Script entries
+[tool.poetry.scripts]
+mdpp = "lamd.mdpp:main"
+flags = "lamd.flags:main"
+dependencies = "lamd.dependencies:main"
+mdfield = "lamd.mdfield:main"
+maketalk = "lamd.maketalk:main"
+makecv = "lamd.makecv:main"
+mdlist = "lamd.mdlist:main"
+
+# Optional dependencies
+# [tool.poetry.extras]
+# fancy-feature = ["django"]
