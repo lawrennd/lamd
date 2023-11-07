@@ -15,6 +15,7 @@ def main():
                         help="The filename where dependencies are being searched")
 
     parser.add_argument("-d", "--diagrams-dir", type=str, help="Directory to find the diagrams in")
+    parser.add_argument("-S", "--snippets-path", type=str, help="Directory to find the snippets in")
 
 
     args = parser.parse_args()
@@ -23,12 +24,17 @@ def main():
     if args.diagrams_dir:
         diagrams_dir = args.diagrams_dir
 
+    snippets_path = '..'
+    if args.snippets_path:
+        snippets_path = args.snippets_path
+
     if args.dependency == 'all':
         listfiles = nt.extract_all(args.filename)
         print(' '.join(listfiles))
 
     elif args.dependency == 'diagrams':
-        listfiles = nt.extract_diagrams(args.filename, diagrams_dir=diagrams_dir)
+        listfiles = nt.extract_diagrams(args.filename,
+                                        diagrams_dir=diagrams_dir)
         print(' '.join(listfiles))
 
     elif args.dependency == 'slidediagrams':
@@ -44,7 +50,8 @@ def main():
         print(' '.join(listfiles))
         
     elif args.dependency == 'inputs':    
-        listfiles = nt.extract_inputs(args.filename)
+        listfiles = nt.extract_inputs(args.filename, 
+                                      snippets_path=snippets_path)
         print(args.filename + ' ' + ' '.join(listfiles))
 
     elif args.dependency == 'bibinputs':
