@@ -39,7 +39,10 @@ def main():
                         help="Whether to remove whitespace from gpp files.")
 
     parser.add_argument("-I", "--include-path", type=str,
-                        help="include diractories")
+                        help="include directories")
+
+    parser.add_argument("-S", "--snippets-path", type=str,
+                        help="Location of snippets to include directories")
 
     parser.add_argument("-F", "--format", type=str,
                        choices=['notes', 'slides', 'code'],
@@ -145,10 +148,14 @@ def main():
     arglist.append('-DscriptsDir={scripts_dir}'.format(scripts_dir=scripts_dir))
     arglist.append('-DwriteDiagramsDir={write_diagrams_dir}'.format(write_diagrams_dir=write_diagrams_dir))
 
-    arglist.append('-I.')
     if args.include_path:
         arglist.append('-I{include}'.format(include=args.include_path))
-    arglist.append("-I{macro_dir}".format(macro_dir=INCLUDE))
+    arglist.append("-I{macro_path}".format(macro_path=INCLUDE))
+    # Have the snippets directory specified explicitly
+    if args.snippets_path:
+        arglist.append("-I{snippets_path}".format(snippets_path=args.snippets_path))
+    arglist.append('-I.')
+
     if args.output:
         arglist.append('-o {}'.format(args.output))
 
