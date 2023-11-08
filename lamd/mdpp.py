@@ -85,7 +85,10 @@ def main():
 
     args = parser.parse_args()
 
-    url = ny.config['url'] + ny.config['baseurl']
+    if "diagramsurl" in ny.config:
+        url = ny.config["diagramsurl"]
+    else:
+        url = ny.config['url'] + ny.config['baseurl']
     # For on line use the url to source diragrams.
     if args.to == "html" or args.to=="ipynb":
         diagrams_dir =  url + ny.config['diagramsdir']
@@ -144,9 +147,14 @@ def main():
             arglist.append('-DHELPERCODE=1')
             arglist.append('-DPLOTCODE=1')
 
-    arglist.append('-DdiagramsDir={diagrams_dir}'.format(diagrams_dir=diagrams_dir))
-    arglist.append('-DscriptsDir={scripts_dir}'.format(scripts_dir=scripts_dir))
-    arglist.append('-DwriteDiagramsDir={write_diagrams_dir}'.format(write_diagrams_dir=write_diagrams_dir))
+    arglist.append(f'-DdiagramsDir={diagrams_dir}')
+    arglist.append(f'-DscriptsDir={scripts_dir}')
+    arglist.append(f'-DwriteDiagramsDir={write_diagrams_dir}')
+    talks_dir = '/Users/neil/lawrennd/talks'
+    arglist.append(f'-Dtalksdir={talks_dir}')
+    github_baseurl = 'https://github.com/lawrennd/snippets/edit/main/'
+    arglist.append(f'-DgithubBaseUrl={github_baseurl}')
+    #arglist.append(f'-Dgithubdir')
 
     if args.include_path:
         arglist.append('-I{include}'.format(include=args.include_path))
