@@ -34,25 +34,41 @@ def main():
 
     elif args.dependency == 'diagrams':
         listfiles = nt.extract_diagrams(args.filename,
-                                        diagrams_dir=diagrams_dir)
+                                        diagrams_dir=diagrams_dir,
+                                        snippets_path=snippets_path)
         print(' '.join(listfiles))
 
     elif args.dependency == 'slidediagrams':
-        listfiles = nt.extract_diagrams(args.filename, absolute_path=False, diagram_exts=['svg'], diagrams_dir=diagrams_dir)
+        listfiles = nt.extract_diagrams(args.filename,
+                                        absolute_path=False,
+                                        diagram_exts=['svg'],
+                                        diagrams_dir=diagrams_dir,
+                                        snippets_path=snippets_path)
         print(' '.join(listfiles))
 
     elif args.dependency == 'texdiagrams':
-        listfiles = nt.extract_diagrams(args.filename, absolute_path=False, diagram_exts=['pdf'], diagrams_dir=diagrams_dir)
+        listfiles = nt.extract_diagrams(args.filename,
+                                        absolute_path=False,
+                                        diagram_exts=['pdf'],
+                                        diagrams_dir=diagrams_dir,
+                                        snippets_path=snippets_path)
         print(' '.join(listfiles))
 
     elif args.dependency == 'docxdiagrams':
-        listfiles = nt.extract_diagrams(args.filename, absolute_path=False, diagram_exts=['emf'], diagrams_dir=diagrams_dir)
+        listfiles = nt.extract_diagrams(args.filename,
+                                        absolute_path=False,
+                                        diagram_exts=['emf'],
+                                        diagrams_dir=diagrams_dir,
+                                        snippets_path=snippets_path)
         print(' '.join(listfiles))
         
     elif args.dependency == 'inputs':    
         listfiles = nt.extract_inputs(args.filename, 
                                       snippets_path=snippets_path)
-        print(args.filename + ' ' + ' '.join(listfiles))
+        if len(listfiles)>0:
+            print(' '.join(listfiles))
+        else:
+            print('')
 
     elif args.dependency == 'bibinputs':
         listfiles = nt.extract_bibinputs(args.filename)

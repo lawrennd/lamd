@@ -36,4 +36,4 @@ ${BASE}.include.tex: ${BASE}.notes.tex.markdown ${TEXDEPS}
 		-o ${BASE}.include.tex  \
 		${BASE}.notes.tex.markdown 
 	cp ${BASE}.include.tex ${TEXDIR}/${BASE}.include.tex
-	../copy_web_diagrams.sh ${BASE}.md texdiagrams ${TEXDIR}/diagrams	
+	${SCRIPTDIR}/copy_web_diagrams.sh ${BASE}.md texdiagrams ${TEXDIR}/diagrams	

@@ -6,6 +6,12 @@ authors = ["Neil D. Lawrence <lawrennd@gmail.com>"]
 homepage = "https://github.com/lawrennd/lamd"
 license = "MIT"
 readme = "README.md"
+include = [
+{ path = "macros", format = ["sdist", "wheel"] },
+{ path = "templates", format = ["sdist", "wheel"] },
+{ path = "makefiles", format = ["sdist", "wheel"] },
+{ path = "scripts", format = ["sdist", "wheel"] },
+]
 
 [tool.poetry.dependencies]
 python = ">=3.9"
@@ -17,6 +23,7 @@ python-liquid = "*"
 [tool.poetry.dev-dependencies]
 # Add your dev dependencies here if necessary
 
+    
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
