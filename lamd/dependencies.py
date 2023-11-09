@@ -20,7 +20,7 @@ def main():
 
     args = parser.parse_args()
 
-    diagrams_dir = '../slides/diagrams'
+    diagrams_dir = '/Users/neil/lawrennd/slides/diagrams'
     if args.diagrams_dir:
         diagrams_dir = args.diagrams_dir
 
