@@ -10,7 +10,8 @@ import frontmatter as fm
 
 import ndlpy.yaml as ny
 
-INCLUDE = os.path.join(os.path.dirname(__file__), "macros")
+MACROS = os.path.join(os.path.dirname(__file__), "macros")
+INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
 
 def main():
 
@@ -158,7 +159,7 @@ def main():
 
     if args.include_path:
         arglist.append('-I{include}'.format(include=args.include_path))
-    arglist.append("-I{macro_path}".format(macro_path=INCLUDE))
+    arglist.append("-I{macro_path}".format(macro_path=MACROS))
     # Have the snippets directory specified explicitly
     if args.snippets_path:
         arglist.append("-I{snippets_path}".format(snippets_path=args.snippets_path))
@@ -177,11 +178,11 @@ def main():
         
     if args.replace_notation:
         before_text += '\n\n'
-        with open('../_includes/talk-notation.tex', 'r') as fd:
+        with open(os.path.join(INCLUDES, 'talk-notation.tex'), 'r') as fd:
             before_text += fd.read()
 
     # Read in talk-macros.gpp which loads in the other macro files.
-    with open(os.path.join(INCLUDE, 'talk-macros.gpp')) as f:
+    with open(os.path.join(MACROS, 'talk-macros.gpp')) as f:
         before_text += f.read()
             
 

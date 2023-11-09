@@ -22,7 +22,8 @@ PP=mdpp
 PPFLAGS=-T 
 PPFLAGS=$(shell flags pp $(BASE))
 
-BIBFLAGS=--bibliography=../lawrence.bib --bibliography=../other.bib --bibliography=../zbooks.bib 
+BIBDIRECTORY=$(shell mdfield bibdir ${BASE}.md)
+BIBFLAGS=--bibliography=${BIBDIRECTORY}/lawrence.bib --bibliography=${BIBDIRECTORY}/other.bib --bibliography=${BIBDIRECTORY}/zbooks.bib 
 
 CITEFLAGS=--citeproc --csl=../elsevier-harvard.csl ${BIBFLAGS}
 
