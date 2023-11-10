@@ -10,12 +10,13 @@ include = [
 { path = "macros", format = ["sdist", "wheel"] },
 { path = "templates", format = ["sdist", "wheel"] },
 { path = "makefiles", format = ["sdist", "wheel"] },
+{ path = "includes", format = ["sdist", "wheel"] },
 { path = "scripts", format = ["sdist", "wheel"] },
 ]
 
 [tool.poetry.dependencies]
 python = ">=3.9"
-ndlpy = { git = "https://github.com/lawrennd/ndlpy.git", branch = "main" } # You might need to specify a version if the repository has tags.
+#ndlpy = { git = "https://github.com/lawrennd/ndlpy.git", branch = "main" } # You might need to specify a version if the repository has tags.
 python-frontmatter = "*"
 pandas = "*"
 python-liquid = "*"

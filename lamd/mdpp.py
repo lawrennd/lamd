@@ -9,12 +9,13 @@ import argparse
 import frontmatter as fm
 
 import ndlpy.yaml as ny
+import ndlpy.config as cf
 
 MACROS = os.path.join(os.path.dirname(__file__), "macros")
 INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
 
 def main():
-
+    config = cf.load_user_config(["_lamd.yml", "_config.yml"], directory=".")
     parser = argparse.ArgumentParser()
 
     parser.add_argument("filename", type=str,
@@ -86,18 +87,18 @@ def main():
 
     args = parser.parse_args()
 
-    if "diagramsurl" in ny.config:
-        url = ny.config["diagramsurl"]
+    if "diagramsurl" in config:
+        url = config["diagramsurl"]
     else:
-        url = ny.config['url'] + ny.config['baseurl']
+        url = config['url'] + config['baseurl']
     # For on line use the url to source diragrams.
     if args.to == "html" or args.to=="ipynb":
-        diagrams_dir =  url + ny.config['diagramsdir']
+        diagrams_dir =  url + config['diagramsdir']
     else:
-        diagrams_dir = ny.config['diagramsdir']
+        diagrams_dir = config['diagramsdir']
 
-    scripts_dir = ny.config['scriptsdir']
-    write_diagrams_dir = ny.config['writediagramsdir']
+    scripts_dir = config['scriptsdir']
+    write_diagrams_dir = config['writediagramsdir']
     if args.diagrams_dir:
         diagrams_dir = args.diagrams_dir
 
