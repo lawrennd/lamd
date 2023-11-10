@@ -29,7 +29,7 @@ def main():
         snippets_path = args.snippets_path
 
     if args.dependency == 'all':
-        listfiles = nt.extract_all(args.filename)
+        listfiles = nt.extract_all(args.filename, user_file=["_lamd.yml", "_config.yml"])
         print(' '.join(listfiles))
 
     elif args.dependency == 'diagrams':
