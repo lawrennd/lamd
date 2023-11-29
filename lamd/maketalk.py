@@ -5,7 +5,7 @@ import argparse
 
 import ndlpy.talk as nt
 import ndlpy.yaml as ny
-import ndlpy.config as cf
+import ndlpy.settings as settings
 
 import lamd
 
@@ -36,9 +36,9 @@ def main():
         try:
             answer = nt.talk_field(field, f"{base}.md")
         except ny.FileFormatError:
-            config = cf.load_config(user_file=["_lamd.yml", "_config.yml"], directory=".")
-            if field in config:
-                answer= config[field]
+            settings = settings.Settings(user_file=["_lamd.yml", "_config.yml"], directory=".")
+            if field in settings:
+                answer = settings[field]
             else:
                 answer = ''
     

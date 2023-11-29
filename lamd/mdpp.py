@@ -9,13 +9,13 @@ import argparse
 import frontmatter as fm
 
 import ndlpy.yaml as ny
-import ndlpy.config as cf
+import ndlpy.settings as settings
 
 MACROS = os.path.join(os.path.dirname(__file__), "macros")
 INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
 
 def main():
-    config = cf.load_user_config(["_lamd.yml", "_config.yml"], directory=".")
+    settings = settings.Settings(user_file=["_lamd.yml", "_config.yml"], directory=".")
     parser = argparse.ArgumentParser()
 
     parser.add_argument("filename", type=str,
@@ -87,18 +87,18 @@ def main():
 
     args = parser.parse_args()
 
-    if "diagramsurl" in config:
-        url = config["diagramsurl"]
+    if "diagramsurl" in settings:
+        url = settings["diagramsurl"]
     else:
-        url = config['url'] + config['baseurl']
+        url = settings['url'] + settings['baseurl']
     # For on line use the url to source diragrams.
     if args.to == "html" or args.to=="ipynb":
-        diagrams_dir =  url + config['diagramsdir']
+        diagrams_dir =  url + settings['diagramsdir']
     else:
-        diagrams_dir = config['diagramsdir']
+        diagrams_dir = settings['diagramsdir']
 
-    scripts_dir = config['scriptsdir']
-    write_diagrams_dir = config['writediagramsdir']
+    scripts_dir = settings['scriptsdir']
+    write_diagrams_dir = settings['writediagramsdir']
     if args.diagrams_dir:
         diagrams_dir = args.diagrams_dir
 
@@ -159,11 +159,13 @@ def main():
     #arglist.append(f'-Dgithubdir')
 
     if args.include_path:
-        arglist.append('-I{include}'.format(include=args.include_path))
+        for include_dir in args.include_path.split(":"):
+            arglist.append(f"-I{include_dir}")
     arglist.append("-I{macro_path}".format(macro_path=MACROS))
     # Have the snippets directory specified explicitly
     if args.snippets_path:
-        arglist.append("-I{snippets_path}".format(snippets_path=args.snippets_path))
+        for snippet_dir in args.snippets_path.split(":"):
+            arglist.append(f"-I{snippet_dir}")
     arglist.append('-I.')
 
     if args.output:
@@ -192,13 +194,17 @@ def main():
             after_text = fd.read()
     else:
         after_text = ''
-
-    default_file = '_config.yml'
-
-    if os.path.isfile(default_file):
-        with open(default_file, 'r') as f:
-            writepost = fm.load(f)
-    else:
+        
+    # Try _lamd.yml for default entries then _config.yml
+    default_files = ['_lamd.yml', "_config.yml"]
+    found_file = False
+    for file in default_files:
+        if os.path.isfile(file):
+            found_file = True
+            with open(file, 'r') as f:
+                writepost = fm.load(f)
+            break
+    if not found_file:
         writepost = fm.loads("")
         
     if args.no_header:

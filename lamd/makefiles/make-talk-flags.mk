@@ -54,8 +54,8 @@ TEXDEPS=$(shell dependencies texdiagrams $(BASE).md --snippets-path $(SNIPPETSDI
 ALL=$(shell dependencies all $(BASE).md --snippets-path $(SNIPPETSDIR))
 
 POSTFLAGS=$(shell flags post $(BASE))
-PPTXFLAGS=$(shell flags pptx $(BASE))
-DOCXFLAGS=$(shell flags docx $(BASE))
+PPTXFLAGS=$(shell flags pptx $(BASE)) --resource-path .:$(INCLUDESDIR):$(SLIDESDIR)
+DOCXFLAGS=$(shell flags docx $(BASE)) --resource-path .:$(INCLUDESDIR):$(SLIDESDIR)
 SLIDEFLAGS=$(shell flags reveal $(BASE))
 
 

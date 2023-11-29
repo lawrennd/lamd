@@ -150,14 +150,13 @@ def main():
 
     out = prefix + args.base
 
+    lines = ""
     if args.output == 'prefix':
         print(prefix)
 
     elif args.output == 'post':
         if date is not None:
-            lines = """--metadata date={date} """
-        else:
-            lines = ""
+            lines += """--metadata date={date} """
         for ext in ['docx', 'pptx']:
             if ny.header_field(ext, fields, user_file):
                 lines += """ --metadata {ext}={{out}}.{ext}""".format(ext=ext)
@@ -171,26 +170,24 @@ def main():
             lines += """ --metadata notespdf={out}.notes.pdf"""
         if ny.header_field('pdf', fields, user_file):
             lines += """ --metadata pdf={out}.pdf"""
-        if args.output == 'post':
-            lines += weekarg + topicarg + sessionarg + practicalarg + """ --metadata layout={layout}""".format(layout=layout)
+            
+        lines += weekarg + topicarg + sessionarg + practicalarg + f" --metadata layout={layout}"
         if ny.header_field('ghub', fields, user_file=["_lamd.yml", "_config.yml"]):
             ghub = ny.header_field('ghub', fields, user_file)[0]
             lines += """ --metadata edit_url={local_edit}""".format(local_edit="https://github.com/{ghub_organization}/{ghub_repository}/edit/{ghub_branch}/{ghub_dir}/{base}.md".format(base=args.base, ghub_organization=ghub['organization'], ghub_repository=ghub['repository'], ghub_branch=ghub['branch'], ghub_dir=ghub['directory']))    
         print(lines.format(out=out, date=date))
 
     elif args.output=='docx':
-        lines = '--reference-doc ' + ny.header_field('dotx', fields, user_file)
+        lines += '--reference-doc ' + ny.header_field('dotx', fields, user_file)
         print(lines)
 
     elif args.output=='pptx':
-        lines = '--reference-doc ' + ny.header_field('potx', fields, user_file)
+        lines += '--reference-doc ' + ny.header_field('potx', fields, user_file)
         print(lines)
 
     elif args.output=='reveal':
-        lines = '--slide-level 2 ' + revealjs_urlarg + talkthemearg + talkcssarg
+        lines += '--slide-level 2 ' + revealjs_urlarg + talkthemearg + talkcssarg
         print(lines)
-
-
 
     elif args.output=='pp':
         lines = '--include-path ./..'
@@ -199,5 +196,6 @@ def main():
             lines += """ --assignment"""
         print(lines)
 
+    
 if __name__ == "__main__":
     sys.exit(main())
