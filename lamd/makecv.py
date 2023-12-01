@@ -3,6 +3,11 @@
 import os
 import argparse
 
+import ndlpy.talk as nt
+import ndlpy.yaml as ny
+from ndlpy.settings import Settings
+
+import lamd
 
 def main():
     parser = argparse.ArgumentParser()
@@ -37,7 +42,7 @@ def main():
         try:
             answer = nt.talk_field(field, f"{base}.md")
         except ny.FileFormatError:
-            settings = settings.Settings(user_file=["_lamd.yml", "_config.yml"], directory=".")
+            settings = Settings(user_file=["_lamd.yml", "_config.yml"], directory=".")
             if field in settings:
                 answer = settings[field]
             else:
