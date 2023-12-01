@@ -22,9 +22,13 @@ PP=mdpp
 PPFLAGS=-T 
 PPFLAGS=$(shell flags pp $(BASE))
 
-BIBFLAGS=--bibliography=../lawrence.bib --bibliography=../other.bib --bibliography=../zbooks.bib 
+BIBDIRECTORY=$(shell mdfield bibdir ${BASE}.md)
 
-CITEFLAGS=--citeproc --csl=../elsevier-harvard.csl ${BIBFLAGS}
+# Bibliography information not yet automatically extracted
+BIBFLAGS=--bibliography=${BIBDIRECTORY}/lawrence.bib --bibliography=${BIBDIRECTORY}/other.bib --bibliography=${BIBDIRECTORY}/zbooks.bib 
+BIBDEPS=${BIBDIRECTORY}/lawrence.bib ${BIBDIRECTORY}/other.bib ${BIBDIRECTORY}/zbooks.bib 
+
+CITEFLAGS=--citeproc --csl=${INCLUDESDIR}/elsevier-harvard.csl ${BIBFLAGS}
 
 PDSFLAGS=-s ${CITEFLAGS} --mathjax=${MATHJAX} 
 
@@ -43,7 +47,6 @@ SESSION=$(shell mdfield session $(BASE).md)
 
 DEPS=$(shell dependencies inputs $(BASE).md --snippets-path $(SNIPPETSDIR))
 DIAGDEPS=$(shell dependencies diagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
-BIBDEPS=$(shell dependencies bibinputs $(BASE).md --snippets-path $(SNIPPETSDIR))
 DOCXDEPS=$(shell dependencies docxdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
 PPTXDEPS=$(shell dependencies docxdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
 TEXDEPS=$(shell dependencies texdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
@@ -51,8 +54,8 @@ TEXDEPS=$(shell dependencies texdiagrams $(BASE).md --snippets-path $(SNIPPETSDI
 ALL=$(shell dependencies all $(BASE).md --snippets-path $(SNIPPETSDIR))
 
 POSTFLAGS=$(shell flags post $(BASE))
-PPTXFLAGS=$(shell flags pptx $(BASE))
-DOCXFLAGS=$(shell flags docx $(BASE))
+PPTXFLAGS=$(shell flags pptx $(BASE)) --resource-path .:$(INCLUDESDIR):$(SLIDESDIR)
+DOCXFLAGS=$(shell flags docx $(BASE)) --resource-path .:$(INCLUDESDIR):$(SLIDESDIR)
 SLIDEFLAGS=$(shell flags reveal $(BASE))
 
 

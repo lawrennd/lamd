@@ -12,15 +12,16 @@ import liquid as pl
 
 import ndlpy.data as nd
 
-from .config import *
-from .log import Logger
+import ndlpy.context as context
+from ndlpy.log import Logger
 
 global SINCE_YEAR
 
+cntxt = context.Context(name="lamd")
 log = Logger(
     name=__name__,
-    level=config["logging"]["level"],
-    filename=config["logging"]["filename"]
+    level=cntxt["logging"]["level"],
+    filename=cntxt["logging"]["filename"]
 )
 
 

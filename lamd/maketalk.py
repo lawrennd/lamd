@@ -5,6 +5,7 @@ import argparse
 
 import ndlpy.talk as nt
 import ndlpy.yaml as ny
+import ndlpy.settings as settings
 
 import lamd
 
@@ -19,31 +20,33 @@ def main():
     base = os.path.splitext(basename)[0]
 
     dirname = os.path.dirname(lamd.__file__)
-    include_dir = os.path.join(dirname, "makefiles")
+    make_dir = os.path.join(dirname, "makefiles")
+    includes_dir = os.path.join(dirname, "includes")
     script_dir = os.path.join(dirname, "scripts")
     f = open('makefile', 'w+')
     f.write(f"BASE={base}\n")
-    f.write(f"INCLUDEDIR={include_dir}\n")
+    f.write(f"MAKEFILESDIR={make_dir}\n")
+    f.write(f"INCLUDESDIR={includes_dir}\n")
     f.write(f"SCRIPTDIR={script_dir}\n")
     
-    f.write(f"include $(INCLUDEDIR)/make-talk-flags.mk\n")
-    f.write(f"include $(INCLUDEDIR)/make-talk.mk\n")
+    f.write(f"include $(MAKEFILESDIR)/make-talk-flags.mk\n")
+    f.write(f"include $(MAKEFILESDIR)/make-talk.mk\n")
     f.close()
-    field = "snippetsdir"
-    try:
-        answer = nt.talk_field(field, f"{base}.md")
-    except ny.FileFormatError:
-        if field in ny.config:
-            answer= ny.config[field]
-        else:
-            answer = ''
-        answer = nt.talk_field(field, filename)
+    for field in ["snippetsdir", "bibdir"]:
+        try:
+            answer = nt.talk_field(field, f"{base}.md")
+        except ny.FileFormatError:
+            settings = settings.Settings(user_file=["_lamd.yml", "_config.yml"], directory=".")
+            if field in settings:
+                answer = settings[field]
+            else:
+                answer = ''
     
-    # Hacky way to make sure snippets are pulled down
-    os.system(f"CURDIR=`pwd`;cd {answer}; git pull; cd $CURDIR")
+        # Hacky way to make sure snippets are pulled down
+        os.system(f"CURDIR=`pwd`;cd {answer}; git pull; cd $CURDIR")
 
     os.system('git pull')
-    os.system(f"make --include-dir {include_dir} all")
+    os.system(f"make all")
 
 if __name__ == "__main__":
     sys.exit(main())
