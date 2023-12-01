@@ -439,7 +439,6 @@ cvlists["exstudents"]["filter"] = [
         },
     },
 ]
-
 cvlists["pdras"] = cvlists["students"].copy()
 cvlists["pdras"]["listtemplate"] = "listpdra"
 cvlists["pdras"]["filter"] = [
@@ -463,6 +462,19 @@ cvlists["pdras"]["filter"] = [
         "args": {
             "column": "supervisor",
             "value": "ndl21",
+        },
+    },
+]
+
+cvlists["expdras"] = cvlists["pdras"].copy()
+del cvlists["expdras"]["augmentor"]
+del cvlists["expdras"]["sorter"]
+cvlists["expdras"]["filter"] = [
+    {
+        "f": onbool,
+        "args": {
+            "column": "current",
+            "invert": True,
         },
     },
 ]
