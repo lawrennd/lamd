@@ -8,15 +8,15 @@ all: $(ALL)
 ##${BASE}.notes.tex ${BASE}.notes.pdf 
 
 
-include $(INCLUDEDIR)/make-figures.mk
-include $(INCLUDEDIR)/make-python.mk
-include $(INCLUDEDIR)/make-slides.mk 
-include $(INCLUDEDIR)/make-notes.mk
-include $(INCLUDEDIR)/make-tex.mk
-include $(INCLUDEDIR)/make-paper.mk
-include $(INCLUDEDIR)/make-post.mk
-include $(INCLUDEDIR)/make-docx.mk
-include $(INCLUDEDIR)/make-ipynb.mk
+include $(MAKEFILESDIR)/make-figures.mk
+include $(MAKEFILESDIR)/make-python.mk
+include $(MAKEFILESDIR)/make-slides.mk 
+include $(MAKEFILESDIR)/make-notes.mk
+include $(MAKEFILESDIR)/make-tex.mk
+include $(MAKEFILESDIR)/make-paper.mk
+include $(MAKEFILESDIR)/make-post.mk
+include $(MAKEFILESDIR)/make-docx.mk
+include $(MAKEFILESDIR)/make-ipynb.mk
 
 
 clean:
