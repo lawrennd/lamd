@@ -12,8 +12,11 @@ import liquid as pl
 
 import ndlpy.data as nd
 
+import ndlpy.access as access
+
 import ndlpy.context as context
 from ndlpy.log import Logger
+from ndlpy.util import remove_nan
 
 global SINCE_YEAR
 
@@ -508,12 +511,24 @@ def main():
     now_year = now.year
 
     if args.since_year:
-        print("Since Year!")
         set_since_year(args.since_year)
     else:
         set_since_year(now_year - 5)
-        
-    df = pd.DataFrame(nd.loaddata(args.file))
+    if type(args.file) is list:
+        data = []
+        for filename in args.file:
+            new_data = access.read_file(filename)
+            typ = type(new_data)
+            if typ is list:
+                data += new_data
+            elif typ is dict:
+                data.append(new_data)
+            else:
+                raise ValueError(f"data loaded from \"{filename}\" is of invalid type \"{typ}\".")
+        df = pd.DataFrame(data)
+    elif type(args.file) is str:
+        data = access.read_file(args.file)
+        df = pd.DataFrame(data)
     text = ''
 
 
@@ -570,17 +585,17 @@ def main():
     else:
         print(text)
 
-def remove_nan(dictionary):
-    """Delete missing entries from dictionary"""
-    dictionary2 = dictionary.copy()
-    for key, entry in dictionary.items():
-        if type(entry) is dict:
-            dictionary2[key] = remove_nan(entry)
-        else:
-            isna = pd.isna(entry)
-            if type(isna) is bool and isna:
-                del(dictionary2[key])
-    return dictionary2
+# def remove_nan(dictionary):
+#     """Delete missing entries from dictionary"""
+#     dictionary2 = dictionary.copy()
+#     for key, entry in dictionary.items():
+#         if type(entry) is dict:
+#             dictionary2[key] = remove_nan(entry)
+#         else:
+#             isna = pd.isna(entry)
+#             if type(isna) is bool and isna:
+#                 del(dictionary2[key])
+#     return dictionary2
                 
  
 def addcolumns(df, columns):
