@@ -192,8 +192,12 @@ def main():
     elif args.output=='pp':
         lines = '--include-path ./..'
         # Flags for the preprocessor.
-        if ny.header_field('assignment', fields, user_file):
-            lines += """ --assignment"""
+        try:
+            if ny.header_field('assignment', fields, user_file):
+                lines += """ --assignment"""
+        except ny.FileFormatError:
+            pass
+        
         print(lines)
 
     

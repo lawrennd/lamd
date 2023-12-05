@@ -10,7 +10,7 @@ REVEALJS="https://inverseprobability.com/talks/slides/reveal.js/"
 
 POSTSHEADER=$(shell mdfield postssheader ${BASE}.md)
 ASSIGNMENT=$(shell mdfield assignment ${BASE}.md)
-NOTATION=$(shell mdfield notation ${BASE}.md)
+NOTATION=talk-notation.tex
 
 PREFIX=$(shell flags prefix ${BASE})
 
@@ -38,18 +38,30 @@ SINCEFLAGS=--meta-data talkYearSince=${TALKSINCE} meetingYearSince=${MEETINGSINC
 
 DEPS=$(shell dependencies inputs $(BASE).md)
 DIAGDEPS=$(shell dependencies diagrams $(BASE).md)
-BIBDEPS=$(shell dependencies bibinputs $(BASE).md)
+BIBDEPS=${BIBDIRECTORY}/lawrence.bib ${BIBDIRECTORY}/other.bib ${BIBDIRECTORY}/zbooks.bib 
+# BIBDEPS=$(shell dependencies bibinputs $(BASE).md)
 
 POSTFLAGS=$(shell flags post $(BASE))
 PPTXFLAGS=$(shell flags pptx $(BASE))
 DOCXFLAGS=$(shell flags docx $(BASE))
 SFLAGS=$(shell flags reveal $(BASE))
 
-TALKSDIR=/Users/neil/lawrennd/talks/_posts
-PUBLICATIONSDIR=/Users/neil/lawrennd/publications/_posts
-GROUPDIR=/Users/neil/mlatcl/mlatcl.github.io/_people
-DATADIR=/Users/neil/lawrennd/data
-PROJECTSDIR=${DATADIR}
+SNIPPETSDIR=$(shell mdfield snippetsdir $(BASE).md)
+DIAGRAMSDIR=$(shell mdfield diagramsdir $(BASE).md)
+WRITEDIAGRAMSDIR=$(shell mdfield writediagramsdir $(BASE).md)
+POSTSDIR=$(shell mdfield postsdir $(BASE).md)
+NOTESDIR=$(shell mdfield notesdir $(BASE).md)
+NOTEBOOKSDIR=$(shell mdfield notebooksdir $(BASE).md)
+SLIDESDIR=$(shell mdfield slidesdir $(BASE).md)
+TEXDIR=$(shell mdfield texdir $(BASE).md)
+WEEK=$(shell mdfield week $(BASE).md)
+SESSION=$(shell mdfield session $(BASE).md)
+
+TALKSDIR=$(shell mdfield talksdir $(BASE).md)
+PUBLICATIONSDIR=$(shell mdfield publicationsdir $(BASE).md)
+GROUPDIR=$(shell mdfield groupdir $(BASE).md)
+DATADIR=$(shell mdfield datadir $(BASE).md)
+PROJECTSDIR=$(shell mdfield projectsdir $(BASE).md)
 
 TALKLISTFILES=$(shell ${FIND} ${TALKSDIR} -type f)
 PUBLICATIONLISTFILES=$(shell ${FIND} ${PUBLICATIONSDIR} -type f)

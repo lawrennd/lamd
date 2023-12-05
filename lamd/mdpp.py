@@ -9,13 +9,13 @@ import argparse
 import frontmatter as fm
 
 import ndlpy.yaml as ny
-import ndlpy.settings as settings
+from ndlpy.settings import Settings
 
 MACROS = os.path.join(os.path.dirname(__file__), "macros")
 INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
 
 def main():
-    settings = settings.Settings(user_file=["_lamd.yml", "_config.yml"], directory=".")
+    settings = Settings(user_file=["_lamd.yml", "_config.yml"], directory=".")
     parser = argparse.ArgumentParser()
 
     parser.add_argument("filename", type=str,
