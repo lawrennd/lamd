@@ -2,10 +2,10 @@
 
 import sys
 import os
-import ndlpy.talk as nt
-import ndlpy.yaml as ny
-from ndlpy.settings import Settings
+import ndlpy.util.talk as nt
+import ndlpy.util.yaml as ny
 
+from ndlpy.config.interface import Interface
 
 def main():
     field = sys.argv[1]
@@ -14,9 +14,9 @@ def main():
     try:
         answer = nt.talk_field(field, filename)
     except ny.FileFormatError:
-        settings = Settings(user_file=["_lamd.yml", "_config.yml"], directory=".")
-        if field in settings:
-            answer = settings[field]
+        iface = Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
+        if field in iface:
+            answer = iface[field]
         else:
             answer = ''
     if type(answer) is str:

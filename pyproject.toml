@@ -16,7 +16,7 @@ include = [
 
 [tool.poetry.dependencies]
 python = ">=3.9"
-#ndlpy = { git = "https://github.com/lawrennd/ndlpy.git", branch = "main" } # You might need to specify a version if the repository has tags.
+ndlpy = { git = "https://github.com/lawrennd/ndlpy.git", branch = "main" } # You might need to specify a version if the repository has tags.
 python-frontmatter = "*"
 pandas = "*"
 python-liquid = "*"

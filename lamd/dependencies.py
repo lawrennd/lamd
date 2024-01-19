@@ -2,7 +2,7 @@
 
 import sys
 import argparse
-import ndlpy.talk as nt
+import ndlpy.util.talk as nt
 
 def main():
     parser = argparse.ArgumentParser()
