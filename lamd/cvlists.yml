@@ -1,0 +1,273 @@
+talks:
+  listtemplate: listtalk
+  compute:
+    preprocessor:
+    - function: convert_datetime
+      field: date
+    sorter:
+      function: descending
+      args:
+        by: date
+    augmentor:
+    - function: addmonth
+      field: month
+      args:
+        source: date
+    - function: addyear
+      field: year
+      args:
+        source: date
+    filter:
+      function: recent
+      args:
+        column: year
+
+publications:
+  listtemplate: listpaper
+  compute:
+    preprocessor:
+    - function: convert_datetime
+      field: date
+    - function: convert_datetime
+      field: published
+    - function: convert_int
+      field: year
+    augmentor:
+    - function: augmentmonth
+      field: month
+      args:
+        destination: month
+        source: published
+    - function: augmentyear
+      field: year
+      args:
+        destination: month
+        source: published
+    sorter:
+      function: descending
+      args:
+        by:
+        - year
+        - published
+    filter:
+      function: recent
+      args:
+        column: year
+        
+grants:
+  listtemplate: listgrant
+  compute:
+    preprocessor:
+    - function: convert_year_iso
+      field: start
+      args:
+        month: 1
+        day: 1
+    - function: convert_year_iso
+      field: end
+      args:
+        month: 12
+        day: 31
+    - function: convert_datetime
+      field: start
+    - function: convert_datetime
+      field: end
+    - function: convert_int
+      column: amount
+    augmentor:
+    - function: augmentcurrency
+      field: amountstr
+      args:
+        source: amount
+    sorter:
+      function: descending
+      args:
+        by:
+        - start
+        - end
+    filter:
+      function: current
+      args:
+        start: start
+        end: end
+        
+teaching:
+  listtemplate: listteaching
+  compute:
+    preprocessor:
+    - function: convert_datetime
+      field: start
+    - function: convert_datetime
+      field: end
+    sorter:
+      function: descending
+      args:
+        by:
+        - start
+        - end
+        - semester
+    filter:
+      function: current
+      args:
+        start: start
+        end: end
+        
+meetings:
+  listtemplate: listmeeting
+  compute:
+    preprocessor:
+    - function: convert_int
+      field: year
+    sorter:
+      function: descending
+      args:
+        by:
+        - year
+    filter:
+      function: recent
+      args:
+        column: year
+        
+students:
+  listtemplate: liststudent
+  compute:
+    preprocessor:
+    - function: convert_datetime
+      field: start
+    - function: convert_datetime
+      field: end
+    sorter:
+      function: descending
+      args:
+        by:
+        - start
+    augmentor:
+      function: addsupervisor
+      field: supervisor
+      args:
+        supervisor: ndl21
+    filter:
+    - function: current
+      args:
+        current: current
+        start: start
+        end: end
+    - function: columnis
+      args:
+        column: position
+        value: PhD Student
+    - function: columncontains
+      args:
+        column: supervisor
+        value: ndl21
+        
+exgrants:
+  listtemplate: listgrant
+  compute:
+    preprocessor:
+    - function: convert_year_iso
+      field: start
+      args:
+        month: 1
+        day: 1
+    augmentor:
+    - function: augmentcurrency
+      field: amountstr
+      args:
+        source: amount
+    sorter:
+      function: descending
+      args:
+        by:
+        - start
+        - end
+    filter:
+      function: former
+      args:
+        end: end
+
+exteaching:
+  listtemplate: listteaching
+  compute:
+    preprocessor:
+    - function: convert_datetime
+      field: start
+    - function: convert_datetime
+      field: end
+    sorter:
+      function: descending
+      args:
+        by:
+        - start
+        - end
+        - semester
+    filter:
+      function: former
+      args:
+        end: end
+
+exstudents:
+  listtemplate: liststudent
+  compute:
+    preprocessor:
+    - function: convert_datetime
+      field: start
+    - function: convert_datetime
+      field: end
+    sorter:
+      function: descending
+      args:
+        by:
+        - start
+    filter:
+    - function: onbool
+      args:
+        column: current
+        invert: true
+    - function: onbool 
+      args:
+        column: student
+pdras:
+  listtemplate: listpdra
+  compute:
+    preprocessor:
+    - function: convert_datetime
+      field: start
+    - function: convert_datetime
+      field: end
+    sorter:
+      function: descending
+      args:
+        by:
+        - start
+    augmentor:
+      function: addsupervisor
+      field: supervisor
+    filter:
+    - function: current
+      args:
+        current: current
+        start: start
+        end: end
+    - function: columnis 
+      args:
+        column: position
+        value: Research Associate
+    - function: columncontains
+      args:
+        column: supervisor
+        value: ndl21
+
+expdras:
+  listtemplate: listpdra
+  compute:
+    preprocessor:
+    - function: convert_datetime
+      field: start
+    - function: convert_datetime
+      field: end
+    filter:
+    - function: onbool 
+      args:
+        column: current
+        invert: true

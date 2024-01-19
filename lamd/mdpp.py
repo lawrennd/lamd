@@ -8,14 +8,14 @@ import os
 import argparse
 import frontmatter as fm
 
-import ndlpy.yaml as ny
-from ndlpy.settings import Settings
+import ndlpy.util.yaml as ny
+from ndlpy.config.interface import Interface
 
 MACROS = os.path.join(os.path.dirname(__file__), "macros")
 INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
 
 def main():
-    settings = Settings(user_file=["_lamd.yml", "_config.yml"], directory=".")
+    iface = Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
     parser = argparse.ArgumentParser()
 
     parser.add_argument("filename", type=str,
@@ -87,18 +87,18 @@ def main():
 
     args = parser.parse_args()
 
-    if "diagramsurl" in settings:
-        url = settings["diagramsurl"]
+    if "diagramsurl" in iface:
+        url = iface["diagramsurl"]
     else:
-        url = settings['url'] + settings['baseurl']
+        url = iface['url'] + iface['baseurl']
     # For on line use the url to source diragrams.
     if args.to == "html" or args.to=="ipynb":
-        diagrams_dir =  url + settings['diagramsdir']
+        diagrams_dir =  url + iface['diagramsdir']
     else:
-        diagrams_dir = settings['diagramsdir']
+        diagrams_dir = iface['diagramsdir']
 
-    scripts_dir = settings['scriptsdir']
-    write_diagrams_dir = settings['writediagramsdir']
+    scripts_dir = iface['scriptsdir']
+    write_diagrams_dir = iface['writediagramsdir']
     if args.diagrams_dir:
         diagrams_dir = args.diagrams_dir
 
