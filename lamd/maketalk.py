@@ -22,11 +22,13 @@ def main():
     dirname = os.path.dirname(lamd.__file__)
     make_dir = os.path.join(dirname, "makefiles")
     includes_dir = os.path.join(dirname, "includes")
+    templates_dir = os.path.join(dirname, "templates")
     script_dir = os.path.join(dirname, "scripts")
     f = open('makefile', 'w+')
     f.write(f"BASE={base}\n")
     f.write(f"MAKEFILESDIR={make_dir}\n")
     f.write(f"INCLUDESDIR={includes_dir}\n")
+    f.write(f"TEMPLATESDIR={templates_dir}\n")
     f.write(f"SCRIPTDIR={script_dir}\n")
     
     f.write(f"include $(MAKEFILESDIR)/make-talk-flags.mk\n")
