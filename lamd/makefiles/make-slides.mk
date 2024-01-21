@@ -6,7 +6,7 @@
 
 
 ${BASE}.slides.html: ${BASE}.slides.html.markdown ${BIBDEPS}
-	pandoc --template pandoc-revealjs-template ${PDSFLAGS} ${SLIDEFLAGS} --include-in-header=${INCLUDESDIR}/${SLIDESHEADER} -t revealjs ${BIBFLAGS} -o ${BASE}.slides.html  ${BASE}.slides.html.markdown 
+	pandoc --template ${TEMPLATESDIR}/pandoc/pandoc-revealjs-template ${PDSFLAGS} ${SLIDEFLAGS} --include-in-header=${INCLUDESDIR}/${SLIDESHEADER} -t revealjs ${BIBFLAGS} -o ${BASE}.slides.html  ${BASE}.slides.html.markdown 
 	cp ${BASE}.slides.html ${SLIDESDIR}/${OUT}.slides.html
 
 ${BASE}.pptx: ${BASE}.slides.pptx.markdown 

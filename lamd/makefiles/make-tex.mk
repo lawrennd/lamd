@@ -18,7 +18,7 @@ ${BASE}.notes.aux: ${BASE}.notes.tex
 
 ${BASE}.notes.tex: ${BASE}.notes.tex.markdown 
 	pandoc  -s \
-		--template pandoc-notes-tex-template.tex \
+		--template ${TEMPLATESDIR}/pandoc/pandoc-notes-tex-template.tex \
 		--number-sections \
 		--natbib \
 		${BIBFLAGS} \
@@ -28,7 +28,7 @@ ${BASE}.notes.tex: ${BASE}.notes.tex.markdown
 
 ${BASE}.include.tex: ${BASE}.notes.tex.markdown ${TEXDEPS}
 	pandoc  -s \
-		--template pandoc-include-tex-template.tex \
+		--template ${TEMPLATESDIR}/pandoc/pandoc-include-tex-template.tex \
 		--number-sections \
 		--natbib \
 		${BIBFLAGS} \
