@@ -1,0 +1,141 @@
+---
+title: "$title$"
+$if(venue)$
+venue: "$venue$"
+$endif$
+$if(abstract)$
+abstract: "$abstract$"
+$endif$
+$if(author)$
+author:
+$for(author)$
+- given: $author.given$
+  family: $author.family$
+  url: $author.url$
+  institute: $author.institute$
+  twitter: $author.twitter$
+  gscholar: $author.gscholar$
+  orcid: $author.orcid$
+$endfor$
+$endif$
+$if(edit_url)$
+edit_url: $edit_url$
+$endif$
+$if(blog)$
+blog: $blog$
+$endif$
+$if(blog1)$
+blog: $blog1$
+$endif$
+$if(blog2)$
+blog: $blog2$
+$endif$
+$if(date)$
+date: $date$
+published: $date$
+$endif$
+$if(time)$
+time: "$time$"
+$endif$
+$if(topic)$
+topic: $topic$
+$endif$
+$if(week)$
+week: $week$
+$endif$
+$if(session)$
+session: $session$
+$endif$
+$if(background)$
+background: $background$
+$endif$
+$if(featured_image)$
+featured_image: $featured_image$
+$endif$
+$if(icon)$
+icon: $icon$
+$endif$
+$if(reveal)$
+reveal: $reveal$
+$endif$
+$if(transition)$
+transition: $transition$
+$endif$
+$if(ipynb)$
+ipynb: $ipynb$
+$endif$
+$if(slidesipynb)$
+slidesipynb: $slidesipynb$
+$endif$
+$if(linkipynb)$
+linkipynb: $linkipynb$
+$endif$
+$if(pptx)$
+pptx: $pptx$
+$endif$
+$if(ppt)$
+ppt: $ppt$
+$endif$
+$if(pdf)$
+pdf: $pdf$
+$endif$
+$if(camtalk)$
+camtalk: $camtalk$
+$endif$
+$if(pdfslides)$
+pdfslides: $pdfslides$
+$endif$
+$if(pdfnotes)$
+pdfslides: $pdfnotes$
+$endif$
+$if(pdfworksheet)$
+pdfworksheet: $pdfworksheet$
+$endif$
+$if(hackmdslides)$
+hackmdslides: $hackmdslides$
+$endif$
+$if(hackmdnotes)$
+hackmdnotes: $hackmdnotes$
+$endif$
+$if(hackmdworksheet)$
+hackmdworksheet: $hackmdworksheet$
+$endif$
+$if(docx)$
+docx: $docx$
+$endif$
+$if(notespdf)$
+notespdf: $notespdf$
+$endif$
+$if(camvideo)$
+camvideo: "$camvideo$"
+$endif$
+$if(youtube)$
+youtube: "$youtube$"
+$endif$
+$if(youtube_start)$
+youtube_start: "$youtube_start$"
+$endif$
+$if(youtube_end)$
+youtube_end: "$youtube_end$"
+$endif$
+layout: $layout$
+categories:
+$if(categories)$
+$for(categories)$
+- $categories$
+$endfor$$else$
+- notes
+$endif$
+---
+
+$for(include-before)$
+$include-before$
+$endfor$
+
+
+$body$
+
+
+$for(include-after)$
+$include-after$
+$endfor$
