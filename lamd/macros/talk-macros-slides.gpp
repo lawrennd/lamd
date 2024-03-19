@@ -77,6 +77,13 @@
 }
 \endif}
 
+\define{\addatomic{title}{link}}{\ifndef{atomicPages}\defeval{\atomicPages}{
+   \page
+}
+\else
+\defeval{\atomicPages}{\atomicPages, \page}
+\endif}
+
 \define{\addguardian{title}{link}}{\ifndef{guardianArticles}\defeval{\guardianArticles}{* Guardian article on [\title](https://www.theguardian.com/media-network/\link)
 }
 \else
@@ -106,6 +113,7 @@
 \slides{
 * book: [The Atomic Human](https://www.penguin.co.uk/books/455130/the-atomic-human-by-lawrence-neil-d/9780241625248)
 * twitter: [\@lawrennd](https://twitter.com/lawrennd)
+* [The Atomic Human](https://www.penguin.co.uk/books/455130/the-atomic-human-bylawrence-neil-d/9780241625248)\ifdef{atomicPages} pages \atomicPages.\endif
 * podcast: [The Talking Machines](http://thetalkingmachines.com)\ifdef{guardianArticles}
 \guardianArticles\else
 * newspaper: [Guardian Profile Page](http://www.theguardian.com/profile/neil-lawrence)\endif}\ifdef{blogPosts}
