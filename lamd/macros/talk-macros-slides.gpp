@@ -77,11 +77,11 @@
 }
 \endif}
 
-\define{\addatomic{title}{link}}{\ifndef{atomicPages}\defeval{\atomicPages}{
-   \page
+\define{\addatomic{subject}{page}}{\ifndef{atomicPages}\defeval{\atomicPages}{
+   \subject \page
 }
 \else
-\defeval{\atomicPages}{\atomicPages, \page}
+\defeval{\atomicPages}{\atomicPages, \subject \page}
 \endif}
 
 \define{\addguardian{title}{link}}{\ifndef{guardianArticles}\defeval{\guardianArticles}{* Guardian article on [\title](https://www.theguardian.com/media-network/\link)

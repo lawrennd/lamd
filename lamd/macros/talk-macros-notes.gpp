@@ -55,7 +55,7 @@
 
 \define{\addguardian{title}{link}}{Guardian article on [\title](https://www.theguardian.com/media-network/\link)}
 \define{\addblog{title}{link}}{blog post on [\title](http://inverseprobability.com/\link).}
-\define{\addatomic{page}}{See @Lawrence-atomic24 p. \page.}
+\define{\addatomic{subject}{page}}{See @Lawrence-atomic24 \subject p. \page.}
 
 \define{\addreading{reference}{section}}{\ifndef{readingMaterial}\defeval{\readingMaterial}{* \section of \reference 
 }
@@ -78,7 +78,7 @@
 
 For more information on these subjects and more you might want to check the following resources.
 
-* book: [The Atomic Human](https://www.penguin.co.uk/books/455130/the-atomic-human-by-lawrence-neil-d/9780241625248)\ifdef{atomicPages} pages \atomicPages.\endif
+* book: [The Atomic Human](https://www.penguin.co.uk/books/455130/the-atomic-human-by-lawrence-neil-d/9780241625248)\ifdef{atomicPages}\endif
 * twitter: [\@lawrennd](https://twitter.com/lawrennd)
 * podcast: [The Talking Machines](http://thetalkingmachines.com)\ifdef{guardianArticles}
 \guardianArticles\else
