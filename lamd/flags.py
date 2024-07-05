@@ -2,8 +2,8 @@
 
 import argparse
 import os
-import ndlpy.util.talk as nt
-import ndlpy.util.yaml as ny
+import linguine.util.talk as nt
+import linguine.util.yaml as ny
 
 def main():
     parser = argparse.ArgumentParser()

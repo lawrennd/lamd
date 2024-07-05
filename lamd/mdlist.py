@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 from .utils import *
-from ndlpy import access
-from ndlpy.util import remove_nan
-from ndlpy.liquid import load_template_env
+from linguine import access
+from linguine.util import remove_nan
+from linguine.liquid import load_template_env
 
 from referia import assess
 
-from ndlpy import settings as st
+from linguine import settings as st
 
 global SINCE_YEAR
 

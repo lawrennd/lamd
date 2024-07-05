@@ -3,9 +3,9 @@
 import os
 import argparse
 
-import ndlpy.talk as nt
-import ndlpy.yaml as ny
-from ndlpy.settings import Settings
+import linguine.talk as nt
+import linguine.yaml as ny
+from linguine.settings import Settings
 
 import lamd
 

@@ -2,10 +2,10 @@
 
 import sys
 import os
-import ndlpy.util.talk as nt
-import ndlpy.util.yaml as ny
+import linguine.util.talk as nt
+import linguine.util.yaml as ny
 
-from ndlpy.config.interface import Interface
+from linguine.config.interface import Interface
 
 def main():
     field = sys.argv[1]
