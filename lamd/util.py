@@ -6,13 +6,13 @@ import argparse
 import numpy as np
 
 import pandas as pd
-import ndlpy.data as nd
+import linguine.data as nd
 
-import ndlpy.access as access
+import linguine.access as access
 
-import ndlpy.context as context
-from ndlpy.log import Logger
-from ndlpy.util import remove_nan
+import linguine.context as context
+from linguine.log import Logger
+from linguine.util import remove_nan
 
 
 cntxt = context.Context(name="lamd")
