@@ -2,7 +2,7 @@
 
 import sys
 import argparse
-import linguine.util.talk as nt
+import lynguine.util.talk as nt
 
 def main():
     parser = argparse.ArgumentParser()

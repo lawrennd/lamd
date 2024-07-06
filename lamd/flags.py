@@ -2,8 +2,8 @@
 
 import argparse
 import os
-import linguine.util.talk as nt
-import linguine.util.yaml as ny
+import lynguine.util.talk as nt
+import lynguine.util.yaml as ny
 
 def main():
     parser = argparse.ArgumentParser()

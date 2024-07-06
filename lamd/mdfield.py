@@ -2,10 +2,10 @@
 
 import sys
 import os
-import linguine.util.talk as nt
-import linguine.util.yaml as ny
+import lynguine.util.talk as nt
+import lynguine.util.yaml as ny
 
-from linguine.config.interface import Interface
+from lynguine.config.interface import Interface
 
 def main():
     field = sys.argv[1]

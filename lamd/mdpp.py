@@ -8,8 +8,8 @@ import os
 import argparse
 import frontmatter as fm
 
-import linguine.util.yaml as ny
-from linguine.config.interface import Interface
+import lynguine.util.yaml as ny
+from lynguine.config.interface import Interface
 
 MACROS = os.path.join(os.path.dirname(__file__), "macros")
 INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
