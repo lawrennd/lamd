@@ -16,7 +16,7 @@ include = [
 
 [tool.poetry.dependencies]
 python = ">=3.11,<4.0"
-#linguine = { git = "https://github.com/lawrennd/linguine.git", branch = "main" } # You might need to specify a version if the repository has tags.
+lynguine = { git = "https://github.com/lawrennd/lynguine.git", branch = "main" } # You might need to specify a version if the repository has tags.
 python-frontmatter = "*"
 pandas = "*"
 python-liquid = "*"

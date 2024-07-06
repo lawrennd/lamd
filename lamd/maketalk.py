@@ -3,9 +3,9 @@
 import os
 import argparse
 
-import linguine.util.talk as nt
-import linguine.util.yaml as ny
-import linguine.config.interface as interface
+import lynguine.util.talk as nt
+import lynguine.util.yaml as ny
+import lynguine.config.interface as interface
 
 import lamd
 
