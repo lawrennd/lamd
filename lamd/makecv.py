@@ -3,9 +3,8 @@
 import os
 import argparse
 
-import lynguine.talk as nt
-import lynguine.yaml as ny
-from lynguine.settings import Settings
+import lynguine.util.talk as nt
+import lynguine.util.yaml as ny
 
 import lamd
 
@@ -40,11 +39,11 @@ def main():
     f.close()
     for field in ["snippetsdir", "bibdir"]:
         try:
-            answer = nt.talk_field(field, f"{base}.md")
+            answer = nt.talk_field(field, f"{base}.md", user_file=["_lamd.yml", "_config.yml"])
         except ny.FileFormatError:
-            settings = Settings(user_file=["_lamd.yml", "_config.yml"], directory=".")
-            if field in settings:
-                answer = settings[field]
+            iface = lamd.config.interface.Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
+            if field in iface:
+                answer = iface[field]
             else:
                 answer = ''
     
@@ -53,7 +52,6 @@ def main():
 
     os.system('git pull')
     os.system(f"make all")
-
 
 if __name__ == "__main__":
     sys.exit(main())

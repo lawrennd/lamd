@@ -5,9 +5,9 @@ import argparse
 
 import lynguine.util.talk as nt
 import lynguine.util.yaml as ny
-import lynguine.config.interface as interface
 
 import lamd
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -36,9 +36,9 @@ def main():
     f.close()
     for field in ["snippetsdir", "bibdir"]:
         try:
-            answer = nt.talk_field(field, f"{base}.md")
+            answer = nt.talk_field(field, f"{base}.md", user_file=["_lamd.yml", "_config.yml"])
         except ny.FileFormatError:
-            iface = interface.Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
+            iface = lamd.config.interface.Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
             if field in iface:
                 answer = iface[field]
             else:

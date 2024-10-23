@@ -1,12 +1,10 @@
 \ifndef{talkPeople}
 \define{talkPeople}
 
-\defeval{\challengerMishraPicture{width}}{\circleHead{\diagramsDir/people/challenger-mishra.jpg}{Vincent Dutordoir}{\width}{https://acceleratescience.github.io/team/challenger-mishra.html}}
+\defeval{\challengerMishraPicture{width}}{\circleHead{\diagramsDir/people/challenger-mishra.jpg}{Challenger Mishra}{\width}{https://acceleratescience.github.io/team/challenger-mishra.html}}
 \defeval{\soumyaBanerjeePicture{width}}{\circleHead{\diagramsDir/people/soumya-banerjee.jpg}{Soumya Banerjee}{\width}{https://acceleratescience.github.io/team/soumya-banerjee.html}}
 \defeval{\samNallaperumaPicture{width}}{\circleHead{\diagramsDir/people/sam-nallaperuma.jpg}{Sam Nallaperuma}{\width}{https://acceleratescience.github.io/team/sam-nallaperuma.html}}
 \defeval{\sarahMorganPicture{width}}{\circleHead{\diagramsDir/people/sarah-morgan.jpg}{Sarah Morgan}{\width}{https://acceleratescience.github.io/team/sarah-morgan.html}}
-
-\defeval{\vincentDutordoirPicture{width}}{\circleHead{\diagramsDir/people/vincent-dutordoir.png}{Vincent Dutordoir}{\width}{https://vdutor.github.io/}}
 
 \defeval{\vincentDutordoirPicture{width}}{\circleHead{\diagramsDir/people/vincent-dutordoir.png}{Vincent Dutordoir}{\width}{https://vdutor.github.io/}}
 

@@ -5,14 +5,14 @@ import os
 import lynguine.util.talk as nt
 import lynguine.util.yaml as ny
 
-from lynguine.config.interface import Interface
+from lamd.config.interface import Interface
 
 def main():
     field = sys.argv[1]
     filename = sys.argv[2]
 
     try:
-        answer = nt.talk_field(field, filename)
+        answer = nt.talk_field(field, filename, user_file=["_lamd.yml", "_config.yml"])
     except ny.FileFormatError:
         iface = Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
         if field in iface:
