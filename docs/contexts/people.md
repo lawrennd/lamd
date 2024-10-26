@@ -25,8 +25,8 @@ The people context provides macros for displaying and referencing people consist
 
 Example usage:
 ```markdown
-\neillawrencePicture{15%}
-\carlhenrikekPicture{15%}
+\jackSprattPicture{15%}
+\peterPiperPicture{15%}
 ```
 
 ## Multiple People Display
