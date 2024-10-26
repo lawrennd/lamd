@@ -60,15 +60,17 @@ mdpeople verify -i people.yml
 
 Example people.yml:
 ```yaml
-- name: Neil Lawrence
-  image: \diagramsDir/people/neil-lawrence.png
-  url: https://inverseprobability.com/
+- given: Peter
+  family: Piper
+  image: people/peter-piper.png
+  url: https://pepper-pickers.com/
   title: Neil Lawrence
 
-- name: Carl Henrik Ek
-  image: \diagramsDir/people/carl-henrik-ek.png
-  url: https://carlhenrik.com
-  title: Carl Henrik Ek
+- given: Jack
+  family: Spratt
+  image: people/jacks.png
+  url: https://lowfatyoghurts.com/jackspratt
+  title: Jack Spratt
 ```
 
 Using generated macros:
