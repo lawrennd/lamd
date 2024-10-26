@@ -9,6 +9,7 @@ all: $(ALL)
 
 
 include $(MAKEFILESDIR)/make-figures.mk
+include $(MAKEFILESDIR)/make-people.mk
 include $(MAKEFILESDIR)/make-python.mk
 include $(MAKEFILESDIR)/make-slides.mk 
 include $(MAKEFILESDIR)/make-notes.mk

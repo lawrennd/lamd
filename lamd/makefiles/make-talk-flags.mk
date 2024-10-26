@@ -42,7 +42,7 @@ SLIDESDIR=$(shell mdfield slidesdir $(BASE).md)
 TEXDIR=$(shell mdfield texdir $(BASE).md)
 WEEK=$(shell mdfield week $(BASE).md)
 SESSION=$(shell mdfield session $(BASE).md)
-
+PEOPLEYAML=$(shell mdfield people $(BASE).md)
 
 
 DEPS=$(shell dependencies inputs $(BASE).md --snippets-path $(SNIPPETSDIR))
@@ -51,7 +51,10 @@ DOCXDEPS=$(shell dependencies docxdiagrams $(BASE).md --snippets-path $(SNIPPETS
 PPTXDEPS=$(shell dependencies docxdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
 TEXDEPS=$(shell dependencies texdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
 
-ALL=$(shell dependencies all $(BASE).md --snippets-path $(SNIPPETSDIR))
+# Add "talk-people.gpp" as the first entry in the dependencies to trigger a rebuild if the people file changes.
+ALL=talk-people.gpp
+ALL+=$(shell dependencies all $(BASE).md --snippets-path $(SNIPPETSDIR))
+
 
 POSTFLAGS=$(shell flags post $(BASE))
 PPTXFLAGS=$(shell flags pptx $(BASE)) --resource-path .:$(INCLUDESDIR):$(SLIDESDIR)
