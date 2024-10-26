@@ -38,6 +38,7 @@ mdfield = "lamd.mdfield:main"
 maketalk = "lamd.maketalk:main"
 makecv = "lamd.makecv:main"
 mdlist = "lamd.mdlist:main"
+mdpeople = "lamd.mdpeople:main"
 
 # Optional dependencies
 # [tool.poetry.extras]

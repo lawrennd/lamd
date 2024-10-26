@@ -28,36 +28,43 @@ circle {
 </defs><title>\alttext</title><image preserveAspectRatio="xMinYMin slice" width="100%" xlink:href="\filename" clip-path="url(#clip\urlCount)"/></svg>}
 """
 
-def create_person_macro(name: str, 
-                       image_path: str, 
-                       url: Optional[str] = None,
-                       title: Optional[str] = None) -> str:
+def create_person_macro(given: str,
+                        family: str,
+                        image_path: str, 
+                        url: Optional[str] = None,
+                        title: Optional[str] = None,
+                        crop: Optional[Dict] = None) -> str:
     """Creates a macro for a specific person.
     
     Args:
-        name: Person's name
+        given: Person's given name
+        family: Person's family name
         image_path: Path to their image
         url: Optional URL for their webpage
         title: Optional title/position
-    
-    Returns:
-        Macro definition as string
+        crop: Optional crop coordinates {llx, lly, urx, ury}
     """
     # Create macro name from person's name
-    macro_name = name.lower().replace(' ', '')
+    given_lowered = given[0].lower() + given[1:]
+    macro_name = given_lowered + family
+    macro_name.replace(' ', '').replace('-', '').replace('.', '')
     macro_name = ''.join(c for c in macro_name if c.isalnum())
-    
+
+    diagrams_dir = "\\diagramsDir" + "/" + image_path
     # Create display name
     display_name = title or name
     
-    # Build macro
-    macro = f"""\\defeval{{{macro_name}Picture{{width}}}}{{\\circleHead{{{image_path}}}{{{display_name}}}{{{{\width}}}}{"""
-    
+    if crop:
+        # Handle cropped images
+        macro = f"""\\defeval{{\\{macro_name}Picture{{width}}}}{{\\circleHead{{\includeimgclip{{{diagrams_dir}}}{{{crop['llx']}}}{{{crop['lly']}}}{{{crop['urx']}}}{{{crop['ury']}}}}}{{{display_name}}}{{\width}}"""
+    else:
+        # Standard image handling
+        macro = f"""\\defeval{{\\{macro_name}Picture{{width}}}}{{\\circleHead{{{diagrams_dir}}}{{{display_name}}}{{\width}}"""
+
     if url:
-        macro += url
-    
-    macro += "}}}"
-    
+        macro += f"""{{{url}}}"""
+        
+    macro += "}"
     return macro
 
 def generate_macros_file(people: Dict, output_file: str = "talk-people.gpp") -> None:
@@ -79,10 +86,12 @@ def generate_macros_file(people: Dict, output_file: str = "talk-people.gpp") -> 
         # Write each person's macro
         for person_info in people:
             macro = create_person_macro(
-                person_info['name'],
+                person_info['given'],
+                person_info['family'],
                 person_info['image'],
                 person_info.get('url'),
-                person_info.get('title')
+                person_info.get('title'),
+                person_info.get('crop')
             )
             f.write(f"\n{macro}\n")
         
