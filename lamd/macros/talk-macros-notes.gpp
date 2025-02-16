@@ -54,7 +54,9 @@
 \define{\references}{\section{References}}
 
 \define{\addguardian{title}{link}}{Guardian article on [\title](https://www.theguardian.com/media-network/\link)}
+\define{\addarticle{title}{link}}{[\title](\link)}
 \define{\addblog{title}{link}}{blog post on [\title](http://inverseprobability.com/\link).}
+\define{\addatomicblog{title}{link}}{blog post on [\title](http://the-atomic-human.ai/\link).}
 \define{\addatomic{subject}{page}}{See @Lawrence-atomic24 \subject p. \page.}
 
 \define{\addglossary{term}{definition}}{\ifndef{glossaryEntries}\defeval{\glossaryEntries}{* *\term*: \definition
