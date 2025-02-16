@@ -14,7 +14,7 @@
 \define{\notes{text}}{\text}
 \define{\notesfigure{block}}{\block}
 \define{\recommendation{text}}{**Recommendation**: \text}
-
+\define{\gls{term}}{\emph{\term}\footnote{See glossary entry for \term.}}
 
 \define{\newframe{contents}{name}{style}}{\contents}
 
@@ -57,6 +57,14 @@
 \define{\addblog{title}{link}}{blog post on [\title](http://inverseprobability.com/\link).}
 \define{\addatomic{subject}{page}}{See @Lawrence-atomic24 \subject p. \page.}
 
+\define{\addglossary{term}{definition}}{\ifndef{glossaryEntries}\defeval{\glossaryEntries}{* *\term*: \definition
+}
+\else
+\defeval{\glossaryEntries}{\glossaryEntries
+* *\term*: \definition
+}
+\endif}
+
 \define{\addreading{reference}{section}}{\ifndef{readingMaterial}\defeval{\readingMaterial}{* \section of \reference 
 }
 \else
@@ -88,6 +96,13 @@ For more information on these subjects and more you might want to check the foll
 * blog: [http://inverseprobability.com](http://inverseprobability.com/blog.html)
 \endif}
 
+\define{\glossary}{
+\ifdef{glossaryEntries}
+\subsection{Glossary}
+
+\glossaryEntries\undef{glossaryEntries}
+
+\endif}
 
 \define{\reading}{
 \ifdef{readingMaterial}
