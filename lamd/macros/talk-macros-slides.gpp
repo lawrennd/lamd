@@ -2,6 +2,7 @@
 \define{talkMacroSlides}
 
 \define{\slidenotes{slidetext}{notetext}}{\slidetext}
+\define{\gls{term}}{\emph{\term}}
 
 \define{\section{text}}{<!-- SECTION \text -->
 ## \text \ifdef{editText}
@@ -92,6 +93,14 @@
 }
 \endif}
 
+\define{\addglossary{term}{definition}}{\ifndef{glossaryEntries}\defeval{\glossaryEntries}{* *\term*: \definition
+}
+\else
+\defeval{\glossaryEntries}{\glossaryEntries
+* *\term*: \definition
+}
+\endif}
+
 \define{\addreading{reference}{section}}{\ifndef{readingMaterial}\defeval{\readingMaterial}{* \section of \reference 
 }
 \else
@@ -124,6 +133,13 @@
 
 \define{\references}{\newslide{References}{.scrollable}}
 
+\define{\glossary}{
+\ifdef{glossaryEntries}
+\subsection{Glossary}
+
+\glossaryEntries\undef{glossaryEntries}
+
+\endif}
 
 \define{\reading}{
 \ifdef{readingMaterial}
