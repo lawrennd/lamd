@@ -2,12 +2,12 @@
 
 from .utils import *
 from lynguine import access
-from lynguine.util import remove_nan
-from lynguine.liquid import load_template_env
+from lynguine.util.misc import remove_nan
+from lynguine.util.liquid import load_template_env
 
 from referia import assess
 
-from lynguine import settings as st
+from lynguine.config.interface import Interface
 
 global SINCE_YEAR
 
@@ -45,8 +45,8 @@ def main():
     now = pd.to_datetime(datetime.datetime.now().date())
     now_year = now.year
 
-    # Load in the settings specified for the relevant list type.
-    settings = st.Settings(user_file="cvlists.yml", field=args.listtype)
+    # Load in the interface specified for the relevant list type.
+    interface = Interface.from_file(user_file="cvlists.yml")[args.listtype]
     
     if args.since_year:
         set_since_year(args.since_year)
@@ -55,18 +55,20 @@ def main():
 
 
     # Set up the allocation based on command line.
-    settings["alllocation"] = {}
-    settings["allocation"]["filename"] = args.file
+    interface["allocation"] = {}
+    interface["allocation"]["filename"] = args.file
     if type(args.file) is list:
         data = []
-        settings["allocation"]["type"] = "list"
-        data = assess.Data(settings)
+        interface["allocation"]["type"] = "list"
+        data = assess.data.CustomDataFrame.from_flow(interface)
+        #data = assess.Data(settings)
         
     elif type(args.file) is str:
         settings["allocation"]["type"] = "auto"
-        data = assess.Data(settings)
+        data = assess.data.CustomDataFrame.from_flow(interface)
+        #data = assess.Data(settings)
 
-    settings["cache"] = # Set up cache 
+    #settings["cache"] = # Set up cache 
     text = ""
 
     for op in ["preprocessor", "augmentor", "sorter"]:
@@ -80,7 +82,7 @@ def main():
                     settings["compute"][op] = comp
                     
         if "filter" in settings["lists"][args.listtype]:
-            filt = settings["lists"][args.listtype]["filter"]:
+            filt = settings["lists"][args.listtype]["filter"]
             if "filter" in settings:
                 if type(filt) is not list:
                     filt = [filt]

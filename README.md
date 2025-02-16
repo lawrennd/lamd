@@ -41,6 +41,7 @@ LaMD provides several utility scripts:
 * `mdfield`: Extracts fields from markdown headers
 * `dependencies`: Lists dependencies in markdown files
 * `mdpeople`: Generates people macros from YAML definitions
+* `mdlist`: Generates lists from YAML definitions
 
 ### Managing People Information
 
