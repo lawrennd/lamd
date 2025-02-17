@@ -20,8 +20,8 @@ global SINCE_YEAR
 def set_since_year(year):
     """Set the global year filter for entries.
     
-    Args:
-        year (int): The year from which to include entries
+    :param year: The year from which to include entries
+    :type year: int
     """
     global SINCE_YEAR
     SINCE_YEAR = year
@@ -29,8 +29,8 @@ def set_since_year(year):
 def get_since_year():
     """Get the current global year filter.
     
-    Returns:
-        int: The year from which entries are included
+    :return: The year from which entries are included
+    :rtype: int
     """
     global SINCE_YEAR
     return SINCE_YEAR
@@ -40,6 +40,9 @@ def main():
     
     Handles command line arguments, loads data, processes it according to specified
     settings, and outputs formatted markdown text either to a file or stdout.
+    
+    :return: None
+    :rtype: None
     """
     # Set up template environment for markdown
     ext = ".md"
@@ -80,20 +83,27 @@ def main():
 
 
     # Configure data allocation based on input files
-    interface["allocation"] = {}
-    interface["allocation"]["filename"] = args.file
+    interface["input"] = {}
+
+    # Extract most common starting directory from file paths
+    file_dirs = [os.path.dirname(os.path.abspath(f)) for f in args.file]
+    common_prefix = os.path.commonpath(file_dirs)
     
-    # Handle different input file configurations
-    if type(args.file) is list:
-        data = []
-        interface["allocation"]["type"] = "list"
-        data = assess.data.CustomDataFrame.from_flow(interface)
-        #data = assess.Data(settings)
-        
-    elif type(args.file) is str:
-        settings["allocation"]["type"] = "auto"
-        data = assess.data.CustomDataFrame.from_flow(interface)
-        #data = assess.Data(settings)
+    interface["input"]["base_directory"] = common_prefix
+
+
+    # Remove common prefix from file paths
+    args.file = [os.path.relpath(f, common_prefix) for f in args.file]
+    interface["input"]["directory"] = "."
+    if len(args.file) == 1:
+        interface["input"]["filename"] = args.file[0]
+        interface["input"]["type"] = "auto"
+    else:
+        interface["input"]["filename"] = args.file
+        interface["input"]["type"] = "list"
+    
+    data = assess.data.CustomDataFrame.from_flow(interface)
+
 
     #settings["cache"] = # Set up cache 
     text = ""

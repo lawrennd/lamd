@@ -31,6 +31,37 @@ On macOS:
 brew install gpp
 ```
 
+```bash
+# Install lamd using pip
+pip install lamd
+
+# Or install from source using Poetry
+git clone https://github.com/lawrennd/lamd.git
+cd lamd
+poetry install
+```
+
+## Dependencies
+
+LaMD requires:
+- Python 3.11 or higher
+- gpp preprocessor
+- Pandoc (for document conversion)
+- Additional Python packages (installed automatically):
+  - lynguine
+  - python-frontmatter
+  - pandas
+  - python-liquid
+  - notedown
+
+## Configuration
+
+Create a `_lamd.yml` in your project root to configure pandoc flags and other settings:
+
+```yaml
+```
+
+
 ## Core Scripts
 
 LaMD provides several utility scripts:
@@ -127,3 +158,4 @@ maketalk talk.md --format notes
 
 - [Snippets](https://github.com/lawrennd/snippets): Repository of reusable content
 - [Talks](https://github.com/lawrennd/talks): Example talks using LaMD
+
