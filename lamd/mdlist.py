@@ -9,19 +9,43 @@ from referia import assess
 
 from lynguine.config.interface import Interface
 
+"""
+This script generates markdown lists for various academic content types (publications, talks, grants, etc.)
+from structured data files. It processes the input data according to specified settings and outputs
+formatted markdown text.
+"""
+
 global SINCE_YEAR
 
 def set_since_year(year):
+    """Set the global year filter for entries.
+    
+    Args:
+        year (int): The year from which to include entries
+    """
     global SINCE_YEAR
-    SINCE_YEAR=year
+    SINCE_YEAR = year
 
 def get_since_year():
+    """Get the current global year filter.
+    
+    Returns:
+        int: The year from which entries are included
+    """
     global SINCE_YEAR
     return SINCE_YEAR
 
 def main():
+    """Main function to process and generate markdown lists.
+    
+    Handles command line arguments, loads data, processes it according to specified
+    settings, and outputs formatted markdown text either to a file or stdout.
+    """
+    # Set up template environment for markdown
     ext = ".md"
     env = load_template_env(ext=ext)
+
+    # Configure command line argument parser
     parser = argparse.ArgumentParser()
     parser.add_argument("listtype",
                         type=str,
@@ -45,18 +69,21 @@ def main():
     now = pd.to_datetime(datetime.datetime.now().date())
     now_year = now.year
 
-    # Load in the interface specified for the relevant list type.
+    # Load interface configuration for the specified list type
     interface = Interface.from_file(user_file="cvlists.yml")[args.listtype]
     
+    # Set the year filter - either from command line or default to 5 years ago
     if args.since_year:
         set_since_year(args.since_year)
     else:
         set_since_year(now_year - 5)
 
 
-    # Set up the allocation based on command line.
+    # Configure data allocation based on input files
     interface["allocation"] = {}
     interface["allocation"]["filename"] = args.file
+    
+    # Handle different input file configurations
     if type(args.file) is list:
         data = []
         interface["allocation"]["type"] = "list"
@@ -71,37 +98,40 @@ def main():
     #settings["cache"] = # Set up cache 
     text = ""
 
+    # Process the data through different operations (preprocessor, augmentor, sorter)
     for op in ["preprocessor", "augmentor", "sorter"]:
         if op in settings["lists"][args.listtype]:
-                comp = settings["lists"][args.listtype][op]
-                if op in settings["compute"]:
-                    if type(comp) is not list:
-                        comp = [comp]    
-                    settings["compute"][op] += comp
-                else:
-                    settings["compute"][op] = comp
-                    
-        if "filter" in settings["lists"][args.listtype]:
-            filt = settings["lists"][args.listtype]["filter"]
-            if "filter" in settings:
-                if type(filt) is not list:
-                    filt = [filt]
-                settings["filter"] += filt
+            # Add operation to compute settings
+            comp = settings["lists"][args.listtype][op]
+            if op in settings["compute"]:
+                if type(comp) is not list:
+                    comp = [comp]    
+                settings["compute"][op] += comp
             else:
-                settings["filter"] = filt
-            
-        data.preprocess()
-                        
-        listtemplate = settings["lists"][args.listtype]["listtemplate"]
-        for index, entry in df.iterrows():
-            if not pd.isna(filt[index]) and filt[index]:
-                kwargs = remove_nan(entry.to_dict())
-                text += env.get_template(listtemplate + ext).render(**kwargs)
-                text += "\n"
-
-               
-
+                settings["compute"][op] = comp
+    
+    # Handle filters if specified
+    if "filter" in settings["lists"][args.listtype]:
+        filt = settings["lists"][args.listtype]["filter"]
+        if "filter" in settings:
+            if type(filt) is not list:
+                filt = [filt]
+            settings["filter"] += filt
+        else:
+            settings["filter"] = filt
         
+    # Preprocess the data
+    data.preprocess()
+                    
+    # Generate markdown text using the specified template
+    listtemplate = settings["lists"][args.listtype]["listtemplate"]
+    for index, entry in df.iterrows():
+        if not pd.isna(filt[index]) and filt[index]:
+            kwargs = remove_nan(entry.to_dict())
+            text += env.get_template(listtemplate + ext).render(**kwargs)
+            text += "\n"
+
+    # Output the generated markdown
     if args.output is not None:
         with open(args.output, 'w', encoding='utf-8') as f:
             f.write(text)
