@@ -47,7 +47,9 @@ Organize the project with clear separation of concerns:
 - Maintain at least 80% code coverage.
 
 ## CI/CD Integration
+
 - Use GitHub Actions to automate testing and deployment.
+- Write tests in the subdirectory lamd/tests
 - Include the following checks:
   - Linting with `flake8`.
   - Type checking with `mypy`.
