@@ -37,7 +37,8 @@ Organize the project with clear separation of concerns:
 - Ensure `lynguine` is listed in dependencies.
 
 ## Documentation Standards
-- Use Python docstrings for all workflows and activities:
+- Use Python docstrings for all functions.
+- Assume we are using sphinx for documentatin.
   ```python
   ```
 
