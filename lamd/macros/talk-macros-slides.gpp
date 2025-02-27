@@ -108,7 +108,7 @@
 \defeval{\glossaryEntries}{\glossaryEntries
 * *\term*: \definition
 }
-
+\endif}
 \define{\addarticle{title}{link}}{\ifndef{newspaperArticles}\defeval{\newspaperArticles}{* [\title](\link)
 }
 \else
