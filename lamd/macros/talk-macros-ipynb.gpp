@@ -4,6 +4,10 @@
 
 \include{talk-macros-html.gpp}
 
+\define{\addColabLink{notebookPath}}{\startMarkdownCell
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/\ifdef{ghubOrganization}\ghubOrganization\else lawrennd\endif/\ifdef{ghubRepository}\ghubRepository\else talks\endif/blob/\ifdef{ghubBranch}\ghubBranch\else main\endif/\notebookPath)
+\endCell} 
+
 \define{\ipynb{block}}{\block}
 
 \define{\endCell}{\ifdef{inCell}\undef{inCell}:::\endif\ifdef{inMarkdownCell}\undef{inMarkdownCell}\endif\ifdef{inCodeCell}\undef{inCodeCell}\endif}
