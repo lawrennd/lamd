@@ -16,7 +16,7 @@ This file provides an overview of all current backlog items organized by categor
 
 ### Proposed
 
-- [Improve Command Line Help Text for All lamd Utilities](documentation/2025-05-16_improve-cli-help.md)
+*No tasks currently proposed.*
 
 
 ## Infrastructure
@@ -50,7 +50,9 @@ This file provides an overview of all current backlog items organized by categor
 
 ### Proposed
 
-*No tasks currently proposed.*
+- [Implement extract_snippets Function in lynguine.util.talk](features/2025-05-16_implement-extract-snippets.md)
+
+- [Implement extract_snippets Function in lynguine.util.talk](features/2023-06-20_implement-extract-snippets.md)
 
 
 ## Bugs
