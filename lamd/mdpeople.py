@@ -1,17 +1,51 @@
 #!/usr/bin/env python
-"""Script to generate people macros for LAMD system.
+"""
+Script to generate people macros for LAMD system.
 
-This script creates macros for displaying people's images and information in a consistent format.
-It can be used with a YAML input file or programmatically.
+This script creates macros for displaying people's images and information in a consistent format
+across different documents. It takes a YAML file that defines people's information and generates
+LaTeX/GPP macros that can be included in documents.
+
+Each person's macro allows displaying their image in a circular format with optional URL links,
+titles, and custom image cropping. The script automatically generates appropriate macro names
+based on the person's name.
+
+Usage:
+    python -m lamd.mdpeople --input people.yaml [--output talk-people.gpp]
+
+Where:
+    people.yaml: A YAML file containing people information
+    talk-people.gpp: Output file for the generated macros (default: talk-people.gpp)
+
+Example YAML format:
+    - given: Jane
+      family: Doe
+      image: people/jane-doe.jpg
+      url: https://example.com/jane
+      title: Professor
+    
+    - given: John
+      family: Smith
+      image: people/john-smith.jpg
+      crop:
+        llx: 0
+        lly: 0
+        urx: 100
+        ury: 100
 """
 
 import yaml
 import argparse
+import sys
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, List, Any
 
 def create_circle_head_macro() -> str:
-    """Creates the base circleHead macro that other macros will use."""
+    """Creates the base circleHead macro that other macros will use.
+    
+    Returns:
+        str: The macro definition for circleHead
+    """
     return r"""
 \define{\circleHead{filename}{alttext}{width}{circleurl}}{
 \ifndef{urlCount}\define{urlCount}{0}\else\defeval{urlCount}{\eval{\urlCount+1}}\endif
@@ -33,7 +67,7 @@ def create_person_macro(given: str,
                         image_path: str, 
                         url: Optional[str] = None,
                         title: Optional[str] = None,
-                        crop: Optional[Dict] = None) -> str:
+                        crop: Optional[Dict[str, int]] = None) -> str:
     """Creates a macro for a specific person.
     
     Args:
@@ -43,35 +77,39 @@ def create_person_macro(given: str,
         url: Optional URL for their webpage
         title: Optional title/position
         crop: Optional crop coordinates {llx, lly, urx, ury}
+        
+    Returns:
+        str: The macro definition for this person
     """
     # Create macro name from person's name
     given_lowered = given[0].lower() + given[1:]
     macro_name = given_lowered + family
-    macro_name.replace(' ', '').replace('-', '').replace('.', '')
+    macro_name = macro_name.replace(' ', '').replace('-', '').replace('.', '')
     macro_name = ''.join(c for c in macro_name if c.isalnum())
 
     diagrams_dir = "\\diagramsDir" + "/" + image_path
-    # Create display name
-    display_name = title or name
+    
+    # Create display name - use title if available, otherwise combine given and family names
+    display_name = title if title else f"{given} {family}"
     
     if crop:
         # Handle cropped images
-        macro = f"""\\defeval{{\\{macro_name}Picture{{width}}}}{{\\circleHead{{\includeimgclip{{{diagrams_dir}}}{{{crop['llx']}}}{{{crop['lly']}}}{{{crop['urx']}}}{{{crop['ury']}}}}}{{{display_name}}}{{\width}}"""
+        macro = rf"""\\defeval{{\\{macro_name}Picture{{width}}}}{{\\circleHead{{\includeimgclip{{{diagrams_dir}}}{{{crop['llx']}}}{{{crop['lly']}}}{{{crop['urx']}}}{{{crop['ury']}}}}}{{{display_name}}}{{\width}}"""
     else:
         # Standard image handling
-        macro = f"""\\defeval{{\\{macro_name}Picture{{width}}}}{{\\circleHead{{{diagrams_dir}}}{{{display_name}}}{{\width}}"""
+        macro = rf"""\\defeval{{\\{macro_name}Picture{{width}}}}{{\\circleHead{{{diagrams_dir}}}{{{display_name}}}{{\width}}"""
 
     if url:
-        macro += f"""{{{url}}}"""
+        macro += rf"{{{url}}}"
         
     macro += "}"
     return macro
 
-def generate_macros_file(people: Dict, output_file: str = "talk-people.gpp") -> None:
+def generate_macros_file(people: List[Dict[str, Any]], output_file: str = "talk-people.gpp") -> None:
     """Generates a complete macro file for all people.
     
     Args:
-        people: Dictionary of people information
+        people: List of dictionaries with people information
         output_file: File to write macros to
     """
     with open(output_file, "w") as f:
@@ -100,7 +138,12 @@ def generate_macros_file(people: Dict, output_file: str = "talk-people.gpp") -> 
 \endif
 """)
 
-def main():
+def main() -> int:
+    """Main function to parse arguments and generate macros.
+    
+    Returns:
+        int: Exit code (0 for success)
+    """
     parser = argparse.ArgumentParser(description='Generate people macros for LAMD')
     parser.add_argument('--input', '-i', type=str, required=True,
                       help='Input YAML file with people information')
@@ -109,10 +152,15 @@ def main():
     
     args = parser.parse_args()
     
-    with open(args.input) as f:
-        people = yaml.safe_load(f)
-    
-    generate_macros_file(people, args.output)
+    try:
+        with open(args.input) as f:
+            people = yaml.safe_load(f)
+        
+        generate_macros_file(people, args.output)
+        return 0
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
