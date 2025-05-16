@@ -1,6 +1,8 @@
 # LaMD
 
 <p align="left">
+  <a href="https://github.com/lawrennd/lamd/actions/workflows/tests.yml"><img alt="Tests Status" src="https://github.com/lawrennd/lamd/workflows/Tests/badge.svg"></a>
+  <a href="https://github.com/lawrennd/lamd/actions/workflows/lint.yml"><img alt="Lint Status" src="https://github.com/lawrennd/lamd/workflows/Lint/badge.svg"></a>
   <a href="https://github.com/lawrennd/lamd"><img alt="GitHub Actions status" src="https://github.com/lawrennd/lamd/workflows/code-tests/badge.svg"></a>
   <a href="https://lawrennd.github.io/lamd"><img alt="Documentation Status" src="https://github.com/lawrennd/lamd/workflows/documentation/badge.svg"></a>
 </p>
