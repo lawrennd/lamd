@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import sys
 import lynguine.util.talk as nt
 import lynguine.util.yaml as ny
 
@@ -120,11 +121,17 @@ def main():
         prefix = 'XXXX-XX-XX'
         prefix += '-'
     elif layout == 'talk':
-        prefix = date
-        prefix += '-'
+        if date is not None:
+            prefix = date
+            prefix += '-'
+        else:
+            prefix = ''
     elif layout == 'casestudy':
-        prefix = date
-        prefix += '-'
+        if date is not None:
+            prefix = date
+            prefix += '-'
+        else:
+            prefix = ''
     elif layout == 'notebook':
         prefix = ''
     elif layout == 'practical':
@@ -145,8 +152,11 @@ def main():
     elif layout == 'dataset':
         prefix = ''
     elif layout == 'cv':
-        prefix = date
-        prefix += '-'
+        if date is not None:
+            prefix = date
+            prefix += '-'
+        else:
+            prefix = ''
 
     out = prefix + args.base
 
@@ -200,6 +210,10 @@ def main():
         
         print(lines)
 
-    
+    elif args.output=='cv':
+        # For CV output, we don't need to print any specific flags
+        # This is a placeholder for future implementation
+        pass
+
 if __name__ == "__main__":
     sys.exit(main())
