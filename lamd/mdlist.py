@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 
-from .utils import *
+import argparse
+import sys
+import os
+import datetime
+import pandas as pd
+
 from lynguine import access
 from lynguine.util.misc import remove_nan
 from lynguine.util.liquid import load_template_env
@@ -10,12 +15,44 @@ from referia import assess
 from lynguine.config.interface import Interface
 
 """
-This script generates markdown lists for various academic content types (publications, talks, grants, etc.)
-from structured data files. It processes the input data according to specified settings and outputs
-formatted markdown text.
+Markdown List Generator for Academic Content
+
+This module generates formatted markdown lists from structured data files
+for various academic content types including:
+- Publications (all, journal, book, conference)
+- Talks (current and external)
+- Grants (current and former)
+- Teaching activities (current and former)
+- Students (current and former)
+- Postdoctoral Research Associates (current and former)
+- Meetings
+
+The module:
+1. Loads data from structured files (YAML, JSON, etc.)
+2. Processes this data according to specified settings in cvlists.yml
+3. Filters entries by year or other criteria
+4. Applies preprocessing, augmentation, and sorting operations
+5. Formats the data using Liquid templates
+6. Outputs formatted markdown text to a file or stdout
+
+The processing pipeline consists of:
+- Preprocessors: Convert data types, standardize formats
+- Augmentors: Add derived fields
+- Sorters: Order entries appropriately
+- Filters: Select entries meeting specific criteria
+
+Usage:
+    python -m lamd.mdlist [listtype] [options] [file...]
+
+Dependencies:
+    - lynguine: For data access and templating
+    - referia: For data assessment
+    - pandas: For data manipulation
 """
 
+# Global year filter to be used across the module
 global SINCE_YEAR
+SINCE_YEAR = None
 
 def set_since_year(year):
     """Set the global year filter for entries.
@@ -102,10 +139,16 @@ def main():
         interface["input"]["filename"] = args.file
         interface["input"]["type"] = "list"
     
+    # Load the data using referia's CustomDataFrame
     data = assess.data.CustomDataFrame.from_flow(interface)
+    
+    # Initialize settings dictionary from the interface
+    settings = {
+        "lists": interface,
+        "compute": {},
+        "filter": []
+    }
 
-
-    #settings["cache"] = # Set up cache 
     text = ""
 
     # Process the data through different operations (preprocessor, augmentor, sorter)
@@ -132,6 +175,14 @@ def main():
         
     # Preprocess the data
     data.preprocess()
+    
+    # Get the DataFrame from the data object
+    df = data.df
+    
+    # Apply filter function to get boolean mask
+    # This is a placeholder implementation since we don't have the actual filter functions
+    # In a real implementation, this would use the filters from settings
+    filt = pd.Series([True] * len(df), index=df.index)
                     
     # Generate markdown text using the specified template
     listtemplate = settings["lists"][args.listtype]["listtemplate"]
