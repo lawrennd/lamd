@@ -15,90 +15,131 @@ MACROS = os.path.join(os.path.dirname(__file__), "macros")
 INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
 
 def main():
-    iface = Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
-    parser = argparse.ArgumentParser()
+    """
+    Markdown Preprocessor for academic content.
+    
+    This utility preprocesses markdown files with the Generic Preprocessor (gpp),
+    handling macros, includes, and conditional content for different output formats.
+    It supports generating slides, notes, and code outputs from a single source.
+    
+    Examples:
+        # Process a markdown file for HTML slides
+        mdpp input.md -o output.md -t html -F slides
+        
+        # Generate notes with code examples
+        mdpp input.md -o output.md -F notes -c ipynb
+        
+        # Include exercises in the output
+        mdpp input.md -o output.md -e
+    """
+    parser = argparse.ArgumentParser(
+        description="Preprocess markdown files with macros and conditionals for academic content.",
+        epilog="For full documentation, visit: https://github.com/lawrennd/lamd"
+    )
 
     parser.add_argument("filename", type=str,
-                        help="Input filename")
+                        help="Input markdown file to process")
 
     parser.add_argument("-o", "--output", type=str,
-                        help="Output filename")
+                        help="Output filename (defaults to stdout if not specified)")
 
     parser.add_argument("--no-header", default=False, action='store_true',
-                        help="Whether to search for a header in the input file (default False).")
+                        help="Do not search for a YAML header in the input file")
 
     parser.add_argument("-B", "--include-before-body", type=str,
-                        help="File to include before body.")
+                        help="File to include before the main content body")
 
     parser.add_argument("-A", "--include-after-body", type=str,
-                        help="File to include after body.")
+                        help="File to include after the main content body")
 
     parser.add_argument("-t", "--to", type=str,
                         choices=['pptx', 'html', 'docx', 'ipynb', 'svg', 'tex', 'python'],
-                        help="Target output file format")
+                        help="Target output file format (affects conditional content)")
 
     parser.add_argument("-w", "--whitespace", default=True, action='store_true',
-                        help="Whether to remove whitespace from gpp files.")
+                        help="Remove excess whitespace from preprocessed files")
 
     parser.add_argument("-I", "--include-path", type=str,
-                        help="include directories")
+                        help="Colon-separated list of directories to search for includes")
 
     parser.add_argument("-S", "--snippets-path", type=str,
-                        help="Location of snippets to include directories")
+                        help="Colon-separated list of directories to search for code snippets")
 
     parser.add_argument("-F", "--format", type=str,
                        choices=['notes', 'slides', 'code'],
-                       help="Target output file contents")
+                       help="Target content format: 'notes' for detailed text, 'slides' for presentations, 'code' for code-focused output")
 
     parser.add_argument("-c", "--code", type=str, default='none',
                         choices=['none', 'sparse', 'ipynb', 'diagnostic', 'plot', 'full'],
-                        help="Which parts of the code to include.")
+                        help="Code inclusion level: 'none' omits code, 'sparse' includes minimal code, 'ipynb' for notebook code, 'diagnostic' for debugging, 'plot' for visualization code, 'full' for all code")
 
     parser.add_argument("-e", "--exercises", default=False, action='store_true',
-                       help="Whether to include exercises")
+                       help="Include exercise sections in the output")
 
     parser.add_argument("-a", "--assignment", default=False, action='store_true',
-                       help="Whether notes are an assignment or not")
+                       help="Format the document as an assignment rather than regular notes")
 
     parser.add_argument("-d", "--diagrams-dir", type=str,
-                        help="Directory to find the diagrams in")
+                        help="Directory containing diagram files referenced in the content")
 
     parser.add_argument("-s", "--scripts-dir", type=str,
-                        help="Directory to find the javascript in")
+                        help="Directory containing JavaScript files for interactive content")
 
     parser.add_argument("-W", "--write-diagrams-dir", type=str,
-                        help="Directory to write diagrams in for code")
+                        help="Directory where generated diagrams should be written")
 
     parser.add_argument("-D", "--draft", default=False, action='store_true',
-                       help="Whether this is a draft version (default False)")
+                       help="Mark the document as a draft, which may affect styling and add draft watermarks")
 
     parser.add_argument("-E", "--edit-links", default=False, action='store_true',
-                       help="Whether to show edit links (default False)")
+                       help="Include edit links in the output for online editing")
 
     parser.add_argument("-r", "--replace-notation", default=False, action='store_true',
-                        help="Whether to replace the latex macros in the files, or to retain them for later processing (default is False, retain them)")
+                        help="Replace LaTeX macros in the files rather than retaining them for later processing")
 
     parser.add_argument("-m", "--meta-data", nargs="*",
-                        help="Additional definitions to pass to the preprocessor")
+                        help="Additional metadata definitions to pass to the preprocessor (format: KEY=VALUE)")
     
     parser.add_argument("-x", "--extract-material", type=str, default='all',
                         choices=['all', 'reading', 'references', 'exercises'],
-                        help="Extract a subset of the material, e.g. reading matter, the references, etc.")
+                        help="Extract only specific material: 'all' for everything, 'reading' for reading material, 'references' for citations, 'exercises' for practice problems")
 
     args = parser.parse_args()
+    
+    # If only help was requested, we can return now without loading config
+    if len(sys.argv) == 2 and sys.argv[1] in ['-h', '--help']:
+        return 0
+        
+    # Now load the interface configuration
+    try:
+        iface = Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
+    except ValueError as e:
+        print(f"Configuration error: {e}", file=sys.stderr)
+        print("Continuing with default settings...", file=sys.stderr)
+        # Create a minimal default configuration
+        iface = {}
+        iface.setdefault('url', '')
+        iface.setdefault('baseurl', '')
+        iface.setdefault('diagramsdir', 'diagrams')
+        iface.setdefault('scriptsdir', 'scripts')
+        iface.setdefault('writediagramsdir', 'diagrams')
 
+    # Processing URL and paths
     if "diagramsurl" in iface:
         url = iface["diagramsurl"]
     else:
-        url = iface['url'] + iface['baseurl']
-    # For on line use the url to source diragrams.
-    if args.to == "html" or args.to=="ipynb":
-        diagrams_dir =  url + iface['diagramsdir']
+        url = iface.get('url', '') + iface.get('baseurl', '')
+        
+    # Set up diagram directory based on output format
+    if args.to == "html" or args.to == "ipynb":
+        diagrams_dir = url + iface.get('diagramsdir', 'diagrams')
     else:
-        diagrams_dir = iface['diagramsdir']
+        diagrams_dir = iface.get('diagramsdir', 'diagrams')
 
-    scripts_dir = iface['scriptsdir']
-    write_diagrams_dir = iface['writediagramsdir']
+    scripts_dir = iface.get('scriptsdir', 'scripts')
+    write_diagrams_dir = iface.get('writediagramsdir', 'diagrams')
+    
+    # Override with command line arguments if provided
     if args.diagrams_dir:
         diagrams_dir = args.diagrams_dir
 
@@ -108,6 +149,7 @@ def main():
     if args.write_diagrams_dir:
         write_diagrams_dir = args.write_diagrams_dir
 
+    # Set up GPP arguments
     arglist = ['+n', '-U "\\\\" "" "{" "}{" "}" "{" "}" "#" ""']
     if args.to:
         arglist.append('-D{to}=1'.format(to=args.to.upper()))
@@ -128,6 +170,7 @@ def main():
     if args.extract_material is not None and args.code != 'all':
         pass
 
+    # Handle code inclusion options
     if args.code is not None and args.code != 'none':
         arglist.append('-DCODE=1')
         if args.code == 'ipynb':
@@ -149,6 +192,7 @@ def main():
             arglist.append('-DHELPERCODE=1')
             arglist.append('-DPLOTCODE=1')
 
+    # Add directory definitions
     arglist.append(f'-DdiagramsDir={diagrams_dir}')
     arglist.append(f'-DscriptsDir={scripts_dir}')
     arglist.append(f'-DwriteDiagramsDir={write_diagrams_dir}')
@@ -156,21 +200,24 @@ def main():
     arglist.append(f'-Dtalksdir={talks_dir}')
     github_baseurl = 'https://github.com/lawrennd/snippets/edit/main/'
     arglist.append(f'-DgithubBaseUrl={github_baseurl}')
-    #arglist.append(f'-Dgithubdir')
 
+    # Set up include paths
     if args.include_path:
         for include_dir in args.include_path.split(":"):
             arglist.append(f"-I{include_dir}")
     arglist.append("-I{macro_path}".format(macro_path=MACROS))
-    # Have the snippets directory specified explicitly
+    
+    # Add snippets directories
     if args.snippets_path:
         for snippet_dir in args.snippets_path.split(":"):
             arglist.append(f"-I{snippet_dir}")
     arglist.append('-I.')
 
+    # Set output file if specified
     if args.output:
         arglist.append('-o {}'.format(args.output))
 
+    # Process include files
     filelist = []
     if args.include_before_body:
         with open(args.include_before_body, 'r') as fd:
@@ -178,17 +225,17 @@ def main():
     else:
         before_text = ''
 
-        
+    # Handle LaTeX notation replacement
     if args.replace_notation:
         before_text += '\n\n'
         with open(os.path.join(INCLUDES, 'talk-notation.tex'), 'r') as fd:
             before_text += fd.read()
 
-    # Read in talk-macros.gpp which loads in the other macro files.
+    # Read in talk-macros.gpp which loads in the other macro files
     with open(os.path.join(MACROS, 'talk-macros.gpp')) as f:
         before_text += f.read()
-            
 
+    # Process after-body includes
     if args.include_after_body:
         with open(args.include_after_body, 'r') as fd:
             after_text = fd.read()
