@@ -21,9 +21,16 @@ python-frontmatter = "*"
 pandas = "*"
 python-liquid = "*"
 notedown = "*"
-[tool.poetry.dev-dependencies]
-# Add your dev dependencies here if necessary
 
+[tool.poetry.dev-dependencies]
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
     
 [build-system]
 requires = ["poetry-core>=1.0.0"]
