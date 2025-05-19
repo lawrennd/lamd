@@ -11,14 +11,17 @@ def main():
     field = sys.argv[1]
     filename = sys.argv[2]
 
-    try:
-        answer = nt.talk_field(field, filename, user_file=["_lamd.yml", "_config.yml"])
-    except ny.FileFormatError:
-        iface = Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
-        if field in iface:
-            answer = iface[field]
-        else:
+    # Try _lamd.yml first
+    iface = Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
+    if field in iface:
+        answer = iface[field]
+    else:
+        # If not in _lamd.yml, try the markdown file
+        try:
+            answer = nt.talk_field(field, filename, user_file=["_lamd.yml", "_config.yml"])
+        except ny.FileFormatError:
             answer = ''
+
     if type(answer) is str:
         answer = os.path.expandvars(answer)
     if field=='categories':
