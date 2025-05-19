@@ -21,8 +21,9 @@ python-frontmatter = "*"
 pandas = "*"
 python-liquid = "*"
 notedown = "*"
+referia = { git = "https://github.com/lawrennd/referia.git", branch = "main" }
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
 pytest-cov = "^4.1.0"
 
