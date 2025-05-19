@@ -26,9 +26,9 @@ jobs:
     - name: Install dependencies
       run: |
         poetry install
-    - name: Run tests with pytest and coverage
+    - name: Run tests
       run: |
-        poetry run pytest --cov=referia --cov-report=xml
+        poetry run pytest --cov=lamd --cov-report=xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
