@@ -1,35 +1,23 @@
 ---
 id: "2025-05-16_improve-cli-help"
 title: "Improve Command Line Help Text for All lamd Utilities"
-status: "Proposed"
+status: "In Progress"
 priority: "High"
 effort: "Medium"
 type: "documentation"
 created: "2025-05-16"
 last_updated: "2025-05-16"
-owner: "TBD"
+owner: lawrennd
 github_issue: null
 dependencies: []
 ---
-
-# Task: Improve Command Line Help Text for All lamd Utilities
-
-- **ID**: 2025-05-16_improve-cli-help
-- **Title**: Improve Command Line Help Text for All lamd Utilities
-- **Status**: Proposed
-- **Priority**: High
-- **Created**: 2025-05-16
-- **Last Updated**: 2025-05-16
-- **Owner**: TBD
-- **GitHub Issue**: N/A
-- **Dependencies**: None
 
 ## Description
 
 The lamd project provides several command line utilities for academic content generation and management, but the help text displayed when using these utilities with the `-h` or `--help` flag is minimal and lacks detailed explanations and examples. This task involves improving the command line help text for all lamd utilities to make them more user-friendly and informative.
 
 The utilities to improve include:
-1. `mdpp` - Markdown preprocessor
+1. `mdpp` - Markdown preprocessor ✅
 2. `flags` - Extracts pandoc flags
 3. `dependencies` - Lists dependencies in markdown files
 4. `mdfield` - Extracts fields from markdown headers
@@ -77,4 +65,18 @@ parser.add_argument("--format", type=str,
 
 ### 2025-05-16
 
-Task created with Proposed status. Initial analysis of current help text shows significant room for improvement in clarity and thoroughness. 
+Task created with Proposed status. Initial analysis of current help text shows significant room for improvement in clarity and thoroughness.
+
+### 2025-05-16
+
+Improved the help text for the `mdpp` utility:
+- Added comprehensive docstring to the main function with examples
+- Enhanced argument descriptions for all options
+- Added proper ArgumentParser description and epilog
+- Made help text work without requiring configuration files
+- Added error handling for missing configuration files
+- Committed changes to the cip0001-cli-documentation branch
+
+Next steps:
+- Improve help text for other utilities following the same pattern
+- Ensure consistent style and terminology across all utilities 
