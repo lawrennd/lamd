@@ -4,6 +4,12 @@
 			"path": "."
 		},
 		{
+			"path": "../cv"
+		},
+		{
+			"path": "../../mlatcl/mlfoundations"
+		},
+		{
 			"path": "../lynguine"
 		}
 	],

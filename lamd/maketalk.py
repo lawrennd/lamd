@@ -19,40 +19,34 @@ import lamd
 def main():
     """
     Process a markdown file and generate various output formats.
-    
+
     This function creates a makefile customized for the specific input file,
     and then runs 'make' to generate the output formats. It supports formats
     like slides, notes, and more.
-    
+
     Returns:
         int: 0 for success, non-zero for failure
     """
     parser = argparse.ArgumentParser(
         description="Process markdown files into various output formats.",
         epilog="Examples: \n"
-              "  maketalk talk.md                    # Create all output formats\n"
-              "  maketalk talk.md --format slides    # Create slides only\n"
-              "  maketalk talk.md --format notes     # Create notes only\n"
-              "  maketalk talk.md --to html          # Output to HTML format\n",
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        "  maketalk talk.md                    # Create all output formats\n"
+        "  maketalk talk.md --format slides    # Create slides only\n"
+        "  maketalk talk.md --format notes     # Create notes only\n"
+        "  maketalk talk.md --to html          # Output to HTML format\n",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    
-    parser.add_argument("filename",
-                        type=str,
-                        help="The markdown file to process")
-    
-    parser.add_argument("--format", "-F",
-                        type=str,
-                        choices=['slides', 'notes'],
-                        help="The content format to produce (slides, notes)")
-    
-    parser.add_argument("--to", "-t",
-                        type=str,
-                        choices=['html', 'pptx', 'docx', 'pdf', 'tex'],
-                        help="The output file format")
-    
+
+    parser.add_argument("filename", type=str, help="The markdown file to process")
+
+    parser.add_argument(
+        "--format", "-F", type=str, choices=["slides", "notes"], help="The content format to produce (slides, notes)"
+    )
+
+    parser.add_argument("--to", "-t", type=str, choices=["html", "pptx", "docx", "pdf", "tex"], help="The output file format")
+
     args = parser.parse_args()
-    
+
     # Extract the base filename without extension
     basename = os.path.basename(args.filename)
     base = os.path.splitext(basename)[0]
@@ -66,7 +60,7 @@ def main():
 
     # Load the interface to check for required fields
     iface = lamd.config.interface.Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
-    
+
     # Update external dependencies if needed
     for field in ["snippetsdir", "bibdir"]:
         if field not in iface:
@@ -75,16 +69,16 @@ def main():
             print("Example:")
             print(f"{field}: ../_{field.replace('dir', '')}")
             sys.exit(1)
-            
+
         answer = iface[field]
-        
+
         # Check if the directory exists and is a git repo before pulling
         if not os.path.exists(answer):
             print(f"Error: Directory '{answer}' specified in _lamd.yml for '{field}' does not exist.")
             print(f"Please create the directory or update the '{field}' entry in your _lamd.yml file.")
             sys.exit(1)
-        
-        git_dir = os.path.join(answer, '.git')
+
+        git_dir = os.path.join(answer, ".git")
         if os.path.isdir(git_dir):
             os.system(f"CURDIR=`pwd`;cd {answer}; git pull; cd $CURDIR")
         else:
@@ -96,24 +90,24 @@ def main():
     includes_dir = os.path.join(dirname, "includes")
     templates_dir = os.path.join(dirname, "templates")
     script_dir = os.path.join(dirname, "scripts")
-    
+
     # Create the makefile
-    with open('makefile', 'w+') as f:
+    with open("makefile", "w+") as f:
         f.write(f"BASE={base}\n")
         f.write(f"MAKEFILESDIR={make_dir}\n")
         f.write(f"INCLUDESDIR={includes_dir}\n")
         f.write(f"TEMPLATESDIR={templates_dir}\n")
         f.write(f"SCRIPTDIR={script_dir}\n")
-        
+
         f.write(f"include $(MAKEFILESDIR)/make-talk-flags.mk\n")
         f.write(f"include $(MAKEFILESDIR)/make-talk.mk\n")
 
     # Make sure we have the latest files
-    os.system('git pull')
-    
+    os.system("git pull")
+
     # Build the make command based on format and output options
     make_cmd = "make"
-    
+
     if args.format and args.to:
         # Build specific format and output type
         target = f"{base}.{args.format}.{args.to}"
@@ -139,9 +133,10 @@ def main():
     else:
         # Build everything
         make_cmd += " all"
-    
+
     # Run the make command
     return os.system(make_cmd)
+
 
 if __name__ == "__main__":
     sys.exit(main())
