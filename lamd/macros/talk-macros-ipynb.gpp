@@ -22,6 +22,7 @@
 ::: {.cell .code}\define{inCodeCell}\define{inCell}
 }
 
+\define{\startNotebook}{\ifdef{ipynbpath}\addColabLink{\ipynbpath}\endif}
 
 \define{\pythonblockstart}{\startCodeCell
 ```{.python}}
