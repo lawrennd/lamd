@@ -57,6 +57,39 @@ def main():
     basename = os.path.basename(args.filename)
     base = os.path.splitext(basename)[0]
 
+    # Check for _lamd.yml first
+    if not os.path.exists("_lamd.yml"):
+        print("Error: _lamd.yml configuration file not found.")
+        print("Please create a _lamd.yml file in the current directory.")
+        print("Note: _config.yml is deprecated and only supported for backwards compatibility.")
+        sys.exit(1)
+
+    # Load the interface to check for required fields
+    iface = lamd.config.interface.Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
+    
+    # Update external dependencies if needed
+    for field in ["snippetsdir", "bibdir"]:
+        if field not in iface:
+            print(f"Error: Required field '{field}' is not defined in your _lamd.yml configuration file.")
+            print(f"Please add a '{field}' entry pointing to your {field.replace('dir', '')} directory.")
+            print("Example:")
+            print(f"{field}: ../_{field.replace('dir', '')}")
+            sys.exit(1)
+            
+        answer = iface[field]
+        
+        # Check if the directory exists and is a git repo before pulling
+        if not os.path.exists(answer):
+            print(f"Error: Directory '{answer}' specified in _lamd.yml for '{field}' does not exist.")
+            print(f"Please create the directory or update the '{field}' entry in your _lamd.yml file.")
+            sys.exit(1)
+        
+        git_dir = os.path.join(answer, '.git')
+        if os.path.isdir(git_dir):
+            os.system(f"CURDIR=`pwd`;cd {answer}; git pull; cd $CURDIR")
+        else:
+            print(f"Warning: {answer} is not a git repository. Skipping git pull.")
+
     # Set up directories
     dirname = os.path.dirname(lamd.__file__)
     make_dir = os.path.join(dirname, "makefiles")
@@ -74,21 +107,6 @@ def main():
         
         f.write(f"include $(MAKEFILESDIR)/make-talk-flags.mk\n")
         f.write(f"include $(MAKEFILESDIR)/make-talk.mk\n")
-    
-    # Update external dependencies if needed
-    for field in ["snippetsdir", "bibdir"]:
-        try:
-            answer = nt.talk_field(field, f"{base}.md", user_file=["_lamd.yml", "_config.yml"])
-        except ny.FileFormatError:
-            iface = lamd.config.interface.Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
-            if field in iface:
-                answer = iface[field]
-            else:
-                answer = ''
-    
-        # Pull the latest changes from external repositories if they exist
-        if answer:
-            os.system(f"CURDIR=`pwd`;cd {answer}; git pull; cd $CURDIR")
 
     # Make sure we have the latest files
     os.system('git pull')

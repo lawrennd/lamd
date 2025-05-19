@@ -20,7 +20,8 @@ def main():
     
     This function parses command line arguments, extracts the requested field
     from the specified markdown file's frontmatter, or falls back to configuration
-    files if the field isn't found in the document.
+    files if the field isn't found in the document. It first checks _lamd.yml for
+    the field, and only if not found there, checks the markdown file itself.
     
     Returns:
         int: 0 for success, non-zero for failure
@@ -43,22 +44,22 @@ def main():
                         help="The markdown file to extract the field from")
     
     args = parser.parse_args()
-    
+
+    # First check _lamd.yml for the field
     try:
-        # First try to get the field from the document
-        answer = nt.talk_field(args.field, args.filename, user_file=["_lamd.yml", "_config.yml"])
-    except ny.FileFormatError:
-        # If not in document, try to get from config files
-        try:
-            iface = Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
-            if args.field in iface:
-                answer = iface[args.field]
-            else:
+        iface = Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
+        if args.field in iface:
+            answer = iface[args.field]
+        else:
+            # If not in _lamd.yml, try the markdown file
+            try:
+                answer = nt.talk_field(args.field, args.filename, user_file=["_lamd.yml", "_config.yml"])
+            except ny.FileFormatError:
                 answer = ''
-        except Exception as e:
-            # If we can't access config files, return empty string
-            sys.stderr.write(f"Error accessing configuration: {e}\n")
-            answer = ''
+    except Exception as e:
+        # If we can't access config files, return empty string
+        sys.stderr.write(f"Error accessing configuration: {e}\n")
+        answer = ''
     
     # Handle different types of output
     if type(answer) is str:
