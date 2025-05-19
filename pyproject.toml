@@ -24,8 +24,19 @@ notedown = "*"
 referia = { git = "https://github.com/lawrennd/referia.git", branch = "main" }
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.0"
-pytest-cov = "^4.1.0"
+pytest = "^6.2.5"
+pytest-cov = "^3.0.0"
+pytest-mock = "^3.3.1"
+deepdiff = "^6.6.0"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^8.2.3"
+sphinx-rtd-theme = "^3.0.2"
+myst-parser = "^4.0.1"
+toml = ">=0.10.2"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
