@@ -3,12 +3,16 @@
 
 OUT=$(PREFIX)$(BASE)
 
-all: $(ALL)
+.PHONY: all
+all: check-snippetsdir check-postsdir check-bibdir 
+	$(MAKE) $(BASE).docx
+
+%.md: %.markdown
+	$(PP) $(PPFLAGS) $< > $@
 
 ##${BASE}.notes.tex ${BASE}.notes.pdf 
 
 
-include $(MAKEFILESDIR)/make-lists.mk
 include $(MAKEFILESDIR)/make-tex.mk
 include $(MAKEFILESDIR)/make-docx.mk
 

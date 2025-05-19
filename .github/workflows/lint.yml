@@ -29,15 +29,25 @@ jobs:
       run: |
         poetry install --with dev
         
+    - name: Install linting tools
+      run: |
+        poetry run pip install flake8 black isort mypy
+        
+    - name: Check formatting with black
+      run: |
+        poetry run black --check --diff .
+        
+    - name: Check import sorting with isort
+      run: |
+        poetry run isort --check-only --diff .
+        
     - name: Lint with flake8
       run: |
-        poetry run pip install flake8
         # stop the build if there are Python syntax errors or undefined names
         poetry run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings
-        poetry run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        poetry run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --select=E,W,F,C,N --ignore=E203,W503
         
     - name: Type check with mypy
       run: |
-        poetry run pip install mypy
-        poetry run mypy --ignore-missing-imports lamd/ 
+        poetry run mypy --strict --ignore-missing-imports --disallow-untyped-defs --disallow-incomplete-defs lamd/ 

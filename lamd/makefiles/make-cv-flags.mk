@@ -22,23 +22,26 @@ FIND=gfind
 PPFLAGS=-T 
 PPFLAGS=$(shell flags pp $(BASE))
 
-BIBFLAGS=--bibliography=../lawrence.bib --bibliography=../other.bib --bibliography=../zbooks.bib 
+BIBDIRECTORY=$(shell mdfield bibdir ${BASE}.md)
 
-CITEFLAGS=--citeproc --csl=../elsevier-harvard.csl ${BIBFLAGS}
+# Bibliography information
+BIBFLAGS=--bibliography=${BIBDIRECTORY}/lawrence.bib --bibliography=${BIBDIRECTORY}/other.bib --bibliography=${BIBDIRECTORY}/zbooks.bib 
+BIBDEPS=${BIBDIRECTORY}/lawrence.bib ${BIBDIRECTORY}/other.bib ${BIBDIRECTORY}/zbooks.bib 
+
+CITEFLAGS=--citeproc --csl=${INCLUDESDIR}/elsevier-harvard.csl ${BIBFLAGS}
 
 PDSFLAGS=-s ${CITEFLAGS} --mathjax=${MATHJAX} 
 
 CVDIR=$(shell mdfield cvdir $(BASE).md)
 
-TALKSINCE=$(shell mdfield talksince $(BASE).md)
-MEETINGSINCE=$(shell mdfield meetingsince $(BASE).md)
+TALKSINCE=$(shell mdfield talksince ${BASE}.md)
+MEETINGSINCE=$(shell mdfield meetingsince ${BASE}.md)
 PUBLICATIONSINCE=$(shell mdfield publicationsince $(BASE).md)
 
 SINCEFLAGS=--meta-data talkYearSince=${TALKSINCE} meetingYearSince=${MEETINGSINCE} publicationYearSince=${PUBLICATIONSINCE}
 
 DEPS=$(shell dependencies inputs $(BASE).md)
 DIAGDEPS=$(shell dependencies diagrams $(BASE).md)
-BIBDEPS=${BIBDIRECTORY}/lawrence.bib ${BIBDIRECTORY}/other.bib ${BIBDIRECTORY}/zbooks.bib 
 # BIBDEPS=$(shell dependencies bibinputs $(BASE).md)
 
 POSTFLAGS=$(shell flags post $(BASE))
@@ -72,4 +75,38 @@ GROUPLISTFILES=$(shell ${FIND} ${GROUPDIR} -type f)
 EXSTUDENTFILES=${DATADIR}/students.yaml
 EXRAFILES=${DATADIR}/ras.yaml
 
-ALL=$(shell dependencies all $(BASE).md)
+# Get all dependencies
+DYNAMIC_DEPS=$(shell dependencies all $(BASE).md --snippets-path $(SNIPPETSDIR))
+ALL := $(BASE).docx $(DYNAMIC_DEPS)
+
+# Add directory check targets
+.PHONY: check-snippetsdir
+check-snippetsdir:
+	@if [ -z "$(SNIPPETSDIR)" ]; then \
+		echo "Error: 'snippetsdir' is not defined in your _lamd.yml configuration file."; \
+		echo "Please add a 'snippetsdir' entry pointing to your code snippets directory."; \
+		echo "Example:"; \
+		echo "snippetsdir: ../_snippets"; \
+		exit 1; \
+	fi
+
+.PHONY: check-postsdir
+check-postsdir:
+	@if [ -z "$(POSTSDIR)" ]; then \
+		echo "Error: 'postsdir' is not defined in your _lamd.yml configuration file."; \
+		echo "Please add a 'postsdir' entry pointing to your posts directory."; \
+		echo "Example:"; \
+		echo "postsdir: ../_posts"; \
+		exit 1; \
+	fi
+
+.PHONY: check-bibdir
+check-bibdir:
+	@echo "Checking for bibliography files...";
+	@if [ -z "$(BIBDIRECTORY)" ]; then \
+		echo "Error: 'bibdir' is not defined in your _lamd.yml configuration file."; \
+		echo "Please add a 'bibdir' entry pointing to your bibliography directory."; \
+		echo "Example:"; \
+		echo "bibdir: ../_bibliography"; \
+		exit 1; \
+	fi

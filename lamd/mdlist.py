@@ -54,30 +54,33 @@ Dependencies:
 global SINCE_YEAR
 SINCE_YEAR = None
 
+
 def set_since_year(year):
     """Set the global year filter for entries.
-    
+
     :param year: The year from which to include entries
     :type year: int
     """
     global SINCE_YEAR
     SINCE_YEAR = year
 
+
 def get_since_year():
     """Get the current global year filter.
-    
+
     :return: The year from which entries are included
     :rtype: int
     """
     global SINCE_YEAR
     return SINCE_YEAR
 
+
 def main():
     """Main function to process and generate markdown lists.
-    
+
     Handles command line arguments, loads data, processes it according to specified
     settings, and outputs formatted markdown text either to a file or stdout.
-    
+
     :return: None
     :rtype: None
     """
@@ -87,23 +90,34 @@ def main():
 
     # Configure command line argument parser
     parser = argparse.ArgumentParser()
-    parser.add_argument("listtype",
-                        type=str,
-                        choices=['talks', 'grants', 'meetings',
-                                 'extalks', 'teaching', 'exteaching', 'students',
-                                 'exstudents', 'pdras', 'expdras', 'exgrants',
-                                 'publications', 'journal', 'book', "conference"],
-                        help="The type of output markdown list")
+    parser.add_argument(
+        "listtype",
+        type=str,
+        choices=[
+            "talks",
+            "grants",
+            "meetings",
+            "extalks",
+            "teaching",
+            "exteaching",
+            "students",
+            "exstudents",
+            "pdras",
+            "expdras",
+            "exgrants",
+            "publications",
+            "journal",
+            "book",
+            "conference",
+        ],
+        help="The type of output markdown list",
+    )
 
-    parser.add_argument("-o", "--output", type=str,
-                        help="Output filename")
+    parser.add_argument("-o", "--output", type=str, help="Output filename")
 
-    parser.add_argument('-s', '--since-year', type=int, 
-                        help="The year from which to include entries")
+    parser.add_argument("-s", "--since-year", type=int, help="The year from which to include entries")
 
-    parser.add_argument('file', type=str, nargs='+',
-                        help="The file names to read in")
-
+    parser.add_argument("file", type=str, nargs="+", help="The file names to read in")
 
     args = parser.parse_args()
     now = pd.to_datetime(datetime.datetime.now().date())
@@ -111,13 +125,12 @@ def main():
 
     # Load interface configuration for the specified list type
     interface = Interface.from_file(user_file="cvlists.yml")[args.listtype]
-    
+
     # Set the year filter - either from command line or default to 5 years ago
     if args.since_year:
         set_since_year(args.since_year)
     else:
         set_since_year(now_year - 5)
-
 
     # Configure data allocation based on input files
     interface["input"] = {}
@@ -125,9 +138,8 @@ def main():
     # Extract most common starting directory from file paths
     file_dirs = [os.path.dirname(os.path.abspath(f)) for f in args.file]
     common_prefix = os.path.commonpath(file_dirs)
-    
-    interface["input"]["base_directory"] = common_prefix
 
+    interface["input"]["base_directory"] = common_prefix
 
     # Remove common prefix from file paths
     args.file = [os.path.relpath(f, common_prefix) for f in args.file]
@@ -138,16 +150,12 @@ def main():
     else:
         interface["input"]["filename"] = args.file
         interface["input"]["type"] = "list"
-    
+
     # Load the data using referia's CustomDataFrame
     data = assess.data.CustomDataFrame.from_flow(interface)
-    
+
     # Initialize settings dictionary from the interface
-    settings = {
-        "lists": interface,
-        "compute": {},
-        "filter": []
-    }
+    settings = {"lists": interface, "compute": {}, "filter": []}
 
     text = ""
 
@@ -158,11 +166,11 @@ def main():
             comp = settings["lists"][args.listtype][op]
             if op in settings["compute"]:
                 if type(comp) is not list:
-                    comp = [comp]    
+                    comp = [comp]
                 settings["compute"][op] += comp
             else:
                 settings["compute"][op] = comp
-    
+
     # Handle filters if specified
     if "filter" in settings["lists"][args.listtype]:
         filt = settings["lists"][args.listtype]["filter"]
@@ -172,18 +180,18 @@ def main():
             settings["filter"] += filt
         else:
             settings["filter"] = filt
-        
+
     # Preprocess the data
     data.preprocess()
-    
+
     # Get the DataFrame from the data object
     df = data.df
-    
+
     # Apply filter function to get boolean mask
     # This is a placeholder implementation since we don't have the actual filter functions
     # In a real implementation, this would use the filters from settings
     filt = pd.Series([True] * len(df), index=df.index)
-                    
+
     # Generate markdown text using the specified template
     listtemplate = settings["lists"][args.listtype]["listtemplate"]
     for index, entry in df.iterrows():
@@ -194,7 +202,7 @@ def main():
 
     # Output the generated markdown
     if args.output is not None:
-        with open(args.output, 'w', encoding='utf-8') as f:
+        with open(args.output, "w", encoding="utf-8") as f:
             f.write(text)
     else:
         print(text)
