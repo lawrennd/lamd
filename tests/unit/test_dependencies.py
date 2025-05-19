@@ -72,17 +72,34 @@ Here's a citation \cite{Smith2020}.
   volume  = {1},
   pages   = {1--10}
 }""")
+        
+        # Create a patch for opening the test file
+        # This is needed for tests that don't use the temp directory
+        self.open_patcher = patch('builtins.open', create=True)
+        self.mock_open = self.open_patcher.start()
     
     def teardown_method(self):
         """Clean up after each test."""
         # Remove temporary directory and its contents
         self.temp_dir.cleanup()
+        
+        # Stop the open patch
+        self.open_patcher.stop()
     
     @patch('sys.argv', ['dependencies', 'all', 'test.md'])
     @patch('lynguine.util.talk.extract_all')
+    @patch('lynguine.util.yaml.header_fields')
+    @patch('lynguine.util.yaml.header_field')
+    @patch('lynguine.util.yaml.Interface.from_file')
     @patch('builtins.print')
-    def test_extract_all(self, mock_print, mock_extract_all):
+    def test_extract_all(self, mock_print, mock_interface, mock_header_field, mock_header_fields, mock_extract_all):
         """Test the 'all' dependency extraction."""
+        # Mock the header_fields function to return a dictionary
+        mock_header_fields.return_value = {'title': 'Test Document'}
+        
+        # Mock the header_field function to return False for 'posts'
+        mock_header_field.return_value = False
+        
         # Mock the extract_all function to return a predefined list of files
         mock_extract_all.return_value = [
             'introduction.md', 
