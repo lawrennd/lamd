@@ -14,8 +14,9 @@
 \else\ifeq{\library}{GPy}\ifndef{gpyInstalled}\define{gpyInstalled}\code{%pip install gpy}\endif
 \else\ifeq{\library}{EmuKit}\ifndef{emukitInstalled}\define{emukitInstalled}\code{%pip install emukit}\endif
 \else\ifeq{\library}{notutils}\ifndef{notutilsInstalled}\define{notutilsInstalled}\code{%pip install notutils}\endif
+\else\ifeq{\library}{pymysql}\ifndef{pymysqlInstalled}\define{pymysqlInstalled}{%pip install pymysql}\endif
 \else\code{%pip install \library}
-\endif\endif\endif\endif\endif\endif\endif\endif}
+\endif\endif\endif\endif\endif\endif\endif\endif\endif}
 \define{\setupcode{block}}{\pythonblockstart
 \block
 \pythonblockend}

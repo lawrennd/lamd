@@ -15,15 +15,22 @@ include = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.9"
-#ndlpy = { git = "https://github.com/lawrennd/ndlpy.git", branch = "main" } # You might need to specify a version if the repository has tags.
+python = ">=3.11,<4.0"
+lynguine = { git = "https://github.com/lawrennd/lynguine.git", branch = "main" } # You might need to specify a version if the repository has tags.
 python-frontmatter = "*"
 pandas = "*"
 python-liquid = "*"
+notedown = "*"
 
 [tool.poetry.dev-dependencies]
-# Add your dev dependencies here if necessary
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
     
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -38,6 +45,7 @@ mdfield = "lamd.mdfield:main"
 maketalk = "lamd.maketalk:main"
 makecv = "lamd.makecv:main"
 mdlist = "lamd.mdlist:main"
+mdpeople = "lamd.mdpeople:main"
 
 # Optional dependencies
 # [tool.poetry.extras]

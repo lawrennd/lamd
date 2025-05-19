@@ -1,11 +1,56 @@
 #!/usr/bin/env python3
+"""
+Flags Module - Extracts flags and options for pandoc from YAML frontmatter.
+
+This module generates command-line flags for Pandoc based on the YAML frontmatter 
+in markdown files and configuration files. It supports multiple output formats and
+produces the appropriate flags for each.
+
+The flags module is used by other tools in the lamd package to generate
+consistent command-line options when converting markdown files to various formats.
+
+Usage:
+    flags OUTPUT BASE
+
+Where:
+    OUTPUT: The type of output (pp, post, docx, pptx, prefix, reveal, cv)
+    BASE: The base part of the filename (without extension)
+
+Example:
+    flags reveal myfile
+    flags post lecture-notes
+    flags docx syllabus
+"""
 
 import argparse
 import os
-import ndlpy.talk as nt
-import ndlpy.yaml as ny
+import sys
+import lynguine.util.talk as nt
+import lynguine.util.yaml as ny
 
 def main():
+    """
+    Process markdown files and extract appropriate pandoc flags based on YAML frontmatter.
+    
+    This function:
+    1. Parses command-line arguments for output type and base filename
+    2. Reads YAML frontmatter from the specified markdown file
+    3. Extracts relevant fields from the frontmatter or config files
+    4. Generates a prefix for output filenames based on layout and metadata
+    5. Outputs appropriate pandoc flags based on the requested output format
+    
+    Output formats:
+        prefix: Returns the file prefix only, based on date and layout
+        post: Generates metadata flags for Jekyll post conversion
+        docx: Generates flags for Word document conversion
+        pptx: Generates flags for PowerPoint presentation conversion  
+        reveal: Generates flags for reveal.js presentation
+        pp: Generates flags for the preprocessor
+        cv: Placeholder for CV-specific flags (not fully implemented)
+    
+    Returns:
+        None (prints the generated flags to stdout)
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("output",
                         type=str,
@@ -120,11 +165,17 @@ def main():
         prefix = 'XXXX-XX-XX'
         prefix += '-'
     elif layout == 'talk':
-        prefix = date
-        prefix += '-'
+        if date is not None:
+            prefix = date
+            prefix += '-'
+        else:
+            prefix = ''
     elif layout == 'casestudy':
-        prefix = date
-        prefix += '-'
+        if date is not None:
+            prefix = date
+            prefix += '-'
+        else:
+            prefix = ''
     elif layout == 'notebook':
         prefix = ''
     elif layout == 'practical':
@@ -145,8 +196,11 @@ def main():
     elif layout == 'dataset':
         prefix = ''
     elif layout == 'cv':
-        prefix = date
-        prefix += '-'
+        if date is not None:
+            prefix = date
+            prefix += '-'
+        else:
+            prefix = ''
 
     out = prefix + args.base
 
@@ -200,6 +254,10 @@ def main():
         
         print(lines)
 
-    
+    elif args.output=='cv':
+        # For CV output, we don't need to print any specific flags
+        # This is a placeholder for future implementation
+        pass
+
 if __name__ == "__main__":
     sys.exit(main())

@@ -9,7 +9,7 @@
 
 
 ${BASE}.ipynb: ${BASE}.notes.ipynb.markdown
-	pandoc  --template pandoc-jekyll-ipynb-template \
+	pandoc  --template ${TEMPLATESDIR}/pandoc/pandoc-jekyll-ipynb-template \
 		--markdown-headings=atx \
 		--out ${BASE}.tmp.markdown  ${BASE}.notes.ipynb.markdown
 	pandoc 	${PDSFLAGS} \
@@ -19,7 +19,7 @@ ${BASE}.ipynb: ${BASE}.notes.ipynb.markdown
 	rm ${BASE}.tmp.markdown
 
 ${BASE}.full.ipynb: ${BASE}.full.ipynb.markdown
-	pandoc  --template pandoc-jekyll-ipynb-template \
+	pandoc  --template ${TEMPLATESDIR}/pandoc/pandoc-jekyll-ipynb-template \
 		--markdown-headings=atx \
 		--out ${BASE}.tmp.markdown  ${BASE}.full.ipynb.markdown
 	pandoc 	${PDSFLAGS} \
@@ -29,7 +29,7 @@ ${BASE}.full.ipynb: ${BASE}.full.ipynb.markdown
 	rm ${BASE}.tmp.markdown
 
 ${BASE}.slides.ipynb: ${BASE}.slides.ipynb.markdown
-	pandoc  --template pandoc-jekyll-ipynb-template \
+	pandoc  --template ${TEMPLATESDIR}/pandoc/pandoc-jekyll-ipynb-template \
 		--markdown-headings=atx \
 		${CITEFLAGS} \
 		--out ${BASE}.tmp.markdown  ${BASE}.slides.ipynb.markdown
