@@ -3,6 +3,7 @@
 import sys
 import argparse
 import lynguine.util.talk as nt
+import lynguine.util.yaml as ny
 
 def main():
     parser = argparse.ArgumentParser()
@@ -38,7 +39,27 @@ def main():
         snippets_path = args.snippets_path
 
     if args.dependency == "all":
-        listfiles = nt.extract_all(args.filename, user_file=["_lamd.yml", "_config.yml"])
+        try:
+            # Check if posts: true is set
+            fields = ny.header_fields(args.filename)
+            posts_enabled = False
+            try:
+                posts_enabled = ny.header_field('posts', fields, ["_lamd.yml", "_config.yml"])
+            except ny.FileFormatError:
+                posts_enabled = False
+            if posts_enabled:
+                # Now check for postsdir
+                iface = ny.Interface.from_file(["_lamd.yml", "_config.yml"], directory=".")
+                if 'postsdir' not in iface:
+                    print("Error: 'postsdir' is not defined in your _lamd.yml configuration file.")
+                    print("Please add a 'postsdir' entry pointing to your posts directory.")
+                    print("Example:")
+                    print("postsdir: ../_posts")
+                    sys.exit(1)
+            listfiles = nt.extract_all(args.filename, user_file=["_lamd.yml", "_config.yml"])
+        except ny.FileFormatError as e:
+            print(f"Error: {e}")
+            sys.exit(1)
         print(" ".join(listfiles))
 
     elif args.dependency == "diagrams":
