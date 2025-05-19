@@ -1,0 +1,27 @@
+title: LaTeX and Markdown (LaM)
+description: Python package for managing academic material written in markdown.
+baseurl: "/lamd"
+url: "https://lawrennd.github.io"
+
+# Build settings
+markdown: kramdown
+theme: jekyll-theme-primer
+
+# Exclude these directories and files from being processed by Jekyll
+exclude:
+  - lamd/templates/
+  - lamd/macros/
+  - lamd/includes/
+  - lamd/makefiles/
+  - "*.gpp"
+  - "*.tex"
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .github
+  - .venv
+  - venv
+  - build
+  - dist
+  - "*.egg-info" 
