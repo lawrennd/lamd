@@ -42,7 +42,7 @@ SLIDESDIR=$(shell mdfield slidesdir $(BASE).md)
 TEXDIR=$(shell mdfield texdir $(BASE).md)
 WEEK=$(shell mdfield week $(BASE).md)
 SESSION=$(shell mdfield session $(BASE).md)
-
+PEOPLEYAML=$(shell mdfield people $(BASE).md)
 
 
 DEPS=$(shell dependencies inputs $(BASE).md --snippets-path $(SNIPPETSDIR))
@@ -51,11 +51,75 @@ DOCXDEPS=$(shell dependencies docxdiagrams $(BASE).md --snippets-path $(SNIPPETS
 PPTXDEPS=$(shell dependencies docxdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
 TEXDEPS=$(shell dependencies texdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
 
-ALL=$(shell dependencies all $(BASE).md --snippets-path $(SNIPPETSDIR))
+# Get all dependencies and add "talk-people.gpp" as the first entry to trigger a rebuild if the people file changes
+DYNAMIC_DEPS=$(shell dependencies all $(BASE).md --snippets-path $(SNIPPETSDIR))
+ALL := talk-people.gpp $(DYNAMIC_DEPS)
+
+# After checks, show what dynamic dependencies are included
+include_dynamic_deps:
+	@if [ -n "$(DYNAMIC_DEPS)" ]; then \
+		echo "Including dynamic dependencies: $(DYNAMIC_DEPS)"; \
+	fi
 
 POSTFLAGS=$(shell flags post $(BASE))
 PPTXFLAGS=$(shell flags pptx $(BASE)) --resource-path .:$(INCLUDESDIR):$(SLIDESDIR)
 DOCXFLAGS=$(shell flags docx $(BASE)) --resource-path .:$(INCLUDESDIR):$(SLIDESDIR)
 SLIDEFLAGS=$(shell flags reveal $(BASE))
+
+.PHONY: check-snippetsdir
+check-snippetsdir:
+	@if [ -z "$(SNIPPETSDIR)" ]; then \
+		echo "Error: 'snippetsdir' is not defined in your _lamd.yml configuration file."; \
+		echo "Please add a 'snippetsdir' entry pointing to your code snippets directory."; \
+		echo "Example:"; \
+		echo "snippetsdir: ../_snippets"; \
+		exit 1; \
+	fi
+
+.PHONY: check-postsdir
+check-postsdir:
+	@if [ -z "$(POSTSDIR)" ]; then \
+		echo "Error: 'postsdir' is not defined in your _lamd.yml configuration file."; \
+		echo "Please add a 'postsdir' entry pointing to your posts directory."; \
+		echo "Example:"; \
+		echo "postsdir: ../_posts"; \
+		exit 1; \
+	fi
+
+.PHONY: check-bibdir
+check-bibdir:
+	@echo "Checking for bibliography files...";
+	@if [ ! -f "${BIBDIRECTORY}/lawrence.bib" ] || [ ! -f "${BIBDIRECTORY}/other.bib" ] || [ ! -f "${BIBDIRECTORY}/zbooks.bib" ]; then \
+		echo "Error: Required bibliography files are missing."; \
+		echo "Please ensure the following files exist:"; \
+		echo "  - ${BIBDIRECTORY}/lawrence.bib"; \
+		echo "  - ${BIBDIRECTORY}/other.bib"; \
+		echo "  - ${BIBDIRECTORY}/zbooks.bib"; \
+		echo "You may need to add a 'bibdir' entry to your _lamd.yml file."; \
+		echo "Example:"; \
+		echo "bibdir: ../_bibliography"; \
+		exit 1; \
+	fi
+
+# Check header for which formats to create in notes and slides.
+# Create PDF of reveal slides with something like decktape https://github.com/astefanutti/decktape
+
+OUT=$(PREFIX)$(BASE)
+
+.PHONY: check-directories
+check-directories:
+	@echo "Checking required directories...";
+	@if [ ! -d "$(SNIPPETSDIR)" ]; then \
+		echo "Error: Snippets directory '$(SNIPPETSDIR)' does not exist."; \
+		echo "Please ensure the 'snippetsdir' entry in your _lamd.yml points to a valid directory."; \
+		exit 1; \
+	fi
+	@if [ ! -d "$(BIBDIRECTORY)" ]; then \
+		echo "Error: Bibliography directory '$(BIBDIRECTORY)' does not exist."; \
+		echo "Please ensure the 'bibdir' entry in your _lamd.yml points to a valid directory."; \
+		exit 1; \
+	fi
+
+all: check-snippetsdir check-postsdir check-bibdir check-directories include_dynamic_deps $(ALL)
 
 

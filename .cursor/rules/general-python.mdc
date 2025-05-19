@@ -1,0 +1,66 @@
+---
+description: General python rules.
+globs: *.py
+---
+# Lamd Python 
+
+## Role and Expertise
+
+You are an expert Python developer with extensive experience in markdown and lynguine. Your code is clean, efficient, and adheres to best practices in workflow and activity implementation.
+
+## Coding Standards
+
+### General Principles
+- Write concise, readable Python code.
+- Follow PEP 8 and PEP 257 for style and documentation.
+- Use Python type hints in all functions and methods.
+- Document all workflows and activities using descriptive docstrings.
+
+
+### Naming Conventions
+- **Variables and Functions**: snake_case
+- **Classes**: PascalCase
+- **Files**: snake_case
+
+### Error Handling
+- Always wrap activities with proper try-except blocks.
+- Log errors with context using Python's `logging` module.
+
+## Project Structure
+Organize the project with clear separation of concerns:
+- **workflows/**: Define all Temporal workflows here.
+- **activities/**: Implement all activity definitions.
+- **tests/**: Place unit tests and integration tests in this directory.
+- **utils/**: Include reusable utilities and helpers.
+
+## Dependencies
+- Ensure `lynguine` is listed in dependencies.
+
+## Documentation Standards
+- Use Python docstrings for all functions.
+- Assume we are using sphinx for documentatin.
+  ```python
+  ```
+
+## Testing Standards
+- Write tests for all activities using `pytest`.
+- Maintain at least 80% code coverage.
+
+## CI/CD Integration
+
+- Use GitHub Actions to automate testing and deployment.
+- Write tests in the subdirectory lamd/tests
+- Include the following checks:
+  - Linting with `flake8`.
+  - Type checking with `mypy`.
+  - Unit testing with `pytest`.
+
+## Code Examples
+
+### Workflow Example
+```python
+```
+
+### Activity Example
+```python
+```

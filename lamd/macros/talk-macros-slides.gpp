@@ -2,6 +2,7 @@
 \define{talkMacroSlides}
 
 \define{\slidenotes{slidetext}{notetext}}{\slidetext}
+\define{\gls{term}}{\emph{\term}}
 
 \define{\section{text}}{<!-- SECTION \text -->
 ## \text \ifdef{editText}
@@ -77,11 +78,42 @@
 }
 \endif}
 
-\define{\addguardian{title}{link}}{\ifndef{guardianArticles}\defeval{\guardianArticles}{* Guardian article on [\title](https://www.theguardian.com/media-network/\link)
+\define{\addatomicblog{title}{link}}{\ifndef{blogPosts}\defeval{\blogPosts}{
+   [\title](http://the-atomic-human.ai/\link)
 }
 \else
-\defeval{\guardianArticles}{\guardianArticles
+\defeval{\blogPosts}{\blogPosts
+   [\title](http://the-atomic-human.ai/\link)
+}
+\endif}
+
+\define{\addatomic{subject}{page}}{\ifndef{atomicPages}\defeval{\atomicPages}{
+   \subject \page
+}
+\else
+\defeval{\atomicPages}{\atomicPages, \subject \page}
+\endif}
+
+\define{\addguardian{title}{link}}{\ifndef{newspaperArticles}\defeval{\newspaperArticles}{* Guardian article on [\title](https://www.theguardian.com/media-network/\link)
+}
+\else
+\defeval{\newspaperArticles}{\newspaperArticles
 * Guardian article on [\title](https://www.theguardian.com/media-network/\link)
+}
+\endif}
+
+\define{\addglossary{term}{definition}}{\ifndef{glossaryEntries}\defeval{\glossaryEntries}{* *\term*: \definition
+}
+\else
+\defeval{\glossaryEntries}{\glossaryEntries
+* *\term*: \definition
+}
+\endif}
+\define{\addarticle{title}{link}}{\ifndef{newspaperArticles}\defeval{\newspaperArticles}{* [\title](\link)
+}
+\else
+\defeval{\newspaperArticles}{\newspaperArticles
+* [\title](\link)
 }
 \endif}
 
@@ -101,12 +133,15 @@
 }
 \endif}
 
+
+
 \define{\thanks}{
 \newslide{Thanks!}{.scrollable}
 \slides{
+* book: [The Atomic Human](https://www.penguin.co.uk/books/455130/the-atomic-human-by-lawrence-neil-d/9780241625248)
 * twitter: [\@lawrennd](https://twitter.com/lawrennd)
-* podcast: [The Talking Machines](http://thetalkingmachines.com)\ifdef{guardianArticles}
-\guardianArticles\else
+* [The Atomic Human](https://the-atomic-human.ai)\ifdef{atomicPages} pages \atomicPages.\endif\ifdef{newspaperArticles}
+\newspaperArticles\else
 * newspaper: [Guardian Profile Page](http://www.theguardian.com/profile/neil-lawrence)\endif}\ifdef{blogPosts}
 * blog posts:
 \blogPosts\else
@@ -115,6 +150,13 @@
 
 \define{\references}{\newslide{References}{.scrollable}}
 
+\define{\glossary}{
+\ifdef{glossaryEntries}
+\subsection{Glossary}
+
+\glossaryEntries\undef{glossaryEntries}
+
+\endif}
 
 \define{\reading}{
 \ifdef{readingMaterial}

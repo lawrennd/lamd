@@ -1,26 +1,163 @@
 # LaMD
 
 <p align="left">
+  <a href="https://github.com/lawrennd/lamd/actions/workflows/tests.yml"><img alt="Tests Status" src="https://github.com/lawrennd/lamd/workflows/Tests/badge.svg"></a>
+  <a href="https://github.com/lawrennd/lamd/actions/workflows/lint.yml"><img alt="Lint Status" src="https://github.com/lawrennd/lamd/workflows/Lint/badge.svg"></a>
   <a href="https://github.com/lawrennd/lamd"><img alt="GitHub Actions status" src="https://github.com/lawrennd/lamd/workflows/code-tests/badge.svg"></a>
+  <a href="https://lawrennd.github.io/lamd"><img alt="Documentation Status" src="https://github.com/lawrennd/lamd/workflows/documentation/badge.svg"></a>
 </p>
 
-A set of scripts for converting markdown files into talks.
+A system for creating academic content that can be rendered in multiple formats (slides, notes, papers) from a single source. LaMD provides a rich set of macros and contexts for handling different content types and output formats.
 
-The scripts rely on the generic preprocessor, `gpp`, https://github.com/logological/gpp. On Linux it can be installed using
+## Documentation
 
-```
+Full documentation is available at:
+- [https://lawrennd.github.io/lamd](https://lawrennd.github.io/lamd)
+
+Key sections:
+- [Getting Started](https://lawrennd.github.io/lamd/intro/installation.html)
+- [Context Reference](https://lawrennd.github.io/lamd/contexts/)
+- [Usage Guides](https://lawrennd.github.io/lamd/guides/)
+
+## Installation
+
+The system relies on the generic preprocessor, `gpp` ([https://github.com/logological/gpp](https://github.com/logological/gpp)).
+
+On Linux:
+```bash
 apt-get install gpp
 ```
 
-And on OSX it's available through brew.
-
-```
+On macOS:
+```bash
 brew install gpp
 ```
-The code wraps gpp and creates make files for doing the conversion. 
 
-* `maketalk`: for converting talk files from markdown to other formats.
-* `makecv`: for converting CVs from markdown to other formats.
-* `flags`: For extracting flags for pandoc's use from the configuration file `_config.yml`
-* `mdfield`: for extracting a field from markdown header file.
-* `dependencies`: for listing the dependencies in a given markdown file.
+```bash
+# Install lamd using pip
+pip install lamd
+
+# Or install from source using Poetry
+git clone https://github.com/lawrennd/lamd.git
+cd lamd
+poetry install
+```
+
+## Dependencies
+
+LaMD requires:
+- Python 3.11 or higher
+- gpp preprocessor
+- Pandoc (for document conversion)
+- Additional Python packages (installed automatically):
+  - lynguine
+  - python-frontmatter
+  - pandas
+  - python-liquid
+  - notedown
+
+## Configuration
+
+Create a `_lamd.yml` in your project root to configure pandoc flags and other settings:
+
+```yaml
+```
+
+
+## Core Scripts
+
+LaMD provides several utility scripts:
+
+* `maketalk`: Converts talk files from markdown to other formats
+* `makecv`: Converts CVs from markdown to other formats
+* `flags`: Extracts pandoc flags from `_config.yml`
+* `mdfield`: Extracts fields from markdown headers
+* `dependencies`: Lists dependencies in markdown files
+* `mdpeople`: Generates people macros from YAML definitions
+* `mdlist`: Generates lists from YAML definitions
+
+### Managing People Information
+
+The `mdpeople` script provides a powerful way to manage information about people in your documents. It generates macros for displaying profile images and information consistently.
+
+Usage:
+```bash
+# Generate people macros from YAML file
+mdpeople generate -i people.yml -o talk-people.gpp
+
+# List all defined people
+mdpeople list -i people.yml
+
+# Check for missing images or invalid URLs
+mdpeople verify -i people.yml
+```
+
+Example people.yml:
+```yaml
+- given: Peter
+  family: Piper
+  image: people/peter-piper.png
+  url: https://pepper-pickers.com/
+  title: Neil Lawrence
+
+- given: Jack
+  family: Spratt
+  image: people/jacks.png
+  url: https://lowfatyoghurts.com/jackspratt
+  title: Jack Spratt
+```
+
+Using generated macros:
+```markdown
+\include{talk-people.gpp}
+
+\section{Team}
+
+Our team includes \neillawrencePicture{15%} and \carlhenrikekPicture{15%}
+```
+
+## Features
+
+- Multiple output formats (HTML, PDF, PPTX)
+- Context-aware content rendering
+- Rich macro system for content reuse
+- Media handling (images, videos, diagrams)
+- Bibliography management
+- People and team pages
+- Exercise and assignment support
+
+## Example Usage
+
+Create a new talk:
+```markdown
+# Create talk file
+echo "---
+title: My Talk
+author: Your Name
+---
+
+\section{Introduction}
+
+\notes{Detailed notes here}
+
+\slides{
+* Bullet points
+* For slides
+}" > talk.md
+
+# Build different formats
+maketalk talk.md --format slides
+maketalk talk.md --format notes
+```
+
+## Contributing
+
+- [Source Code](https://github.com/lawrennd/lamd)
+- [Issue Tracker](https://github.com/lawrennd/lamd/issues)
+
+
+## Related Projects
+
+- [Snippets](https://github.com/lawrennd/snippets): Repository of reusable content
+- [Talks](https://github.com/lawrennd/talks): Example talks using LaMD
+

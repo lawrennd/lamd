@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
-import ndlpy.talk as nt
+import lynguine.talk as nt
 
 def main(args=None):
     filename = args[0]
