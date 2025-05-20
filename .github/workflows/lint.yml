@@ -44,6 +44,10 @@ jobs:
         # exit-zero treats all errors as warnings
         poetry run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --select=E,W,F,C,N --ignore=E203,W503
         
+    - name: Install type stubs
+      run: |
+        poetry run pip install types-PyYAML
+        
     - name: Type check with mypy
       run: |
         poetry run mypy --strict --ignore-missing-imports --disallow-untyped-defs --disallow-incomplete-defs lamd/
