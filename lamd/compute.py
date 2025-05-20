@@ -1,7 +1,5 @@
 from typing import Any, Callable, List
 
-from . import util
-
 
 class Compute:
     def __init__(self) -> None:

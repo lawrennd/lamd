@@ -10,9 +10,6 @@ import argparse
 import os
 import sys
 
-import lynguine.util.talk as nt
-import lynguine.util.yaml as ny
-
 import lamd
 
 

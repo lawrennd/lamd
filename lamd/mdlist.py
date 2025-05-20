@@ -4,16 +4,15 @@ import argparse
 import datetime
 import os
 import sys
-from typing import Any, Dict, List, Optional
+from typing import Optional
 
 import pandas as pd
-from lynguine import access
 from lynguine.config.interface import Interface
 from lynguine.util.liquid import load_template_env
 from lynguine.util.misc import remove_nan
 from referia import assess
 
-from lamd.util import get_since_year, set_since_year
+from lamd.util import set_since_year
 
 """
 Markdown List Generator for Academic Content
