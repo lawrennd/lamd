@@ -1,0 +1,1 @@
+* {% include 'listperson' %}{% include 'position' %}

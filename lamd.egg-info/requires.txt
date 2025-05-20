@@ -1,0 +1,4 @@
+ndlpy
+python-frontmatter
+pandas
+python-liquid
