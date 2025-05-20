@@ -1,4 +1,3 @@
-import pytest
 from lamd.compute import Compute
 
 
