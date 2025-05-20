@@ -47,8 +47,7 @@ def create_circle_head_macro() -> str:
     Returns:
         str: The macro definition for circleHead
     """
-    return (
-        r"""
+    return r"""
 \define{\circleHead{filename}{alttext}{width}{circleurl}}{
 \ifndef{urlCount}\define{urlCount}{0}\else\defeval{urlCount}{\eval{\urlCount+1}}\endif
 <svg viewBox="0 0 200 200" style="width:\width">
@@ -67,7 +66,6 @@ circle {
        xlink:href="\filename" clip-path="url(#clip\urlCount)"/>
 </svg>}
 """
-    )
 
 
 def create_person_macro(

@@ -191,10 +191,7 @@ def main() -> int:
         write_diagrams_dir = args.write_diagrams_dir
 
     # Set up GPP arguments
-    arglist = [
-        "+n",
-        '-U "\\" "" "{" "}{" "}" "{" "}" "#" ""'
-    ]
+    arglist = ["+n", '-U "\\" "" "{" "}{" "}" "{" "}" "#" ""']
     if args.to:
         arglist.append("-D{to}=1".format(to=args.to.upper()))
     if args.format:

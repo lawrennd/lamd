@@ -11,7 +11,7 @@ def test_logger():
     handler = logging.StreamHandler(log_stream)
     handler.setFormatter(logging.Formatter("%(levelname)s:%(name)s:%(asctime)s:%(message)s"))
     handler.setLevel(logging.DEBUG)
-    
+
     logger = Logger(name="test_logger", level=logging.DEBUG)
     logger.logger.setLevel(logging.DEBUG)
     logger.logger.handlers = [handler]
@@ -63,4 +63,4 @@ def test_logger_critical(test_logger):
     test_logger.critical("Test critical message")
     log_content = test_logger.log_stream.getvalue()
     assert "CRITICAL" in log_content
-    assert "Test critical message" in log_content 
+    assert "Test critical message" in log_content

@@ -12,4 +12,4 @@ def test_compute_functions_list():
     compute = Compute()
     functions = compute._compute_functions_list()
     assert isinstance(functions, list)
-    assert len(functions) == 0 
+    assert len(functions) == 0
