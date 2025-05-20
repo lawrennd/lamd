@@ -34,11 +34,12 @@ Example YAML format:
         ury: 100
 """
 
-import yaml
 import argparse
 import sys
 from pathlib import Path
-from typing import Dict, Optional, List, Any
+from typing import Any, Dict, List, Optional
+
+import yaml
 
 
 def create_circle_head_macro() -> str:

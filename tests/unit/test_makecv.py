@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-import unittest
+import builtins
 import os
 import sys
-from unittest.mock import patch, mock_open, MagicMock, call
-import builtins
+import unittest
+from unittest.mock import MagicMock, call, mock_open, patch
 
 import lynguine.util.yaml as ny
+
 from lamd.makecv import main
 
 

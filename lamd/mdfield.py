@@ -6,16 +6,17 @@ This script extracts metadata fields from markdown document frontmatter (YAML he
 or falls back to configuration files if the field isn't found in the document.
 """
 
-import sys
-import os
 import argparse
+import os
+import sys
+
 import lynguine.util.talk as nt
 import lynguine.util.yaml as ny
 
 from lamd.config.interface import Interface
 
 
-def main():
+def main() -> int:
     """
     Extract field values from markdown frontmatter.
 

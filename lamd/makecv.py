@@ -7,9 +7,9 @@ to various formats (PDF, HTML, etc.) using LaTeX and other tools.
 It creates a makefile with appropriate configurations and runs build commands.
 """
 
+import argparse
 import os
 import sys
-import argparse
 
 import lynguine.util.talk as nt
 import lynguine.util.yaml as ny

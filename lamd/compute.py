@@ -1,6 +1,6 @@
-from . import util
+from typing import Any, Callable, List
 
-from typing import List, Callable, Any
+from . import util
 
 
 class Compute:
