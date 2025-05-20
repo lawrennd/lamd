@@ -17,7 +17,7 @@ import lynguine.util.yaml as ny
 import lamd
 
 
-def main():
+def main() -> int:
     """
     Main function for the makecv tool.
 

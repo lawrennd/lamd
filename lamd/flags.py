@@ -29,7 +29,7 @@ import lynguine.util.talk as nt
 import lynguine.util.yaml as ny
 
 
-def main():
+def main() -> int:
     """
     Process markdown files and extract appropriate pandoc flags based on YAML frontmatter.
 
@@ -50,7 +50,7 @@ def main():
         cv: Placeholder for CV-specific flags (not fully implemented)
 
     Returns:
-        None (prints the generated flags to stdout)
+        int: Exit code (0 for success)
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -265,6 +265,8 @@ def main():
         # For CV output, we don't need to print any specific flags
         # This is a placeholder for future implementation
         pass
+
+    return 0
 
 
 if __name__ == "__main__":
