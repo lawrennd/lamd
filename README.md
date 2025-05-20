@@ -12,12 +12,12 @@ A system for creating academic content that can be rendered in multiple formats 
 ## Documentation
 
 Full documentation is available at:
-- [https://lawrennd.github.io/lamd](https://lawrennd.github.io/lamd)
+- [https://inverseprobability.com/lamd](https://lawrennd.github.io/lamd)
 
 Key sections:
-- [Getting Started](https://lawrennd.github.io/lamd/intro/installation.html)
-- [Context Reference](https://lawrennd.github.io/lamd/contexts/)
-- [Usage Guides](https://lawrennd.github.io/lamd/guides/)
+- [Getting Started](https://https://inverseprobability.com/lamd/intro/installation.html)
+- [Context Reference](https://inverseprobability.com/lamd/contexts/)
+- [Usage Guides](https://inverseprobability.com/lamd/guides/)
 
 ## Installation
 
