@@ -8,7 +8,6 @@ import sys
 from typing import List
 
 import frontmatter as fm
-import lynguine.util.yaml as ny
 
 from lamd.config.interface import Interface
 
