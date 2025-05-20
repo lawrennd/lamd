@@ -4,7 +4,7 @@ import builtins
 import os
 import sys
 import unittest
-from unittest.mock import MagicMock, call, mock_open, patch
+from unittest.mock import MagicMock, mock_open, patch
 
 import lynguine.util.yaml as ny
 
