@@ -21,7 +21,6 @@ def set_since_year(year: int) -> None:
 
 def get_since_year() -> Optional[int]:
     """Get the global SINCE_YEAR variable."""
-    global SINCE_YEAR
     return SINCE_YEAR
 
 
