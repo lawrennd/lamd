@@ -1,0 +1,8 @@
+[console_scripts]
+dependencies = lamd.dependencies:main
+flags = lamd.flags:main
+makecv = lamd.makecv:main
+maketalk = lamd.maketalk:main
+mdfield = lamd.mdfield:main
+mdlist = lamd.mdlist:main
+mdpp = lamd.mdpp:main

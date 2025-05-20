@@ -1,0 +1,44 @@
+Metadata-Version: 2.1
+Name: lamd
+Version: 0.1.3
+Summary: Package for converting collection of markdown files and macros into talks and notes.
+Home-page: https://github.com/lawrennd/lamd
+Author: Neil D. Lawrence
+Author-email: lawrennd@gmail.com
+License: MIT
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.6.0
+Description-Content-Type: text/markdown
+
+
+# LaMD
+
+<p align="left">
+  <a href="https://github.com/lawrennd/lamd"><img alt="GitHub Actions status" src="https://github.com/lawrennd/lamd/workflows/code-tests/badge.svg"></a>
+</p>
+
+A set of scripts for converting markdown files into talks.
+
+The scripts rely on the generic preprocessor, `gpp`, https://github.com/logological/gpp. On Linux it can be installed using
+
+```
+apt-get install gpp
+```
+
+And on OSX it's available through brew.
+
+```
+brew install gpp
+```
+The code wraps gpp and creates make files for doing the conversion. 
+
+* `maketalk`: for converting talk files from markdown to other formats.
+* `makecv`: for converting CVs from markdown to other formats.
+* `flags`: For extracting flags for pandoc's use from the configuration file `_config.yml`
+* `mdfield`: for extracting a field from markdown header file.
+* `dependencies`: for listing the dependencies in a given markdown file.
