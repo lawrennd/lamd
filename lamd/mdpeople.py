@@ -47,7 +47,8 @@ def create_circle_head_macro() -> str:
     Returns:
         str: The macro definition for circleHead
     """
-    return r"""
+    return (
+        r"""
 \define{\circleHead{filename}{alttext}{width}{circleurl}}{
 \ifndef{urlCount}\define{urlCount}{0}\else\defeval{urlCount}{\eval{\urlCount+1}}\endif
 <svg viewBox="0 0 200 200" style="width:\width">
@@ -60,8 +61,13 @@ circle {
 </style>
 <circle cx="100" cy="100" r="100"/>
 </clipPath>
-</defs><title>\alttext</title><image preserveAspectRatio="xMinYMin slice" width="100%" xlink:href="\filename" clip-path="url(#clip\urlCount)"/></svg>}
+</defs>
+<title>\alttext</title>
+<image preserveAspectRatio="xMinYMin slice" width="100%"
+       xlink:href="\filename" clip-path="url(#clip\urlCount)"/>
+</svg>}
 """
+    )
 
 
 def create_person_macro(
@@ -98,10 +104,18 @@ def create_person_macro(
 
     if crop:
         # Handle cropped images
-        macro = rf"""\\defeval{{\\{macro_name}Picture{{width}}}}{{\\circleHead{{\includeimgclip{{{diagrams_dir}}}{{{crop['llx']}}}{{{crop['lly']}}}{{{crop['urx']}}}{{{crop['ury']}}}}}{{{display_name}}}{{\width}}"""
+        macro = (
+            rf"""\\defeval{{\\{macro_name}Picture{{width}}}}"""
+            rf"""{{\\circleHead{{\includeimgclip{{{diagrams_dir}}}"""
+            rf"""{{{crop['llx']}}}{{{crop['lly']}}}{{{crop['urx']}}}{{{crop['ury']}}}"""
+            rf"""}}{{{display_name}}}{{\width}}"""
+        )
     else:
         # Standard image handling
-        macro = rf"""\\defeval{{\\{macro_name}Picture{{width}}}}{{\\circleHead{{{diagrams_dir}}}{{{display_name}}}{{\width}}"""
+        macro = (
+            rf"""\\defeval{{\\{macro_name}Picture{{width}}}}"""
+            rf"""{{\\circleHead{{{diagrams_dir}}}{{{display_name}}}{{\width}}"""
+        )
 
     if url:
         macro += rf"{{{url}}}"

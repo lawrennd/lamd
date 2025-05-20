@@ -30,7 +30,7 @@ def file_type(filename: str) -> str:
     return ext.lower()
 
 
-## Preprocessors
+# Preprocessors
 def convert_datetime(df: pd.DataFrame, columns: Union[str, List[str]]) -> pd.DataFrame:
     """Preprocessor to set datetime type on columns."""
     if isinstance(columns, str):
@@ -88,7 +88,7 @@ def convert_year_iso(df: pd.DataFrame, column: str = "year", month: int = 1, day
     return df
 
 
-## Augmentors
+# Augmentors
 def addmonth(df: pd.DataFrame, newcolumn: str = "month", source: str = "date") -> pd.DataFrame:
     """Add month column based on source date field."""
     df[newcolumn] = df[source].apply(lambda x: x.month_name() if x is not None else pd.NA)
@@ -129,7 +129,7 @@ def addsupervisor(df: pd.DataFrame, column: str, supervisor: str) -> pd.DataFram
     return df
 
 
-## Sorters
+# Sorters
 def ascending(df: pd.DataFrame, by: Union[str, List[str]]) -> pd.DataFrame:
     """Sort in ascending order"""
     return df.sort_values(by=by, ascending=True)
@@ -140,7 +140,7 @@ def descending(df: pd.DataFrame, by: Union[str, List[str]]) -> pd.DataFrame:
     return df.sort_values(by=by, ascending=False)
 
 
-## Filters
+# Filters
 def recent(df: pd.DataFrame, column: str = "year") -> pd.Series:
     """Filter on year of item"""
     return df[column] >= get_since_year()

@@ -96,8 +96,8 @@ def main() -> int:
         f.write(f"TEMPLATESDIR={templates_dir}\n")
         f.write(f"SCRIPTDIR={script_dir}\n")
 
-        f.write(f"include $(MAKEFILESDIR)/make-talk-flags.mk\n")
-        f.write(f"include $(MAKEFILESDIR)/make-talk.mk\n")
+        f.write("include $(MAKEFILESDIR)/make-talk-flags.mk\n")
+        f.write("include $(MAKEFILESDIR)/make-talk.mk\n")
 
     # Make sure we have the latest files
     os.system("git pull")

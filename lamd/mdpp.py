@@ -5,7 +5,6 @@
 import argparse
 import os
 import sys
-from typing import List
 
 import frontmatter as fm
 
@@ -82,7 +81,12 @@ def main() -> int:
         type=str,
         default="none",
         choices=["none", "sparse", "ipynb", "diagnostic", "plot", "full"],
-        help="Code inclusion level: 'none' omits code, 'sparse' includes minimal code, 'ipynb' for notebook code, 'diagnostic' for debugging, 'plot' for visualization code, 'full' for all code",
+        help=(
+            """Code inclusion level: 'none' omits code, 'sparse' """
+            """includes minimal code, 'ipynb' for notebook """
+            """code, 'diagnostic' for debugging, 'plot' for """
+            """visualization code, 'full' for all code"""
+        ),
     )
 
     parser.add_argument(
@@ -133,7 +137,12 @@ def main() -> int:
         type=str,
         default="all",
         choices=["all", "reading", "references", "exercises"],
-        help="Extract only specific material: 'all' for everything, 'reading' for reading material, 'references' for citations, 'exercises' for practice problems",
+        help=(
+            """Extract only specific material: 'all' for """
+            """everything, 'reading' for reading material, """
+            """'references' for citations, 'exercises' for """
+            """practice problems"""
+        ),
     )
 
     args = parser.parse_args()
@@ -182,7 +191,10 @@ def main() -> int:
         write_diagrams_dir = args.write_diagrams_dir
 
     # Set up GPP arguments
-    arglist = ["+n", '-U "\\\\" "" "{" "}{" "}" "{" "}" "#" ""']
+    arglist = [
+        "+n",
+        '-U "\\" "" "{" "}{" "}" "{" "}" "#" ""'
+    ]
     if args.to:
         arglist.append("-D{to}=1".format(to=args.to.upper()))
     if args.format:
@@ -304,8 +316,9 @@ def main() -> int:
         fm.dump(writepost, fd, sort_keys=False, default_flow_style=False)
 
     runlist = ["gpp"] + arglist + [tmp_file]
-    print(" ".join(runlist))
-    os.system(" ".join(runlist))
+    run_command = " ".join(runlist)
+    print(run_command)
+    os.system(run_command)
     return 0
 
 

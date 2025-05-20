@@ -156,6 +156,9 @@ def main() -> int:
         if session is not None and session > 0:
             prefix += "{0:02}".format(session)
             prefix += "-"
+        if background is not None and background > 0:
+            prefix += "{0:02}".format(background)
+            prefix += "-"
     elif layout == "test":
         prefix = "XXXX-XX-XX"
         prefix += "-"
@@ -223,15 +226,11 @@ def main() -> int:
         lines += weekarg + topicarg + sessionarg + practicalarg + backgroundarg + f" --metadata layout={layout}"
         if ny.header_field("ghub", fields, user_file=["_lamd.yml", "_config.yml"]):
             ghub = ny.header_field("ghub", fields, user_file)[0]
-            lines += """ --metadata edit_url={local_edit}""".format(
-                local_edit="https://github.com/{ghub_organization}/{ghub_repository}/edit/{ghub_branch}/{ghub_dir}/{base}.md".format(
-                    base=args.base,
-                    ghub_organization=ghub["organization"],
-                    ghub_repository=ghub["repository"],
-                    ghub_branch=ghub["branch"],
-                    ghub_dir=ghub["directory"],
-                )
+            local_edit = (
+                f"https://github.com/{ghub['organization']}/{ghub['repository']}"
+                f"/edit/{ghub['branch']}/{ghub['directory']}/{args.base}.md"
             )
+            lines += f" --metadata edit_url={local_edit}"
         print(lines.format(out=out, date=date))
 
     elif args.output == "docx":
