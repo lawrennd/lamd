@@ -6,17 +6,28 @@ import argparse
 import numpy as np
 
 import pandas as pd
-import lynguine.data as nd
 
 import lynguine.access as access
 
-import lynguine.context as context
+from lynguine.config.context import Context
 from lynguine.log import Logger
-from lynguine.util import remove_nan
+from lynguine.util.misc import remove_nan
 
 
-cntxt = context.Context(name="lamd")
+cntxt = Context(name="lamd")
 log = Logger(name=__name__, level=cntxt["logging"]["level"], filename=cntxt["logging"]["filename"])
+
+SINCE_YEAR = None
+
+def set_since_year(year):
+    """Set the global SINCE_YEAR variable."""
+    global SINCE_YEAR
+    SINCE_YEAR = year
+
+def get_since_year():
+    """Get the global SINCE_YEAR variable."""
+    global SINCE_YEAR
+    return SINCE_YEAR
 
 
 def file_type(filename):
