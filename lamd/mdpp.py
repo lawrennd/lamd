@@ -250,7 +250,6 @@ def main() -> int:
         arglist.append("-o {}".format(args.output))
 
     # Process include files
-    filelist: List[str] = []
     if args.include_before_body:
         with open(args.include_before_body, "r") as fd:
             before_text = fd.read()
