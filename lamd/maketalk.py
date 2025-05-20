@@ -6,9 +6,9 @@ This script generates a makefile based on the input markdown file
 and runs the appropriate commands to convert it to the requested formats.
 """
 
+import argparse
 import os
 import sys
-import argparse
 
 import lynguine.util.talk as nt
 import lynguine.util.yaml as ny

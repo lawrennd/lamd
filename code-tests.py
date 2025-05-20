@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
-import nose, warnings
+import warnings
+
+import nose
 
 nose.main("lamd", defaultTest="lamd/tests", argv=["", ""])

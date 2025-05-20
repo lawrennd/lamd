@@ -1,2 +1,2 @@
-from .config import interface
 from . import util
+from .config import interface

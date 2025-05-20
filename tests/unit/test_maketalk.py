@@ -5,8 +5,9 @@ Unit tests for the maketalk module.
 import os
 import sys
 import tempfile
+from unittest.mock import MagicMock, call, mock_open, patch
+
 import pytest
-from unittest.mock import patch, MagicMock, mock_open, call
 
 # Add the parent directory to the path so we can import the module
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))

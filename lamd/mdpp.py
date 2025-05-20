@@ -2,20 +2,21 @@
 # Markdown Preprocessor for talks.
 # Requries gpp (the generic preprocessor) to be installed https://math.berkeley.edu/~auroux/software/gpp.html.
 
-import sys
-import os
-
 import argparse
-import frontmatter as fm
+import os
+import sys
+from typing import List
 
+import frontmatter as fm
 import lynguine.util.yaml as ny
+
 from lamd.config.interface import Interface
 
 MACROS = os.path.join(os.path.dirname(__file__), "macros")
 INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
 
 
-def main():
+def main() -> int:
     """
     Markdown Preprocessor for academic content.
 
@@ -250,7 +251,7 @@ def main():
         arglist.append("-o {}".format(args.output))
 
     # Process include files
-    filelist = []
+    filelist: List[str] = []
     if args.include_before_body:
         with open(args.include_before_body, "r") as fd:
             before_text = fd.read()
@@ -307,6 +308,7 @@ def main():
     runlist = ["gpp"] + arglist + [tmp_file]
     print(" ".join(runlist))
     os.system(" ".join(runlist))
+    return 0
 
 
 if __name__ == "__main__":

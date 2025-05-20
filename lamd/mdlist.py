@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 
 import argparse
-import sys
-import os
 import datetime
+import os
+import sys
+from typing import Any, Dict, List, Optional
+
 import pandas as pd
-
 from lynguine import access
-from lynguine.util.misc import remove_nan
+from lynguine.config.interface import Interface
 from lynguine.util.liquid import load_template_env
-
+from lynguine.util.misc import remove_nan
 from referia import assess
 
-from lynguine.config.interface import Interface
+from lamd.util import get_since_year, set_since_year
 
 """
 Markdown List Generator for Academic Content
@@ -52,37 +53,17 @@ Dependencies:
 
 # Global year filter to be used across the module
 global SINCE_YEAR
-SINCE_YEAR = None
+SINCE_YEAR: Optional[int] = None
 
 
-def set_since_year(year):
-    """Set the global year filter for entries.
-
-    :param year: The year from which to include entries
-    :type year: int
-    """
-    global SINCE_YEAR
-    SINCE_YEAR = year
-
-
-def get_since_year():
-    """Get the current global year filter.
-
-    :return: The year from which entries are included
-    :rtype: int
-    """
-    global SINCE_YEAR
-    return SINCE_YEAR
-
-
-def main():
+def main() -> int:
     """Main function to process and generate markdown lists.
 
     Handles command line arguments, loads data, processes it according to specified
     settings, and outputs formatted markdown text either to a file or stdout.
 
-    :return: None
-    :rtype: None
+    :return: Exit code (0 for success)
+    :rtype: int
     """
     # Set up template environment for markdown
     ext = ".md"
@@ -206,6 +187,8 @@ def main():
             f.write(text)
     else:
         print(text)
+
+    return 0
 
 
 if __name__ == "__main__":

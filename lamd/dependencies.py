@@ -29,13 +29,14 @@ Options:
     -S, --snippets-path DIR: Specify the directory containing snippet files
 """
 
-import sys
 import argparse
+import sys
+
 import lynguine.util.talk as nt
 import lynguine.util.yaml as ny
 
 
-def main():
+def main() -> int:
     """
     Extract dependencies from markdown files based on specified type.
 
@@ -56,7 +57,7 @@ def main():
         snippets: Code snippets (temporarily disabled)
 
     Returns:
-        None (prints the list of dependencies to stdout)
+        int: 0 for success, non-zero for failure
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -152,6 +153,8 @@ def main():
     #                                     absolute_path=False,
     #                                     snippets_path=snippets_path)
     #     print(" ".join(listfiles))
+
+    return 0
 
 
 if __name__ == "__main__":
