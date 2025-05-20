@@ -57,7 +57,9 @@ class TestMakeCV(unittest.TestCase):
     @patch("lamd.config.interface.Interface.from_file")
     @patch("lynguine.util.talk.talk_field")
     @patch("os.path.exists")
-    def test_main_function_with_talk_fields(self, mock_exists, mock_talk_field, mock_from_file, mock_dirname, mock_system, mock_args):
+    def test_main_function_with_talk_fields(
+        self, mock_exists, mock_talk_field, mock_from_file, mock_dirname, mock_system, mock_args
+    ):
         """
         Test the main function when talk_field succeeds for both fields.
         """
@@ -65,20 +67,24 @@ class TestMakeCV(unittest.TestCase):
         mock_dirname.return_value = "/mock/path"
         mock_exists.return_value = True
         mock_interface = MagicMock()
+
         def getitem_side_effect(key):
             if key == "snippetsdir":
                 return "../_snippets"
             elif key == "bibdir":
                 return "../_bib"
             return ""
+
         mock_interface.__getitem__.side_effect = getitem_side_effect
         mock_from_file.return_value = mock_interface
         mock_talk_field.side_effect = ["snippets_path", "bib_path"]
         real_open = builtins.open
+
         def open_side_effect(file, mode="r", *args, **kwargs):
             if file == "makefile":
                 return mock_open()(file, mode, *args, **kwargs)
             return real_open(file, mode, *args, **kwargs)
+
         with patch("builtins.open", side_effect=open_side_effect):
             with self.assertRaises(SystemExit):
                 main()
@@ -89,7 +95,9 @@ class TestMakeCV(unittest.TestCase):
     @patch("lamd.config.interface.Interface.from_file")
     @patch("lynguine.util.talk.talk_field")
     @patch("os.path.exists")
-    def test_main_function_with_empty_field(self, mock_exists, mock_talk_field, mock_from_file, mock_dirname, mock_system, mock_args):
+    def test_main_function_with_empty_field(
+        self, mock_exists, mock_talk_field, mock_from_file, mock_dirname, mock_system, mock_args
+    ):
         """
         Test the main function when a field is not present in the interface.
         """
@@ -97,20 +105,24 @@ class TestMakeCV(unittest.TestCase):
         mock_dirname.return_value = "/mock/path"
         mock_exists.return_value = True
         mock_interface = MagicMock()
+
         def getitem_side_effect(key):
             if key == "snippetsdir":
                 return "../_snippets"
             elif key == "bibdir":
                 return "../_bib"
             return ""
+
         mock_interface.__getitem__.side_effect = getitem_side_effect
         mock_from_file.return_value = mock_interface
         mock_talk_field.side_effect = [ny.FileFormatError("Error 1"), ny.FileFormatError("Error 2")]
         real_open = builtins.open
+
         def open_side_effect(file, mode="r", *args, **kwargs):
             if file == "makefile":
                 return mock_open()(file, mode, *args, **kwargs)
             return real_open(file, mode, *args, **kwargs)
+
         with patch("builtins.open", side_effect=open_side_effect):
             with self.assertRaises(SystemExit):
                 main()

@@ -112,18 +112,17 @@ filter: []
                 if key == "talks":
                     return self
                 return dict.__getitem__(self, key)
-        talks_dict = TalksDict({
-            "listtemplate": "talk_item",
-            "preprocessor": "clean_date",
-            "augmentor": "add_talk_details",
-            "sorter": "sort_by_date",
-            "filter": "recent_talks",
-            "input": {}
-        })
-        interface_dict = InterfaceDict({
-            "talks": talks_dict,
-            "lists": {"talks": talks_dict}
-        })
+        talks_dict = TalksDict(
+            {
+                "listtemplate": "talk_item",
+                "preprocessor": "clean_date",
+                "augmentor": "add_talk_details",
+                "sorter": "sort_by_date",
+                "filter": "recent_talks",
+                "input": {},
+            }
+        )
+        interface_dict = InterfaceDict({"talks": talks_dict, "lists": {"talks": talks_dict}})
         mock_interface.return_value = interface_dict
 
         # Mock the template environment
@@ -134,14 +133,16 @@ filter: []
         mock_load_template.return_value = mock_env
 
         # Mock the CustomDataFrame
-        mock_df = pd.DataFrame({
-            "title": ["Test Talk 1", "Test Talk 2"],
-            "venue": ["Test Conference", "Another Conference"],
-            "year": [2022, 2023],
-            "month": [6, 3],
-            "day": [15, 10],
-            "url": ["https://example.com/talk1", "https://example.com/talk2"]
-        })
+        mock_df = pd.DataFrame(
+            {
+                "title": ["Test Talk 1", "Test Talk 2"],
+                "venue": ["Test Conference", "Another Conference"],
+                "year": [2022, 2023],
+                "month": [6, 3],
+                "day": [15, 10],
+                "url": ["https://example.com/talk1", "https://example.com/talk2"],
+            }
+        )
         mock_custom_df_instance = MagicMock()
         mock_custom_df_instance.df = mock_df
         mock_custom_df_instance.preprocess = MagicMock()
