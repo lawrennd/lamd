@@ -156,9 +156,6 @@ def main() -> int:
         if session is not None and session > 0:
             prefix += "{0:02}".format(session)
             prefix += "-"
-        if background is not None and background > 0:
-            prefix += "{0:02}".format(background)
-            prefix += "-"
     elif layout == "test":
         prefix = "XXXX-XX-XX"
         prefix += "-"
@@ -223,7 +220,7 @@ def main() -> int:
         if ny.header_field("pdf", fields, user_file):
             lines += """ --metadata pdf={out}.pdf"""
 
-        lines += weekarg + topicarg + sessionarg + practicalarg + f" --metadata layout={layout}"
+        lines += weekarg + topicarg + sessionarg + practicalarg + backgroundarg + f" --metadata layout={layout}"
         if ny.header_field("ghub", fields, user_file=["_lamd.yml", "_config.yml"]):
             ghub = ny.header_field("ghub", fields, user_file)[0]
             lines += """ --metadata edit_url={local_edit}""".format(
