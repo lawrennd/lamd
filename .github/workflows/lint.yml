@@ -25,10 +25,6 @@ jobs:
         virtualenvs-create: true
         virtualenvs-in-project: true
         
-    - name: Install dependencies
-      run: |
-        poetry install --with dev
-        
     - name: Install linting tools
       run: |
         poetry run pip install flake8 black isort mypy
@@ -50,4 +46,8 @@ jobs:
         
     - name: Type check with mypy
       run: |
-        poetry run mypy --strict --ignore-missing-imports --disallow-untyped-defs --disallow-incomplete-defs lamd/ 
+        poetry run mypy --strict --ignore-missing-imports --disallow-untyped-defs --disallow-incomplete-defs lamd/
+        
+    - name: Install dependencies
+      run: |
+        poetry install --with dev 
