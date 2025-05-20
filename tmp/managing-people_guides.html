@@ -1,0 +1,210 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Managing People Macros &mdash; LaMD 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=360bc84d"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LaMD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/index.html">Getting Started with LaMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contexts/index.html">Understanding LaMD Contexts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/index.html">LaMD Guides</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LaMD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Managing People Macros</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tmp/managing-people_guides.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="managing-people-macros">
+<h1>Managing People Macros<a class="headerlink" href="#managing-people-macros" title="Link to this heading"></a></h1>
+<p>LAMD provides a system for managing people information and automatically generating the required macros using a Python script.</p>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Install requirements:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pyyaml
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Save the macro generator script:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># In your LAMD root directory</span>
+wget<span class="w"> </span>https://raw.githubusercontent.com/lawrennd/lamd/main/scripts/create_people_macros.py
+chmod<span class="w"> </span>+x<span class="w"> </span>create_people_macros.py
+</pre></div>
+</div>
+</section>
+<section id="people-information-file">
+<h2>People Information File<a class="headerlink" href="#people-information-file" title="Link to this heading"></a></h2>
+<p>Create a YAML file (<code class="docutils literal notranslate"><span class="pre">people.yml</span></code>) with people information:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Neil Lawrence</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\diagramsDir/people/neil-lawrence.png</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://inverseprobability.com/</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Neil Lawrence</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Carl Henrik Ek</span>
+<span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\diagramsDir/people/carl-henrik-ek.png</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://carlhenrik.com</span>
+<span class="w">  </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Carl Henrik Ek</span>
+</pre></div>
+</div>
+<p>Required fields:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: Person’s full name</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">image</span></code>: Path to profile image</p></li>
+</ul>
+<p>Optional fields:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">url</span></code>: Personal webpage</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">title</span></code>: Position or title</p></li>
+</ul>
+</section>
+<section id="generating-macros">
+<h2>Generating Macros<a class="headerlink" href="#generating-macros" title="Link to this heading"></a></h2>
+<p>Generate the macros file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./create_people_macros.py<span class="w"> </span>-i<span class="w"> </span>people.yml<span class="w"> </span>-o<span class="w"> </span>talk-people.gpp
+</pre></div>
+</div>
+<p>Include in your LAMD setup:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\include{talk-people.gpp}
+</pre></div>
+</div>
+</section>
+<section id="using-the-macros">
+<h2>Using the Macros<a class="headerlink" href="#using-the-macros" title="Link to this heading"></a></h2>
+<p>Basic usage:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\neillawrencePicture{15%}
+</pre></div>
+</div>
+<p>Multiple people:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\centerdiv{
+    \neillawrencePicture{15%}
+    \carlhenrikekPicture{15%}
+}
+</pre></div>
+</div>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Image Management</p>
+<ul class="simple">
+<li><p>Use consistent image sizes</p></li>
+<li><p>Store images in <code class="docutils literal notranslate"><span class="pre">\diagramsDir/people/</span></code></p></li>
+<li><p>Use clear file names</p></li>
+</ul>
+</li>
+<li><p>Macro Generation</p>
+<ul class="simple">
+<li><p>Keep YAML file under version control</p></li>
+<li><p>Re-run generator when adding people</p></li>
+<li><p>Test macros after generation</p></li>
+</ul>
+</li>
+<li><p>Usage Guidelines</p>
+<ul class="simple">
+<li><p>Use consistent sizing</p></li>
+<li><p>Group related people</p></li>
+<li><p>Include alt text</p></li>
+<li><p>Consider mobile viewing</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<p>Common issues and solutions:</p>
+<ul class="simple">
+<li><p>Image not displaying: Check path in YAML</p></li>
+<li><p>Macro not found: Ensure generator was run</p></li>
+<li><p>Sizing issues: Use percentage widths</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Neil D. Lawrence.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

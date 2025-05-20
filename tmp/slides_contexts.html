@@ -1,0 +1,234 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Presentation Context &mdash; LaMD 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=360bc84d"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LaMD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/index.html">Getting Started with LaMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contexts/index.html">Understanding LaMD Contexts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/index.html">LaMD Guides</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LaMD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Presentation Context</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tmp/slides_contexts.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="presentation-context">
+<h1>Presentation Context<a class="headerlink" href="#presentation-context" title="Link to this heading"></a></h1>
+<p>The slides context is used when creating presentations. Content in this context typically appears in reveal.js slides or PowerPoint presentations.</p>
+<section id="key-macros">
+<h2>Key Macros<a class="headerlink" href="#key-macros" title="Link to this heading"></a></h2>
+<section id="slide-creation">
+<h3>Slide Creation<a class="headerlink" href="#slide-creation" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\newslide{title}
+    Creates a new slide
+    Args:
+        title: Title of the slide
+</pre></div>
+</div>
+</section>
+<section id="content-control">
+<h3>Content Control<a class="headerlink" href="#content-control" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\slides{content}
+    Specifies content that only appears in slides
+    Args:
+        content: Slide-specific content, often bullet points
+</pre></div>
+</div>
+</section>
+<section id="animation-control">
+<h3>Animation Control<a class="headerlink" href="#animation-control" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\fragment{text}{type}
+    Creates animated elements in reveal.js
+    Args:
+        text: Content to animate
+        type: Animation type (e.g., &#39;fade-in&#39;, &#39;grow&#39;)
+</pre></div>
+</div>
+</section>
+<section id="presenter-notes">
+<h3>Presenter Notes<a class="headerlink" href="#presenter-notes" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\speakernotes{text}
+    Adds notes visible only to the presenter
+    Args:
+        text: Notes for the presenter
+</pre></div>
+</div>
+</section>
+<section id="animation-controls">
+<h3>Animation Controls<a class="headerlink" href="#animation-controls" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\startanimation{group}{start}{finish}{name}
+    Controls multi-step animations
+    Args:
+        group: Animation group identifier
+        start: Starting frame number
+        finish: Ending frame number
+        name: Animation name for reference
+
+\newframe{contents}{name}{style}
+    Creates individual animation frame
+    Args:
+        contents: Frame content
+        name: Frame identifier
+        style: CSS styling for frame
+
+\endanimation
+    Ends an animation sequence
+    No arguments
+</pre></div>
+</div>
+<p>Example animation:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\startanimation{neural-net}{1}{5}{Neural Network Training}
+
+\newframe{\includediagram{nn-frame1}{80%}}{frame1}{}
+\newframe{\includediagram{nn-frame2}{80%}}{frame2}{}
+\newframe{\includediagram{nn-frame3}{80%}}{frame3}{}
+
+\endanimation
+</pre></div>
+</div>
+</section>
+<section id="additional-display-controls">
+<h3>Additional Display Controls<a class="headerlink" href="#additional-display-controls" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\slidesmall{block}
+    Makes content smaller in slides only
+    Args:
+        block: Content to reduce in size
+
+\slidenotes{slidetext}{notetext}
+    Different content for slides vs notes
+    Args:
+        slidetext: Content for slides
+        notetext: Content for notes
+</pre></div>
+</div>
+</section>
+</section>
+<section id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h2>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\ifndef{machineLearningIntro}
+\define{machineLearningIntro}
+
+\newslide{Introduction to Machine Learning}
+
+\slides{
+<span class="k">*</span><span class="w"> </span>Supervised Learning
+<span class="k">*</span><span class="w"> </span>Unsupervised Learning
+<span class="k">*</span><span class="w"> </span>Reinforcement Learning
+}
+
+\fragment{Deep Learning}{fade-in}
+
+\speakernotes{
+Remember to mention real-world applications for each type
+}
+
+\endif
+</pre></div>
+</div>
+</section>
+<section id="output-formats">
+<h2>Output Formats<a class="headerlink" href="#output-formats" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>reveal.js presentations (HTML)</p></li>
+<li><p>PowerPoint (PPTX)</p></li>
+</ul>
+</section>
+<section id="tips">
+<h2>Tips<a class="headerlink" href="#tips" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Keep slide content concise</p></li>
+<li><p>Use fragments for building complex ideas</p></li>
+<li><p>Include speaker notes for important points</p></li>
+<li><p>Consider both HTML and PPTX output when formatting</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Neil D. Lawrence.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

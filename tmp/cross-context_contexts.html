@@ -1,0 +1,253 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cross-Context Features &mdash; LaMD 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=360bc84d"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LaMD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/index.html">Getting Started with LaMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contexts/index.html">Understanding LaMD Contexts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/index.html">LaMD Guides</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LaMD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Cross-Context Features</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tmp/cross-context_contexts.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cross-context-features">
+<h1>Cross-Context Features<a class="headerlink" href="#cross-context-features" title="Link to this heading"></a></h1>
+<p>Some LAMD features work across multiple contexts, adapting their behavior to the output format while maintaining consistent syntax.</p>
+<section id="universal-macros">
+<h2>Universal Macros<a class="headerlink" href="#universal-macros" title="Link to this heading"></a></h2>
+<section id="text-formatting">
+<h3>Text Formatting<a class="headerlink" href="#text-formatting" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\linebreak
+    Creates appropriate line break for format
+    No arguments
+    Behavior:
+<span class="w">        </span><span class="k">-</span><span class="w"> </span>HTML: &lt;br&gt;
+<span class="w">        </span><span class="k">-</span><span class="w"> </span>LaTeX: \\
+<span class="w">        </span><span class="k">-</span><span class="w"> </span>Slides: Slide break
+
+\href{url}{text}
+    Creates hyperlink
+    Args:
+        url: Link target
+        text: Link text
+    Behavior:
+<span class="w">        </span><span class="k">-</span><span class="w"> </span>HTML: Clickable link
+<span class="w">        </span><span class="k">-</span><span class="w"> </span>PDF: Underlined link
+<span class="w">        </span><span class="k">-</span><span class="w"> </span>Slides: Interactive link
+</pre></div>
+</div>
+</section>
+<section id="conditional-processing">
+<h3>Conditional Processing<a class="headerlink" href="#conditional-processing" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\ifdef{FORMAT}
+    Includes content only if FORMAT is defined
+    Examples:
+        \ifdef{SLIDES} Slides only \endif
+        \ifdef{NOTES} Notes only \endif
+        \ifdef{DRAFT} Draft content \endif
+
+\comment{text}
+    Adds hidden comment
+    Args:
+        text: Comment content
+    Behavior:
+<span class="w">        </span><span class="k">-</span><span class="w"> </span>Never appears in output
+<span class="w">        </span><span class="k">-</span><span class="w"> </span>Preserved in source
+</pre></div>
+</div>
+</section>
+<section id="style-control">
+<h3>Style Control<a class="headerlink" href="#style-control" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\color{name}{text}
+    Applies color to text
+    Args:
+        name: Color name/code
+        text: Text to color
+    Behavior:
+<span class="w">        </span><span class="k">-</span><span class="w"> </span>HTML: CSS color
+<span class="w">        </span><span class="k">-</span><span class="w"> </span>LaTeX: LaTeX color
+<span class="w">        </span><span class="k">-</span><span class="w"> </span>Slides: Theme-aware color
+</pre></div>
+</div>
+</section>
+</section>
+<section id="content-adaptation">
+<h2>Content Adaptation<a class="headerlink" href="#content-adaptation" title="Link to this heading"></a></h2>
+<section id="format-detection">
+<h3>Format Detection<a class="headerlink" href="#format-detection" title="Link to this heading"></a></h3>
+<p>Content can detect and adapt to its context:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\ifdef{SLIDES}
+    \slides{Concise version}
+\else
+    \notes{Detailed version}
+\endif
+</pre></div>
+</div>
+</section>
+<section id="media-handling">
+<h3>Media Handling<a class="headerlink" href="#media-handling" title="Link to this heading"></a></h3>
+<p>Images and figures adapt to context:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\figure{contents}{caption}{label}
+Behavior:
+<span class="w">    </span><span class="k">-</span><span class="w"> </span>Slides: Full-width, minimal caption
+<span class="w">    </span><span class="k">-</span><span class="w"> </span>Notes: Formatted figure with caption
+<span class="w">    </span><span class="k">-</span><span class="w"> </span>PDF: Float placement
+</pre></div>
+</div>
+</section>
+</section>
+<section id="example-of-cross-context-usage">
+<h2>Example of Cross-Context Usage<a class="headerlink" href="#example-of-cross-context-usage" title="Link to this heading"></a></h2>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\ifndef{adaptiveContent}
+\define{adaptiveContent}
+
+\section{Adaptive Example}
+
+% Content adapts to format
+\ifdef{SLIDES}
+    \slides{
+<span class="w">        </span><span class="k">*</span><span class="w"> </span>Key Point 1
+<span class="w">        </span><span class="k">*</span><span class="w"> </span>Key Point 2
+    }
+\else
+    \notes{
+        This detailed explanation provides in-depth understanding...
+    }
+\endif
+
+% Link works everywhere
+\href{https://example.com}{More Information}
+
+% Figure adapts to context
+\figure{\includediagram{example}{80%}}
+{This caption adapts to format}{fig:example}
+
+\endif
+</pre></div>
+</div>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Format Awareness</p>
+<ul class="simple">
+<li><p>Consider all output formats</p></li>
+<li><p>Test in each context</p></li>
+<li><p>Provide appropriate fallbacks</p></li>
+</ul>
+</li>
+<li><p>Consistent Usage</p>
+<ul class="simple">
+<li><p>Use consistent macro patterns</p></li>
+<li><p>Maintain style across contexts</p></li>
+<li><p>Document format-specific behavior</p></li>
+</ul>
+</li>
+<li><p>Progressive Enhancement</p>
+<ul class="simple">
+<li><p>Start with basic content</p></li>
+<li><p>Add format-specific enhancements</p></li>
+<li><p>Ensure graceful fallbacks</p></li>
+</ul>
+</li>
+<li><p>Testing</p>
+<ul class="simple">
+<li><p>Verify behavior in each context</p></li>
+<li><p>Check format-specific features</p></li>
+<li><p>Validate cross-format compatibility</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Neil D. Lawrence.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

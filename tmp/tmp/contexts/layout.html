@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Layout Context &mdash; LaMD 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=360bc84d"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            LaMD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro/index.html">Getting Started with LaMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contexts/index.html">Understanding LaMD Contexts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guides/index.html">LaMD Guides</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">LaMD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Layout Context</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/tmp/tmp/contexts/layout.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="layout-context">
+<h1>Layout Context<a class="headerlink" href="#layout-context" title="Link to this heading"></a></h1>
+<p>The layout context manages the visual arrangement of content across different output formats, handling columns, alignment, and spacing.</p>
+<section id="key-macros">
+<h2>Key Macros<a class="headerlink" href="#key-macros" title="Link to this heading"></a></h2>
+<section id="column-layout">
+<h3>Column Layout<a class="headerlink" href="#column-layout" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\columns{one}{two}{width1}{width2}
+    Creates two-column layout
+    Args:
+        one: Left column content
+        two: Right column content
+        width1: Left column width
+        width2: Right column width
+
+\threeColumns{one}{two}{three}{width1}{width2}{width3}
+    Creates three-column layout
+    Args:
+        one/two/three: Column contents
+        width1/2/3: Column widths
+</pre></div>
+</div>
+</section>
+<section id="alignment">
+<h3>Alignment<a class="headerlink" href="#alignment" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\aligncenter{block}
+    Centers content horizontally
+    Args:
+        block: Content to center
+
+\alignright{block}
+    Right-aligns content
+    Args:
+        block: Content to align
+
+\alignleft{block}
+    Left-aligns content
+    Args:
+        block: Content to align
+</pre></div>
+</div>
+</section>
+<section id="containers">
+<h3>Containers<a class="headerlink" href="#containers" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\div{contents}{class}{style}
+    Creates a generic container
+    Args:
+        contents: Container content
+        class: CSS class
+        style: CSS styling
+
+\span{contents}{class}{style}
+    Creates an inline container
+    Args:
+        contents: Inline content
+        class: CSS class
+        style: CSS styling
+</pre></div>
+</div>
+</section>
+<section id="text-styling">
+<h3>Text Styling<a class="headerlink" href="#text-styling" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\largetext{block}
+    Increases text size
+    Args:
+        block: Text to enlarge
+
+\smalltext{block}
+    Decreases text size
+    Args:
+        block: Text to reduce
+</pre></div>
+</div>
+</section>
+<section id="additional-layout-controls">
+<h3>Additional Layout Controls<a class="headerlink" href="#additional-layout-controls" title="Link to this heading"></a></h3>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\xrightarrow{block}
+    Creates right arrow with text
+    Args:
+        block: Arrow label text
+
+\small{block}
+    Makes text small in all formats
+    Args:
+        block: Text to reduce
+
+\raw{block}{options}
+    Inserts raw content
+    Args:
+        block: Raw content
+        options: Format options
+</pre></div>
+</div>
+<p>Example usage:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>Model input \xrightarrow{transform} Model output
+
+\small{Note: Results may vary}
+
+\raw{&lt;custom-element&gt;Content&lt;/custom-element&gt;}{html}
+</pre></div>
+</div>
+</section>
+</section>
+<section id="example-usage">
+<h2>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading"></a></h2>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\ifndef{layoutExample}
+\define{layoutExample}
+
+\section{Comparison of Methods}
+
+\columns{
+    \aligncenter{
+        \largetext{Method A}
+        \includediagram{method-a}{90%}
+    }
+}{
+    \aligncenter{
+        \largetext{Method B}
+        \includediagram{method-b}{90%}
+    }
+}{50%}{50%}
+
+\div{
+    \smalltext{* Results based on experimental data}
+}{footnote}{padding: 1em;}
+
+\endif
+</pre></div>
+</div>
+</section>
+<section id="format-specific-behavior">
+<h2>Format-Specific Behavior<a class="headerlink" href="#format-specific-behavior" title="Link to this heading"></a></h2>
+<section id="html-slides">
+<h3>HTML/Slides<a class="headerlink" href="#html-slides" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Flexible CSS-based layouts</p></li>
+<li><p>Responsive design support</p></li>
+<li><p>Dynamic alignment</p></li>
+</ul>
+</section>
+<section id="pdf-latex">
+<h3>PDF/LaTeX<a class="headerlink" href="#pdf-latex" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Fixed column widths</p></li>
+<li><p>Precise alignment control</p></li>
+<li><p>Consistent spacing</p></li>
+</ul>
+</section>
+<section id="word-pptx">
+<h3>Word/PPTX<a class="headerlink" href="#word-pptx" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Table-based layouts</p></li>
+<li><p>Native alignment support</p></li>
+<li><p>Consistent margins</p></li>
+</ul>
+</section>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Use relative widths when possible</p></li>
+<li><p>Consider mobile responsiveness</p></li>
+<li><p>Test layouts in all output formats</p></li>
+<li><p>Maintain consistent spacing</p></li>
+<li><p>Use semantic class names</p></li>
+<li><p>Consider accessibility</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Neil D. Lawrence.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
