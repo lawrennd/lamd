@@ -33,10 +33,11 @@ jobs:
         sudo apt-get install -y gpp
     - name: Install dependencies
       run: |
-        poetry install --with dev
+        poetry install --with dev --no-root
+        poetry install -e .
     - name: Run tests
       run: |
-        poetry run pytest --cov=lamd --cov-report=xml
+        poetry run pytest --cov=lamd --cov-report=xml --cov-config=.coveragerc
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
