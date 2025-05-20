@@ -9,6 +9,7 @@ from lynguine.log import Logger
 cntxt = Context(name="lamd")
 log = Logger(name=__name__, level=cntxt["logging"]["level"], filename=cntxt["logging"]["filename"])
 
+# Module-level variable for tracking the since year
 SINCE_YEAR: Optional[int] = None
 
 
