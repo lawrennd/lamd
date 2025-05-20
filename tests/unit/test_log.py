@@ -1,6 +1,8 @@
 import io
 import logging
+
 import pytest
+
 from lamd.log import Logger
 
 
