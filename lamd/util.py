@@ -16,10 +16,12 @@ log = Logger(name=__name__, level=cntxt["logging"]["level"], filename=cntxt["log
 
 SINCE_YEAR: Optional[int] = None
 
+
 def set_since_year(year: int) -> None:
     """Set the global SINCE_YEAR variable."""
     global SINCE_YEAR
     SINCE_YEAR = year
+
 
 def get_since_year() -> Optional[int]:
     """Get the global SINCE_YEAR variable."""
