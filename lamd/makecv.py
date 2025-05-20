@@ -57,8 +57,8 @@ def main() -> int:
         f.write(f"MAKEFILESDIR={make_dir}\n")
         f.write(f"INCLUDESDIR={includes_dir}\n")
         f.write(f"SCRIPTDIR={script_dir}\n")
-        f.write(f"include $(MAKEFILESDIR)/make-cv-flags.mk\n")
-        f.write(f"include $(MAKEFILESDIR)/make-cv.mk\n")
+        f.write("include $(MAKEFILESDIR)/make-cv-flags.mk\n")
+        f.write("include $(MAKEFILESDIR)/make-cv.mk\n")
 
     # Update external dependencies if needed
     for field in ["snippetsdir", "bibdir"]:
