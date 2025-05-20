@@ -1,3 +1,3 @@
 # Package initialization
-from . import util
-from .config import interface
+from . import util  # noqa: F401
+from .config import interface  # noqa: F401
