@@ -1,10 +1,11 @@
 import logging
+from typing import Optional
 
 from .config import *
 
 
 class Logger:
-    def __init__(self, name=None, level=20, filename="lamd.log"):
+    def __init__(self, name: Optional[str] = None, level: int = 20, filename: str = "lamd.log") -> None:
         self.level = level
         self.filename = filename
         self.name = name
@@ -12,17 +13,17 @@ class Logger:
         logging.basicConfig(level=level, filename=filename, format=format)
         self.logger = logging.getLogger(name)
 
-    def debug(self, message):
+    def debug(self, message: str) -> None:
         self.logger.debug(message)
 
-    def info(self, message):
+    def info(self, message: str) -> None:
         self.logger.info(message)
 
-    def warning(self, message):
+    def warning(self, message: str) -> None:
         self.logger.warning(message)
 
-    def error(self, message):
+    def error(self, message: str) -> None:
         self.logger.error(message)
 
-    def critical(self, message):
+    def critical(self, message: str) -> None:
         self.logger.critical(message)

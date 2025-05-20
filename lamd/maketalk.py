@@ -16,7 +16,7 @@ import lynguine.util.yaml as ny
 import lamd
 
 
-def main():
+def main() -> int:
     """
     Process a markdown file and generate various output formats.
 
