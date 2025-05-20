@@ -105,15 +105,19 @@ filter: []
         class InterfaceDict(dict):
             def __contains__(self, key):
                 return dict.__contains__(self, key)
+
             def __getitem__(self, key):
                 return dict.__getitem__(self, key)
+
         class TalksDict(dict):
             def __contains__(self, key):
                 return key in ["listtemplate", "preprocessor", "augmentor", "sorter", "filter", "input", "talks"]
+
             def __getitem__(self, key):
                 if key == "talks":
                     return self
                 return dict.__getitem__(self, key)
+
         talks_dict = TalksDict(
             {
                 "listtemplate": "talk_item",
@@ -158,7 +162,7 @@ filter: []
         mock_load_template.assert_called_once_with(ext=".md")
         mock_custom_df.assert_called_once()
         mock_custom_df_instance.preprocess.assert_called_once()
-        
+
         # Verify the output
         expected_output = "- Test Talk\n\n- Test Talk\n\n"
         mock_print.assert_called_once_with(expected_output)

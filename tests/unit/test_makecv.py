@@ -38,11 +38,13 @@ class TestMakeCV(unittest.TestCase):
             elif key == "bibdir":
                 return "../_bib"
             return ""
+
         mock_interface.__getitem__.side_effect = getitem_side_effect
         mock_from_file.return_value = mock_interface
         mock_talk_field.side_effect = [ny.FileFormatError("Test error"), ny.FileFormatError("Test error")]
 
         real_open = builtins.open
+
         def open_side_effect(file, mode="r", *args, **kwargs):
             if file == "makefile":
                 return mock_open()(file, mode, *args, **kwargs)
