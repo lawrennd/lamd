@@ -15,7 +15,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 import pandas as pd
 
-from lamd.mdlist import get_since_year, main, set_since_year
+from lamd.mdlist import main
+from lamd.util import get_since_year, set_since_year
 
 
 class TestMdlist:
