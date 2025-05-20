@@ -1,1 +1,0 @@
-git+ssh://git@github.com/lawrennd/ndlpy.git#egg=ndlpy-0.1.0
