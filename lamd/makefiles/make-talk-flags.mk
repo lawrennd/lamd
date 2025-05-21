@@ -5,6 +5,10 @@ DATE=$(shell mdfield date ${BASE}.md)
 
 CATEGORIES=$(shell mdfield categories ${BASE}.md)
 
+# Get macros path from frontmatter or use default
+MACROS=$(shell mdfield macros ${BASE}.md)
+MACROS?=macros
+
 MATHJAX="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_SVG"
 REVEALJS="https://inverseprobability.com/talks/slides/reveal.js/"
 
@@ -19,8 +23,8 @@ PREFIX=$(shell flags prefix ${BASE})
 INKSCAPE=/Applications/Inkscape.app/Contents/MacOS/inkscape
 PP=mdpp
 
-PPFLAGS=-T 
-PPFLAGS=$(shell flags pp $(BASE))
+PPFLAGS=-T --macros=$(MACROS)
+PPFLAGS=$(shell flags pp $(BASE)) --macros=$(MACROS)
 
 BIBDIRECTORY=$(shell mdfield bibdir ${BASE}.md)
 

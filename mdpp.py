@@ -3,6 +3,63 @@ import sys
 import argparse
 import subprocess
 import shutil
+import yaml
+from lamd.validation import (
+    ValidationError,
+    FileNotFoundError,
+    DirectoryNotFoundError,
+    ArgumentValidationError,
+    DependencyError,
+    validate_file_exists,
+    validate_directory_exists,
+    validate_include_paths,
+    validate_output_format,
+    validate_code_level,
+    validate_metadata,
+    resolve_dependencies
+)
+
+# Constants for validation
+VALID_OUTPUT_FORMATS = ["html", "pdf", "ipynb"]
+VALID_FORMATS = ["slides", "notes", "article"]
+VALID_CODE_LEVELS = ["none", "ipynb", "diagnostic", "full", "plot"]
+
+def load_config() -> dict:
+    """Load configuration from _lamd.yml file.
+    
+    :return: Configuration dictionary
+    :rtype: dict
+    """
+    config_file = "_lamd.yml"
+    if not os.path.exists(config_file):
+        return {}
+    
+    with open(config_file, "r") as f:
+        return yaml.safe_load(f) or {}
+
+def process_includes(args: argparse.Namespace) -> tuple[str, str]:
+    """Process include files.
+    
+    :param args: Command line arguments
+    :type args: argparse.Namespace
+    :return: Tuple of (before_text, after_text)
+    :rtype: tuple[str, str]
+    """
+    return "", ""  # Placeholder implementation
+
+def process_content(args: argparse.Namespace, before_text: str, after_text: str) -> dict:
+    """Process content with GPP.
+    
+    :param args: Command line arguments
+    :type args: argparse.Namespace
+    :param before_text: Text to insert before content
+    :type before_text: str
+    :param after_text: Text to insert after content
+    :type after_text: str
+    :return: Processed content
+    :rtype: dict
+    """
+    return {}  # Placeholder implementation
 
 def setup_gpp_arguments(args: argparse.Namespace, iface: dict) -> list:
     """Set up GPP arguments based on command line args and interface config.
@@ -77,13 +134,17 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict) -> list:
     if args.include_path:
         for include_dir in args.include_path.split(":"):
             arglist.append(f"-I{include_dir}")
-    arglist.append(f"-I{MACROS}")
     
     # Add snippets directories
     if args.snippets_path:
         for snippet_dir in args.snippets_path.split(":"):
             arglist.append(f"-I{snippet_dir}")
+    
     arglist.append("-I.")
+    
+    # Add macros path after -I.
+    macros_path = str(args.macros)
+    arglist.append(f"-I{macros_path}")
     
     # Set output file if specified
     if args.output:
@@ -132,6 +193,36 @@ def check_dependencies() -> None:
     if incompatible_versions:
         raise RuntimeError(f"Incompatible versions for dependencies: {', '.join(incompatible_versions)}")
 
+def write_tmp_file(content: dict, filename: str) -> None:
+    """Write content to a temporary file.
+    
+    :param content: Content to write
+    :type content: dict
+    :param filename: Name of the file to write
+    :type filename: str
+    """
+    with open(filename, "wb") as fd:
+        yaml.dump(content, fd, sort_keys=False, default_flow_style=False)
+
+def run_gpp(args: list) -> None:
+    """Run GPP with the given arguments.
+    
+    :param args: List of arguments to pass to GPP
+    :type args: list
+    """
+    runlist = ["gpp"] + args
+    run_command = " ".join(runlist)
+    os.system(run_command)
+
+def cleanup_tmp_file(filename: str) -> None:
+    """Clean up temporary file.
+    
+    :param filename: Name of the file to clean up
+    :type filename: str
+    """
+    if os.path.exists(filename):
+        os.remove(filename)
+
 def main() -> int:
     """Markdown Preprocessor for academic content.
 
@@ -147,8 +238,16 @@ def main() -> int:
         epilog="For full documentation, visit: https://github.com/lawrennd/lamd",
     )
 
+    # Add macros argument
+    parser.add_argument("--macros", default="macros",
+                      help="Path to macros directory (default: macros)")
 
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output for detailed processing information")
+
+    parser.add_argument("--auto-install", action="store_true", help="Automatically install missing dependencies")
+
+    # Add positional filename argument
+    parser.add_argument("filename", help="Input markdown file")
 
     args = parser.parse_args()
 
@@ -158,7 +257,11 @@ def main() -> int:
 
     try:
         # Check dependencies
-        check_dependencies()
+        required_dependencies = {
+            "gpp": "2.24",  # This should be in pyproject.toml
+            "lynguine": "^0.1.0"  # Add other dependencies as needed
+        }
+        resolve_dependencies(required_dependencies, args.auto_install)
 
         # Validate input file
         validate_file_exists(args.filename, "input markdown file")
@@ -199,15 +302,10 @@ def main() -> int:
         # Write temporary file
         tmp_file, ext = os.path.splitext(args.filename)
         tmp_file += ".gpp.markdown"
-        with open(tmp_file, "wb") as fd:
-            fm.dump(writepost, fd, sort_keys=False, default_flow_style=False)
+        write_tmp_file(writepost, tmp_file)
 
         # Run GPP
-        runlist = ["gpp"] + arglist + [tmp_file]
-        run_command = " ".join(runlist)
-        if args.verbose:
-            print(f"Running command: {run_command}")
-        os.system(run_command)
+        run_gpp(arglist)
         return 0
 
     except ValidationError as e:

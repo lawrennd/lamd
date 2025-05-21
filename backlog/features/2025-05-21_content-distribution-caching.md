@@ -101,7 +101,7 @@ The implementation will use lynguine's data-oriented framework to create a conte
 
 ## Related
 
-- CIP: CIP-0005 (to be created)
+- CIP: CIP-0005 (Identified during mdpp error handling improvements)
 - PRs: None yet
 - Documentation: 
   - `lamd/makefiles/make-macros.mk`
@@ -116,7 +116,7 @@ The implementation will use lynguine's data-oriented framework to create a conte
 
 ### 2025-05-21
 
-Initial backlog item created to track the need for standardized content distribution and caching.
+Initial backlog item created to track the need for standardized content distribution and caching, identified during CIP-0005's analysis of mdpp error handling.
 
 ### 2025-05-21
 
