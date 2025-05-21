@@ -105,6 +105,17 @@ check-bibdir:
 		exit 1; \
 	fi
 
+# Check if macros field is defined
+.PHONY: check-macros
+check-macros:
+	@if [ -z "$(MACROS)" ]; then \
+		echo "Error: 'macros' is not defined in your _lamd.yml configuration file."; \
+		echo "Please add a 'macros' entry pointing to your macros directory."; \
+		echo "Example:"; \
+		echo "macros: macros"; \
+		exit 1; \
+	fi
+
 # Check header for which formats to create in notes and slides.
 # Create PDF of reveal slides with something like decktape https://github.com/astefanutti/decktape
 
@@ -124,6 +135,6 @@ check-directories:
 		exit 1; \
 	fi
 
-all: check-snippetsdir check-postsdir check-bibdir check-directories include_dynamic_deps $(ALL)
+all: check-snippetsdir check-postsdir check-bibdir check-directories check-macros include_dynamic_deps $(ALL)
 
 
