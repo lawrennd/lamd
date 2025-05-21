@@ -50,8 +50,4 @@ jobs:
         
     - name: Type check with mypy
       run: |
-        poetry run mypy --strict --ignore-missing-imports --disallow-untyped-defs --disallow-incomplete-defs lamd/
-        
-    - name: Install dependencies
-      run: |
-        poetry install --with dev 
+        poetry run mypy --strict --ignore-missing-imports --disallow-untyped-defs --disallow-incomplete-defs lamd/ 
