@@ -13,6 +13,7 @@ import argparse
 import os
 import sys
 
+
 import frontmatter as fm
 
 from lamd.config.interface import Interface
@@ -343,6 +344,8 @@ def main() -> int:
         ),
     )
 
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output for detailed processing information")
+
     args = parser.parse_args()
 
     # If only help was requested, we can return now without loading config
@@ -395,12 +398,13 @@ def main() -> int:
         # Run GPP
         runlist = ["gpp"] + arglist + [tmp_file]
         run_command = " ".join(runlist)
-        print(run_command)
+        if args.verbose:
+            print(f"Running command: {run_command}")
         os.system(run_command)
         return 0
 
     except ValidationError as e:
-        print(f"Error: {e}", file=sys.stderr)
+        print(f"Validation error: {e}", file=sys.stderr)
         return 1
     except Exception as e:
         print(f"Unexpected error: {e}", file=sys.stderr)
