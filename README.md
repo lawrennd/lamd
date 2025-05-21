@@ -63,6 +63,36 @@ Create a `_lamd.yml` in your project root to configure pandoc flags and other se
 ```yaml
 ```
 
+## Configuration System
+
+LaMD uses a modular configuration system based on makefiles and markdown frontmatter:
+
+### Flag Files
+
+Configuration is organized into flag files for different document types:
+- `make-cv-flags.mk`: Configuration for CV documents
+- `make-talk-flags.mk`: Configuration for talk documents
+- etc.
+
+These flag files:
+1. Extract configuration from markdown frontmatter using `mdfield`
+2. Define document-specific settings and paths
+3. Are included by the make system as needed
+
+### Configuration Sources
+
+Configuration can come from:
+1. Markdown frontmatter (primary source)
+2. Flag files (document-type specific)
+3. Environment variables (for system-wide settings)
+
+### Example Configuration Flow
+
+For a talk document:
+1. The markdown file's frontmatter defines basic settings along with _lamd.yml that contains the defaults.
+2. `make-talk-flags.mk` extracts these settings using `mdfield`
+3. The make system includes these flags
+4. The Python code (`mdpp.py`) respects these settings
 
 ## Core Scripts
 

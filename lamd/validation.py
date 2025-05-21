@@ -8,7 +8,9 @@ It includes custom exception classes and validation functions for various input 
 
 import os
 import sys
-from typing import List, Optional, Tuple
+import subprocess
+import shutil
+from typing import List, Optional, Tuple, Dict, Any
 
 
 class ValidationError(Exception):
@@ -25,6 +27,134 @@ class DirectoryNotFoundError(ValidationError):
 
 class ArgumentValidationError(ValidationError):
     """Exception raised when command line arguments are invalid."""
+
+
+class DependencyError(ValidationError):
+    """Exception raised when a dependency is missing or incompatible."""
+
+
+def check_dependency(dependency_name: str) -> bool:
+    """Check if a dependency is installed and accessible.
+
+    :param dependency_name: Name of the dependency to check
+    :type dependency_name: str
+    :return: True if the dependency is available, False otherwise
+    :rtype: bool
+    """
+    return shutil.which(dependency_name) is not None
+
+
+def check_version(dependency_name: str, required_version: str) -> bool:
+    """Check if a dependency meets the required version.
+
+    :param dependency_name: Name of the dependency to check
+    :type dependency_name: str
+    :param required_version: Required version of the dependency
+    :type required_version: str
+    :return: True if the dependency version is compatible, False otherwise
+    :rtype: bool
+    """
+    try:
+        result = subprocess.run([dependency_name, "--version"], capture_output=True, text=True)
+        installed_version = result.stdout.strip()
+        return installed_version >= required_version
+    except subprocess.CalledProcessError:
+        return False
+
+
+def resolve_dependencies(dependencies: Dict[str, str], auto_install: bool = False) -> None:
+    """Resolve and optionally install dependencies using Poetry.
+
+    :param dependencies: Dictionary of dependency names and required versions
+    :type dependencies: Dict[str, str]
+    :param auto_install: Whether to automatically install missing dependencies
+    :type auto_install: bool
+    :raises DependencyError: If dependencies cannot be resolved
+    """
+    try:
+        # Check if poetry is installed
+        if not check_dependency("poetry"):
+            raise DependencyError("Poetry is required for dependency management")
+        
+        # Check if we're in a poetry project
+        if not os.path.exists("pyproject.toml"):
+            raise DependencyError("Not in a Poetry project (pyproject.toml not found)")
+        
+        if auto_install:
+            # Add dependencies to pyproject.toml
+            for dep, version in dependencies.items():
+                try:
+                    subprocess.run(
+                        ["poetry", "add", f"{dep}=={version}"],
+                        check=True,
+                        capture_output=True,
+                        text=True
+                    )
+                except subprocess.CalledProcessError as e:
+                    raise DependencyError(f"Failed to add dependency {dep}: {e.stderr}")
+            
+            # Install dependencies
+            try:
+                subprocess.run(
+                    ["poetry", "install"],
+                    check=True,
+                    capture_output=True,
+                    text=True
+                )
+            except subprocess.CalledProcessError as e:
+                raise DependencyError(f"Failed to install dependencies: {e.stderr}")
+        else:
+            # Just check if dependencies are installed
+            try:
+                result = subprocess.run(
+                    ["poetry", "show"],
+                    check=True,
+                    capture_output=True,
+                    text=True
+                )
+                installed_deps = {
+                    line.split()[0]: line.split()[1]
+                    for line in result.stdout.splitlines()
+                    if line.strip()
+                }
+                
+                missing_deps = [
+                    dep for dep, version in dependencies.items()
+                    if dep not in installed_deps or installed_deps[dep] < version
+                ]
+                if missing_deps:
+                    raise DependencyError(
+                        f"Missing or outdated dependencies: {', '.join(missing_deps)}. "
+                        "Run with --auto-install to install them."
+                    )
+            except subprocess.CalledProcessError as e:
+                raise DependencyError(f"Failed to check dependencies: {e.stderr}")
+    except Exception as e:
+        raise DependencyError(f"Failed to resolve dependencies: {str(e)}")
+
+
+def install_dependency(dependency_name: str, version: Optional[str] = None) -> None:
+    """Install a dependency using Poetry.
+
+    :param dependency_name: Name of the dependency to install
+    :type dependency_name: str
+    :param version: Optional version to install
+    :type version: Optional[str]
+    :raises DependencyError: If installation fails
+    """
+    if not check_dependency("poetry"):
+        raise DependencyError("Poetry is required for dependency management")
+    
+    try:
+        cmd = ["poetry", "add"]
+        if version:
+            cmd.append(f"{dependency_name}=={version}")
+        else:
+            cmd.append(dependency_name)
+        
+        subprocess.run(cmd, check=True, capture_output=True, text=True)
+    except subprocess.CalledProcessError as e:
+        raise DependencyError(f"Failed to install {dependency_name}: {e.stderr}")
 
 
 def validate_file_exists(filepath: str, description: str = "file") -> None:
