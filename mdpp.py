@@ -1,3 +1,9 @@
+import os
+import sys
+import argparse
+import subprocess
+import shutil
+
 def setup_gpp_arguments(args: argparse.Namespace, iface: dict) -> list:
     """Set up GPP arguments based on command line args and interface config.
     
@@ -85,6 +91,26 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict) -> list:
     
     return arglist
 
+def check_dependency(dependency_name: str) -> bool:
+    """Check if a dependency is installed and accessible.
+
+    :param dependency_name: Name of the dependency to check
+    :type dependency_name: str
+    :return: True if the dependency is available, False otherwise
+    :rtype: bool
+    """
+    return shutil.which(dependency_name) is not None
+
+def check_dependencies() -> None:
+    """Check if all required dependencies are installed and accessible.
+
+    :raises RuntimeError: If any required dependency is missing
+    """
+    required_dependencies = ["gpp"]
+    missing_dependencies = [dep for dep in required_dependencies if not check_dependency(dep)]
+    if missing_dependencies:
+        raise RuntimeError(f"Missing required dependencies: {', '.join(missing_dependencies)}")
+
 def main() -> int:
     """Markdown Preprocessor for academic content.
 
@@ -100,7 +126,8 @@ def main() -> int:
         epilog="For full documentation, visit: https://github.com/lawrennd/lamd",
     )
 
-    # ... existing argument definitions ...
+
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output for detailed processing information")
 
     args = parser.parse_args()
 
@@ -109,6 +136,9 @@ def main() -> int:
         return 0
 
     try:
+        # Check dependencies
+        check_dependencies()
+
         # Validate input file
         validate_file_exists(args.filename, "input markdown file")
 
@@ -154,12 +184,13 @@ def main() -> int:
         # Run GPP
         runlist = ["gpp"] + arglist + [tmp_file]
         run_command = " ".join(runlist)
-        print(run_command)
+        if args.verbose:
+            print(f"Running command: {run_command}")
         os.system(run_command)
         return 0
 
     except ValidationError as e:
-        print(f"Error: {e}", file=sys.stderr)
+        print(f"Validation error: {e}", file=sys.stderr)
         return 1
     except Exception as e:
         print(f"Unexpected error: {e}", file=sys.stderr)
