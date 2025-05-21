@@ -101,15 +101,36 @@ def check_dependency(dependency_name: str) -> bool:
     """
     return shutil.which(dependency_name) is not None
 
+def check_version(dependency_name: str, required_version: str) -> bool:
+    """Check if a dependency meets the required version.
+
+    :param dependency_name: Name of the dependency to check
+    :type dependency_name: str
+    :param required_version: Required version of the dependency
+    :type required_version: str
+    :return: True if the dependency version is compatible, False otherwise
+    :rtype: bool
+    """
+    try:
+        result = subprocess.run([dependency_name, "--version"], capture_output=True, text=True)
+        installed_version = result.stdout.strip()
+        return installed_version >= required_version
+    except subprocess.CalledProcessError:
+        return False
+
 def check_dependencies() -> None:
     """Check if all required dependencies are installed and accessible.
 
-    :raises RuntimeError: If any required dependency is missing
+    :raises RuntimeError: If any required dependency is missing or has an incompatible version
     """
-    required_dependencies = ["gpp"]
+    required_dependencies = {"gpp": "2.24"}
     missing_dependencies = [dep for dep in required_dependencies if not check_dependency(dep)]
     if missing_dependencies:
         raise RuntimeError(f"Missing required dependencies: {', '.join(missing_dependencies)}")
+    
+    incompatible_versions = [dep for dep, version in required_dependencies.items() if not check_version(dep, version)]
+    if incompatible_versions:
+        raise RuntimeError(f"Incompatible versions for dependencies: {', '.join(incompatible_versions)}")
 
 def main() -> int:
     """Markdown Preprocessor for academic content.
