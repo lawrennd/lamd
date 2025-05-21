@@ -408,6 +408,7 @@ def main() -> int:
         run_command = " ".join(runlist)
         if args.verbose:
             print(f"Running command: {run_command}")
+        print(f"Running command: {run_command}")
         os.system(run_command)
         return 0
 
