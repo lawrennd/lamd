@@ -46,7 +46,7 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict) -> list:
     :rtype: list
     """
     # Basic arguments
-    arglist = ["+n", "-U", '\\" "" "{" "}{" "}" "{" "}" "#" ""']
+    arglist = ["+n", '-U "\\" "" "{" "}{" "}" "{" "}" "#" ""']
 
     # Add format-specific arguments
     if args.to:
