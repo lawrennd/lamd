@@ -114,3 +114,17 @@ check-bibdir:
 		echo "bibdir: ../_bibliography"; \
 		exit 1; \
 	fi
+
+# Check if macros field is defined
+.PHONY: check-macros
+check-macros:
+	@if [ -z "$(MACROS)" ]; then \
+		echo "Error: 'macros' is not defined in your _lamd.yml configuration file."; \
+		echo "Please add a 'macros' entry pointing to your macros directory."; \
+		echo "Example:"; \
+		echo "macros: macros"; \
+		exit 1; \
+	fi
+
+# Add check-macros to the all target
+all: check-snippetsdir check-postsdir check-bibdir check-macros $(ALL)

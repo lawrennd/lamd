@@ -346,6 +346,8 @@ def main() -> int:
 
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output for detailed processing information")
 
+    parser.add_argument("-M", "--macros", type=str, help="Directory containing *.gpp files for macros")
+
     args = parser.parse_args()
 
     # If only help was requested, we can return now without loading config
@@ -376,6 +378,12 @@ def main() -> int:
         # Validate metadata
         if args.meta_data:
             validate_metadata(args.meta_data)
+
+        # Validate macros directory
+        if args.macros:
+            validate_directory_exists(args.macros, "macros directory")
+        else:
+            raise ValidationError("The '--macros' option must be specified to indicate the directory containing *.gpp files.")
 
         # Load configuration
         iface = load_config()
