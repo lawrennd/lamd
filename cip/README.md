@@ -35,9 +35,7 @@ Each CIP can have one of the following statuses:
 
 ## Current CIPs
 
-- [CIP-0001](./cip0001.md): lamd Command Line Utilities Documentation Improvements - Creating comprehensive documentation for all command line utilities to improve usability and adoption
-- [CIP-0002](./cip0002.md): Systematic Requirements Gathering for lamd - Establishing a process for gathering, documenting, and tracking user requirements
-- [CIP-0003](./cip0003.md): Establishing Project Tenets for lamd - Creating core tenets to guide decision-making and project direction
+- [CIP-0001](./cip0001.md): 
 
 ## Creating a Good CIP
 
