@@ -6,7 +6,7 @@ DATE=$(shell mdfield date ${BASE}.md)
 CATEGORIES=$(shell mdfield categories ${BASE}.md)
 
 # Get macros path from frontmatter or use default
-MACROS=$(shell mdfield macros ${BASE}.md)
+MACROSDIR=$(shell mdfield macrosdir ${BASE}.md)
 MACROS?=macros
 
 MATHJAX="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_SVG"
@@ -23,8 +23,8 @@ INKSCAPE=inkscape #/Applications/Inkscape.app/Contents/Resources/bin/inkscape
 PP=mdpp
 FIND=gfind
 
-PPFLAGS=-T --macros=$(MACROS)
-PPFLAGS=$(shell flags pp $(BASE)) --macros=$(MACROS)
+PPFLAGS=-T --macros=$(MACROSDIR)
+PPFLAGS=$(shell flags pp $(BASE)) --macros=$(MACROSDIR)
 
 BIBDIRECTORY=$(shell mdfield bibdir ${BASE}.md)
 
@@ -118,11 +118,11 @@ check-bibdir:
 # Check if macros field is defined
 .PHONY: check-macros
 check-macros:
-	@if [ -z "$(MACROS)" ]; then \
-		echo "Error: 'macros' is not defined in your _lamd.yml configuration file."; \
-		echo "Please add a 'macros' entry pointing to your macros directory."; \
+	@if [ -z "$(MACROSDIR)" ]; then \
+		echo "Error: 'macrosdir' is not defined in your _lamd.yml configuration file."; \
+		echo "Please add a 'macrosdir' entry pointing to your macros directory."; \
 		echo "Example:"; \
-		echo "macros: macros"; \
+		echo "macrosdir: macros"; \
 		exit 1; \
 	fi
 
