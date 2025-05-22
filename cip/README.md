@@ -35,7 +35,10 @@ Each CIP can have one of the following statuses:
 
 ## Current CIPs
 
-- [CIP-0001](./cip0001.md): 
+- [CIP-0001](./cip0001.md): lamd Command Line Utilities Documentation Improvements (In Progress)
+- [CIP-0002](./cip0002.md): Systematic Requirements Gathering for lamd (Proposed)
+- [CIP-0003](./cip0003.md): Establishing Project Tenets for lamd (Proposed)
+- [CIP-0005](./cip0005.md): Improve mdpp Error Handling and Validation (In Progress)
 
 ## Creating a Good CIP
 

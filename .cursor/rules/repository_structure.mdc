@@ -1,6 +1,7 @@
 ---
-description: Repository Structure
-globs: *
+description: 
+globs: 
+alwaysApply: true
 ---
 
 # Lamd Repository Structure
