@@ -1,0 +1,63 @@
+# Lamd Repository Structure
+
+## Core Package Structure
+
+The `lamd` directory at the root of the repository contains the Python package itself. This directory should ONLY contain:
+- Python package code
+- Package-specific tests
+- Package documentation
+- Package configuration files
+
+## Other Repository Contents
+
+All other repository contents should be placed at the root level, NOT inside the `lamd` package directory. This includes:
+
+### Backlog Items
+
+- Location: `/backlog/features/`
+- Example: `/backlog/features/2025-05-22_path-handling-consistency.md`
+- NEVER place in `/lamd/backlog/`
+
+### Documentation
+- Location: `/docs/`
+- Example: `/docs/guides/`, `/docs/api/`
+- NEVER place in `/lamd/docs/`
+
+### Scripts
+- Location: `/scripts/`
+- Example: `/scripts/build.sh`
+- NEVER place in `/lamd/scripts/`
+
+### Tests
+- Location: `/tests/`
+- Example: `/tests/integration/`
+- NEVER place in `/lamd/tests/`
+
+### Configuration
+- Location: `/config/`
+- Example: `/config/defaults.yml`
+- NEVER place in `/lamd/config/`
+
+## Rule Application
+When creating or modifying files:
+1. First determine if it's part of the Python package
+2. If yes, place in `/lamd/` directory
+3. If no, place at root level in appropriate directory
+4. NEVER create new directories inside `/lamd/` unless they are part of the package structure
+
+## Common Mistakes to Avoid
+- Creating backlog items in `/lamd/backlog/`
+- Placing scripts in `/lamd/scripts/`
+- Adding documentation in `/lamd/docs/`
+- Creating tests in `/lamd/tests/`
+
+## Correct Examples
+✅ `/backlog/features/2025-05-22_feature.md`
+✅ `/lamd/lamd/core/processor.py`
+✅ `/docs/guides/installation.md`
+✅ `/scripts/build.sh`
+
+## Incorrect Examples
+❌ `/lamd/backlog/features/2025-05-22_feature.md`
+❌ `/lamd/scripts/build.sh`
+❌ `/lamd/docs/guides/installation.md` 
