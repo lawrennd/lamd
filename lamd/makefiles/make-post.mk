@@ -8,5 +8,5 @@ ${BASE}.posts.html: ${BASE}.posts.html.markdown
                --to html \
                --out ${BASE}.posts.html  ${BASE}.posts.html.markdown 
 	cp ${BASE}.posts.html ${POSTSDIR}/${OUT}.html
-	${SCRIPTDIR}/copy_web_diagrams.sh ${BASE}.md slidediagrams ${SLIDESDIR}/diagrams/
+	${SCRIPTDIR}/copy_web_diagrams.sh ${BASE}.md slidediagrams ${SLIDESDIR}/diagrams/ ${SLIDESDIR} ${DIAGRAMSDIR} ${SNIPPETSDIR} ${VERBOSE:+--verbose}
 
