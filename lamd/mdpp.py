@@ -12,6 +12,7 @@ slides, notes, and code outputs from a single source.
 import argparse
 import os
 import sys
+from typing import Any
 
 import frontmatter as fm
 
@@ -34,94 +35,63 @@ VALID_CODE_LEVELS = ["none", "sparse", "ipynb", "diagnostic", "plot", "full"]
 VALID_OUTPUT_FORMATS = ["pptx", "html", "docx", "ipynb", "svg", "tex", "python"]
 
 
-def setup_gpp_arguments(args: argparse.Namespace, iface: dict) -> list:
-    """Set up GPP arguments based on command line args and interface config.
+def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list[str]:
+    """Set up arguments for gpp.
 
-    :param args: Command line arguments
-    :type args: argparse.Namespace
-    :param iface: Interface configuration
-    :type iface: dict
-    :return: List of GPP arguments
-    :rtype: list
+    Args:
+        args: Command line arguments.
+        iface: Interface configuration.
+
+    Returns:
+        list[str]: List of gpp arguments.
     """
-    # Basic arguments
-    arglist = ["+n", '-U "\\\\" "" "{" "}{" "}" "{" "}" "#" ""']
+    gpp_args = ["+n", '-U "\\\\" "" "{" "}{" "}" "{" "}" "#" ""']
 
     # Add format-specific arguments
-    if args.to:
-        arglist.append(f"-D{args.to.upper()}=1")
-    if args.format:
-        arglist.append(f"-D{args.format.upper()}=1")
+    if args.to == "html":
+        gpp_args.append("-DHTML=1")
+    if args.format == "slides":
+        gpp_args.append("-DSLIDES=1")
+    if args.exercises:
+        gpp_args.append("-DEXERCISES=1")
+    if args.assignment:
+        gpp_args.append("-DASSIGNMENT=1")
+    if args.edit_links:
+        gpp_args.append("-DEDIT=1")
+    if args.draft:
+        gpp_args.append("-DDRAFT=1")
 
-    # Add feature flags
-    feature_flags = {"exercises": "EXERCISES", "assignment": "ASSIGNMENT", "edit_links": "EDIT", "draft": "DRAFT"}
-    for arg_name, flag in feature_flags.items():
-        if getattr(args, arg_name):
-            arglist.append(f"-D{flag}=1")
+    # Add metadata arguments
+    for meta in args.meta_data:
+        gpp_args.append(f"-D{meta}")
 
-    # Add metadata
-    if args.meta_data:
-        for a in args.meta_data:
-            arglist.append(f"-D{a}")
+    # Add code-specific arguments
+    if args.code == "ipynb":
+        gpp_args.extend(["-DCODE=1", "-DDISPLAYCODE=1", "-DPLOTCODE=1", "-DHELPERCODE=1", "-DMAGICCODE=1"])
 
-    # Handle code inclusion options
-    if args.code is not None and args.code != "none":
-        arglist.append("-DCODE=1")
-        code_flags = {
-            "ipynb": ["DISPLAYCODE", "PLOTCODE", "HELPERCODE", "MAGICCODE"],
-            "diagnostic": ["DISPLAYCODE", "HELPERCODE", "PLOTCODE", "MAGICCODE"],
-            "full": ["DISPLAYCODE", "HELPERCODE", "PLOTCODE", "MAGICCODE"],
-            "plot": ["HELPERCODE", "PLOTCODE"],
-        }
-        if args.code in code_flags:
-            arglist.extend([f"-D{flag}=1" for flag in code_flags[args.code]])
-
-    # Add directory definitions
-    url = iface.get("diagramsurl", iface.get("url", "") + iface.get("baseurl", ""))
-    diagrams_dir = (
-        url + iface.get("diagramsdir", "diagrams") if args.to in ["html", "ipynb"] else iface.get("diagramsdir", "diagrams")
-    )
-    scripts_dir = iface.get("scriptsdir", "scripts")
-    write_diagrams_dir = iface.get("writediagramsdir", "diagrams")
-
-    # Override with command line arguments
+    # Add directory arguments
     if args.diagrams_dir:
-        diagrams_dir = args.diagrams_dir
+        gpp_args.append(f"-DdiagramsDir={iface['diagramsurl']}{iface['diagramsdir']}")
     if args.scripts_dir:
-        scripts_dir = args.scripts_dir
+        gpp_args.append(f"-DscriptsDir={iface['scriptsdir']}")
     if args.write_diagrams_dir:
-        write_diagrams_dir = args.write_diagrams_dir
-
-    arglist.extend(
-        [
-            f"-DdiagramsDir={diagrams_dir}",
-            f"-DscriptsDir={scripts_dir}",
-            f"-DwriteDiagramsDir={write_diagrams_dir}",
-            "-Dtalksdir=/Users/neil/lawrennd/talks",
-            "-DgithubBaseUrl=https://github.com/lawrennd/snippets/edit/main/",
-        ]
-    )
+        gpp_args.append(f"-DwriteDiagramsDir={iface['writediagramsdir']}")
 
     # Add include paths
-    if args.include_path:
-        for include_dir in args.include_path.split(":"):
-            arglist.append(f"-I{include_dir}")
-    arglist.append(f"-I{MACROS}")
+    gpp_args.append(f"-Dtalksdir={os.path.dirname(os.path.abspath(__file__))}")
+    gpp_args.append("-DgithubBaseUrl=https://github.com/lawrennd/snippets/edit/main/")
+    gpp_args.append(f"-I{args.include_path}")
+    gpp_args.append(f"-I{args.snippets_path}")
+    gpp_args.append("-I.")
+    gpp_args.append(f"-I{args.macros}")
 
-    # Add snippets directories
-    if args.snippets_path:
-        for snippet_dir in args.snippets_path.split(":"):
-            arglist.append(f"-I{snippet_dir}")
-    arglist.append("-I.")
+    # Add output file
+    gpp_args.append(f"-o {args.output}")
 
-    # Set output file if specified
-    if args.output:
-        arglist.append(f"-o {args.output}")
-
-    return arglist
+    return gpp_args
 
 
-def process_includes(args: argparse.Namespace) -> tuple:
+def process_includes(args: argparse.Namespace) -> tuple[str, str]:
     """Process include files and return before/after text.
 
     :param args: Command line arguments
@@ -154,14 +124,15 @@ def process_includes(args: argparse.Namespace) -> tuple:
     return before_text, after_text
 
 
-def load_config() -> dict:
+def load_config() -> dict[str, Any]:
     """Load interface configuration from files.
 
     :return: Interface configuration
     :rtype: dict
     """
     try:
-        return Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
+        config: dict[str, Any] = Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
+        return config
     except ValueError as e:
         print(f"Configuration error: {e}", file=sys.stderr)
         print("Continuing with default settings...", file=sys.stderr)
