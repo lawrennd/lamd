@@ -36,4 +36,12 @@ ${BASE}.include.tex: ${BASE}.notes.tex.markdown ${TEXDEPS}
 		-o ${BASE}.include.tex  \
 		${BASE}.notes.tex.markdown 
 	cp ${BASE}.include.tex ${TEXDIR}/${BASE}.include.tex
-	${SCRIPTDIR}/copy_web_diagrams.sh ${BASE}.md texdiagrams ${TEXDIR}/diagrams ${SLIDESDIR} ${DIAGRAMSDIR} ${SNIPPETSDIR} ${VERBOSE:+--verbose}
+	${SCRIPTDIR}/copy_web_diagrams.sh ${VERBOSE:+--verbose} ${BASE}.md texdiagrams ${TEXDIR}/diagrams ${SLIDESDIR} ${DIAGRAMSDIR} ${SNIPPETSDIR}
+
+${BASE}.tex: ${BASE}.tex.markdown
+	pandoc --template ${TEMPLATESDIR}/pandoc/pandoc-jekyll-tex-template ${PDSFLAGS} \
+	       --markdown-headings=atx \
+	       ${TEXFLAGS} \
+               --to latex \
+               --out ${BASE}.tex  ${BASE}.tex.markdown 
+	${SCRIPTDIR}/copy_web_diagrams.sh ${VERBOSE:+--verbose} ${BASE}.md texdiagrams ${TEXDIR}/diagrams ${SLIDESDIR} ${DIAGRAMSDIR} ${SNIPPETSDIR}
