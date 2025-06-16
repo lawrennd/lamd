@@ -9,7 +9,7 @@ import pytest
 # Add the parent directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
-from lamd.mdpp import main, setup_gpp_arguments
+from lamd.mdpp import main, process_content, process_includes, setup_gpp_arguments
 from lamd.validation import check_dependency, check_version
 
 # Set LAMD_MACROS environment variable for testing
@@ -59,15 +59,19 @@ def test_setup_gpp_arguments():
     args.include_path = "/usr/include"
     args.snippets_path = "/usr/snippets"
     args.output = "output.md"
-    args.macros = "macros"  # Set macros attribute on MagicMock
+    args.macros = "macros"
 
     iface = {
         "diagramsurl": "http://example.com",
         "diagramsdir": "diagrams",
         "scriptsdir": "scripts",
         "writediagramsdir": "diagrams",
-        "macros": "macros",  # Add macros to interface config
+        "macros": "macros",
     }
+
+    # Get the directory of mdpp.py for the expected -Dtalksdir value
+    import lamd.mdpp
+    mdpp_dir = os.path.dirname(os.path.abspath(lamd.mdpp.__file__))
 
     expected_args = [
         "+n",
@@ -82,10 +86,7 @@ def test_setup_gpp_arguments():
         "-DPLOTCODE=1",
         "-DHELPERCODE=1",
         "-DMAGICCODE=1",
-        "-DdiagramsDir=http://example.comdiagrams",
-        "-DscriptsDir=scripts",
-        "-DwriteDiagramsDir=diagrams",
-        "-Dtalksdir=/Users/neil/lawrennd/talks",
+        f"-Dtalksdir={mdpp_dir}",
         "-DgithubBaseUrl=https://github.com/lawrennd/snippets/edit/main/",
         "-I/usr/include",
         "-I/usr/snippets",
@@ -101,9 +102,8 @@ def test_main():
     """Test the main function."""
     with patch("sys.argv", ["mdpp.py", "-h", "dummy.md"]), patch("sys.exit") as mock_exit:
         main()
-        mock_exit.assert_called_once_with(0)  # Check if sys.exit was called with 0
+        mock_exit.assert_called_once_with(0)
 
-    # Create a Namespace with all required attributes
     args_namespace = argparse.Namespace(
         to="html",
         format="slides",
@@ -132,9 +132,6 @@ def test_main():
         patch("lamd.mdpp.setup_gpp_arguments", return_value=[]),
         patch("lamd.mdpp.process_includes", return_value=("", "")),
         patch("lamd.mdpp.process_content", return_value=""),
-        patch("lamd.mdpp.write_tmp_file"),
-        patch("lamd.mdpp.run_gpp"),
-        patch("lamd.mdpp.cleanup_tmp_file"),
         patch("os.path.isdir", return_value=True),
     ):
         main()
