@@ -24,16 +24,17 @@ Returns:
     None. Outputs formatted status information to stdout.
 """
 
-import os
-import sys
-import subprocess
-import re
-import glob
 import argparse
+import glob
+import os
+import re
+import subprocess
+import sys
 from datetime import datetime
-import yaml
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
+
+import yaml
 
 
 # ANSI color codes for terminal output
