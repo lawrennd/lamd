@@ -4,16 +4,18 @@ Tests for the validation module.
 """
 
 import os
-import pytest
-from unittest.mock import patch, MagicMock
 import subprocess
+from unittest.mock import MagicMock, patch
+
+import pytest
+
 from lamd.validation import (
-    ValidationError,
     DependencyError,
+    ValidationError,
     check_dependency,
     check_version,
-    resolve_dependencies,
     install_dependency,
+    resolve_dependencies,
 )
 
 

@@ -4,12 +4,13 @@ Script to combine individual tenet files into a single document.
 Also creates a YAML representation for machine processing.
 """
 
+import glob
 import os
 import re
-import yaml
-import glob
 from collections import OrderedDict
 from datetime import datetime
+
+import yaml
 
 
 def extract_tenet_metadata(file_path):

@@ -1,14 +1,15 @@
-import pytest
-from unittest.mock import patch, MagicMock
+import argparse
+import os
 import subprocess
 import sys
-import os
-import argparse
+from unittest.mock import MagicMock, patch
+
+import pytest
 
 # Add the parent directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
-from mdpp import check_dependency, check_version, check_dependencies, setup_gpp_arguments, main
+from mdpp import check_dependencies, check_dependency, check_version, main, setup_gpp_arguments
 
 # Set LAMD_MACROS environment variable for testing
 os.environ["LAMD_MACROS"] = "/usr/local/macros"

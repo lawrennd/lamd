@@ -13,7 +13,6 @@ import argparse
 import os
 import sys
 
-
 import frontmatter as fm
 
 from lamd.config.interface import Interface
