@@ -344,7 +344,9 @@ def main() -> int:
         ),
     )
 
-    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output for detailed processing information")
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="Enable verbose output for detailed processing information"
+    )
 
     parser.add_argument("-M", "--macros", type=str, help="Directory containing *.gpp files for macros")
 

@@ -75,52 +75,32 @@ def resolve_dependencies(dependencies: Dict[str, str], auto_install: bool = Fals
         # Check if poetry is installed
         if not check_dependency("poetry"):
             raise DependencyError("Poetry is required for dependency management")
-        
+
         # Check if we're in a poetry project
         if not os.path.exists("pyproject.toml"):
             raise DependencyError("Not in a Poetry project (pyproject.toml not found)")
-        
+
         if auto_install:
             # Add dependencies to pyproject.toml
             for dep, version in dependencies.items():
                 try:
-                    subprocess.run(
-                        ["poetry", "add", f"{dep}=={version}"],
-                        check=True,
-                        capture_output=True,
-                        text=True
-                    )
+                    subprocess.run(["poetry", "add", f"{dep}=={version}"], check=True, capture_output=True, text=True)
                 except subprocess.CalledProcessError as e:
                     raise DependencyError(f"Failed to add dependency {dep}: {e.stderr}")
-            
+
             # Install dependencies
             try:
-                subprocess.run(
-                    ["poetry", "install"],
-                    check=True,
-                    capture_output=True,
-                    text=True
-                )
+                subprocess.run(["poetry", "install"], check=True, capture_output=True, text=True)
             except subprocess.CalledProcessError as e:
                 raise DependencyError(f"Failed to install dependencies: {e.stderr}")
         else:
             # Just check if dependencies are installed
             try:
-                result = subprocess.run(
-                    ["poetry", "show"],
-                    check=True,
-                    capture_output=True,
-                    text=True
-                )
-                installed_deps = {
-                    line.split()[0]: line.split()[1]
-                    for line in result.stdout.splitlines()
-                    if line.strip()
-                }
-                
+                result = subprocess.run(["poetry", "show"], check=True, capture_output=True, text=True)
+                installed_deps = {line.split()[0]: line.split()[1] for line in result.stdout.splitlines() if line.strip()}
+
                 missing_deps = [
-                    dep for dep, version in dependencies.items()
-                    if dep not in installed_deps or installed_deps[dep] < version
+                    dep for dep, version in dependencies.items() if dep not in installed_deps or installed_deps[dep] < version
                 ]
                 if missing_deps:
                     raise DependencyError(
@@ -144,14 +124,14 @@ def install_dependency(dependency_name: str, version: Optional[str] = None) -> N
     """
     if not check_dependency("poetry"):
         raise DependencyError("Poetry is required for dependency management")
-    
+
     try:
         cmd = ["poetry", "add"]
         if version:
             cmd.append(f"{dependency_name}=={version}")
         else:
             cmd.append(dependency_name)
-        
+
         subprocess.run(cmd, check=True, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
         raise DependencyError(f"Failed to install {dependency_name}: {e.stderr}")
