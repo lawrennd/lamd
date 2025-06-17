@@ -297,7 +297,7 @@ def main() -> int:
     )
 
     parser.add_argument(
-        "-m", "--meta-data", nargs="*", help="Additional metadata definitions to pass to the preprocessor (format: KEY=VALUE)"
+        "-m", "--meta-data", nargs="*", default=[], help="Additional metadata definitions to pass to the preprocessor (format: KEY=VALUE)"
     )
 
     parser.add_argument(
