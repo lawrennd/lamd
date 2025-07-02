@@ -39,6 +39,7 @@ Each CIP can have one of the following statuses:
 - [CIP-0002](./cip0002.md): Systematic Requirements Gathering for lamd (Proposed)
 - [CIP-0003](./cip0003.md): Establishing Project Tenets for lamd (Proposed)
 - [CIP-0005](./cip0005.md): Improve mdpp Error Handling and Validation (In Progress)
+- [CIP-0006](./cip0006.md): Two-Stage Command Line Interface for lamd Utilities (Proposed)
 
 ## Creating a Good CIP
 
