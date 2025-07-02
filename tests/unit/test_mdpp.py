@@ -71,6 +71,7 @@ def test_setup_gpp_arguments():
     }
 
     import lamd.mdpp
+
     mdpp_dir = os.path.dirname(os.path.abspath(lamd.mdpp.__file__))
 
     required_args = [
@@ -101,12 +102,12 @@ def test_setup_gpp_arguments():
 
     result = setup_gpp_arguments(args, iface)
     # Check -U argument flexibly due to platform-dependent escaping
-    u_args = [arg for arg in result if arg.startswith('-U')]
+    u_args = [arg for arg in result if arg.startswith("-U")]
     assert u_args, "Missing required -U argument"
-    assert '{' in u_args[0] and '}' in u_args[0], "-U argument does not contain expected macro delimiters"
+    assert "{" in u_args[0] and "}" in u_args[0], "-U argument does not contain expected macro delimiters"
     # Check all other required arguments except -U
     for req in required_args:
-        if not req.startswith('-U'):
+        if not req.startswith("-U"):
             assert req in result, f"Missing required argument: {req}"
 
 
