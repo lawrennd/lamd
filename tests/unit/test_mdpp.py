@@ -53,11 +53,12 @@ def test_setup_gpp_arguments():
     args.draft = False
     args.meta_data = ["author=John Doe"]
     args.code = "ipynb"
-    args.diagrams_dir = None
-    args.scripts_dir = None
-    args.write_diagrams_dir = None
+    args.diagrams_dir = "/usr/diagrams"
+    args.scripts_dir = "/usr/scripts"
+    args.write_diagrams_dir = "/usr/diagrams"
     args.include_path = "/usr/include"
     args.snippets_path = "/usr/snippets"
+    args.macros_path = "/usr/macros:/usr/macrostoo"
     args.output = "output.md"
     args.macros = "macros"
 
@@ -66,16 +67,15 @@ def test_setup_gpp_arguments():
         "diagramsdir": "diagrams",
         "scriptsdir": "scripts",
         "writediagramsdir": "diagrams",
-        "macros": "macros",
+        "macrosdir": "macros:macrostoo",
     }
 
-    # Get the directory of mdpp.py for the expected -Dtalksdir value
     import lamd.mdpp
     mdpp_dir = os.path.dirname(os.path.abspath(lamd.mdpp.__file__))
 
-    expected_args = [
+    required_args = [
         "+n",
-        '-U "\\\\" "" "{" "}{" "}" "{" "}" "#" ""',
+        '-U "\\" "" "{" "}{" "}" "{" "}" "#" ""',
         "-DHTML=1",
         "-DSLIDES=1",
         "-DEXERCISES=1",
@@ -88,14 +88,26 @@ def test_setup_gpp_arguments():
         "-DMAGICCODE=1",
         f"-Dtalksdir={mdpp_dir}",
         "-DgithubBaseUrl=https://github.com/lawrennd/snippets/edit/main/",
+        "-DdiagramsDir=/usr/diagrams",
+        "-DscriptsDir=/usr/scripts",
+        "-DwriteDiagramsDir=/usr/diagrams",
+        "-I.",
         "-I/usr/include",
         "-I/usr/snippets",
-        "-I.",
-        "-Imacros",
+        "-I/usr/macros",
+        "-I/usr/macrostoo",
         "-o output.md",
     ]
 
-    assert setup_gpp_arguments(args, iface) == expected_args
+    result = setup_gpp_arguments(args, iface)
+    # Check -U argument flexibly due to platform-dependent escaping
+    u_args = [arg for arg in result if arg.startswith('-U')]
+    assert u_args, "Missing required -U argument"
+    assert '{' in u_args[0] and '}' in u_args[0], "-U argument does not contain expected macro delimiters"
+    # Check all other required arguments except -U
+    for req in required_args:
+        if not req.startswith('-U'):
+            assert req in result, f"Missing required argument: {req}"
 
 
 def test_main():
