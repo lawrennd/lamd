@@ -132,3 +132,5 @@ for file in $deps; do
 done
 
 [ $VERBOSE -eq 1 ] && echo "Diagram copying completed successfully"
+[ $VERBOSE -eq 1 ] && echo "Script reached end, exit code: $?"
+exit 0

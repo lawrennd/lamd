@@ -163,11 +163,13 @@ def validate_directory_exists(dirpath: str, description: str = "directory") -> N
         raise DirectoryNotFoundError(f"{description.capitalize()} not found: {dirpath}")
 
 
-def validate_include_paths(paths: Optional[str]) -> List[str]:
+def validate_include_paths(paths: Optional[str], description: str = "include paths") -> List[str]:
     """Validate include paths and return list of valid directories.
 
     :param paths: Colon-separated list of include paths
     :type paths: Optional[str]
+    :param description: Description of the directory for error messages
+    :type description: str
     :return: List of valid include directories
     :rtype: List[str]
     :raises DirectoryNotFoundError: If any required include directory doesn't exist

@@ -69,21 +69,42 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
     if args.code == "ipynb":
         gpp_args.extend(["-DCODE=1", "-DDISPLAYCODE=1", "-DPLOTCODE=1", "-DHELPERCODE=1", "-DMAGICCODE=1"])
 
-    # Add directory arguments
+    # Add directory definitions
+    url = iface.get("diagramsurl", iface.get("url", "") + iface.get("baseurl", ""))
+    diagrams_dir = (
+        url + iface.get("diagramsdir", "diagrams") if args.to in ["html", "ipynb"] else iface.get("diagramsdir", "diagrams")
+    )
+    scripts_dir = iface.get("scriptsdir", "scripts")
+    write_diagrams_dir = iface.get("writediagramsdir", "diagrams")
+    
+   # Override with command line arguments
     if args.diagrams_dir:
-        gpp_args.append(f"-DdiagramsDir={iface['diagramsurl']}{iface['diagramsdir']}")
+        diagrams_dir = args.diagrams_dir
     if args.scripts_dir:
-        gpp_args.append(f"-DscriptsDir={iface['scriptsdir']}")
+        scripts_dir = args.scripts_dir
     if args.write_diagrams_dir:
-        gpp_args.append(f"-DwriteDiagramsDir={iface['writediagramsdir']}")
+        write_diagrams_dir = args.write_diagrams_dir
+
+    gpp_args.append(f"-DdiagramsDir={diagrams_dir}")
+    gpp_args.append(f"-DscriptsDir={scripts_dir}")
+    gpp_args.append(f"-DwriteDiagramsDir={write_diagrams_dir}")
+    
 
     # Add include paths
     gpp_args.append(f"-Dtalksdir={os.path.dirname(os.path.abspath(__file__))}")
     gpp_args.append("-DgithubBaseUrl=https://github.com/lawrennd/snippets/edit/main/")
-    gpp_args.append(f"-I{args.include_path}")
-    gpp_args.append(f"-I{args.snippets_path}")
+    if args.include_path:
+        for include_dir in args.include_path.split(":"):
+            gpp_args.append(f"-I{include_dir}")
+
+    if args.snippets_path:
+        for snippet_dir in args.snippets_path.split(":"):
+            gpp_args.append(f"-I{snippet_dir}")
     gpp_args.append("-I.")
-    gpp_args.append(f"-I{args.macros}")
+
+    if args.macros_path:
+        for macro_dir in args.macros_path.split(":"):
+            gpp_args.append(f"-I{macro_dir}")
 
     # Add output file
     gpp_args.append(f"-o {args.output}")
@@ -111,9 +132,18 @@ def process_includes(args: argparse.Namespace) -> tuple[str, str]:
         with open(os.path.join(INCLUDES, "talk-notation.tex"), "r") as fd:
             before_text += fd.read()
 
-    # Read in talk-macros.gpp
-    with open(os.path.join(MACROS, "talk-macros.gpp")) as f:
-        before_text += f.read()
+    # Search for talk-macros.gpp in the macros path
+    try:
+        talk_macros_file = next(
+            os.path.join(macros_dir, "talk-macros.gpp")
+            for macros_dir in args.macros_path.split(':')
+            if os.path.isfile(os.path.join(macros_dir, "talk-macros.gpp"))
+        )
+        with open(talk_macros_file) as f:
+            before_text += f.read()
+    except StopIteration:
+        raise FileNotFoundError("talk-macros.gpp not found in any directory in macros_path")
+
 
     # Process after-body includes
     after_text = ""
@@ -236,6 +266,8 @@ def main() -> int:
         "-S", "--snippets-path", type=str, help="Colon-separated list of directories to search for code snippets"
     )
 
+    parser.add_argument("-M", "--macros-path", type=str, help="Colon-separated list of directories to search for *.gpp macro files")
+    
     parser.add_argument(
         "-F",
         "--format",
@@ -318,7 +350,6 @@ def main() -> int:
         "-v", "--verbose", action="store_true", help="Enable verbose output for detailed processing information"
     )
 
-    parser.add_argument("-M", "--macros", type=str, help="Directory containing *.gpp files for macros")
 
     args = parser.parse_args()
 
@@ -343,19 +374,18 @@ def main() -> int:
 
         # Validate include paths and snippets path
         if args.include_path:
-            validate_include_paths(args.include_path)
+            validate_include_paths(args.include_path, "include paths")
         if args.snippets_path:
-            validate_directory_exists(args.snippets_path, "snippets directory")
+            validate_include_paths(args.snippets_path, "snippets paths")
+        if args.macros_path:
+            validate_include_paths(args.macros_path, "macro paths")
+        else:
+            raise ValidationError("The '--macros-path' option must be specified to indicate the directory containing *.gpp files.")
 
         # Validate metadata
         if args.meta_data:
             validate_metadata(args.meta_data)
 
-        # Validate macros directory
-        if args.macros:
-            validate_directory_exists(args.macros, "macros directory")
-        else:
-            raise ValidationError("The '--macros' option must be specified to indicate the directory containing *.gpp files.")
 
         # Load configuration
         iface = load_config()
