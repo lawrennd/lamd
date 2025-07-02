@@ -5,8 +5,8 @@ DATE=$(shell mdfield date ${BASE}.md)
 
 CATEGORIES=$(shell mdfield categories ${BASE}.md)
 
-# Get macros path from frontmatter or use default
-MACROSDIR=$(shell mdfield macrosdir ${BASE}.md):macros
+# Get macros path from frontmatter 
+MACROSDIR=$(shell mdfield macrosdir ${BASE}.md)
 
 MATHJAX="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_SVG"
 REVEALJS="https://inverseprobability.com/talks/slides/reveal.js/"
@@ -22,8 +22,8 @@ PREFIX=$(shell flags prefix ${BASE})
 INKSCAPE=/Applications/Inkscape.app/Contents/MacOS/inkscape
 PP=mdpp
 
-PPFLAGS=-T --macros=$(MACROSDIR)
-PPFLAGS=$(shell flags pp $(BASE)) --macros=$(MACROSDIR)
+PPFLAGS=-T
+PPFLAGS=$(shell flags pp $(BASE))
 
 BIBDIRECTORY=$(shell mdfield bibdir ${BASE}.md)
 
@@ -111,7 +111,7 @@ check-macros:
 		echo "Error: 'macrosdir' is not defined in your _lamd.yml configuration file."; \
 		echo "Please add a 'macrosdir' entry pointing to your macros directory."; \
 		echo "Example:"; \
-		echo "macrosdir: macros"; \
+		echo "macrosdir: $HOME/lawrennd/lamd/lamd/macros"; \
 		exit 1; \
 	fi
 

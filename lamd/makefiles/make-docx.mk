@@ -1,5 +1,5 @@
 %.notes.docx.markdown: %.md ${DEPS}
-	${PP} $< -o $@ --format notes --to docx --code sparse --snippets-path ${SNIPPETSDIR} --diagrams-dir ${DIAGRAMSDIR} --edit-links ${PPFLAGS} --replace-notation
+	${PP} $< -o $@ --format notes --to docx --code sparse --snippets-path ${SNIPPETSDIR} --macros-path=$(MACROSDIR) --diagrams-dir ${DIAGRAMSDIR} --edit-links ${PPFLAGS} --replace-notation
 
 # Direct rule for CV generation
 ${BASE}.docx: ${BASE}.md
