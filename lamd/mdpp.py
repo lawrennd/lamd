@@ -76,8 +76,8 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
     )
     scripts_dir = iface.get("scriptsdir", "scripts")
     write_diagrams_dir = iface.get("writediagramsdir", "diagrams")
-    
-   # Override with command line arguments
+
+    # Override with command line arguments
     if args.diagrams_dir:
         diagrams_dir = args.diagrams_dir
     if args.scripts_dir:
@@ -88,7 +88,6 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
     gpp_args.append(f"-DdiagramsDir={diagrams_dir}")
     gpp_args.append(f"-DscriptsDir={scripts_dir}")
     gpp_args.append(f"-DwriteDiagramsDir={write_diagrams_dir}")
-    
 
     # Add include paths
     gpp_args.append(f"-Dtalksdir={os.path.dirname(os.path.abspath(__file__))}")
@@ -136,14 +135,13 @@ def process_includes(args: argparse.Namespace) -> tuple[str, str]:
     try:
         talk_macros_file = next(
             os.path.join(macros_dir, "talk-macros.gpp")
-            for macros_dir in args.macros_path.split(':')
+            for macros_dir in args.macros_path.split(":")
             if os.path.isfile(os.path.join(macros_dir, "talk-macros.gpp"))
         )
         with open(talk_macros_file) as f:
             before_text += f.read()
     except StopIteration:
         raise FileNotFoundError("talk-macros.gpp not found in any directory in macros_path")
-
 
     # Process after-body includes
     after_text = ""
@@ -266,8 +264,10 @@ def main() -> int:
         "-S", "--snippets-path", type=str, help="Colon-separated list of directories to search for code snippets"
     )
 
-    parser.add_argument("-M", "--macros-path", type=str, help="Colon-separated list of directories to search for *.gpp macro files")
-    
+    parser.add_argument(
+        "-M", "--macros-path", type=str, help="Colon-separated list of directories to search for *.gpp macro files"
+    )
+
     parser.add_argument(
         "-F",
         "--format",
@@ -329,7 +329,11 @@ def main() -> int:
     )
 
     parser.add_argument(
-        "-m", "--meta-data", nargs="*", default=[], help="Additional metadata definitions to pass to the preprocessor (format: KEY=VALUE)"
+        "-m",
+        "--meta-data",
+        nargs="*",
+        default=[],
+        help="Additional metadata definitions to pass to the preprocessor (format: KEY=VALUE)",
     )
 
     parser.add_argument(
@@ -349,7 +353,6 @@ def main() -> int:
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="Enable verbose output for detailed processing information"
     )
-
 
     args = parser.parse_args()
 
@@ -380,12 +383,13 @@ def main() -> int:
         if args.macros_path:
             validate_include_paths(args.macros_path, "macro paths")
         else:
-            raise ValidationError("The '--macros-path' option must be specified to indicate the directory containing *.gpp files.")
+            raise ValidationError(
+                "The '--macros-path' option must be specified to indicate the directory containing *.gpp files."
+            )
 
         # Validate metadata
         if args.meta_data:
             validate_metadata(args.meta_data)
-
 
         # Load configuration
         iface = load_config()
