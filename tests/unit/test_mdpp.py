@@ -9,7 +9,7 @@ import pytest
 # Add the parent directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
-from lamd.mdpp import main, process_content, process_includes, setup_gpp_arguments
+from lamd.mdpp import main, setup_gpp_arguments
 from lamd.validation import check_dependency, check_version
 
 # Set LAMD_MACROS environment variable for testing
@@ -148,3 +148,65 @@ def test_main():
         patch("os.path.isdir", return_value=True),
     ):
         main()
+
+
+def test_format_flags():
+    """Test that format-specific flags are set correctly."""
+    from lamd.mdpp import setup_gpp_arguments
+    import argparse
+    
+    # Test notes format
+    args = argparse.Namespace(
+        format="notes",
+        to="html",
+        exercises=False,
+        assignment=False,
+        edit_links=False,
+        draft=False,
+        meta_data=[],
+        code="none",
+        diagrams_dir=None,
+        scripts_dir=None,
+        write_diagrams_dir=None,
+        include_path=None,
+        snippets_path=None,
+        macros_path=None,
+        output="test.md"
+    )
+    iface = {"diagramsdir": "diagrams", "scriptsdir": "scripts", "writediagramsdir": "diagrams"}
+    
+    gpp_args = setup_gpp_arguments(args, iface)
+    
+    # Check that NOTES flag is set
+    assert "-DNOTES=1" in gpp_args
+    assert "-DHTML=1" in gpp_args
+    
+    # Test slides format
+    args.format = "slides"
+    gpp_args = setup_gpp_arguments(args, iface)
+    
+    # Check that SLIDES flag is set
+    assert "-DSLIDES=1" in gpp_args
+    assert "-DHTML=1" in gpp_args
+    
+    # Test different output formats
+    args.format = "notes"
+    args.to = "tex"
+    gpp_args = setup_gpp_arguments(args, iface)
+    assert "-DTEX=1" in gpp_args
+    assert "-DNOTES=1" in gpp_args
+    
+    args.to = "docx"
+    gpp_args = setup_gpp_arguments(args, iface)
+    assert "-DDOCX=1" in gpp_args
+    assert "-DNOTES=1" in gpp_args
+    
+    args.to = "pptx"
+    gpp_args = setup_gpp_arguments(args, iface)
+    assert "-DPPTX=1" in gpp_args
+    assert "-DNOTES=1" in gpp_args
+    
+    args.to = "ipynb"
+    gpp_args = setup_gpp_arguments(args, iface)
+    assert "-DIPYNB=1" in gpp_args
+    assert "-DNOTES=1" in gpp_args

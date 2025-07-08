@@ -20,7 +20,6 @@ from lamd.config.interface import Interface
 from lamd.validation import (
     ValidationError,
     validate_code_level,
-    validate_directory_exists,
     validate_file_exists,
     validate_include_paths,
     validate_metadata,
@@ -50,8 +49,18 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
     # Add format-specific arguments
     if args.to == "html":
         gpp_args.append("-DHTML=1")
+    if args.to == "tex":
+        gpp_args.append("-DTEX=1")
+    if args.to == "docx":
+        gpp_args.append("-DDOCX=1")
+    if args.to == "pptx":
+        gpp_args.append("-DPPTX=1")
+    if args.to == "ipynb":
+        gpp_args.append("-DIPYNB=1")
     if args.format == "slides":
         gpp_args.append("-DSLIDES=1")
+    if args.format == "notes":
+        gpp_args.append("-DNOTES=1")
     if args.exercises:
         gpp_args.append("-DEXERCISES=1")
     if args.assignment:
