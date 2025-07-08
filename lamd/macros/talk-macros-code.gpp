@@ -66,4 +66,10 @@ from \module import \object\endif
 \define{\displaycode{block}}{\code{\block}}
 \endif
 
+\ifdef{TESTCODE}
+\define{\setuptestcode{block}}{\setupcode{\block}}
+\define{\loadtestcode{object}{filename}}{\loadcode{\object}{\filename}}
+\define{\testcode{block}}{\code{\block}}
+\endif
+
 \endif
