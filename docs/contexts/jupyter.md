@@ -98,6 +98,22 @@ The Jupyter notebook context handles interactive code execution and display. It'
     Args:
         block: Plot generation code
 
+\setuptestcode{block}
+    Sets up test code that runs first
+    Args:
+        block: Setup code
+
+\loadtestcode{object}{filename}
+    Loads test code from file
+    Args:
+        object: Object to load
+        filename: Source file
+
+\testcode{block}
+    Defines test code for execution/testing
+    Args:
+        block: Test code to execute
+
 \matlabcode{block}
     Defines MATLAB code
     Args:
@@ -119,6 +135,14 @@ def process_data(data):
 \plotcode{
 x = np.linspace(0, 10, 100)
 plt.plot(x, np.sin(x))
+}
+
+\testcode{
+# Test the data processing function
+test_data = np.random.randn(100, 3)
+result = process_data(test_data)
+assert result.shape == (3,)
+print("Test passed!")
 }
 ```
 
@@ -162,3 +186,5 @@ plot_gaussian()
 3. Add comments for complex operations
 4. Consider notebook execution order
 5. Handle dependencies explicitly
+6. Use \testcode for code that should be executed during testing
+7. Use `--code test` to include all code blocks for extraction and execution
