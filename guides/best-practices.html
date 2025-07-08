@@ -213,6 +213,21 @@ result = process(data)
 }
 </pre></div>
 </div>
+<ol class="arabic simple" start="4">
+<li><p>Code Testing</p></li>
+</ol>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span><span class="gh"># Use \testcode for executable test code</span>
+\testcode{
+import numpy as np
+result = np.mean([1, 2, 3, 4, 5])
+assert result == 3.0
+print(&quot;Test passed!&quot;)
+}
+
+<span class="gh"># Use --code test to extract all code for testing</span>
+mdpp input.md --code test --macros-path macros/
+</pre></div>
+</div>
 </section>
 <section id="error-prevention">
 <h2>Error Prevention<a class="headerlink" href="#error-prevention" title="Link to this heading"></a></h2>

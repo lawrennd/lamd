@@ -199,6 +199,22 @@
     Args:
         block: Plot generation code
 
+\setuptestcode{block}
+    Sets up test code that runs first
+    Args:
+        block: Setup code
+
+\loadtestcode{object}{filename}
+    Loads test code from file
+    Args:
+        object: Object to load
+        filename: Source file
+
+\testcode{block}
+    Defines test code for execution/testing
+    Args:
+        block: Test code to execute
+
 \matlabcode{block}
     Defines MATLAB code
     Args:
@@ -219,6 +235,14 @@ def process_data(data):
 \plotcode{
 x = np.linspace(0, 10, 100)
 plt.plot(x, np.sin(x))
+}
+
+\testcode{
+<span class="gh"># Test the data processing function</span>
+test_data = np.random.randn(100, 3)
+result = process_data(test_data)
+assert result.shape == (3,)
+print(&quot;Test passed!&quot;)
 }
 </pre></div>
 </div>
@@ -267,6 +291,8 @@ plot_gaussian()
 <li><p>Add comments for complex operations</p></li>
 <li><p>Consider notebook execution order</p></li>
 <li><p>Handle dependencies explicitly</p></li>
+<li><p>Use \testcode for code that should be executed during testing</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">--code</span> <span class="pre">test</span></code> to include all code blocks for extraction and execution</p></li>
 </ol>
 </section>
 </section>
