@@ -111,7 +111,7 @@ check-macros:
 		echo "Error: 'macrosdir' is not defined in your _lamd.yml configuration file."; \
 		echo "Please add a 'macrosdir' entry pointing to your macros directory."; \
 		echo "Example:"; \
-		echo "macrosdir: $HOME/lawrennd/lamd/lamd/macros"; \
+		echo "macrosdir: $$HOME/lawrennd/lamd/lamd/macros"; \
 		exit 1; \
 	fi
 
