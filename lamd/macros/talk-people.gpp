@@ -1,0 +1,6 @@
+\ifndef{talkPeople}
+\define{talkPeople}
+
+% People macros can be added here in the future
+
+\endif 
