@@ -100,6 +100,20 @@ result = process(data)
 }
 ```
 
+4. Code Testing
+```markdown
+# Use \testcode for executable test code
+\testcode{
+import numpy as np
+result = np.mean([1, 2, 3, 4, 5])
+assert result == 3.0
+print("Test passed!")
+}
+
+# Use --code test to extract all code for testing
+mdpp input.md --code test --macros-path macros/
+```
+
 ## Error Prevention
 
 1. Common Mistakes

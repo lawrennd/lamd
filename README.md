@@ -155,6 +155,7 @@ Our team includes \neillawrencePicture{15%} and \carlhenrikekPicture{15%}
 - Bibliography management
 - People and team pages
 - Exercise and assignment support
+- Code testing and execution support (`--code test`)
 
 ## Example Usage
 
@@ -179,6 +180,25 @@ author: Your Name
 maketalk talk.md --format slides
 maketalk talk.md --format notes
 ```
+
+### Code Testing and Execution
+
+LaMD supports code extraction and testing through the `--code test` option:
+
+```bash
+# Extract all code blocks for testing/execution
+mdpp input.md --code test --macros-path macros/
+
+# Use \testcode macro for test-specific code
+\testcode{
+import numpy as np
+result = np.mean([1, 2, 3, 4, 5])
+assert result == 3.0
+print("Test passed!")
+}
+```
+
+The `--code test` option enables all code inclusion flags (`-DCODE=1`, `-DPLOTCODE=1`, `-DHELPERCODE=1`, `-DDISPLAYCODE=1`, `-DMAGICCODE=1`, `-DTESTCODE=1`) to ensure all code blocks are available for extraction and execution.
 
 ## Contributing
 
