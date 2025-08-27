@@ -10,5 +10,9 @@ ${BASE}.notes.html: ${BASE}.notes.html.markdown ${BIBDEPS}
 	pandoc  ${PDSFLAGS} \
 		--mathjax \
 		-o ${BASE}.notes.html  \
-		${BASE}.notes.html.markdown 
+		${BASE}.notes.html.markdown
+	@if [ "$(LAYOUT)" = "practical" ] && [ -n "$(PRACTICALSDIR)" ]; then \
+		cp ${BASE}.notes.html ${PRACTICALSDIR}/${OUT}.notes.html; \
+		echo "Copied ${BASE}.notes.html to ${PRACTICALSDIR}/${OUT}.notes.html"; \
+	fi 
 

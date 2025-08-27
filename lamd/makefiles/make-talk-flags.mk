@@ -5,6 +5,9 @@ DATE=$(shell mdfield date ${BASE}.md)
 
 CATEGORIES=$(shell mdfield categories ${BASE}.md)
 
+# Extract the layout
+LAYOUT=$(shell mdfield layout ${BASE}.md)
+
 # Get macros path from frontmatter 
 MACROSDIR=$(shell mdfield macrosdir ${BASE}.md)
 
@@ -39,6 +42,7 @@ SNIPPETSDIR=$(shell mdfield snippetsdir $(BASE).md)
 DIAGRAMSDIR=$(shell mdfield diagramsdir $(BASE).md)
 WRITEDIAGRAMSDIR=$(shell mdfield writediagramsdir $(BASE).md)
 POSTSDIR=$(shell mdfield postsdir $(BASE).md)
+PRACTICALSDIR=$(shell mdfield practicalsdir $(BASE).md)
 NOTESDIR=$(shell mdfield notesdir $(BASE).md)
 NOTEBOOKSDIR=$(shell mdfield notebooksdir $(BASE).md)
 SLIDESDIR=$(shell mdfield slidesdir $(BASE).md)
@@ -89,6 +93,16 @@ check-postsdir:
 		exit 1; \
 	fi
 
+.PHONY: check-practicalsdir
+check-practicalsdir:
+	@if [ "$(LAYOUT)" = "practical" ] && [ -z "$(PRACTICALSDIR)" ]; then \
+		echo "Error: 'practicalsdir' is not defined in your _lamd.yml configuration file."; \
+		echo "Please add a 'practicalsdir' entry pointing to your practicals directory."; \
+		echo "Example:"; \
+		echo "practicalsdir: ../_practicals"; \
+		exit 1; \
+	fi
+
 .PHONY: check-bibdir
 check-bibdir:
 	@echo "Checking for bibliography files...";
@@ -134,6 +148,6 @@ check-directories:
 		exit 1; \
 	fi
 
-all: check-snippetsdir check-postsdir check-bibdir check-directories check-macros include_dynamic_deps $(ALL)
+all: check-snippetsdir check-postsdir check-practicalsdir check-bibdir check-directories check-macros include_dynamic_deps $(ALL)
 
 
