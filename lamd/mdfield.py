@@ -43,17 +43,21 @@ def main() -> int:
 
     args = parser.parse_args()
 
-    # First check _lamd.yml for the field
+    # First try the markdown file, then fall back to _lamd.yml
     try:
-        iface = Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
-        if args.field in iface:
-            answer = iface[args.field]
-        else:
-            # If not in _lamd.yml, try the markdown file
-            try:
-                answer = nt.talk_field(args.field, args.filename, user_file=["_lamd.yml", "_config.yml"])
-            except ny.FileFormatError:
+        answer = nt.talk_field(args.field, args.filename, user_file=["_lamd.yml", "_config.yml"])
+    except ny.FileFormatError:
+        # If markdown file doesn't have the field, try _lamd.yml
+        try:
+            iface = Interface.from_file(user_file=["_lamd.yml", "_config.yml"], directory=".")
+            if args.field in iface:
+                answer = iface[args.field]
+            else:
                 answer = ""
+        except Exception as e:
+            # If we can't access config files, return empty string
+            sys.stderr.write(f"Error accessing configuration: {e}\n")
+            answer = ""
     except Exception as e:
         # If we can't access config files, return empty string
         sys.stderr.write(f"Error accessing configuration: {e}\n")

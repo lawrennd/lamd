@@ -47,16 +47,19 @@ This is test content.
     @patch("sys.argv", ["mdfield", "title", "test.md"])
     @patch("builtins.print")
     def test_extract_string_field_from_config(self, mock_print):
-        """Test that a string field is correctly extracted from _lamd.yml."""
-        # Mock Interface.from_file to return the field from config
-        with patch("lamd.config.interface.Interface.from_file") as mock_interface:
-            mock_interface.return_value = {"title": "From Config"}
+        """Test that a string field is correctly extracted from _lamd.yml when not in markdown."""
+        # Mock talk_field to raise FileFormatError (field not in markdown)
+        import lynguine.util.yaml as ny
+        with patch("lynguine.util.talk.talk_field", side_effect=ny.FileFormatError("Field not found")):
+            # Mock Interface.from_file to return the field from config
+            with patch("lamd.config.interface.Interface.from_file") as mock_interface:
+                mock_interface.return_value = {"title": "From Config"}
 
-            # Call the main function
-            main()
+                # Call the main function
+                main()
 
-            # Check output
-            mock_print.assert_called_once_with("From Config")
+                # Check output
+                mock_print.assert_called_once_with("From Config")
 
     @patch("sys.argv", ["mdfield", "title", "test.md"])
     @patch("builtins.print")
@@ -77,34 +80,40 @@ This is test content.
     @patch("sys.argv", ["mdfield", "date", "test.md"])
     @patch("builtins.print")
     def test_extract_date_field_from_config(self, mock_print):
-        """Test that a date field is correctly extracted from _lamd.yml."""
+        """Test that a date field is correctly extracted from _lamd.yml when not in markdown."""
         from datetime import date
 
         test_date = date(2023, 5, 15)
 
-        # Mock Interface.from_file to return the field from config
-        with patch("lamd.config.interface.Interface.from_file") as mock_interface:
-            mock_interface.return_value = {"date": test_date}
+        # Mock talk_field to raise FileFormatError (field not in markdown)
+        import lynguine.util.yaml as ny
+        with patch("lynguine.util.talk.talk_field", side_effect=ny.FileFormatError("Field not found")):
+            # Mock Interface.from_file to return the field from config
+            with patch("lamd.config.interface.Interface.from_file") as mock_interface:
+                mock_interface.return_value = {"date": test_date}
 
-            # Call the main function
-            main()
+                # Call the main function
+                main()
 
-            # Check output
-            mock_print.assert_called_once_with(test_date)
+                # Check output
+                mock_print.assert_called_once_with(test_date)
 
     @patch("sys.argv", ["mdfield", "categories", "test.md"])
     @patch("builtins.print")
     def test_extract_list_field_from_config(self, mock_print):
-        """Test that a list field is correctly extracted from _lamd.yml."""
-        # Mock Interface.from_file to return the field from config
-        with patch("lamd.config.interface.Interface.from_file") as mock_interface:
-            mock_interface.return_value = {"categories": ["test", "example", "documentation"]}
+        """Test that a list field is correctly extracted from _lamd.yml when not in markdown."""
+        # Mock talk_field to raise FileFormatError (field not in markdown)
+        import lynguine.util.yaml as ny
+        with patch("lynguine.util.talk.talk_field", side_effect=ny.FileFormatError("Field not found")):
+            # Mock Interface.from_file to return the field from config
+            with patch("lamd.config.interface.Interface.from_file") as mock_interface:
+                mock_interface.return_value = {"categories": ["test", "example", "documentation"]}
 
-            # Call the main function
-            main()
+                # Call the main function
+                main()
 
-            # Check output
-            mock_print.assert_called_once_with("['test', 'example', 'documentation']")
+                # Check output
+                mock_print.assert_called_once_with("['test', 'example', 'documentation']")
 
     @patch("sys.argv", ["mdfield", "nonexistent", "test.md"])
     @patch("builtins.print")
@@ -129,33 +138,38 @@ This is test content.
     @patch("os.path.expandvars")
     def test_path_expansion_from_config(self, mock_expandvars, mock_print):
         """Test that environment variables in paths from config are expanded."""
-        # Mock Interface.from_file to return the field from config
-        with patch("lamd.config.interface.Interface.from_file") as mock_interface:
-            mock_interface.return_value = {"path_field": "$HOME/test/path"}
+        # Mock talk_field to raise FileFormatError (field not in markdown)
+        import lynguine.util.yaml as ny
+        with patch("lynguine.util.talk.talk_field", side_effect=ny.FileFormatError("Field not found")):
+            # Mock Interface.from_file to return the field from config
+            with patch("lamd.config.interface.Interface.from_file") as mock_interface:
+                mock_interface.return_value = {"path_field": "$HOME/test/path"}
 
-            # Mock expandvars to return expanded path
-            mock_expandvars.return_value = "/home/user/test/path"
+                # Mock expandvars to return expanded path
+                mock_expandvars.return_value = "/home/user/test/path"
 
-            # Call the main function
-            main()
+                # Call the main function
+                main()
 
-            # Check output was expanded and expandvars was called
-            mock_expandvars.assert_called_once_with("$HOME/test/path")
-            mock_print.assert_called_once_with("/home/user/test/path")
+                # Check output was expanded and expandvars was called
+                mock_expandvars.assert_called_once_with("$HOME/test/path")
+                mock_print.assert_called_once_with("/home/user/test/path")
 
     @patch("sys.argv", ["mdfield", "nonexistent_field", "test.md"])
     @patch("builtins.print")
     @patch("sys.stderr")
     def test_config_access_error(self, mock_stderr, mock_print):
         """Test error handling when config files can't be accessed."""
-        # Mock Interface.from_file to raise an exception
-        with patch("lamd.config.interface.Interface.from_file", side_effect=Exception("Could not access config file")):
+        # Mock talk_field to raise FileFormatError (field not in markdown)
+        import lynguine.util.yaml as ny
+        with patch("lynguine.util.talk.talk_field", side_effect=ny.FileFormatError("Field not found")):
+            # Mock Interface.from_file to raise an exception
+            with patch("lamd.config.interface.Interface.from_file", side_effect=Exception("Could not access config file")):
+                # Call the main function
+                main()
 
-            # Call the main function
-            main()
-
-            # Check that error message was written to stderr
-            mock_stderr.write.assert_called_once_with("Error accessing configuration: Could not access config file\n")
+                # Check that error message was written to stderr
+                mock_stderr.write.assert_called_once_with("Error accessing configuration: Could not access config file\n")
 
             # Check that empty string was output
             mock_print.assert_called_once_with("")
