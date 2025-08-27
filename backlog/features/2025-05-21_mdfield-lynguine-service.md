@@ -136,4 +136,13 @@ Initial backlog item created to track the need for optimizing mdfield-lynguine i
 
 ### 2025-05-21
 
-Updated to emphasize that this feature requires architectural changes to the lynguine package itself. 
+Updated to emphasize that this feature requires architectural changes to the lynguine package itself.
+
+### 2025-08-27
+
+Made significant progress on mdfield improvements:
+- Fixed critical bug in mdfield priority logic (markdown vs config file priority)
+- Enhanced mdfield error handling and field extraction
+- Updated mdfield tests to reflect new behavior
+- This addresses some of the performance and reliability issues mentioned in this backlog item
+- The service architecture approach is still needed for the full optimization, but mdfield is now more reliable 
