@@ -44,6 +44,17 @@ class TestCellBoundaries:
         except Exception as e:
             raise e
 
+    def validate_notebook_cells(self, ipynb_file: Path, expected_min: int = 1) -> tuple[bool, str]:
+        """Validate that a notebook has sufficient cells and return status with message."""
+        try:
+            cell_count = self.count_cells(ipynb_file)
+            if cell_count >= expected_min:
+                return True, f"✅ Notebook has {cell_count} cells (>= {expected_min})"
+            else:
+                return False, f"❌ Notebook has only {cell_count} cells (expected >= {expected_min})"
+        except Exception as e:
+            return False, f"❌ Failed to read notebook: {e}"
+
     @pytest.mark.skipif(not check_dependency("mdpp"), reason="mdpp not available")
     @pytest.mark.skipif(not check_dependency("pandoc"), reason="pandoc not available")
     @pytest.mark.skipif(not check_dependency("notedown"), reason="notedown not available")
@@ -128,8 +139,14 @@ class TestCellBoundaries:
             pytest.fail(f"Pandoc is not properly creating cell boundaries. Generated {pandoc_cells} cells, expected at least {expected_min}. Notedown fallback works ({notedown_cells} cells).")
         elif pandoc_cells >= expected_min:
             print(f"✅ Pandoc is working correctly: {pandoc_cells} cells")
+        elif pandoc_cells < expected_min and notedown_cells < expected_min:
+            print(f"🚨 CRITICAL: Both pandoc and notedown are failing!")
+            print(f"   - Pandoc: {pandoc_cells} cells (insufficient)")
+            print(f"   - Notedown: {notedown_cells} cells (also insufficient)")
+            print(f"   - No working fallback available!")
+            pytest.fail(f"CRITICAL: Both pandoc and notedown are failing to create proper cell boundaries. Pandoc: {pandoc_cells} cells, Notedown: {notedown_cells} cells. Expected at least {expected_min} cells.")
         else:
-            pytest.fail(f"Both methods have issues - pandoc: {pandoc_cells}, notedown: {notedown_cells}")
+            pytest.fail(f"Unexpected state - pandoc: {pandoc_cells}, notedown: {notedown_cells}")
 
     @pytest.mark.skipif(not check_dependency("notedown"), reason="notedown not available")
     def test_notedown_cell_creation(self):
@@ -207,3 +224,69 @@ Content 2
         invalid_file = Path(self.temp_dir) / "nonexistent.ipynb"
         with pytest.raises(Exception):
             self.count_cells(invalid_file)
+
+    @pytest.mark.skipif(not check_dependency("notedown"), reason="notedown not available")
+    def test_notedown_failure_detection(self):
+        """Test that we can detect when notedown fails to create proper cell boundaries."""
+        
+        # Create a test file that should cause notedown to fail or create insufficient cells
+        test_md = Path(self.temp_dir) / "notedown-failure-test.md"
+        test_md.write_text("""# Test Header
+
+This is a simple test without any code blocks or complex structure.
+
+# Another Header
+
+More content here.
+""")
+        
+        # Try to convert with notedown
+        output_ipynb = Path(self.temp_dir) / "notedown-failure-test.ipynb"
+        try:
+            with open(output_ipynb, "w") as f:
+                subprocess.run(["notedown", str(test_md)], 
+                             stdout=f, check=True)
+        except subprocess.CalledProcessError as e:
+            pytest.fail(f"notedown conversion failed: {e}")
+        
+        # Check cell count
+        cell_count = self.count_cells(output_ipynb)
+        
+        # This simple file should create at least 2 cells (headers + content)
+        expected_min = 2
+        if cell_count < expected_min:
+            print(f"⚠️ WARNING: Notedown created only {cell_count} cells from simple test file")
+            print(f"   Expected at least {expected_min} cells")
+            print(f"   This suggests notedown may have issues with basic markdown conversion")
+        
+        # The test passes regardless, but warns about potential issues
+        assert cell_count >= 1, f"Notedown failed completely - no cells created"
+
+    def test_validation_utility(self):
+        """Test the validation utility function."""
+        
+        # Create a valid notebook
+        valid_notebook = {
+            "cells": [
+                {"cell_type": "markdown", "source": ["# Test"]},
+                {"cell_type": "code", "source": ["print('test')"]},
+                {"cell_type": "markdown", "source": ["More content"]}
+            ]
+        }
+        
+        valid_file = Path(self.temp_dir) / "valid-notebook.ipynb"
+        with open(valid_file, 'w') as f:
+            json.dump(valid_notebook, f)
+        
+        # Test validation
+        is_valid, message = self.validate_notebook_cells(valid_file, expected_min=2)
+        assert is_valid, f"Valid notebook should pass validation: {message}"
+        
+        # Test with higher expectation
+        is_valid, message = self.validate_notebook_cells(valid_file, expected_min=5)
+        assert not is_valid, f"Notebook with 3 cells should fail validation with min=5: {message}"
+        
+        # Test with invalid file
+        invalid_file = Path(self.temp_dir) / "nonexistent.ipynb"
+        is_valid, message = self.validate_notebook_cells(invalid_file)
+        assert not is_valid, f"Invalid file should fail validation: {message}"

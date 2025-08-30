@@ -92,3 +92,11 @@ Pandoc should recognize these `::: {.cell .*}` markers and create proper cells, 
 
 ### 2025-08-30
 Task created. Issue confirmed by failing test. Pandoc generates only 4 cells vs expected 9+, while notedown correctly generates 17 cells.
+
+### 2025-08-30 (Update)
+Added improved error detection and validation utilities to `tests/unit/test_cell_boundaries.py`:
+- Enhanced test to detect when both pandoc AND notedown fail (critical failure)
+- Added `validate_notebook_cells()` utility function for build process integration
+- Added `test_notedown_failure_detection()` to warn about notedown issues
+- Added `test_validation_utility()` to test the validation function
+- These utilities can be integrated into the build process to detect and warn about conversion failures
