@@ -48,7 +48,15 @@ class TestCellBoundaries:
     @pytest.mark.skipif(not check_dependency("pandoc"), reason="pandoc not available")
     @pytest.mark.skipif(not check_dependency("notedown"), reason="notedown not available")
     def test_cell_boundary_pipeline(self):
-        """Test that the LaMD pipeline properly creates cell boundaries."""
+        """Test that the LaMD pipeline properly creates cell boundaries.
+        
+        NOTE: This test is currently expected to FAIL due to a known pandoc issue.
+        Pandoc is not properly creating cell boundaries, requiring notedown as a fallback.
+        See backlog item: 2025-08-30_pandoc-cell-boundary-issue.md
+        
+        When this issue is fixed, this test should pass with pandoc generating
+        sufficient cells without requiring notedown fallback.
+        """
         
         # Expected minimum cells: 3 headers + 3 code blocks + metadata cells = ~9+ cells
         expected_min = 9
@@ -113,11 +121,11 @@ class TestCellBoundaries:
         
         # Check if pandoc has the known cell boundary issue
         if pandoc_cells < expected_min and notedown_cells >= expected_min:
-            print(f"✅ CONFIRMED: Known cell boundary issue detected")
+            print(f"❌ FAILED: Pandoc cell boundary issue detected")
             print(f"   - Pandoc: {pandoc_cells} cells (insufficient)")
             print(f"   - Notedown: {notedown_cells} cells (working)")
             print(f"   - Notedown is required as fallback for proper cell boundaries")
-            # This is expected behavior, so the test passes
+            pytest.fail(f"Pandoc is not properly creating cell boundaries. Generated {pandoc_cells} cells, expected at least {expected_min}. Notedown fallback works ({notedown_cells} cells).")
         elif pandoc_cells >= expected_min:
             print(f"✅ Pandoc is working correctly: {pandoc_cells} cells")
         else:
