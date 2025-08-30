@@ -13,7 +13,7 @@ dependencies: []
 
 ## Description
 
-The LaMD pipeline has an issue where pandoc is not properly creating cell boundaries when converting markdown to Jupyter notebooks. As a fallback we have the use of notedown as a fallback, which adds complexity and potential points of failure to the build process.
+The LaMD pipeline has an issue where pandoc is not properly creating cell boundaries when converting markdown to Jupyter notebooks. While notedown is used as a fallback, this is a workaround that masks the underlying problem rather than solving it. The issue is why isn't pandoc handling the cell boundary syntax correctly?
 
 ## Current Behavior
 
@@ -25,7 +25,7 @@ When running the full LaMD pipeline:
 
 ## Expected Behavior
 
-Pandoc should be able to create proper cell boundaries without requiring notedown as a fallback. The pipeline should work end-to-end with just pandoc.
+Pandoc should be able to create proper cell boundaries without requiring notedown as a fallback. The pipeline should work end-to-end with just pandoc. The intermediate markdown contains proper cell boundary syntax (`::: {.cell .*}`) that pandoc should recognize and convert correctly.
 
 ## Impact
 
@@ -40,7 +40,22 @@ The issue is confirmed by the test `test_cell_boundary_pipeline()` in `tests/uni
 
 - Pandoc generates only 4 cells from test file with 3 headers + 3 code blocks
 - Expected minimum: 9 cells (headers, code blocks, metadata)
-- Notedown correctly generates 17 cells from the same input
+- Notedown generates 17 cells from the same input (overly aggressive cell separation)
+
+The intermediate markdown contains proper cell boundary syntax:
+```markdown
+::: {.cell .markdown}
+# Header 1
+:::
+
+::: {.cell .code}
+```python
+print("Code block 1")
+```
+:::
+```
+
+Pandoc should recognize these `::: {.cell .*}` markers and create proper cells, but it's not doing so.
 
 ## Investigation Needed
 
@@ -48,6 +63,8 @@ The issue is confirmed by the test `test_cell_boundary_pipeline()` in `tests/uni
 2. **Markdown structure**: Verify the intermediate markdown structure is correct
 3. **Pandoc version**: Test with different pandoc versions
 4. **Template issues**: Investigate if the pandoc-jekyll-ipynb-template has issues
+5. **Cell boundary syntax**: Verify that pandoc supports the `::: {.cell .*}` syntax
+6. **Alternative approaches**: Consider if different pandoc flags or templates would work better
 
 ## Acceptance Criteria
 
@@ -62,6 +79,8 @@ The issue is confirmed by the test `test_cell_boundary_pipeline()` in `tests/uni
 - Focus on pandoc template and configuration first
 - May need to modify the pandoc-jekyll-ipynb-template
 - Consider if this is a pandoc limitation or configuration issue
+- The notedown fallback is a workaround, not a solution - it masks the underlying problem
+- Goal is to eliminate the need for notedown entirely by fixing pandoc's cell boundary handling
 
 ## Related
 
