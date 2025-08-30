@@ -25,11 +25,10 @@ $endfor$
 $$$$
 :::
 
-::: {.cell .markdown}
 $body$
 
+::: {.cell .markdown}
 $for(include-after)$
 $include-after$
 $endfor$
-
 :::
