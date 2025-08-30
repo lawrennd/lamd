@@ -26,6 +26,7 @@ class TestCellBoundaries:
         self.test_dir = Path(__file__).parent
         self.test_file = self.test_dir / "test-cell-boundaries.md"
         self.temp_dir = tempfile.mkdtemp()
+        # print(f"Using temp directory: {self.temp_dir}")  # Debug output
         
     def teardown_method(self):
         """Clean up test fixtures."""
@@ -61,12 +62,11 @@ class TestCellBoundaries:
     def test_cell_boundary_pipeline(self):
         """Test that the LaMD pipeline properly creates cell boundaries.
         
-        NOTE: This test is currently expected to FAIL due to a known pandoc issue.
-        Pandoc is not properly creating cell boundaries, requiring notedown as a fallback.
-        See backlog item: 2025-08-30_pandoc-cell-boundary-issue.md
+        This test verifies that pandoc correctly processes cell boundaries in the
+        LaMD pipeline after the template fix. The test should pass with pandoc
+        generating sufficient cells without requiring notedown fallback.
         
-        When this issue is fixed, this test should pass with pandoc generating
-        sufficient cells without requiring notedown fallback.
+        See backlog item: 2025-08-30_pandoc-cell-boundary-issue.md (RESOLVED)
         """
         
         # Expected minimum cells: 3 headers + 3 code blocks + metadata cells = ~9+ cells
