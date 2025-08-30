@@ -43,7 +43,7 @@ ${BASE}.slides.ipynb: ${BASE}.slides.ipynb.markdown
 		--out ${BASE}.tmp.markdown  ${BASE}.slides.ipynb.markdown
 	notedown ${BASE}.tmp.markdown > ${BASE}.slides.ipynb
 	# Validate that notedown created sufficient cells (expected: 9+ for typical content)
-	# Note: With the fixed pandoc template, pandoc should work correctly, but notedown is still used here
+: With the fixed pandoc template, pandoc should work correctly, but notedown is still used here
 	${LAMDDIR}/scripts/validate_notebook.sh ${BASE}.slides.ipynb 9 || (echo "WARNING: Notebook conversion may have failed to create proper cell boundaries" && exit 1)
 	cp ${BASE}.slides.ipynb ${NOTEBOOKSDIR}/${OUT}.slides.ipynb
 	rm ${BASE}.tmp.markdown
