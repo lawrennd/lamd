@@ -54,7 +54,6 @@ LaMD requires:
   - python-frontmatter
   - pandas
   - python-liquid
-  - notedown
 
 ## Configuration
 

@@ -20,7 +20,6 @@ lynguine = { git = "https://github.com/lawrennd/lynguine.git", branch = "main" }
 python-frontmatter = "*"
 pandas = "*"
 python-liquid = "*"
-notedown = "*"
 referia = { git = "https://github.com/lawrennd/referia.git", branch = "main" }
 
 [tool.poetry.group.dev.dependencies]
