@@ -30,7 +30,7 @@ MACROS = os.path.join(os.path.dirname(__file__), "macros")
 INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
 
 VALID_FORMATS = ["notes", "slides", "code"]
-VALID_CODE_LEVELS = ["none", "sparse", "ipynb", "diagnostic", "plot", "full"]
+VALID_CODE_LEVELS = ["none", "sparse", "ipynb", "diagnostic", "plot", "full", "test"]
 VALID_OUTPUT_FORMATS = ["pptx", "html", "docx", "ipynb", "svg", "tex", "python"]
 
 
@@ -75,8 +75,22 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
         gpp_args.append(f"-D{meta}")
 
     # Add code-specific arguments
-    if args.code == "ipynb":
-        gpp_args.extend(["-DCODE=1", "-DDISPLAYCODE=1", "-DPLOTCODE=1", "-DHELPERCODE=1", "-DMAGICCODE=1"])
+    if args.code in ["sparse", "plot", "diagnostic", "full", "ipynb", "test"]:
+        gpp_args.append("-DCODE=1")
+    
+    if args.code in ["plot", "diagnostic", "full", "ipynb", "test"]:
+        gpp_args.append("-DPLOTCODE=1")
+    
+    if args.code in ["diagnostic", "full", "ipynb", "test"]:
+        gpp_args.append("-DHELPERCODE=1")
+        gpp_args.append("-DDISPLAYCODE=1")
+    
+    if args.code in ["full", "ipynb", "test"]:
+        gpp_args.append("-DMAGICCODE=1")
+    
+    # Add test code flag when test level is selected
+    if args.code == "test":
+        gpp_args.append("-DTESTCODE=1")
 
     # Add directory definitions
     url = iface.get("diagramsurl", iface.get("url", "") + iface.get("baseurl", ""))
@@ -295,7 +309,8 @@ def main() -> int:
             """Code inclusion level: 'none' omits code, 'sparse' """
             """includes minimal code, 'ipynb' for notebook """
             """code, 'diagnostic' for debugging, 'plot' for """
-            """visualization code, 'full' for all code"""
+            """visualization code, 'full' for all code, 'test' for """
+            """testing/execution (includes all code)"""
         ),
     )
 

@@ -210,3 +210,54 @@ def test_format_flags():
     gpp_args = setup_gpp_arguments(args, iface)
     assert "-DIPYNB=1" in gpp_args
     assert "-DNOTES=1" in gpp_args
+    
+    # Test code level flags
+    args.code = "sparse"
+    gpp_args = setup_gpp_arguments(args, iface)
+    assert "-DCODE=1" in gpp_args
+    assert "-DPLOTCODE=1" not in gpp_args
+    assert "-DHELPERCODE=1" not in gpp_args
+    assert "-DDISPLAYCODE=1" not in gpp_args
+    assert "-DMAGICCODE=1" not in gpp_args
+    
+    args.code = "plot"
+    gpp_args = setup_gpp_arguments(args, iface)
+    assert "-DCODE=1" in gpp_args
+    assert "-DPLOTCODE=1" in gpp_args
+    assert "-DHELPERCODE=1" not in gpp_args
+    assert "-DDISPLAYCODE=1" not in gpp_args
+    assert "-DMAGICCODE=1" not in gpp_args
+    
+    args.code = "diagnostic"
+    gpp_args = setup_gpp_arguments(args, iface)
+    assert "-DCODE=1" in gpp_args
+    assert "-DPLOTCODE=1" in gpp_args
+    assert "-DHELPERCODE=1" in gpp_args
+    assert "-DDISPLAYCODE=1" in gpp_args
+    assert "-DMAGICCODE=1" not in gpp_args
+    
+    args.code = "full"
+    gpp_args = setup_gpp_arguments(args, iface)
+    assert "-DCODE=1" in gpp_args
+    assert "-DPLOTCODE=1" in gpp_args
+    assert "-DHELPERCODE=1" in gpp_args
+    assert "-DDISPLAYCODE=1" in gpp_args
+    assert "-DMAGICCODE=1" in gpp_args
+    
+    # Test test code level
+    args.code = "test"
+    gpp_args = setup_gpp_arguments(args, iface)
+    assert "-DTESTCODE=1" in gpp_args
+    assert "-DCODE=1" in gpp_args
+    assert "-DPLOTCODE=1" in gpp_args
+    assert "-DHELPERCODE=1" in gpp_args
+    assert "-DDISPLAYCODE=1" in gpp_args
+    assert "-DMAGICCODE=1" in gpp_args
+    
+    args.code = "ipynb"
+    gpp_args = setup_gpp_arguments(args, iface)
+    assert "-DCODE=1" in gpp_args
+    assert "-DPLOTCODE=1" in gpp_args
+    assert "-DHELPERCODE=1" in gpp_args
+    assert "-DDISPLAYCODE=1" in gpp_args
+    assert "-DMAGICCODE=1" in gpp_args

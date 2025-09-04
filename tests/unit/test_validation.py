@@ -3,7 +3,6 @@
 Tests for the validation module.
 """
 
-import os
 import subprocess
 from unittest.mock import MagicMock, patch
 
@@ -11,7 +10,6 @@ import pytest
 
 from lamd.validation import (
     DependencyError,
-    ValidationError,
     check_dependency,
     check_version,
     install_dependency,

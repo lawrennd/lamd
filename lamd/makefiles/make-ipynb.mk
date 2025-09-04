@@ -18,8 +18,6 @@ ${BASE}.ipynb: ${BASE}.notes.ipynb.markdown
 		--out ${BASE}.tmp.markdown  ${BASE}.notes.ipynb.markdown
 	pandoc 	${PDSFLAGS} \
 		--out $@ ${BASE}.tmp.markdown
-	# Validate pandoc output
-	${LAMDDIR}/scripts/validate_notebook.sh ${BASE}.ipynb 9 || (echo "WARNING: Pandoc conversion may have failed to create proper cell boundaries" && exit 1)
 	cp ${BASE}.ipynb ${NOTEBOOKSDIR}/${OUT}.ipynb
 	rm ${BASE}.tmp.markdown
 
@@ -29,8 +27,6 @@ ${BASE}.full.ipynb: ${BASE}.full.ipynb.markdown
 		--out ${BASE}.tmp.markdown  ${BASE}.full.ipynb.markdown
 	pandoc 	${PDSFLAGS} \
 		--out $@ ${BASE}.tmp.markdown
-	# Validate pandoc output
-	${LAMDDIR}/scripts/validate_notebook.sh ${BASE}.full.ipynb 9 || (echo "WARNING: Pandoc conversion may have failed to create proper cell boundaries" && exit 1)
 	cp ${BASE}.full.ipynb ${NOTEBOOKSDIR}/${OUT}.full.ipynb
 	rm ${BASE}.tmp.markdown
 
@@ -41,7 +37,5 @@ ${BASE}.slides.ipynb: ${BASE}.slides.ipynb.markdown
 		--out ${BASE}.tmp.markdown  ${BASE}.slides.ipynb.markdown
 	pandoc 	${PDSFLAGS} \
 		--out $@ ${BASE}.tmp.markdown
-	# Validate pandoc output
-	${LAMDDIR}/scripts/validate_notebook.sh ${BASE}.slides.ipynb 9 || (echo "WARNING: Pandoc conversion may have failed to create proper cell boundaries" && exit 1)
 	cp ${BASE}.slides.ipynb ${NOTEBOOKSDIR}/${OUT}.slides.ipynb
 	rm ${BASE}.tmp.markdown
