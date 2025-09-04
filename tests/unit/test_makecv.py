@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 import builtins
-import os
-import sys
 import unittest
 from unittest.mock import MagicMock, mock_open, patch
 

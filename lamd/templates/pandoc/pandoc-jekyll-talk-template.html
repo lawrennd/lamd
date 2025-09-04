@@ -32,7 +32,9 @@ blog: $blog2$
 $endif$
 $if(date)$
 date: $date$
-published: $date$
+$endif$
+$if(published)$
+published: $published$
 $endif$
 $if(time)$
 time: "$time$"

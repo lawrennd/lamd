@@ -46,18 +46,15 @@ fi
 current_dir=$(basename "$PWD")
 if [ "$current_dir" = "_lamd" ]; then
     # If we're in _lamd, adjust relative input paths to be relative to parent directory
-    if [[ "$slides_dir" != /* ]]; then
-        slides_dir="../$slides_dir"
-    fi
+#     if [[ "$slides_dir" != /* ]]; then
+#         slides_dir="../$slides_dir"
+#     fi
     if [[ "$diagrams_dir" != /* ]]; then
         diagrams_dir="../$diagrams_dir"
     fi
-    if [[ "$snippets_dir" != /* ]]; then
-        snippets_dir="../$snippets_dir"
-    fi
-    if [[ "$source_file" != /* ]]; then
-        source_file="../$source_file"
-    fi
+#     if [[ "$snippets_dir" != /* ]]; then
+#         snippets_dir="../$snippets_dir"
+#     fi
     [ $VERBOSE -eq 1 ] && echo "In _lamd directory, adjusting input paths to be relative to parent"
 fi
 

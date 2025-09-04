@@ -138,6 +138,7 @@
 \define{\thanks}{
 \newslide{Thanks!}{.scrollable}
 \slides{
+* company: [Trent AI](https://trent.ai)
 * book: [The Atomic Human](https://www.penguin.co.uk/books/455130/the-atomic-human-by-lawrence-neil-d/9780241625248)
 * twitter: [\@lawrennd](https://twitter.com/lawrennd)
 * [The Atomic Human](https://the-atomic-human.ai)\ifdef{atomicPages} pages \atomicPages.\endif\ifdef{newspaperArticles}
