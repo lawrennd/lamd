@@ -10,10 +10,7 @@
 
 \define{\includecovariance{shortname}{covFormula}{figureCaption}}{\aligncenter{$$\covFormula$$}
 
-\figure{\includegif{\shortname_covariance}{70%}}{\figureCapture}{\shortname-covariance}
-}
-
-\figure{\columns{\includediagramclass{../slides/diagrams/kern/\concat{\shortname}{_covariance}}{100%}}{\includegif{../slides/diagrams/kern/\concat{\shortname}{_covariance}}{100%}{negate}{center}}{45%}{45%}}{\figureCaption}{\concat{\shortname}{-covariance-plot}}}
+\figure{\columns{\includediagramclass{\diagramsDir/kern/\concat{\shortname}{_covariance}}{100%}}{\includegif{\diagramsDir/kern/\concat{\shortname}{_covariance}}{100%}{negate}{center}}{45%}{45%}}{\figureCaption}{\concat{\shortname}{-covariance-plot}}}
 
 
 \define{\thanksto{text}}{\smalltext{\alignright{Thanks to: \text}}}
