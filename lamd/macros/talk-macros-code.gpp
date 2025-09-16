@@ -31,10 +31,12 @@ from \filename import \object\endif
 \pythonblockend}
 
 \define{\loadcode{object}{module}}{\pythonblockstart
-import \module
+import \module\ifdef{MAGICCODE}
+import inspect
+file_path = inspect.getfile(\module.\object)\endif
 \pythonblockend
 \pythonblockstart
-\ifdef{MAGICCODE}%load -n \module.\object\else
+\ifdef{MAGICCODE}%load -s \object {file_path}\else
 from \module import \object\endif
 \pythonblockend}
 

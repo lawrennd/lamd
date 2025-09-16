@@ -103,16 +103,16 @@ def create_person_macro(
     if crop:
         # Handle cropped images
         macro = (
-            rf"""\\defeval{{\\{macro_name}Picture{{width}}}}"""
-            rf"""{{\\circleHead{{\includeimgclip{{{diagrams_dir}}}"""
+            rf"""\defeval{{\{macro_name}Picture{{width}}}}"""
+            rf"""{{\circleHead{{\includeimgclip{{{diagrams_dir}}}"""
             rf"""{{{crop['llx']}}}{{{crop['lly']}}}{{{crop['urx']}}}{{{crop['ury']}}}"""
             rf"""}}{{{display_name}}}{{\width}}"""
         )
     else:
         # Standard image handling
         macro = (
-            rf"""\\defeval{{\\{macro_name}Picture{{width}}}}"""
-            rf"""{{\\circleHead{{{diagrams_dir}}}{{{display_name}}}{{\width}}"""
+            rf"""\defeval{{\{macro_name}Picture{{width}}}}"""
+            rf"""{{\circleHead{{{diagrams_dir}}}{{{display_name}}}{{\width}}"""
         )
 
     if url:
