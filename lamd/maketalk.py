@@ -91,6 +91,7 @@ def main() -> int:
     # Create the makefile
     with open("makefile", "w+") as f:
         f.write(f"BASE={base}\n")
+        f.write(f"LAMDDIR={dirname}\n")
         f.write(f"MAKEFILESDIR={make_dir}\n")
         f.write(f"INCLUDESDIR={includes_dir}\n")
         f.write(f"TEMPLATESDIR={templates_dir}\n")
