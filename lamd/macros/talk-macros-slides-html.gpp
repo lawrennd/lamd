@@ -26,12 +26,14 @@
 </div>
 <aside class="notes">\captionContents</aside>}
 
-\define{\startanimation{group}{start}{finish}{name}}{<script>
+\define{\startanimation{group}{start}{finish}{name}}{<div class="animation-container" data-group="\group">
+<script>
 showDivs(\start, '\group');
 </script>
-\smalltext{\name} <input id="range-\group" type="range" min="\start" max="\finish" value="\start" onchange="setDivs('\group')" oninput="setDivs('\group')">
-<button onclick="plusDivs(-1, '\group')">❮</button>
-<button onclick="plusDivs(1, '\group')">❯</button>
+<label for="range-\group">\name</label>
+<input id="range-\group" type="range" min="\start" max="\finish" value="\start" onchange="setDivs('\group')" oninput="setDivs('\group')" aria-label="Animation control for \name">
+<button onclick="plusDivs(-1, '\group')" aria-label="Previous frame">❮</button>
+<button onclick="plusDivs(1, '\group')" aria-label="Next frame">❯</button>
 }
 
 
@@ -41,7 +43,7 @@ showDivs(\start, '\group');
 
 }
 
-\define{\newframe{contents}{name}{style}}{<div style="text-align:center;\style" class="\name">\contents</div>}
+\define{\endanimation}{</div>}
 
 
 \endif
