@@ -79,8 +79,10 @@ The animation system creates interactive animations in HTML slides with fallback
 #### Accessibility Features
 - ARIA labels for screen readers
 - Proper labeling for range sliders
-- Keyboard navigation support
+- **Keyboard navigation**: Arrow keys (← →) to navigate frames
+- **Reveal.js compatible**: Works with slide navigation
 - Semantic HTML structure
+- Visible, styled buttons for mouse/touch users
 
 Example animation:
 ```markdown
