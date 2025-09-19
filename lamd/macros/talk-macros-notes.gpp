@@ -16,7 +16,11 @@
 \define{\recommendation{text}}{**Recommendation**: \text}
 \define{\gls{term}}{\emph{\term}\footnote{See glossary entry for \term.}}
 
-\define{\newframe{contents}{name}{style}}{\contents}
+\define{\startanimation{group}{start}{finish}{name}}{**Animation: \name** (Frames \start-\finish)}
+
+\define{\newframe{contents}{name}{style}}{**Frame \name**: \contents}
+
+\define{\endanimation}{}
 
 \define{\section{text}}{# \text
 
