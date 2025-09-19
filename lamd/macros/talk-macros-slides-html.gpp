@@ -26,14 +26,28 @@
 </div>
 <aside class="notes">\captionContents</aside>}
 
-\define{\startanimation{group}{start}{finish}{name}}{<div class="animation-container" data-group="\group">
+\define{\startanimation{group}{start}{finish}{name}}{<div class="animation-container" data-group="\group" style="margin: 20px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background: #f9f9f9;">
 <script>
 showDivs(\start, '\group');
+// Add keyboard support for Reveal.js compatibility
+document.addEventListener('keydown', function(event) {
+    if (event.target.closest('.animation-container')) return; // Don't interfere with other controls
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        const container = document.querySelector('[data-group="\group"]');
+        if (container) {
+            event.preventDefault();
+            if (event.key === 'ArrowLeft') plusDivs(-1, '\group');
+            if (event.key === 'ArrowRight') plusDivs(1, '\group');
+        }
+    }
+});
 </script>
-<label for="range-\group">\name</label>
-<input id="range-\group" type="range" min="\start" max="\finish" value="\start" onchange="setDivs('\group')" oninput="setDivs('\group')" aria-label="Animation control for \name">
-<button onclick="plusDivs(-1, '\group')" aria-label="Previous frame">❮</button>
-<button onclick="plusDivs(1, '\group')" aria-label="Next frame">❯</button>
+<label for="range-\group" style="display: block; margin-bottom: 10px; font-weight: bold;">\name</label>
+<input id="range-\group" type="range" min="\start" max="\finish" value="\start" onchange="setDivs('\group')" oninput="setDivs('\group')" aria-label="Animation control for \name" style="width: 100%; margin-bottom: 10px;">
+<div style="text-align: center;">
+<button onclick="plusDivs(-1, '\group')" aria-label="Previous frame" style="margin: 0 10px; padding: 8px 16px; background: #007acc; color: white; border: none; border-radius: 4px; cursor: pointer;">❮ Previous</button>
+<button onclick="plusDivs(1, '\group')" aria-label="Next frame" style="margin: 0 10px; padding: 8px 16px; background: #007acc; color: white; border: none; border-radius: 4px; cursor: pointer;">Next ❯</button>
+</div>
 }
 
 
