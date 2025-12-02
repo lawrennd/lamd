@@ -41,7 +41,7 @@
 \newcommand{\cdataMatrix}{\hat{\dataMatrix}}
 \newcommand{\cdataScalar}{\hat{\dataScalar}}
 \newcommand{\cdataVector}{\hat{\dataVector}}
-\newcommand{\centeredKernelMatrix}{\mathbf{ \MakeUppercase{\centeredKernelScalar}}}
+\newcommand{\centeredKernelMatrix}{\mathbf{B}}
 \newcommand{\centeredKernelScalar}{b}
 \newcommand{\centeredKernelVector}{\centeredKernelScalar}
 \newcommand{\centeringMatrix}{\mathbf{H}}
@@ -59,10 +59,10 @@
 \newcommand{\covarianceMatrixTwo}{\boldsymbol{ \Sigma}}
 \newcommand{\croupierScalar}{s}
 \newcommand{\croupierVector}{\mathbf{ \croupierScalar}}
-\newcommand{\croupierMatrix}{\mathbf{ \MakeUppercase{\croupierScalar}}}
+\newcommand{\croupierMatrix}{\mathbf{ S}}
 \newcommand{\layerDim}{d}
 \newcommand{\layerIndex}{\ell}
-\newcommand{\dataDim}{p}
+\newcommand{\dataDim}{d}
 \newcommand{\dataIndex}{i}
 \newcommand{\dataIndexTwo}{j}
 \newcommand{\dataMatrix}{\mathbf{Y}}
@@ -71,7 +71,7 @@
 \newcommand{\dataStd}{\sigma}
 \newcommand{\dataVector}{\mathbf{ \dataScalar}}
 \newcommand{\decayRate}{d}
-\newcommand{\degreeMatrix}{\mathbf{ \MakeUppercase{\degreeScalar}}}
+\newcommand{\degreeMatrix}{\mathbf{ D}}
 \newcommand{\degreeScalar}{d}
 \newcommand{\degreeVector}{\mathbf{ \degreeScalar}}
 \newcommand{\diag}[1]{\text{diag}\left(#1\right)}
@@ -80,7 +80,7 @@
 \newcommand{\diffTwo}[2]{\frac{\text{d}^2#1}{\text{d}#2^2}}
 \newcommand{\displacement}{x}
 \newcommand{\displacementVector}{\textbf{\displacement}}
-\newcommand{\distanceMatrix}{\mathbf{ \MakeUppercase{\distanceScalar}}}
+\newcommand{\distanceMatrix}{\mathbf{ D}}
 \newcommand{\distanceScalar}{d}
 \newcommand{\distanceVector}{\mathbf{ \distanceScalar}}
 \newcommand{\eigenvaltwo}{\ell}
@@ -106,7 +106,7 @@
 \newcommand{\expectedDistanceMatrix}{\mathscr{D}}
 \newcommand{\eye}{\mathbf{I}}
 \newcommand{\fantasyDim}{r}
-\newcommand{\fantasyMatrix}{\mathbf{ \MakeUppercase{\fantasyScalar}}}
+\newcommand{\fantasyMatrix}{\mathbf{ Z}}
 \newcommand{\fantasyScalar}{z}
 \newcommand{\fantasyVector}{\mathbf{ \fantasyScalar}}
 \newcommand{\featureStd}{\varsigma}
@@ -120,7 +120,7 @@
 \newcommand{\given}{|}
 \newcommand{\half}{\frac{1}{2}}
 \newcommand{\heaviside}{H}
-\newcommand{\hiddenMatrix}{\mathbf{ \MakeUppercase{\hiddenScalar}}}
+\newcommand{\hiddenMatrix}{\mathbf{ H}}
 \newcommand{\hiddenScalar}{h}
 \newcommand{\hiddenVector}{\mathbf{ \hiddenScalar}}
 \newcommand{\identityMatrix}{\eye}
@@ -149,7 +149,7 @@
 \newcommand{\lagrangeMultiplier}{\lambda}
 \newcommand{\lagrangeMultiplierMatrix}{\boldsymbol{ \Lambda}}
 \newcommand{\lagrangian}{L}
-\newcommand{\laplacianFactor}{\mathbf{ \MakeUppercase{\laplacianFactorScalar}}}
+\newcommand{\laplacianFactor}{\mathbf{ M}}
 \newcommand{\laplacianFactorScalar}{m}
 \newcommand{\laplacianFactorVector}{\mathbf{ \laplacianFactorScalar}}
 \newcommand{\laplacianMatrix}{\mathbf{L}}
@@ -162,7 +162,7 @@
 \newcommand{\latentForce}{f}
 \newcommand{\latentFunction}{u}
 \newcommand{\latentFunctionVector}{\mathbf{ \latentFunction}}
-\newcommand{\latentFunctionMatrix}{\mathbf{ \MakeUppercase{\latentFunction}}}
+\newcommand{\latentFunctionMatrix}{\mathbf{ U}}
 \newcommand{\latentIndex}{j}
 \newcommand{\latentScalar}{z}
 \newcommand{\latentVector}{\mathbf{ \latentScalar}}
@@ -252,7 +252,7 @@
 \newcommand{\rotationMatrix}{\mathbf{R}}
 \newcommand{\sampleCovScalar}{s}
 \newcommand{\sampleCovVector}{\mathbf{ \sampleCovScalar}}
-\newcommand{\sampleCovMatrix}{\mathbf{s}}
+\newcommand{\sampleCovMatrix}{\mathbf{S}}
 \newcommand{\scalarProduct}[2]{\left\langle{#1},{#2}\right\rangle}
 \newcommand{\sign}[1]{\text{sign}\left(#1\right)}
 \newcommand{\sigmoid}[1]{\sigma\left(#1\right)}
@@ -300,6 +300,8 @@
 \newcommand{\vec}[1]{#1:}
 \newcommand{\weightScalar}{w}
 \newcommand{\weightVector}{\mathbf{ \weightScalar}}
+\newcommand{\biasScalar}{b}
+\newcommand{\biasVector}{\mathbf{\biasScalar}}
 \newcommand{\weightMatrix}{\mathbf{W}}
 \newcommand{\weightedAdjacencyMatrix}{\mathbf{A}}
 \newcommand{\weightedAdjacencyScalar}{a}
