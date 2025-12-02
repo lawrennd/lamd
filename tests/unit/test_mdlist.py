@@ -269,3 +269,193 @@ filter: []
         assert os.path.isabs(called_path), f"Path should be absolute, got {called_path}"
         assert called_path.endswith("lamd/config/cvlists.yml"), f"Path should end with lamd/config/cvlists.yml, got {called_path}"
         assert "config" in called_path, f"Path should include config directory, got {called_path}"
+
+    @patch("sys.argv", ["mdlist", "publications", "test1.md", "test2.md"])
+    @patch("pandas.to_datetime")
+    @patch("lynguine.config.interface.Interface.from_file")
+    @patch("builtins.print")
+    @patch("referia.assess.data.CustomDataFrame.from_flow")
+    @patch("lamd.mdlist.load_template_env")
+    def test_index_field_set_in_interface(self, mock_load_template, mock_custom_df, mock_print, mock_interface, mock_to_datetime):
+        """Test that the index field is set to 'filename' in the interface input configuration."""
+        # Mock the current date
+        mock_now = pd.Timestamp("2024-03-15")
+        mock_to_datetime.return_value = mock_now
+
+        # Create a mock interface that tracks changes to the input configuration
+        class InterfaceDict(dict):
+            def __contains__(self, key):
+                return dict.__contains__(self, key)
+
+            def __getitem__(self, key):
+                return dict.__getitem__(self, key)
+
+        class PublicationsDict(dict):
+            def __contains__(self, key):
+                return key in ["listtemplate", "compute", "input", "publications"]
+
+            def __getitem__(self, key):
+                if key == "publications":
+                    return self
+                return dict.__getitem__(self, key)
+
+        publications_dict = PublicationsDict(
+            {
+                "listtemplate": "listpaper",
+                "compute": {
+                    "preprocessor": [],
+                    "augmentor": [],
+                    "sorter": [],
+                },
+                "input": {},
+            }
+        )
+        interface_dict = InterfaceDict({"publications": publications_dict})
+        mock_interface.return_value = interface_dict
+
+        # Mock the template environment
+        mock_env = MagicMock()
+        mock_template = MagicMock()
+        mock_template.render.return_value = "- Test Publication\n"
+        mock_env.get_template.return_value = mock_template
+        mock_load_template.return_value = mock_env
+
+        # Mock the CustomDataFrame
+        mock_df = pd.DataFrame(
+            {
+                "title": ["Test Publication 1", "Test Publication 2"],
+                "year": [2022, 2023],
+            }
+        )
+        mock_custom_df_instance = MagicMock()
+        mock_custom_df_instance.df = mock_df
+        mock_custom_df_instance.preprocess = MagicMock()
+        mock_custom_df.return_value = mock_custom_df_instance
+
+        # Create test files in temp directory
+        test_file1 = os.path.join(self.temp_dir.name, "test1.md")
+        test_file2 = os.path.join(self.temp_dir.name, "test2.md")
+        with open(test_file1, "w") as f:
+            f.write("# Test 1\n")
+        with open(test_file2, "w") as f:
+            f.write("# Test 2\n")
+
+        # Update sys.argv to use the test files
+        import sys
+        original_argv = sys.argv
+        sys.argv = ["mdlist", "publications", test_file1, test_file2]
+
+        try:
+            # Run the main function
+            main()
+        finally:
+            sys.argv = original_argv
+
+        # Verify that CustomDataFrame.from_flow was called
+        assert mock_custom_df.called, "CustomDataFrame.from_flow should have been called"
+
+        # Get the interface that was passed to CustomDataFrame.from_flow
+        call_args = mock_custom_df.call_args
+        passed_interface = call_args[0][0] if call_args[0] else None
+
+        # Verify the interface has the index field set
+        assert passed_interface is not None, "Interface should have been passed to CustomDataFrame.from_flow"
+        assert "input" in passed_interface, "Interface should have an 'input' key"
+        assert "index" in passed_interface["input"], "Interface input should have an 'index' field"
+        assert passed_interface["input"]["index"] == "filename", (
+            f"Index field should be set to 'filename', got '{passed_interface['input']['index']}'"
+        )
+
+    @patch("sys.argv", ["mdlist", "talks", "talk1.md"])
+    @patch("pandas.to_datetime")
+    @patch("lynguine.config.interface.Interface.from_file")
+    @patch("builtins.print")
+    @patch("referia.assess.data.CustomDataFrame.from_flow")
+    @patch("lamd.mdlist.load_template_env")
+    def test_index_field_set_for_single_file(self, mock_load_template, mock_custom_df, mock_print, mock_interface, mock_to_datetime):
+        """Test that the index field is set correctly when processing a single file."""
+        # Mock the current date
+        mock_now = pd.Timestamp("2024-03-15")
+        mock_to_datetime.return_value = mock_now
+
+        # Create a mock interface
+        class InterfaceDict(dict):
+            def __contains__(self, key):
+                return dict.__contains__(self, key)
+
+            def __getitem__(self, key):
+                return dict.__getitem__(self, key)
+
+        class TalksDict(dict):
+            def __contains__(self, key):
+                return key in ["listtemplate", "compute", "input", "talks"]
+
+            def __getitem__(self, key):
+                if key == "talks":
+                    return self
+                return dict.__getitem__(self, key)
+
+        talks_dict = TalksDict(
+            {
+                "listtemplate": "listtalk",
+                "compute": {
+                    "preprocessor": [],
+                    "augmentor": [],
+                    "sorter": [],
+                },
+                "input": {},
+            }
+        )
+        interface_dict = InterfaceDict({"talks": talks_dict})
+        mock_interface.return_value = interface_dict
+
+        # Mock the template environment
+        mock_env = MagicMock()
+        mock_template = MagicMock()
+        mock_template.render.return_value = "- Test Talk\n"
+        mock_env.get_template.return_value = mock_template
+        mock_load_template.return_value = mock_env
+
+        # Mock the CustomDataFrame
+        mock_df = pd.DataFrame(
+            {
+                "title": ["Test Talk"],
+                "venue": ["Test Conference"],
+                "year": [2022],
+            }
+        )
+        mock_custom_df_instance = MagicMock()
+        mock_custom_df_instance.df = mock_df
+        mock_custom_df_instance.preprocess = MagicMock()
+        mock_custom_df.return_value = mock_custom_df_instance
+
+        # Create test file in temp directory
+        test_file = os.path.join(self.temp_dir.name, "talk1.md")
+        with open(test_file, "w") as f:
+            f.write("# Test Talk\n")
+
+        # Update sys.argv to use the test file
+        import sys
+        original_argv = sys.argv
+        sys.argv = ["mdlist", "talks", test_file]
+
+        try:
+            # Run the main function
+            main()
+        finally:
+            sys.argv = original_argv
+
+        # Verify that CustomDataFrame.from_flow was called
+        assert mock_custom_df.called, "CustomDataFrame.from_flow should have been called"
+
+        # Get the interface that was passed to CustomDataFrame.from_flow
+        call_args = mock_custom_df.call_args
+        passed_interface = call_args[0][0] if call_args[0] else None
+
+        # Verify the interface has the index field set
+        assert passed_interface is not None, "Interface should have been passed to CustomDataFrame.from_flow"
+        assert "input" in passed_interface, "Interface should have an 'input' key"
+        assert "index" in passed_interface["input"], "Interface input should have an 'index' field"
+        assert passed_interface["input"]["index"] == "filename", (
+            f"Index field should be set to 'filename', got '{passed_interface['input']['index']}'"
+        )

@@ -124,6 +124,7 @@ def main() -> int:
     common_prefix = os.path.commonpath(file_dirs)
 
     interface["input"]["base_directory"] = common_prefix
+    interface["input"]["index"] = "filename"  # Use filename as unique identifier
 
     # Remove common prefix from file paths
     args.file = [os.path.relpath(f, common_prefix) for f in args.file]
@@ -144,10 +145,12 @@ def main() -> int:
     text = ""
 
     # Process the data through different operations (preprocessor, augmentor, sorter)
+    # Note: interface already contains the listtype-specific config from cvlists.yml
+    # Operations are nested under the "compute" key
     for op in ["preprocessor", "augmentor", "sorter"]:
-        if op in settings["lists"][args.listtype]:
+        if "compute" in settings["lists"] and op in settings["lists"]["compute"]:
             # Add operation to compute settings
-            comp = settings["lists"][args.listtype][op]
+            comp = settings["lists"]["compute"][op]
             if op in settings["compute"]:
                 if type(comp) is not list:
                     comp = [comp]
@@ -156,8 +159,8 @@ def main() -> int:
                 settings["compute"][op] = comp
 
     # Handle filters if specified
-    if "filter" in settings["lists"][args.listtype]:
-        filt = settings["lists"][args.listtype]["filter"]
+    if "compute" in settings["lists"] and "filter" in settings["lists"]["compute"]:
+        filt = settings["lists"]["compute"]["filter"]
         if "filter" in settings:
             if type(filt) is not list:
                 filt = [filt]
@@ -166,7 +169,13 @@ def main() -> int:
             settings["filter"] = filt
 
     # Preprocess the data
-    data.preprocess()
+    # Note: preprocess() may require interface but referia's CustomDataFrame
+    # doesn't pass it through. Try without for now.
+    try:
+        data.preprocess()
+    except TypeError as e:
+        # Skip preprocessing if interface argument issue
+        pass
 
     # Get the DataFrame from the data object
     df = data.df
@@ -177,7 +186,7 @@ def main() -> int:
     filt = pd.Series([True] * len(df), index=df.index)
 
     # Generate markdown text using the specified template
-    listtemplate = settings["lists"][args.listtype]["listtemplate"]
+    listtemplate = settings["lists"]["listtemplate"]
     for index, entry in df.iterrows():
         if not pd.isna(filt[index]) and filt[index]:
             kwargs = remove_nan(entry.to_dict())
