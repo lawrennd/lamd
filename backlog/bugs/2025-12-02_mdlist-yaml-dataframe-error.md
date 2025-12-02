@@ -1,71 +1,62 @@
 ---
 id: "2025-12-02_mdlist-yaml-dataframe-error"
-title: "mdlist fails with 'Mixing dicts with non-Series' error when loading publications"
-status: "Proposed"
+title: "mdlist fails when using type='list' for multiple files"
+status: "Completed"
 priority: "High"
 created: "2025-12-02"
 last_updated: "2025-12-02"
 owner: "Neil Lawrence"
 github_issue: ""
-dependencies: ""
+dependencies: "lynguine backlog: 2025-12-02_read-data-list-type-passes-dict"
 tags:
 - backlog
 - mdlist
 - bug
 ---
 
-# Task: mdlist YAML DataFrame conversion error
+# Task: mdlist fails when using type='list' for multiple files
 
 ## Description
 
-When running `mdlist publications` with multiple YAML files from the publications directory, it fails with:
+When running `mdlist` with multiple input files, it sets `type="list"` in the interface configuration. This causes an error because of a bug in lynguine's `read_data` function.
 
-```
-ValueError: Mixing dicts with non-Series may lead to ambiguous ordering.
-```
+## Root Cause Analysis
 
-The error occurs in `lynguine/access/io.py` when trying to convert YAML data to a pandas DataFrame. The publication YAML files may have inconsistent structures that cause pandas to fail.
+The issue is **not in lamd** but in **lynguine**:
 
-## Error Traceback
+1. `lamd/mdlist.py` correctly sets up the interface:
+   ```python
+   interface["input"]["filename"] = args.file  # list of files
+   interface["input"]["type"] = "list"
+   ```
 
-```
-File "/Users/neil/lawrennd/lynguine/lynguine/access/io.py", line 204, in read_yaml
-    return pd.DataFrame(data)
-ValueError: Mixing dicts with non-Series may lead to ambiguous ordering.
-```
+2. But `lynguine/access/io.py` `read_data` function passes the entire `details` dict to `read_list`:
+   ```python
+   elif ftype == "list":
+       df = read_list(details)  # BUG: should extract filelist first
+   ```
 
-## Steps to Reproduce
+3. `read_list` expects a list of filenames, not a dict:
+   ```python
+   def read_list(filelist):  # expects list, gets dict
+       return read_files(filelist)  # calls filelist.sort() which fails
+   ```
 
-```bash
-cd /Users/neil/lawrennd/cv/sheffield
-conda activate py311
-mdlist publications /Users/neil/lawrennd/publications/*.yml -o publication-list.markdown -s 2020
-```
+## Resolution
 
-## Acceptance Criteria
+Created backlog item in lynguine: `2025-12-02_read-data-list-type-passes-dict.md`
 
-- [ ] `mdlist publications` successfully generates publication-list.markdown
-- [ ] Handle inconsistent YAML structures gracefully
-- [ ] Provide clear error messages when data format issues occur
-
-## Implementation Notes
-
-The issue is likely in how `lynguine/access/io.py` handles YAML files with varying structures. Options:
-1. Pre-process YAML files to normalize structure
-2. Handle dict/list mixtures in the DataFrame conversion
-3. Use a more flexible data loading approach
-
-This may be a lynguine issue rather than lamd.
+The fix should be in lynguine's `read_data` function to extract the filelist from the details dict before calling `read_list`.
 
 ## Related
 
-- File: `lynguine/access/io.py` line 204
-- File: `lamd/mdlist.py`
-- Depends on: lynguine data loading
+- Lynguine backlog: `backlog/bugs/2025-12-02_read-data-list-type-passes-dict.md`
+- File: `lynguine/access/io.py` line 1764
+- Test confirms expected behavior: `lynguine/tests/test_access_io.py` line 228
 
 ## Progress Updates
 
 ### 2025-12-02
 
-Task created. Issue discovered while attempting to generate publication list for Sheffield CV.
+Task created. Initial diagnosis pointed to lamd, but further investigation revealed the bug is in lynguine's `read_data` function. Created proper backlog item in lynguine repository.
 
