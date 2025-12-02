@@ -1,7 +1,7 @@
 ---
 id: "2025-12-02_makecv-missing-lists-include"
 title: "makecv doesn't include make-lists.mk for publication/talk list generation"
-status: "In Progress"
+status: "Completed"
 priority: "High"
 created: "2025-12-02"
 last_updated: "2025-12-02"
@@ -50,10 +50,10 @@ include $(MAKEFILESDIR)/make-cv.mk
 
 ## Acceptance Criteria
 
-- [ ] `makecv.py` includes `make-lists.mk` in generated makefile
-- [ ] Running `makecv cv.md` with a CV that includes `publication-list.md` works without manual intervention
-- [ ] All list types (publications, talks, meetings, grants, students, etc.) can be generated automatically
-- [ ] Existing CVs continue to work (backward compatible)
+- [x] `makecv.py` includes `make-lists.mk` in generated makefile
+- [x] Running `makecv cv.md` with a CV that includes `publication-list.md` works without manual intervention
+- [x] All list types (publications, talks, meetings, grants, students, etc.) can be generated automatically
+- [x] Existing CVs continue to work (backward compatible)
 
 ## Implementation Notes
 
@@ -76,4 +76,12 @@ This should be added between `make-cv-flags.mk` and `make-cv.mk` includes.
 ### 2025-12-02
 
 Task created. Issue discovered while attempting to add publication list to Sheffield visiting professor CV.
+
+### 2025-12-02 (Completed)
+
+Fix verified and completed:
+- ✅ `makecv.py` already includes `make-lists.mk` at line 61 (between `make-cv-flags.mk` and `make-cv.mk`)
+- ✅ Added test verification in `test_makecv_integration.py` to ensure `make-lists.mk` is included and in correct order
+- ✅ The fix is backward compatible - existing CVs continue to work
+- ✅ All list types (publications, talks, meetings, grants, students, etc.) can now be generated automatically
 
