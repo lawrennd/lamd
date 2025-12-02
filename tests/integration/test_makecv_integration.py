@@ -152,8 +152,17 @@ class TestMakefileGeneration(TestMakeCVIntegration):
         assert "MAKEFILESDIR=" in makefile_content, "MAKEFILESDIR not set"
         assert "INCLUDESDIR=" in makefile_content, "INCLUDESDIR not set"
         assert "SCRIPTDIR=" in makefile_content, "SCRIPTDIR not set"
+        # Verify all required makefile includes are present
         assert "include $(MAKEFILESDIR)/make-cv-flags.mk" in makefile_content
+        assert "include $(MAKEFILESDIR)/make-lists.mk" in makefile_content, "make-lists.mk should be included"
         assert "include $(MAKEFILESDIR)/make-cv.mk" in makefile_content
+        
+        # Verify the order: make-cv-flags.mk, then make-lists.mk, then make-cv.mk
+        lines = makefile_content.split("\n")
+        flags_line = next(i for i, line in enumerate(lines) if "make-cv-flags.mk" in line)
+        lists_line = next(i for i, line in enumerate(lines) if "make-lists.mk" in line)
+        cv_line = next(i for i, line in enumerate(lines) if "make-cv.mk" in line)
+        assert flags_line < lists_line < cv_line, "Makefile includes should be in correct order"
 
     def test_makecv_uses_lamd_paths(self):
         """Test that makecv uses paths from lamd package location."""
