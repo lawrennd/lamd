@@ -104,7 +104,11 @@ def main() -> int:
     now_year = now.year
 
     # Load interface configuration for the specified list type
-    interface = Interface.from_file(user_file="cvlists.yml")[args.listtype]
+    # Look for cvlists.yml in the lamd config directory
+    lamd_dir = os.path.dirname(os.path.abspath(__file__))
+    config_dir = os.path.join(lamd_dir, "config")
+    cvlists_path = os.path.join(config_dir, "cvlists.yml")
+    interface = Interface.from_file(user_file=cvlists_path)[args.listtype]
 
     # Set the year filter - either from command line or default to 5 years ago
     if args.since_year:
