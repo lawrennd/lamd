@@ -144,26 +144,59 @@
 </section>
 <section id="animation-controls">
 <h3>Animation Controls<a class="headerlink" href="#animation-controls" title="Link to this heading"></a></h3>
+<p>The animation system creates interactive animations in HTML slides with fallback support for other formats.</p>
+<section id="html-slides-interactive">
+<h4>HTML Slides (Interactive)<a class="headerlink" href="#html-slides-interactive" title="Link to this heading"></a></h4>
 <div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\startanimation{group}{start}{finish}{name}
-    Controls multi-step animations
+    Creates interactive animation controls
     Args:
-        group: Animation group identifier
-        start: Starting frame number
-        finish: Ending frame number
-        name: Animation name for reference
+        group: Animation group identifier (used in JavaScript)
+        start: Starting frame number (minimum slider value)
+        finish: Ending frame number (maximum slider value)
+        name: Display name for the animation
+    Output: Range slider, navigation buttons, JavaScript initialization
+    Requirements: figure-animate.js JavaScript library
 
 \newframe{contents}{name}{style}
     Creates individual animation frame
     Args:
         contents: Frame content
-        name: Frame identifier
+        name: CSS class name for show/hide logic
         style: CSS styling for frame
+    Output: HTML div with specified class and styling
 
 \endanimation
-    Ends an animation sequence
-    No arguments
+    Closes animation sequence
+    Output: Closes animation container div
 </pre></div>
 </div>
+</section>
+<section id="other-formats-fallback">
+<h4>Other Formats (Fallback)<a class="headerlink" href="#other-formats-fallback" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Notes</strong>: Shows all frames with clear labeling</p></li>
+<li><p><strong>IPynb</strong>: Displays frames as structured sections</p></li>
+<li><p><strong>Graceful degradation</strong> ensures content is always visible</p></li>
+</ul>
+</section>
+<section id="javascript-dependencies">
+<h4>JavaScript Dependencies<a class="headerlink" href="#javascript-dependencies" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Requires <code class="docutils literal notranslate"><span class="pre">figure-animate.js</span></code> library</p></li>
+<li><p>Functions: <code class="docutils literal notranslate"><span class="pre">showDivs()</span></code>, <code class="docutils literal notranslate"><span class="pre">setDivs()</span></code>, <code class="docutils literal notranslate"><span class="pre">plusDivs()</span></code></p></li>
+<li><p>Loaded via: <code class="docutils literal notranslate"><span class="pre">https://inverseprobability.com/assets/js/figure-animate.js</span></code></p></li>
+</ul>
+</section>
+<section id="accessibility-features">
+<h4>Accessibility Features<a class="headerlink" href="#accessibility-features" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>ARIA labels for screen readers</p></li>
+<li><p>Proper labeling for range sliders</p></li>
+<li><p><strong>Keyboard navigation</strong>: Arrow keys (← →) to navigate frames</p></li>
+<li><p><strong>Reveal.js compatible</strong>: Works with slide navigation</p></li>
+<li><p>Semantic HTML structure</p></li>
+<li><p>Visible, styled buttons for mouse/touch users</p></li>
+</ul>
 <p>Example animation:</p>
 <div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\startanimation{neural-net}{1}{5}{Neural Network Training}
 
@@ -174,6 +207,15 @@
 \endanimation
 </pre></div>
 </div>
+</section>
+<section id="troubleshooting">
+<h4>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Animations not working</strong>: Check that <code class="docutils literal notranslate"><span class="pre">figure-animate.js</span></code> is loaded</p></li>
+<li><p><strong>Frames not showing</strong>: Verify JavaScript console for errors</p></li>
+<li><p><strong>Accessibility issues</strong>: Ensure ARIA labels are properly set</p></li>
+</ul>
+</section>
 </section>
 <section id="additional-display-controls">
 <h3>Additional Display Controls<a class="headerlink" href="#additional-display-controls" title="Link to this heading"></a></h3>

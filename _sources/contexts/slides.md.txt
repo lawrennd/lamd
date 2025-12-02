@@ -39,26 +39,50 @@ The slides context is used when creating presentations. Content in this context 
 
 ### Animation Controls
 
+The animation system creates interactive animations in HTML slides with fallback support for other formats.
+
+#### HTML Slides (Interactive)
 ```markdown
 \startanimation{group}{start}{finish}{name}
-    Controls multi-step animations
+    Creates interactive animation controls
     Args:
-        group: Animation group identifier
-        start: Starting frame number
-        finish: Ending frame number
-        name: Animation name for reference
+        group: Animation group identifier (used in JavaScript)
+        start: Starting frame number (minimum slider value)
+        finish: Ending frame number (maximum slider value)
+        name: Display name for the animation
+    Output: Range slider, navigation buttons, JavaScript initialization
+    Requirements: figure-animate.js JavaScript library
 
 \newframe{contents}{name}{style}
     Creates individual animation frame
     Args:
         contents: Frame content
-        name: Frame identifier
+        name: CSS class name for show/hide logic
         style: CSS styling for frame
+    Output: HTML div with specified class and styling
 
 \endanimation
-    Ends an animation sequence
-    No arguments
+    Closes animation sequence
+    Output: Closes animation container div
 ```
+
+#### Other Formats (Fallback)
+- **Notes**: Shows all frames with clear labeling
+- **IPynb**: Displays frames as structured sections
+- **Graceful degradation** ensures content is always visible
+
+#### JavaScript Dependencies
+- Requires `figure-animate.js` library
+- Functions: `showDivs()`, `setDivs()`, `plusDivs()`
+- Loaded via: `https://inverseprobability.com/assets/js/figure-animate.js`
+
+#### Accessibility Features
+- ARIA labels for screen readers
+- Proper labeling for range sliders
+- **Keyboard navigation**: Arrow keys (← →) to navigate frames
+- **Reveal.js compatible**: Works with slide navigation
+- Semantic HTML structure
+- Visible, styled buttons for mouse/touch users
 
 Example animation:
 ```markdown
@@ -70,6 +94,11 @@ Example animation:
 
 \endanimation
 ```
+
+#### Troubleshooting
+- **Animations not working**: Check that `figure-animate.js` is loaded
+- **Frames not showing**: Verify JavaScript console for errors
+- **Accessibility issues**: Ensure ARIA labels are properly set
 
 ### Additional Display Controls
 
