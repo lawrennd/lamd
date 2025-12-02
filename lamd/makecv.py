@@ -58,6 +58,7 @@ def main() -> int:
         f.write(f"INCLUDESDIR={includes_dir}\n")
         f.write(f"SCRIPTDIR={script_dir}\n")
         f.write("include $(MAKEFILESDIR)/make-cv-flags.mk\n")
+        f.write("include $(MAKEFILESDIR)/make-lists.mk\n")
         f.write("include $(MAKEFILESDIR)/make-cv.mk\n")
 
     # Update external dependencies if needed

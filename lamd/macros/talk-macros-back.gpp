@@ -12,6 +12,18 @@
 
 \figure{\columns{\includediagramclass{\diagramsDir/kern/\concat{\shortname}{_covariance}}{100%}}{\includegif{\diagramsDir/kern/\concat{\shortname}{_covariance}}{100%}{negate}{center}}{45%}{45%}}{\figureCaption}{\concat{\shortname}{-covariance-plot}}}
 
+\define{\includesquareddistance{shortname}{datasetName}{datasetDescription}}{\aligncenter{\datasetName}
+
+\code{Y = data["Y"]}
+
+\setupplotcode{import mlai.plot as plot}
+
+\plotcode{plot.squared_distances(Y, "\shortname", "\datasetDescription", directory="\writeDiagramsDir/dimred")}
+
+\newslide{Histogram for \datasetName}
+
+\figure{\includediagram{\diagramsDir/dimred/\concat{\shortname}{_squared-distances}{60%}}{Histogram of interpoint squared distance distribution for \datasetName. The theoretical curve from the Gamma distribution is superimposed on the histogram.}{\concat{\shortname}{_squared-distances-plot}}}}
+
 
 \define{\thanksto{text}}{\smalltext{\alignright{Thanks to: \text}}}
 
