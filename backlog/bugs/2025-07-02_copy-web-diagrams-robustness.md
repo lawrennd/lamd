@@ -1,17 +1,19 @@
 ---
-id: "2025-07-02_copy-web-diagrams-robustness"
-title: "Bug: Robustness and Debug Output in copy_web_diagrams.sh"
-status: "Completed"
-priority: "Medium"
-created: "2025-07-02"
-last_updated: "2025-07-02"
-owner: "@lawrennd"
-github_issue: ""
-dependencies: ""
+category: bugs
+created: '2025-07-02'
+dependencies: ''
+github_issue: ''
+id: 2025-07-02_copy-web-diagrams-robustness
+last_updated: '2025-07-02'
+owner: '@lawrennd'
+priority: Medium
+related_cips: []
+status: Completed
 tags:
 - backlog
 - bug
 - shell-script
+title: 'Bug: Robustness and Debug Output in copy_web_diagrams.sh'
 ---
 
 # Task: Robustness and Debug Output in copy_web_diagrams.sh
@@ -40,4 +42,4 @@ The `copy_web_diagrams.sh` script was exiting with code 1 even when no real erro
 ## Progress Updates
 
 ### 2025-07-02
-Improved robustness and debug output handling in copy_web_diagrams.sh. 
+Improved robustness and debug output handling in copy_web_diagrams.sh.

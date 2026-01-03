@@ -1,17 +1,19 @@
 ---
-id: "2025-07-02_macro-directory-argument-handling"
-title: "Bug: Macro Directory Argument Handling in mdpp and Makefiles"
-status: "Completed"
-priority: "High"
-created: "2025-07-02"
-last_updated: "2025-07-02"
-owner: "@lawrennd"
-github_issue: ""
-dependencies: "mdpp refactor"
+category: bugs
+created: '2025-07-02'
+dependencies: mdpp refactor
+github_issue: ''
+id: 2025-07-02_macro-directory-argument-handling
+last_updated: '2025-07-02'
+owner: '@lawrennd'
+priority: High
+related_cips: []
+status: Completed
 tags:
 - backlog
 - bug
 - macros
+title: 'Bug: Macro Directory Argument Handling in mdpp and Makefiles'
 ---
 
 # Task: Macro Directory Argument Handling in mdpp and Makefiles
@@ -42,4 +44,4 @@ After refactoring `mdpp.py` for testability, the macro directory argument (`--ma
 ## Progress Updates
 
 ### 2025-07-02
-Identified and fixed macro directory argument handling issues after mdpp refactor. 
+Identified and fixed macro directory argument handling issues after mdpp refactor.

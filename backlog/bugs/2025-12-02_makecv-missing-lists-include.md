@@ -1,17 +1,19 @@
 ---
-id: "2025-12-02_makecv-missing-lists-include"
-title: "makecv doesn't include make-lists.mk for publication/talk list generation"
-status: "Completed"
-priority: "High"
-created: "2025-12-02"
-last_updated: "2025-12-02"
-owner: "Neil Lawrence"
-github_issue: ""
-dependencies: ""
+category: bugs
+created: '2025-12-02'
+dependencies: ''
+github_issue: ''
+id: 2025-12-02_makecv-missing-lists-include
+last_updated: '2025-12-02'
+owner: Neil Lawrence
+priority: High
+related_cips: []
+status: Completed
 tags:
 - backlog
 - makecv
 - makefiles
+title: makecv doesn't include make-lists.mk for publication/talk list generation
 ---
 
 # Task: makecv missing make-lists.mk include
@@ -84,4 +86,3 @@ Fix verified and completed:
 - ✅ Added test verification in `test_makecv_integration.py` to ensure `make-lists.mk` is included and in correct order
 - ✅ The fix is backward compatible - existing CVs continue to work
 - ✅ All list types (publications, talks, meetings, grants, students, etc.) can now be generated automatically
-

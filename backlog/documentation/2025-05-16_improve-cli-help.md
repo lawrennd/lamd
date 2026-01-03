@@ -1,15 +1,17 @@
 ---
-id: "2025-05-16_improve-cli-help"
-title: "Improve Command Line Help Text for All lamd Utilities"
-status: "In Progress"
-priority: "High"
-effort: "Medium"
-type: "documentation"
-created: "2025-05-16"
-last_updated: "2025-05-16"
-owner: lawrennd
-github_issue: null
+category: documentation
+created: '2025-05-16'
 dependencies: []
+effort: Medium
+github_issue: null
+id: 2025-05-16_improve-cli-help
+last_updated: '2025-05-16'
+owner: lawrennd
+priority: High
+related_cips: []
+status: In Progress
+title: Improve Command Line Help Text for All lamd Utilities
+type: documentation
 ---
 
 ## Description
@@ -79,4 +81,4 @@ Improved the help text for the `mdpp` utility:
 
 Next steps:
 - Improve help text for other utilities following the same pattern
-- Ensure consistent style and terminology across all utilities 
+- Ensure consistent style and terminology across all utilities

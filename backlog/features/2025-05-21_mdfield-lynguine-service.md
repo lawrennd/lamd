@@ -1,15 +1,18 @@
 ---
-id: "2025-05-21_mdfield-lynguine-service"
-title: "Optimize mdfield-lynguine Interaction with Service Architecture"
-status: "Proposed"
-priority: "High"
-effort: "Medium"
-type: "feature"
-created: "2025-05-21"
-last_updated: "2025-05-21"
-owner: ""
+category: features
+created: '2025-05-21'
+dependencies:
+- 2025-05-21_content-distribution-caching
+effort: Medium
 github_issue: null
-dependencies: ["2025-05-21_content-distribution-caching"]
+id: 2025-05-21_mdfield-lynguine-service
+last_updated: '2025-05-21'
+owner: ''
+priority: High
+related_cips: []
+status: Proposed
+title: Optimize mdfield-lynguine Interaction with Service Architecture
+type: feature
 ---
 
 # Task: Optimize mdfield-lynguine Interaction with Service Architecture
@@ -145,4 +148,4 @@ Made significant progress on mdfield improvements:
 - Enhanced mdfield error handling and field extraction
 - Updated mdfield tests to reflect new behavior
 - This addresses some of the performance and reliability issues mentioned in this backlog item
-- The service architecture approach is still needed for the full optimization, but mdfield is now more reliable 
+- The service architecture approach is still needed for the full optimization, but mdfield is now more reliable

@@ -1,17 +1,19 @@
 ---
-id: "2025-07-02_consistent-directory-args"
-title: "Feature: Consistent Directory Argument Handling Across Build System"
-status: "Completed"
-priority: "High"
-created: "2025-07-02"
-last_updated: "2025-07-02"
-owner: "@lawrennd"
-github_issue: ""
-dependencies: "mdpp refactor"
+category: features
+created: '2025-07-02'
+dependencies: mdpp refactor
+github_issue: ''
+id: 2025-07-02_consistent-directory-args
+last_updated: '2025-07-02'
+owner: '@lawrennd'
+priority: High
+related_cips: []
+status: Completed
 tags:
 - backlog
 - feature
 - build-system
+title: 'Feature: Consistent Directory Argument Handling Across Build System'
 ---
 
 # Task: Consistent Directory Argument Handling Across Build System
@@ -41,4 +43,4 @@ Inconsistent handling of directory arguments across Makefiles and scripts led to
 ## Progress Updates
 
 ### 2025-07-02
-Standardized directory argument handling across the build system. 
+Standardized directory argument handling across the build system.

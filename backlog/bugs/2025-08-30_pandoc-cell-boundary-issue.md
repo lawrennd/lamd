@@ -1,12 +1,14 @@
 ---
-id: "2025-08-30_pandoc-cell-boundary-issue"
-title: "Pandoc Cell Boundary Issue in LaMD Pipeline"
-status: "Completed"
-priority: "High"
-created: "2025-08-30"
-last_updated: "2025-08-30"
-owner: "Neil Lawrence"
+category: bugs
+created: '2025-08-30'
 dependencies: []
+id: 2025-08-30_pandoc-cell-boundary-issue
+last_updated: '2025-08-30'
+owner: Neil Lawrence
+priority: High
+related_cips: []
+status: Completed
+title: Pandoc Cell Boundary Issue in LaMD Pipeline
 ---
 
 # Task: Fix Pandoc Cell Boundary Issue in LaMD Pipeline

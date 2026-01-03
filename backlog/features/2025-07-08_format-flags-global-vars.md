@@ -1,18 +1,20 @@
 ---
-id: "2025-07-08_format-flags-global-vars"
-title: "Fix: Ensure Global Format Flags (-DNOTES, -DSLIDES, etc.) Are Passed to mdpp"
-status: "Completed"
-priority: "High"
-created: "2025-07-08"
-last_updated: "2025-07-08"
-owner: "@lawrennd"
-github_issue: ""
-dependencies: "mdpp, Makefile integration"
+category: features
+created: '2025-07-08'
+dependencies: mdpp, Makefile integration
+github_issue: ''
+id: 2025-07-08_format-flags-global-vars
+last_updated: '2025-07-08'
+owner: '@lawrennd'
+priority: High
+related_cips: []
+status: Completed
 tags:
 - backlog
 - bugfix
 - mdpp
 - build-system
+title: 'Fix: Ensure Global Format Flags (-DNOTES, -DSLIDES, etc.) Are Passed to mdpp'
 ---
 
 # Task: Ensure Global Format Flags Are Passed to mdpp
@@ -45,4 +47,4 @@ Previously, global format flags such as `-DNOTES` and `-DSLIDES` were not reliab
 ## Progress Updates
 
 ### 2025-07-08
-Fixed global format flag propagation in mdpp and verified with new and existing tests. All output formats now receive correct macro flags for conditional expansion. 
+Fixed global format flag propagation in mdpp and verified with new and existing tests. All output formats now receive correct macro flags for conditional expansion.

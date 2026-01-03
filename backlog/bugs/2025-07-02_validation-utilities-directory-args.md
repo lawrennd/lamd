@@ -1,17 +1,19 @@
 ---
-id: "2025-07-02_validation-utilities-directory-args"
-title: "Bug: Validation Utilities for Directory Arguments"
-status: "Completed"
-priority: "Medium"
-created: "2025-07-02"
-last_updated: "2025-07-02"
-owner: "@lawrennd"
-github_issue: ""
-dependencies: "mdpp refactor"
+category: bugs
+created: '2025-07-02'
+dependencies: mdpp refactor
+github_issue: ''
+id: 2025-07-02_validation-utilities-directory-args
+last_updated: '2025-07-02'
+owner: '@lawrennd'
+priority: Medium
+related_cips: []
+status: Completed
 tags:
 - backlog
 - bug
 - validation
+title: 'Bug: Validation Utilities for Directory Arguments'
 ---
 
 # Task: Validation Utilities for Directory Arguments
@@ -40,4 +42,4 @@ The validation utilities did not provide clear error messages or support for mul
 ## Progress Updates
 
 ### 2025-07-02
-Improved validation utilities for directory arguments. 
+Improved validation utilities for directory arguments.

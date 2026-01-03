@@ -1,9 +1,12 @@
 ---
-id: "2025-12-02_mdlist-preprocess-filtering"
-title: "mdlist filtering not working due to preprocess/Compute interface mismatch"
-status: "Proposed"
-priority: "Medium"
-created: "2025-12-02"
+category: bugs
+created: '2025-12-02'
+id: 2025-12-02_mdlist-preprocess-filtering
+last_updated: '2025-12-02'
+priority: Medium
+related_cips: []
+status: Proposed
+title: mdlist filtering not working due to preprocess/Compute interface mismatch
 ---
 
 # Task: mdlist filtering not working due to preprocess/Compute interface mismatch
@@ -100,4 +103,3 @@ Bypass the preprocess system entirely and implement basic filtering (since_year,
 
 ### 2025-12-02
 Task created. Issue discovered when testing `mdlist publications -s 2020` which returned all publications instead of just those from 2020 onwards. Currently working around with try/except in mdlist.py that skips preprocessing entirely. CV generation works but without filtering.
-

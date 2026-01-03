@@ -1,9 +1,14 @@
 ---
-status: proposed
-priority: medium
+id: "2025-05-16_implement-extract-snippets"
+created: "2025-05-16"
+category: features
+last_updated: '2026-01-03'
 path: backlog/features/2025-05-16_implement-extract-snippets.md
-type: feature
+priority: Medium
+related_cips: []
+status: Proposed
 title: Implement extract_snippets Function in lynguine.util.talk
+type: feature
 ---
 
 # Task: Implement extract_snippets Function in lynguine.util.talk
@@ -51,4 +56,4 @@ The regular expression pattern should identify common code inclusion patterns in
 ## Progress Updates
 
 ### 2025-05-16
-Task created with Proposed status. 
+Task created with Proposed status.

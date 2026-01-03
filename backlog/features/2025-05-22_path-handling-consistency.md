@@ -1,15 +1,17 @@
 ---
-id: "2025-05-22_path-handling-consistency"
-title: "Standardize Path Handling Between URLs and Local Files"
-status: "Proposed"
-priority: "High"
-effort: "Medium"
-type: "feature"
-created: "2025-05-22"
-last_updated: "2025-05-22"
-owner: ""
-github_issue: null
+category: features
+created: '2025-05-22'
 dependencies: []
+effort: Medium
+github_issue: null
+id: 2025-05-22_path-handling-consistency
+last_updated: '2025-05-22'
+owner: ''
+priority: High
+related_cips: []
+status: Proposed
+title: Standardize Path Handling Between URLs and Local Files
+type: feature
 ---
 
 # Task: Standardize Path Handling Between URLs and Local Files
@@ -97,4 +99,4 @@ Initial analysis of path handling issues:
 - Identified inconsistent path handling between URLs and local files
 - Documented current workaround in `copy_web_diagrams.sh`
 - Proposed three potential solutions
-- Created backlog item to track implementation 
+- Created backlog item to track implementation

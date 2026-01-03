@@ -1,18 +1,20 @@
 ---
-id: "2025-08-27_practical-directory-mdfield-priority"
-title: "Fix mdfield Priority: Practical Files Not Going to Correct Directory"
-status: "Completed"
-priority: "High"
-created: "2025-08-27"
-last_updated: "2025-08-27"
-owner: "@lawrennd"
-github_issue: ""
-dependencies: ""
+category: bugs
+created: '2025-08-27'
+dependencies: ''
+github_issue: ''
+id: 2025-08-27_practical-directory-mdfield-priority
+last_updated: '2025-08-27'
+owner: '@lawrennd'
+priority: High
+related_cips: []
+status: Completed
 tags:
 - backlog
 - bug
 - mdfield
 - practical-directory
+title: 'Fix mdfield Priority: Practical Files Not Going to Correct Directory'
 ---
 
 # Task: Fix mdfield Priority: Practical Files Not Going to Correct Directory

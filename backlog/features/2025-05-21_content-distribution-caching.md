@@ -1,15 +1,17 @@
 ---
-id: "2025-05-21_content-distribution-caching"
-title: "Standardize Content Distribution and Caching"
-status: "Proposed"
-priority: "High"
-effort: "Large"
-type: "feature"
-created: "2025-05-21"
-last_updated: "2025-05-21"
-owner: ""
-github_issue: null
+category: features
+created: '2025-05-21'
 dependencies: []
+effort: Large
+github_issue: null
+id: 2025-05-21_content-distribution-caching
+last_updated: '2025-05-21'
+owner: ''
+priority: High
+related_cips: []
+status: Proposed
+title: Standardize Content Distribution and Caching
+type: feature
 ---
 
 # Task: Content Distribution and Caching
@@ -120,4 +122,4 @@ Initial backlog item created to track the need for standardized content distribu
 
 ### 2025-05-21
 
-Updated to incorporate Data-Oriented Architecture principles using lynguine package. 
+Updated to incorporate Data-Oriented Architecture principles using lynguine package.
