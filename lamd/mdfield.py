@@ -31,8 +31,8 @@ def extract_field_server_mode(field: str, filename: str, config_files: list) -> 
     """
     Extract field using lynguine server mode.
 
-    NOTE: Full server mode integration for mdfield requires lynguine API enhancements
-    to expose field extraction via server sessions. This is a placeholder implementation.
+    Uses lynguine server's talk_field endpoint for fast field extraction
+    from markdown frontmatter with config file fallback.
 
     Args:
         field: Field name to extract
@@ -40,17 +40,27 @@ def extract_field_server_mode(field: str, filename: str, config_files: list) -> 
         config_files: List of config files to check
 
     Returns:
-        Field value or None if not found (currently always returns None)
+        Field value or None if server mode fails
     """
-    # TODO: Implement server mode field extraction
-    # This requires:
-    # 1. lynguine server to expose Interface field access via sessions
-    # 2. API to extract fields from markdown frontmatter via server
-    # 3. Session caching by config file path
-    #
-    # For now, return None to fall back to direct mode
-    sys.stderr.write("Note: Server mode for mdfield not yet fully implemented. Using direct mode.\n")
-    return None
+    try:
+        # Create client with auto-start and reasonable timeout
+        client = ServerClient(auto_start=True, idle_timeout=300)
+
+        # Extract field using server's talk_field endpoint
+        # This wraps lynguine.util.talk.talk_field() with config fallback
+        answer = client.extract_talk_field(
+            field=field,
+            markdown_file=filename,
+            config_files=config_files
+        )
+
+        # Server returns empty string for missing fields (matching direct mode)
+        return answer
+
+    except Exception as e:
+        # Server mode failed, return None to trigger fallback
+        sys.stderr.write(f"Server mode error: {e}. Falling back to direct mode.\n")
+        return None
 
 
 def main() -> int:
@@ -117,7 +127,6 @@ def main() -> int:
         answer = extract_field_server_mode(args.field, args.filename, config_files)
         if answer is None:
             # Server mode failed, fall back to direct mode
-            sys.stderr.write("Server mode failed, using direct mode\n")
             use_server = False
 
     if not use_server:
