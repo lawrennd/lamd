@@ -9,7 +9,7 @@ last_updated: '2026-01-03'
 owner: ''
 priority: High
 related_cips: ["0008"]
-status: Ready
+status: In Progress
 title: Optimize mdfield-lynguine Interaction with Service Architecture
 type: feature
 ---
@@ -178,3 +178,27 @@ Made significant progress on mdfield improvements:
 - Backwards compatible (opt-in via flag or environment variable)
 
 This backlog item is now **Ready for implementation** - all the infrastructure work in lynguine is complete, we just need to integrate it into lamd's mdfield and mdlist utilities.
+
+### 2026-01-03 (Later)
+
+**CIP-0008 Phase 1 Complete!**
+
+Implemented server mode infrastructure in lamd:
+- ✅ Added `--use-server` and `--no-server` flags to mdfield and mdlist
+- ✅ Added `LAMD_USE_SERVER` environment variable support
+- ✅ Added ServerClient import with graceful fallback
+- ✅ Fully backwards compatible (defaults to direct mode)
+- ✅ Code compiles and runs
+
+**Status changed**: Ready → In Progress
+
+**Current state**: Infrastructure complete, but full functionality requires lynguine API enhancements:
+- Need lynguine server endpoint for Interface field extraction
+- Need talk_field functionality via server
+- Need session support for CustomDataFrame operations used by mdlist
+
+**Next steps** (CIP-0008 Phase 1b & 2):
+1. Add required endpoints to lynguine server
+2. Implement server mode extraction in mdfield/mdlist
+3. Test performance improvements
+4. Update documentation
