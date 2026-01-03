@@ -1,10 +1,13 @@
 ---
-id: "2025-12-02_cvlists-missing-index-field"
-title: "cvlists.yml missing index field required by lynguine CustomDataFrame"
-status: "Completed"
-priority: "High"
-created: "2025-12-02"
-completed: "2025-12-02"
+category: bugs
+completed: '2025-12-02'
+created: '2025-12-02'
+id: 2025-12-02_cvlists-missing-index-field
+last_updated: '2025-12-02'
+priority: High
+related_cips: []
+status: Completed
+title: cvlists.yml missing index field required by lynguine CustomDataFrame
 ---
 
 # Task: cvlists.yml missing index field required by lynguine CustomDataFrame

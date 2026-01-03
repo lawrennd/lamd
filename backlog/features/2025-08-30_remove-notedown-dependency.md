@@ -1,18 +1,21 @@
 ---
-id: "2025-08-30_remove-notedown-dependency"
-title: "Remove notedown Dependency from LaMD Pipeline"
-status: "Completed"
-priority: "Medium"
-created: "2025-08-30"
-last_updated: "2025-08-30"
-owner: "Neil Lawrence"
-github_issue: ""
-dependencies: ["2025-08-30_pandoc-cell-boundary-issue"]
+category: features
+created: '2025-08-30'
+dependencies:
+- 2025-08-30_pandoc-cell-boundary-issue
+github_issue: ''
+id: 2025-08-30_remove-notedown-dependency
+last_updated: '2025-08-30'
+owner: Neil Lawrence
+priority: Medium
+related_cips: []
+status: Completed
 tags:
 - backlog
 - optimization
 - dependency-reduction
 - build-system
+title: Remove notedown Dependency from LaMD Pipeline
 ---
 
 # Task: Remove notedown Dependency from LaMD Pipeline

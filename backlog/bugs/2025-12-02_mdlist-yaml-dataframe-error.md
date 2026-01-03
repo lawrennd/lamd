@@ -1,17 +1,19 @@
 ---
-id: "2025-12-02_mdlist-yaml-dataframe-error"
-title: "mdlist fails when using type='list' for multiple files"
-status: "Completed"
-priority: "High"
-created: "2025-12-02"
-last_updated: "2025-12-02"
-owner: "Neil Lawrence"
-github_issue: ""
-dependencies: "lynguine backlog: 2025-12-02_read-data-list-type-passes-dict"
+category: bugs
+created: '2025-12-02'
+dependencies: 'lynguine backlog: 2025-12-02_read-data-list-type-passes-dict'
+github_issue: ''
+id: 2025-12-02_mdlist-yaml-dataframe-error
+last_updated: '2025-12-02'
+owner: Neil Lawrence
+priority: High
+related_cips: []
+status: Completed
 tags:
 - backlog
 - mdlist
 - bug
+title: mdlist fails when using type='list' for multiple files
 ---
 
 # Task: mdlist fails when using type='list' for multiple files
@@ -59,4 +61,3 @@ The fix should be in lynguine's `read_data` function to extract the filelist fro
 ### 2025-12-02
 
 Task created. Initial diagnosis pointed to lamd, but further investigation revealed the bug is in lynguine's `read_data` function. Created proper backlog item in lynguine repository.
-

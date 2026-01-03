@@ -1,17 +1,19 @@
 ---
-id: "2025-07-02_directory-argument-validation"
-title: "Bug: Directory Argument Validation and Expansion in mdpp.py"
-status: "Completed"
-priority: "High"
-created: "2025-07-02"
-last_updated: "2025-07-02"
-owner: "@lawrennd"
-github_issue: ""
-dependencies: "mdpp refactor"
+category: bugs
+created: '2025-07-02'
+dependencies: mdpp refactor
+github_issue: ''
+id: 2025-07-02_directory-argument-validation
+last_updated: '2025-07-02'
+owner: '@lawrennd'
+priority: High
+related_cips: []
+status: Completed
 tags:
 - backlog
 - bug
 - directory-arguments
+title: 'Bug: Directory Argument Validation and Expansion in mdpp.py'
 ---
 
 # Task: Directory Argument Validation and Expansion in mdpp.py
@@ -41,4 +43,4 @@ Directory arguments for snippets, includes, and macros were not always validated
 ## Progress Updates
 
 ### 2025-07-02
-Refactored and validated directory argument handling in mdpp.py. 
+Refactored and validated directory argument handling in mdpp.py.

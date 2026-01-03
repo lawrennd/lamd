@@ -1,15 +1,17 @@
 ---
-id: "2025-05-21_refactor_mdpp"
-title: "Refactor mdpp.py for Improved Testability and Coverage"
-status: "Proposed"
-priority: "Medium"
-effort: "Medium"
-type: "refactor"
-created: "2025-05-21"
-last_updated: "2025-05-21"
-owner: ""
-github_issue: null
+category: features
+created: '2025-05-21'
 dependencies: []
+effort: Medium
+github_issue: null
+id: 2025-05-21_refactor_mdpp
+last_updated: '2025-05-21'
+owner: ''
+priority: Medium
+related_cips: []
+status: Proposed
+title: Refactor mdpp.py for Improved Testability and Coverage
+type: refactor
 ---
 
 # Task: Refactor mdpp.py for Improved Testability and Coverage
@@ -41,4 +43,4 @@ The `mdpp.py` script is currently structured as a standalone script, which makes
 
 - CIP-0005 testing uncovered this need.
 - PRs: None yet
-- Documentation: None yet 
+- Documentation: None yet

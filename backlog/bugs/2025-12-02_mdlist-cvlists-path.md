@@ -1,17 +1,19 @@
 ---
-id: "2025-12-02_mdlist-cvlists-path"
-title: "mdlist looks for cvlists.yml in current directory instead of lamd package"
-status: "Completed"
-priority: "High"
-created: "2025-12-02"
-last_updated: "2025-12-02"
-owner: "Neil Lawrence"
-github_issue: ""
-dependencies: ""
+category: bugs
+created: '2025-12-02'
+dependencies: ''
+github_issue: ''
+id: 2025-12-02_mdlist-cvlists-path
+last_updated: '2025-12-02'
+owner: Neil Lawrence
+priority: High
+related_cips: []
+status: Completed
 tags:
 - backlog
 - mdlist
 - bug
+title: mdlist looks for cvlists.yml in current directory instead of lamd package
 ---
 
 # Task: mdlist looks for cvlists.yml in current directory instead of lamd package
@@ -69,4 +71,3 @@ Task created. Issue discovered when testing `mdlist` after fixing lynguine's `re
 ### 2025-12-02 (Completed)
 
 Implemented fix using `__file__` to locate the config directory. The `cvlists.yml` file has been moved to `lamd/lamd/config/cvlists.yml` (alongside `interface.py`) and the code now looks for it there, regardless of the current working directory. This is more consistent with the package structure, as configuration files belong in the `config/` subdirectory.
-

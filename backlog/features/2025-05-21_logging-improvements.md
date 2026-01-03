@@ -1,16 +1,18 @@
 ---
-id: "2025-05-21_logging-improvements"
-title: "Logging Improvements"
-status: "Proposed"
-priority: "Medium"
-effort: "Medium"
-type: "feature"
-created: "2025-05-21"
-last_updated: "2025-05-21"
-owner: ""
-github_issue: null
+category: features
+created: '2025-05-21'
 dependencies:
-  - "None"
+- None
+effort: Medium
+github_issue: null
+id: 2025-05-21_logging-improvements
+last_updated: '2025-05-21'
+owner: ''
+priority: Medium
+related_cips: []
+status: Proposed
+title: Logging Improvements
+type: feature
 ---
 
 # Task: Logging Improvements
@@ -50,4 +52,4 @@ This task is part of the backlog and will be scheduled for future implementation
 
 ### 2025-05-21
 
-Task created and added to the backlog. 
+Task created and added to the backlog.
