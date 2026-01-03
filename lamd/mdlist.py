@@ -14,6 +14,14 @@ from referia import assess
 
 from lamd.util import set_since_year
 
+# Server mode support (optional dependency)
+try:
+    from lynguine.client import ServerClient
+    SERVER_MODE_AVAILABLE = True
+except ImportError:
+    SERVER_MODE_AVAILABLE = False
+    ServerClient = None
+
 """
 Markdown List Generator for Academic Content
 
@@ -65,8 +73,11 @@ def main() -> int:
     :rtype: int
     """
     # Set up template environment for markdown
+    # Use lamd's templates directory, not lynguine's default
     ext = ".md"
-    env = load_template_env(ext=ext)
+    lamd_dir = os.path.dirname(os.path.abspath(__file__))
+    template_dir = os.path.join(lamd_dir, "templates")
+    env = load_template_env(ext=ext, template_dir=template_dir)
 
     # Configure command line argument parser
     parser = argparse.ArgumentParser()
@@ -97,15 +108,37 @@ def main() -> int:
 
     parser.add_argument("-s", "--since-year", type=int, help="The year from which to include entries")
 
+    # Server mode options
+    parser.add_argument(
+        "--use-server",
+        action="store_true",
+        help="Use lynguine server mode for faster repeated access (requires lynguine server mode)"
+    )
+
+    parser.add_argument(
+        "--no-server",
+        action="store_true",
+        help="Force direct mode even if LAMD_USE_SERVER is set"
+    )
+
     parser.add_argument("file", type=str, nargs="+", help="The file names to read in")
 
     args = parser.parse_args()
+
+    # Determine if we should use server mode
+    use_server = args.use_server or (os.environ.get("LAMD_USE_SERVER", "0") == "1")
+    if args.no_server:
+        use_server = False
+
+    # Check if server mode is available
+    if use_server and not SERVER_MODE_AVAILABLE:
+        sys.stderr.write("Warning: Server mode requested but lynguine.client not available. Falling back to direct mode.\n")
+        use_server = False
     now = pd.to_datetime(datetime.datetime.now().date())
     now_year = now.year
 
     # Load interface configuration for the specified list type
-    # Look for cvlists.yml in the lamd config directory
-    lamd_dir = os.path.dirname(os.path.abspath(__file__))
+    # Look for cvlists.yml in the lamd config directory (lamd_dir already defined above)
     config_dir = os.path.join(lamd_dir, "config")
     cvlists_path = os.path.join(config_dir, "cvlists.yml")
     interface = Interface.from_file(user_file=cvlists_path)[args.listtype]
@@ -137,6 +170,14 @@ def main() -> int:
         interface["input"]["type"] = "list"
 
     # Load the data using referia's CustomDataFrame
+    # TODO: Server mode integration for mdlist
+    # In server mode, we would create a session with the interface and use it to load data
+    # This requires lynguine server Phase 5 session support for CustomDataFrame operations
+    # For now, mdlist always uses direct mode
+    if use_server:
+        sys.stderr.write("Note: Server mode for mdlist not yet fully implemented. Using direct mode.\n")
+        use_server = False
+
     data = assess.data.CustomDataFrame.from_flow(interface)
 
     # Initialize settings dictionary from the interface
@@ -178,7 +219,7 @@ def main() -> int:
         pass
 
     # Get the DataFrame from the data object
-    df = data.df
+    df = data.to_pandas()
 
     # Apply filter function to get boolean mask
     # This is a placeholder implementation since we don't have the actual filter functions
