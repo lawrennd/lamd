@@ -170,14 +170,18 @@ def main() -> int:
         interface["input"]["type"] = "list"
 
     # Load the data using referia's CustomDataFrame
-    # TODO: Server mode integration for mdlist
-    # In server mode, we would create a session with the interface and use it to load data
-    # This requires lynguine server Phase 5 session support for CustomDataFrame operations
-    # For now, mdlist always uses direct mode
     if use_server:
-        sys.stderr.write("Note: Server mode for mdlist not yet fully implemented. Using direct mode.\n")
+        # Server mode integration for mdlist is deferred to Phase 3
+        # Complexity: CustomDataFrame.from_flow() integrates tightly with compute operations
+        # (preprocessors, augmentors, sorters) and mdlist's current architecture expects
+        # local DataFrame processing for template rendering.
+        # 
+        # For Phase 2 MVP, focus is on mdfield (38 calls in CV builds).
+        # mdlist server integration will be addressed in Phase 3 with proper architecture.
+        sys.stderr.write("Note: Server mode for mdlist deferred to Phase 3. Using direct mode.\n")
         use_server = False
-
+    
+    # Load data (direct mode for now)
     data = assess.data.CustomDataFrame.from_flow(interface)
 
     # Initialize settings dictionary from the interface
