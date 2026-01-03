@@ -1,16 +1,15 @@
 ---
 category: features
 created: '2025-05-21'
-dependencies:
-- 2025-05-21_content-distribution-caching
+dependencies: []
 effort: Medium
 github_issue: null
 id: 2025-05-21_mdfield-lynguine-service
-last_updated: '2025-05-21'
+last_updated: '2026-01-03'
 owner: ''
 priority: High
-related_cips: []
-status: Proposed
+related_cips: ["0008"]
+status: Ready
 title: Optimize mdfield-lynguine Interaction with Service Architecture
 type: feature
 ---
@@ -40,9 +39,15 @@ This inefficiency is particularly problematic when running mdfield in batch proc
 
 ## Proposed Solution
 
-Transform the lynguine interaction model from direct library calls to a service-based architecture where lynguine runs as a persistent process that mdfield communicates with. This approach would leverage the Data-Oriented Architecture principles outlined in the content distribution and caching feature.
+**UPDATE (2026-01-03)**: Lynguine has now completed Phase 5 of server mode implementation (lynguine CIP-0008), which provides exactly the service architecture described below! The integration approach is documented in lamd CIP-0008.
 
-*IMPORTANT*: This feature requires significant changes to the lynguine package itself ([https://github.com/lawrennd/lynguine/](https://github.com/lawrennd/lynguine/)) to implement the service architecture. The current library design is not structured for persistent operation or remote procedure calls, and would need architectural modifications to support this feature.
+Transform the lynguine interaction model from direct library calls to a service-based architecture where lynguine runs as a persistent process that mdfield communicates with.
+
+~~*IMPORTANT*: This feature requires significant changes to the lynguine package itself to implement the service architecture.~~ **These changes have been completed in lynguine!** Lynguine now provides:
+- HTTP/REST server with auto-start capability
+- Stateful data sessions (Phase 5)
+- Focus-based navigation API mirroring `CustomDataFrame`
+- Cross-platform support (Unix, macOS, Windows)
 
 ### Required Changes to lynguine
 
@@ -126,10 +131,12 @@ The implementation will need to:
 
 ## Related
 
-- Depends on CIP-0005 (Content Distribution and Caching)
-- Requires changes to lynguine package: [https://github.com/lawrennd/lynguine/](https://github.com/lawrennd/lynguine/)
-- Affects mdfield command-line tool
-- Related to lynguine Python package architecture
+- **CIP-0008**: Integrate Lynguine Server Mode for Fast Builds (implementation approach)
+- **REQ-0005**: Build Operations Complete in Reasonable Time (requirement this addresses)
+- **External**: lynguine CIP-0008 (Server Mode) - Phase 5 complete
+- **External**: lynguine REQ-0007 (Fast Repeated Access)
+- Affects mdfield and mdlist command-line tools
+- Expected performance: 72s → 2.3s for CV builds (35-40x improvement)
 
 ## Progress Updates
 
@@ -149,3 +156,25 @@ Made significant progress on mdfield improvements:
 - Updated mdfield tests to reflect new behavior
 - This addresses some of the performance and reliability issues mentioned in this backlog item
 - The service architecture approach is still needed for the full optimization, but mdfield is now more reliable
+
+### 2026-01-03
+
+**Major Update**: The lynguine service architecture is now complete!
+
+- **Lynguine server mode completed** (Phase 1-5, including stateful sessions)
+- **CIP-0008 created** in lamd to document integration approach
+- **REQ-0005 created** to capture the requirement (fast build operations)
+- **Status changed**: Proposed → Ready (lynguine infrastructure is done)
+
+**Performance benchmarks** (from lynguine):
+- Current: 38 subprocess calls × 1.9s startup = 72s overhead per CV build
+- With server mode: 1 session + 38 lightweight ops = 2.3s total
+- **Expected improvement: 35-40x faster** (93% reduction in build time)
+
+**Implementation approach** (from CIP-0008):
+- Add `--use-server` flag to mdfield and mdlist
+- Use lynguine's `ServerClient` with auto-start
+- Session management by interface file
+- Backwards compatible (opt-in via flag or environment variable)
+
+This backlog item is now **Ready for implementation** - all the infrastructure work in lynguine is complete, we just need to integrate it into lamd's mdfield and mdlist utilities.
