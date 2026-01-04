@@ -52,7 +52,7 @@ python_functions = "test_*"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-# Script entries
+# Script entries (Python entry points)
 [tool.poetry.scripts]
 mdpp = "lamd.mdpp:main"
 flags = "lamd.flags:main"
@@ -62,6 +62,12 @@ maketalk = "lamd.maketalk:main"
 makecv = "lamd.makecv:main"
 mdlist = "lamd.mdlist:main"
 mdpeople = "lamd.mdpeople:main"
+
+# Note: Shell script mdfield-server is in lamd/scripts/ directory
+# and is included via 'include' directive above.
+# After 'poetry install', manually symlink or add to PATH:
+#   ln -s $(poetry run python -c "import lamd; import os; print(os.path.dirname(lamd.__file__));")/scripts/mdfield-server ~/.local/bin/
+# Or it's automatically accessible via SCRIPTDIR variable in generated Makefiles.
 
 # Optional dependencies
 # [tool.poetry.extras]
