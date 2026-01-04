@@ -70,12 +70,12 @@ PEOPLEYAML=$(shell $(TIME_CMD) $(MDFIELD) people $(BASE).md)
 # Write batch output to temp file to avoid Make variable issues with multiline content
 _DEPS_CACHE:=$(shell mktemp)
 _DEPS_EXTRACTED:=$(shell $(TIME_CMD) dependencies batch $(BASE).md --snippets-path $(SNIPPETSDIR) > $(_DEPS_CACHE))
-DEPS:=$(shell grep '^DEPS:' $(_DEPS_CACHE) | sed 's/^DEPS://')
-DIAGDEPS:=$(shell grep '^DIAGDEPS:' $(_DEPS_CACHE) | sed 's/^DIAGDEPS://')
-DOCXDEPS:=$(shell grep '^DOCXDEPS:' $(_DEPS_CACHE) | sed 's/^DOCXDEPS://')
-PPTXDEPS:=$(shell grep '^PPTXDEPS:' $(_DEPS_CACHE) | sed 's/^PPTXDEPS://')
-TEXDEPS:=$(shell grep '^TEXDEPS:' $(_DEPS_CACHE) | sed 's/^TEXDEPS://')
-DYNAMIC_DEPS:=$(shell grep '^DYNAMIC_DEPS:' $(_DEPS_CACHE) | sed 's/^DYNAMIC_DEPS://')
+DEPS:=$(shell grep '^inputs:' $(_DEPS_CACHE) | sed 's/^inputs://')
+DIAGDEPS:=$(shell grep '^diagrams:' $(_DEPS_CACHE) | sed 's/^diagrams://')
+DOCXDEPS:=$(shell grep '^docxdiagrams:' $(_DEPS_CACHE) | sed 's/^docxdiagrams://')
+PPTXDEPS:=$(shell grep '^pptxdiagrams:' $(_DEPS_CACHE) | sed 's/^pptxdiagrams://')
+TEXDEPS:=$(shell grep '^texdiagrams:' $(_DEPS_CACHE) | sed 's/^texdiagrams://')
+DYNAMIC_DEPS:=$(shell grep '^all:' $(_DEPS_CACHE) | sed 's/^all://')
 # Clean up temp file immediately after extraction
 _CLEANUP:=$(shell rm -f $(_DEPS_CACHE))
 

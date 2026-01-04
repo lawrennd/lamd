@@ -292,17 +292,17 @@ Here's a citation \cite{Smith2020}.
         )
         mock_extract_all.assert_called_once_with("test.md", user_file=["_lamd.yml", "_config.yml"])
         
-        # Verify the output format (prefixed lines)
+        # Verify the output format (prefixed lines with dependency type names)
         calls = mock_print.call_args_list
         assert len(calls) == 6
         
-        # Check each line starts with the correct prefix
-        assert calls[0][0][0].startswith("DEPS:")
-        assert calls[1][0][0].startswith("DIAGDEPS:")
-        assert calls[2][0][0].startswith("DOCXDEPS:")
-        assert calls[3][0][0].startswith("PPTXDEPS:")
-        assert calls[4][0][0].startswith("TEXDEPS:")
-        assert calls[5][0][0].startswith("DYNAMIC_DEPS:")
+        # Check each line starts with the correct prefix (dependency type names, not Makefile variables)
+        assert calls[0][0][0].startswith("inputs:")
+        assert calls[1][0][0].startswith("diagrams:")
+        assert calls[2][0][0].startswith("docxdiagrams:")
+        assert calls[3][0][0].startswith("pptxdiagrams:")
+        assert calls[4][0][0].startswith("texdiagrams:")
+        assert calls[5][0][0].startswith("all:")
         
         # Verify content
         assert "/custom/snippets/intro.md" in calls[0][0][0]
@@ -341,11 +341,11 @@ Here's a citation \cite{Smith2020}.
         calls = mock_print.call_args_list
         assert len(calls) == 6
         
-        # All diagram-related lines should be empty (just the prefix)
-        assert calls[1][0][0] == "DIAGDEPS:"
-        assert calls[2][0][0] == "DOCXDEPS:"
-        assert calls[3][0][0] == "PPTXDEPS:"
-        assert calls[4][0][0] == "TEXDEPS:"
+        # All diagram-related lines should be empty (just the prefix with dependency type names)
+        assert calls[1][0][0] == "diagrams:"
+        assert calls[2][0][0] == "docxdiagrams:"
+        assert calls[3][0][0] == "pptxdiagrams:"
+        assert calls[4][0][0] == "texdiagrams:"
 
     # Note: There's no extract_snippets function in lynguine.util.talk module,
     # but the code in dependencies.py refers to it. This test is left

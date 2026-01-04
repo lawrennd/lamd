@@ -54,17 +54,15 @@ def main() -> int:
         docxdiagrams: EMF diagrams for Word output
         inputs: Included markdown files
         bibinputs: Bibliography input files
-        batch: Extract all types in one pass (CIP-0009 Phase 1 optimization)
-               Returns prefixed lines: DEPS:..., DIAGDEPS:..., TEXDEPS:..., etc.
-               This reduces file I/O by reading files once and extracting all types,
-               resulting in ~20x performance improvement (28s → 1.4s).
+        batch: Extract all types in one pass
+               Returns prefixed lines using dependency type names
                Example output:
-                 DEPS:/path/to/input1.md /path/to/input2.md
-                 DIAGDEPS:/path/to/diagram1.svg /path/to/diagram2.png
-                 DOCXDEPS:/path/to/diagram.emf
-                 PPTXDEPS:/path/to/diagram.emf
-                 TEXDEPS:/path/to/diagram.pdf
-                 DYNAMIC_DEPS:output.posts.html output.slides.html
+                 inputs:/path/to/input1.md /path/to/input2.md
+                 diagrams:/path/to/diagram1.svg /path/to/diagram2.png
+                 docxdiagrams:/path/to/diagram.emf
+                 pptxdiagrams:/path/to/diagram.emf
+                 texdiagrams:/path/to/diagram.pdf
+                 all:output.posts.html output.slides.html
         snippets: Code snippets (temporarily disabled)
 
     Returns:
@@ -82,7 +80,7 @@ def main() -> int:
             "slidediagrams",
             "texdiagrams",
             "docxdiagrams",
-            "batch",  # New: extract all types in one pass
+            "batch",
             # "snippets", # Temporarily disabled as extract_snippets function is not implemented
         ],
         help="The type of dependency that is required",
@@ -203,12 +201,13 @@ def main() -> int:
             sys.exit(1)
         
         # Output in a format easy to parse in Makefiles (one line per type with prefix)
-        print(f"DEPS:{' '.join(inputs) if inputs else ''}")
-        print(f"DIAGDEPS:{' '.join(all_diagrams) if all_diagrams else ''}")
-        print(f"DOCXDEPS:{' '.join(emf_diagrams) if emf_diagrams else ''}")
-        print(f"PPTXDEPS:{' '.join(emf_diagrams) if emf_diagrams else ''}")
-        print(f"TEXDEPS:{' '.join(pdf_diagrams) if pdf_diagrams else ''}")
-        print(f"DYNAMIC_DEPS:{' '.join(dynamic) if dynamic else ''}")
+        # Use dependency command names, not Makefile variable names
+        print(f"inputs:{' '.join(inputs) if inputs else ''}")
+        print(f"diagrams:{' '.join(all_diagrams) if all_diagrams else ''}")
+        print(f"docxdiagrams:{' '.join(emf_diagrams) if emf_diagrams else ''}")
+        print(f"pptxdiagrams:{' '.join(emf_diagrams) if emf_diagrams else ''}")
+        print(f"texdiagrams:{' '.join(pdf_diagrams) if pdf_diagrams else ''}")
+        print(f"all:{' '.join(dynamic) if dynamic else ''}")
 
     # Temporarily commented out as extract_snippets function is not implemented in lynguine.util.talk
     # elif args.dependency == "snippets":

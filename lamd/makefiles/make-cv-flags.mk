@@ -61,8 +61,8 @@ SINCEFLAGS=--meta-data talkYearSince=${TALKSINCE} meetingYearSince=${MEETINGSINC
 # Write batch output to temp file to avoid Make variable issues with multiline content
 _DEPS_CACHE:=$(shell mktemp)
 _DEPS_EXTRACTED:=$(shell $(TIME_CMD) dependencies batch $(BASE).md --snippets-path $(SNIPPETSDIR) > $(_DEPS_CACHE))
-DEPS:=$(shell grep '^DEPS:' $(_DEPS_CACHE) | sed 's/^DEPS://')
-DIAGDEPS:=$(shell grep '^DIAGDEPS:' $(_DEPS_CACHE) | sed 's/^DIAGDEPS://')
+DEPS:=$(shell grep '^inputs:' $(_DEPS_CACHE) | sed 's/^inputs://')
+DIAGDEPS:=$(shell grep '^diagrams:' $(_DEPS_CACHE) | sed 's/^diagrams://')
 # BIBDEPS=$(shell dependencies bibinputs $(BASE).md)
 
 POSTFLAGS=$(shell flags post $(BASE))
@@ -97,7 +97,7 @@ EXSTUDENTFILES=${DATADIR}/students.yaml
 EXRAFILES=${DATADIR}/ras.yaml
 
 # Get all dependencies (extracted from batch call above)
-DYNAMIC_DEPS:=$(shell grep '^DYNAMIC_DEPS:' $(_DEPS_CACHE) | sed 's/^DYNAMIC_DEPS://')
+DYNAMIC_DEPS:=$(shell grep '^all:' $(_DEPS_CACHE) | sed 's/^all://')
 # Clean up temp file after all extractions are complete
 _CLEANUP:=$(shell rm -f $(_DEPS_CACHE))
 ALL := $(BASE).docx $(DYNAMIC_DEPS)
