@@ -54,7 +54,7 @@ def main() -> int:
         docxdiagrams: EMF diagrams for Word output
         inputs: Included markdown files
         bibinputs: Bibliography input files
-        batch: Extract all types in one pass (optimized, CIP-0009 Phase 1)
+        batch: Extract all types in one pass
         snippets: Code snippets (temporarily disabled)
 
     Returns:
@@ -164,6 +164,10 @@ def main() -> int:
             diagrams_dir=diagrams_dir,
             snippets_path=snippets_path
         )
+        
+        # Handle case where extract_diagrams returns None (file doesn't exist)
+        if all_diagrams is None:
+            all_diagrams = []
         
         # Extract specific diagram types (filter from all_diagrams to avoid re-reading)
         svg_diagrams = [d for d in all_diagrams if d.endswith('.svg')]
