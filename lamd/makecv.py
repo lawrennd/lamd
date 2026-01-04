@@ -49,7 +49,17 @@ def main() -> int:
         help="Enable detailed performance profiling (shows where build time is spent)"
     )
 
+    parser.add_argument(
+        "--git-cache-minutes",
+        type=int,
+        default=5,
+        help="Cache git fetch results for N minutes (default: 5). Set to 0 to always check remote."
+    )
+
     args = parser.parse_args()
+    
+    # Convert git cache minutes to seconds for internal use
+    git_cache_seconds = args.git_cache_minutes * 60
     
     # Check if the markdown file exists FIRST (before any other work)
     if not os.path.exists(args.filename):
@@ -138,10 +148,10 @@ def main() -> int:
                 fetch_head = os.path.join(git_dir, "FETCH_HEAD")
                 should_check_remote = True
                 
-                # If FETCH_HEAD exists and is less than 5 minutes old, skip remote check
+                # If FETCH_HEAD exists and is recent enough, skip remote check
                 if os.path.exists(fetch_head):
                     fetch_age = time.time() - os.path.getmtime(fetch_head)
-                    if fetch_age < 300:  # 5 minutes in seconds
+                    if fetch_age < git_cache_seconds:
                         should_check_remote = False
                 
                 if should_check_remote:
@@ -208,10 +218,10 @@ def main() -> int:
             fetch_head = os.path.join(git_dir, "FETCH_HEAD")
             should_check_remote = True
             
-            # If FETCH_HEAD exists and is less than 5 minutes old, skip remote check
+            # If FETCH_HEAD exists and is recent enough, skip remote check
             if os.path.exists(fetch_head):
                 fetch_age = time.time() - os.path.getmtime(fetch_head)
-                if fetch_age < 300:  # 5 minutes in seconds
+                if fetch_age < git_cache_seconds:
                     should_check_remote = False
         
         if should_check_remote:
