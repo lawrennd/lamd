@@ -1,7 +1,7 @@
 ---
 id: "2026-01-04_deploy-shell-mdfield-client"
-title: "Deploy Shell-based mdfield Client for 8x Speedup"
-status: "Proposed"
+title: "Deploy Shell-based mdfield Client for 4x Build Speedup"
+status: "Ready"
 priority: "High"
 created: "2026-01-04"
 last_updated: "2026-01-04"
@@ -11,13 +11,18 @@ owner: ""
 dependencies: []
 ---
 
-# Task: Deploy Shell-based mdfield Client for 8x Speedup
+# Task: Deploy Shell-based mdfield Client for 4x Build Speedup
 
 ## Description
 
-Deploy the shell-based `mdfield-server` client (developed in CIP-0008 Phase 2.5) as a drop-in replacement for Python `mdfield` in lamd Makefiles. This provides **8-14x speedup** for field extraction operations by eliminating Python subprocess startup overhead.
+Deploy the shell-based `mdfield-server` client (developed in CIP-0008 Phase 2.5) as a production feature in lamd. This provides **4x speedup** for typical talk builds (151s → 37s) by eliminating Python subprocess startup overhead.
 
-**Context**: CIP-0008 performance testing revealed that Python interpreter startup (~1.3s per call) dominates execution time. A shell-based client using `curl` + `jq` + lynguine server reduces per-call overhead from 1.25s to 0.09s (**13.9x faster per call**).
+**Real-World Performance**: Actual `maketalk` benchmarks show:
+- **4.0x faster** for complete talk builds
+- **114 seconds saved** per build (~2 minutes)
+- **70% reduction** in build time
+
+**Technical Details**: CIP-0008 testing revealed that Python interpreter startup (~1.3s per call) dominates execution time. The shell client uses `curl` + `jq` + lynguine server to reduce per-call overhead from 1.25s to 0.09s (**13.9x faster per call**). For the complete build pipeline, this translates to a **4x overall speedup**.
 
 **Performance improvement**: 
 - Current: 24-26s for 21 field extractions (Python subprocess)
