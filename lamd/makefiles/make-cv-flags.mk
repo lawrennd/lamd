@@ -98,6 +98,8 @@ EXRAFILES=${DATADIR}/ras.yaml
 
 # Get all dependencies (extracted from batch call above)
 DYNAMIC_DEPS:=$(shell grep '^DYNAMIC_DEPS:' $(_DEPS_CACHE) | sed 's/^DYNAMIC_DEPS://')
+# Clean up temp file after all extractions are complete
+_CLEANUP:=$(shell rm -f $(_DEPS_CACHE))
 ALL := $(BASE).docx $(DYNAMIC_DEPS)
 
 # Add directory check targets
