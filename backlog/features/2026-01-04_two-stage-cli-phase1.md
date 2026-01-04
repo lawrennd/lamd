@@ -1,6 +1,6 @@
 ---
 id: "2026-01-04_two-stage-cli-phase1"
-title: "Implement Two-Stage CLI Interface (Phase 1: maketalk/makecv)"
+title: "Create New lamd CLI Utility with talk/cv Subcommands"
 status: "Proposed"
 priority: "Medium"
 created: "2026-01-04"
@@ -12,23 +12,34 @@ owner: ""
 dependencies: []
 ---
 
-# Task: Implement Two-Stage CLI Interface (Phase 1: maketalk/makecv)
+# Task: Create New lamd CLI Utility with talk/cv Subcommands
 
 ## Description
 
-Implement Phase 1 of CIP-0006: Add two-stage workflow support to `maketalk` and `makecv` utilities as a pilot program. This enables workflow transparency and integration with external workflow managers while gathering user feedback before expanding to other utilities.
+**Revised Approach**: Instead of modifying `maketalk`/`makecv`, create a new `lamd` CLI utility with modern subcommand architecture. This provides 100% backward compatibility while enabling two-stage workflow and future extensibility.
 
-**Two-Stage Process:**
-1. **Stage 1 (Interface Generation)**: `maketalk --generate-interface talk.md` creates an interface file documenting inputs, outputs, and computations
-2. **Stage 2 (Execution)**: `maketalk --from-interface talk.interface.yml` executes the build from the interface file
+**New Command Structure:**
+```bash
+lamd talk [options] file.md        # Build talk (generate + execute)
+lamd talk --generate file.md       # Generate interface only
+lamd talk --execute file.yml       # Execute from interface
+lamd cv [options] file.md          # Build CV (similar options)
+```
 
-**Why Phase 1 with maketalk/makecv?**
-- These utilities already generate Makefiles (similar concept to interface files)
-- They have complex workflows with many inputs (markdown, configs, snippets, diagrams)
-- They're frequently used, so we'll get good feedback
-- They benefit most from reproducibility and workflow integration
+**Why This Approach is Better:**
+- **Zero breaking changes** - `maketalk` and `makecv` remain untouched
+- **Modern CLI design** - Subcommands are more scalable and intuitive
+- **Clear migration path** - Users can adopt `lamd` when ready
+- **Future extensibility** - Easy to add `lamd field`, `lamd list`, `lamd deps`, etc.
+- **Two-stage as default** - Modern workflow from the start
 
 ## Acceptance Criteria
+
+### New CLI Entry Point
+- [ ] Create `lamd/cli.py` as main entry point
+- [ ] Implement subcommand dispatcher (using `argparse` or `click`)
+- [ ] Configure as `lamd` command in `pyproject.toml`
+- [ ] Help text shows available subcommands: `lamd --help`
 
 ### Interface Schema Design
 - [ ] Extend `lamd.config.interface.Interface` class to include `compute` section
@@ -39,28 +50,28 @@ Implement Phase 1 of CIP-0006: Add two-stage workflow support to `maketalk` and 
 - [ ] Schema is machine-readable and human-friendly
 - [ ] Interface files can be version-controlled and shared
 
-### Implementation: --generate-interface Flag
-- [ ] Add `--generate-interface` flag to `maketalk.py`
-- [ ] Add `--generate-interface` flag to `makecv.py`
-- [ ] Flag generates interface file without executing build
+### Implement `lamd talk` Subcommand
+- [ ] `lamd talk file.md` - Default: generate interface + execute (backward compatible)
+- [ ] `lamd talk --generate file.md` - Generate interface file only
+- [ ] `lamd talk --execute file.interface.yml` - Execute from interface file
+- [ ] All `maketalk` flags work with `lamd talk` (--format, --to, --profile, --git-cache-minutes, etc.)
 - [ ] Generated file named `{basename}.interface.yml`
-- [ ] All dependencies are accurately captured (git repos, snippets, diagrams, bibliography)
-- [ ] Output formats and targets are correctly documented
+- [ ] All dependencies are accurately captured
 - [ ] Compute steps describe Makefile operations
 
-### Implementation: --from-interface Flag
-- [ ] Add `--from-interface` flag to `maketalk.py`
-- [ ] Add `--from-interface` flag to `makecv.py`
-- [ ] Flag reads and validates interface file
-- [ ] Verifies all inputs exist before execution
-- [ ] Executes build according to interface specification
-- [ ] Produces same output as direct execution
+### Implement `lamd cv` Subcommand
+- [ ] `lamd cv file.md` - Default: generate interface + execute
+- [ ] `lamd cv --generate file.md` - Generate interface file only
+- [ ] `lamd cv --execute file.interface.yml` - Execute from interface file
+- [ ] All `makecv` flags work with `lamd cv`
+- [ ] Feature parity with `makecv`
 
-### Backward Compatibility
-- [ ] Existing usage without flags works unchanged
-- [ ] No performance impact on default (single-stage) usage
-- [ ] All existing command-line arguments still work
-- [ ] Two-stage workflow is completely opt-in
+### Backward Compatibility (Critical!)
+- [ ] `maketalk` command continues working exactly as before
+- [ ] `makecv` command continues working exactly as before
+- [ ] No changes to existing command-line tools
+- [ ] Legacy tools and new `lamd` CLI can coexist
+- [ ] No breaking changes for existing users
 
 ### Testing
 - [ ] Unit tests for interface file generation
@@ -81,7 +92,84 @@ Implement Phase 1 of CIP-0006: Add two-stage workflow support to `maketalk` and 
 
 ### Technical Approach
 
-**1. Schema Design**
+**1. New CLI Entry Point (`lamd/cli.py`)**
+```python
+#!/usr/bin/env python3
+"""Main entry point for the lamd CLI utility."""
+
+import argparse
+import sys
+
+def main():
+    """Main CLI dispatcher."""
+    parser = argparse.ArgumentParser(
+        prog="lamd",
+        description="Lamd content generation toolkit"
+    )
+    
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
+    
+    # lamd talk subcommand
+    talk_parser = subparsers.add_parser("talk", help="Build talk presentations")
+    talk_parser.add_argument("file", nargs="?", help="Markdown file to build")
+    talk_parser.add_argument("--generate", action="store_true", 
+                            help="Generate interface file only")
+    talk_parser.add_argument("--execute", metavar="FILE",
+                            help="Execute from interface file")
+    # ... other maketalk arguments ...
+    
+    # lamd cv subcommand
+    cv_parser = subparsers.add_parser("cv", help="Build CV documents")
+    cv_parser.add_argument("file", nargs="?", help="Markdown file to build")
+    cv_parser.add_argument("--generate", action="store_true",
+                          help="Generate interface file only")
+    cv_parser.add_argument("--execute", metavar="FILE",
+                          help="Execute from interface file")
+    # ... other makecv arguments ...
+    
+    args = parser.parse_args()
+    
+    if args.command == "talk":
+        from lamd.commands.talk import run_talk
+        run_talk(args)
+    elif args.command == "cv":
+        from lamd.commands.cv import run_cv
+        run_cv(args)
+    else:
+        parser.print_help()
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
+```
+
+**2. Extract Common Logic (`lamd/commands/talk.py`)**
+```python
+"""Implementation of lamd talk subcommand."""
+
+from lamd import maketalk
+
+def run_talk(args):
+    """Run the talk subcommand."""
+    # Generate-only mode
+    if args.generate:
+        interface = generate_interface(args.file)
+        write_interface_file(interface, f"{base}.interface.yml")
+        return
+    
+    # Execute-from-interface mode
+    if args.execute:
+        interface = load_interface_file(args.execute)
+        validate_inputs(interface)
+        execute_from_interface(interface)
+        return
+    
+    # Default: generate + execute (backward compatible)
+    interface = generate_interface(args.file)
+    execute_from_interface(interface)
+```
+
+**3. Schema Design**
 Extend existing `lamd.config.interface.Interface`:
 ```python
 interface_data = {
@@ -100,79 +188,89 @@ interface_data = {
     "compute": {
         "type": "makefile",
         "steps": [
-            {"target": "talk.slides.html", "dependencies": ["talk.md", "...]},
+            {"target": "talk.slides.html", "dependencies": ["talk.md", "..."]},
             {"target": "talk.notes.html", "dependencies": ["talk.md", "..."]}
         ]
     }
 }
 ```
 
-**2. Implementation in maketalk.py**
-```python
-# Add arguments
-parser.add_argument("--generate-interface", action="store_true", 
-                   help="Generate interface file without executing build")
-parser.add_argument("--from-interface", type=str, metavar="FILE",
-                   help="Execute build from interface file")
-
-# Generate interface
-if args.generate_interface:
-    interface = generate_interface(args.filename, iface)
-    write_interface_file(interface, f"{base}.interface.yml")
-    sys.exit(0)
-
-# Execute from interface
-if args.from_interface:
-    interface = load_interface_file(args.from_interface)
-    validate_inputs(interface)
-    execute_from_interface(interface)
-    sys.exit(0)
+**4. Configuration in pyproject.toml**
+```toml
+[project.scripts]
+lamd = "lamd.cli:main"
+maketalk = "lamd.maketalk:main"  # Unchanged
+makecv = "lamd.makecv:main"      # Unchanged
 ```
 
-**3. Leverage Existing Infrastructure**
+**5. Leverage Existing Infrastructure**
+- Refactor `maketalk.py` and `makecv.py` to extract reusable logic
 - Build on current Makefile generation code
 - Use existing `Interface` class for input/config handling
 - Reuse dependency scanning from CIP-0009 optimizations
-- Maintain compatibility with `--git-cache-minutes` and other flags
+- Maintain compatibility with all existing flags
 
 ### Use Cases
 
-**Use Case 1: Workflow Documentation**
+**Use Case 1: Basic Usage (Backward Compatible)**
+```bash
+# New way - same behavior as maketalk
+lamd talk my-talk.md
+
+# Old way - still works!
+maketalk my-talk.md
+```
+
+**Use Case 2: Workflow Documentation**
 ```bash
 # Generate interface to document workflow
-maketalk --generate-interface my-talk.md
+lamd talk --generate my-talk.md
 # Review my-talk.interface.yml to understand inputs/outputs
 # Version control the interface file alongside source
 ```
 
-**Use Case 2: Reproducible Builds**
+**Use Case 3: Reproducible Builds**
 ```bash
 # Generate interface on machine A
-maketalk --generate-interface talk.md
+lamd talk --generate talk.md
 
 # Transfer interface file to machine B
 # Execute from interface (after ensuring inputs exist)
-maketalk --from-interface talk.interface.yml
+lamd talk --execute talk.interface.yml
 ```
 
-**Use Case 3: External Workflow Integration**
+**Use Case 4: External Workflow Integration**
 ```bash
 # Workflow manager generates interface files
 for talk in *.md; do
-    maketalk --generate-interface $talk
+    lamd talk --generate $talk
 done
 
 # Workflow manager orchestrates builds from interfaces
 workflow-runner execute *.interface.yml
 ```
 
-**Use Case 4: Debugging & Auditing**
+**Use Case 5: Debugging & Auditing**
 ```bash
 # Generate interface to audit what will be built
-maketalk --generate-interface talk.md
+lamd talk --generate talk.md
 # Review interface to verify correct inputs/outputs
 # Execute if satisfied
-maketalk --from-interface talk.interface.yml
+lamd talk --execute talk.interface.yml
+```
+
+**Use Case 6: Migration Path**
+```bash
+# Users can gradually migrate:
+# 1. Keep using maketalk (works forever)
+maketalk my-talk.md
+
+# 2. Try lamd when ready (same behavior)
+lamd talk my-talk.md
+
+# 3. Adopt two-stage workflow when beneficial
+lamd talk --generate my-talk.md
+lamd talk --execute my-talk.interface.yml
 ```
 
 ### Performance Considerations
@@ -200,8 +298,22 @@ After implementation, gather feedback:
 
 ## Progress Updates
 
-### 2026-01-04
+### 2026-01-04 (Initial)
 
 Task created following acceptance of CIP-0006 with phased approach. This is Phase 1: pilot implementation with maketalk/makecv before expanding to other utilities.
+
+### 2026-01-04 (Architectural Revision)
+
+**Major improvement**: Revised approach to create a new `lamd` CLI utility instead of modifying existing tools. This provides:
+- **100% backward compatibility** - No changes to `maketalk`/`makecv`
+- **Modern CLI architecture** - Subcommand structure (`lamd talk`, `lamd cv`)
+- **Clear migration path** - Users adopt `lamd` when ready
+- **Future extensibility** - Easy to add more subcommands (`lamd field`, `lamd list`, etc.)
+
+Benefits of this approach:
+- Zero risk of breaking existing workflows
+- Two-stage workflow can be default for new `lamd` command
+- Both old and new commands coexist peacefully
+- Users get modern CLI without losing legacy compatibility
 
 
