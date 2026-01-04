@@ -1,7 +1,7 @@
 ---
 id: "2026-01-04_conditional-git-pulls"
 title: "Conditional Git Pulls for Dependencies"
-status: "Proposed"
+status: "Completed"
 priority: "High"
 created: "2026-01-04"
 last_updated: "2026-01-04"
@@ -353,7 +353,31 @@ if result.stdout.strip():
 
 ## Progress Updates
 
-### 2026-01-04
+### 2026-01-04 (Creation)
 
 Task created as part of CIP-0009 Phase 2. High-priority quick win with minimal risk and clear benefits.
+
+### 2026-01-04 (Completion)
+
+**Implemented**: Time-based caching approach
+- Check `FETCH_HEAD` timestamp before checking remote
+- Only fetch if > 1 hour (3600s) since last fetch
+- Use `git rev-parse --git-dir` to find actual git directory (handles subdirectories)
+- Applied to both dependency repos (snippetsdir, bibdir) and local repo
+
+**Performance Results**:
+- Dependency git pulls: 2.8s → 0.0s (100% eliminated!)
+- Local git pull: 1.4s → 0.03s (98% reduction!)
+- Overall build time: 7.9s → 3.4-3.7s (53% speedup)
+
+**Implementation Files**:
+- `lamd/maketalk.py`: Updated dependency and local git pull logic
+- `lamd/makecv.py`: Updated dependency and local git pull logic
+
+**Testing**: Verified on multiple talk files with repeated builds
+- First build after > 1 hour: performs fetch and pull if behind
+- Subsequent builds within 1 hour: skips remote checks entirely
+- Graceful fallback on errors (timeout, subprocess failure)
+
+**Status**: ✅ Completed and integrated into main branch
 
