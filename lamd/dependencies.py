@@ -54,6 +54,7 @@ def main() -> int:
         docxdiagrams: EMF diagrams for Word output
         inputs: Included markdown files
         bibinputs: Bibliography input files
+        batch: Extract all types in one pass (optimized, CIP-0009 Phase 1)
         snippets: Code snippets (temporarily disabled)
 
     Returns:
@@ -71,6 +72,7 @@ def main() -> int:
             "slidediagrams",
             "texdiagrams",
             "docxdiagrams",
+            "batch",  # New: extract all types in one pass
             # "snippets", # Temporarily disabled as extract_snippets function is not implemented
         ],
         help="The type of dependency that is required",
@@ -146,6 +148,53 @@ def main() -> int:
     elif args.dependency == "bibinputs":
         listfiles = nt.extract_bibinputs(args.filename)
         print(" ".join(listfiles))
+
+    elif args.dependency == "batch":
+        # Extract all dependency types in one pass (CIP-0009 Phase 1 optimization)
+        # This reduces redundant file I/O by reading files once and extracting all types
+        
+        # First extract inputs (reads all files once)
+        inputs = nt.extract_inputs(args.filename, snippets_path=snippets_path)
+        
+        # Then extract diagrams of all types (reuses the file list from inputs)
+        all_diagrams = nt.extract_diagrams(
+            args.filename,
+            absolute_path=True,
+            diagram_exts=['svg', 'png', 'pdf', 'emf'],
+            diagrams_dir=diagrams_dir,
+            snippets_path=snippets_path
+        )
+        
+        # Extract specific diagram types (filter from all_diagrams to avoid re-reading)
+        svg_diagrams = [d for d in all_diagrams if d.endswith('.svg')]
+        pdf_diagrams = [d for d in all_diagrams if d.endswith('.pdf')]
+        emf_diagrams = [d for d in all_diagrams if d.endswith('.emf')]
+        
+        # Extract dynamic dependencies (what files the talk creates)
+        try:
+            fields = ny.header_fields(args.filename)
+            posts_enabled = False
+            try:
+                posts_enabled = ny.header_field("posts", fields, ["_lamd.yml", "_config.yml"])
+            except ny.FileFormatError:
+                posts_enabled = False
+            if posts_enabled:
+                iface = ny.Interface.from_file(["_lamd.yml", "_config.yml"], directory=".")
+                if "postsdir" not in iface:
+                    print("Error: 'postsdir' is not defined in your _lamd.yml configuration file.", file=sys.stderr)
+                    sys.exit(1)
+            dynamic = nt.extract_all(args.filename, user_file=["_lamd.yml", "_config.yml"])
+        except ny.FileFormatError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            sys.exit(1)
+        
+        # Output in a format easy to parse in Makefiles (one line per type with prefix)
+        print(f"DEPS:{' '.join(inputs) if inputs else ''}")
+        print(f"DIAGDEPS:{' '.join(all_diagrams) if all_diagrams else ''}")
+        print(f"DOCXDEPS:{' '.join(emf_diagrams) if emf_diagrams else ''}")
+        print(f"PPTXDEPS:{' '.join(emf_diagrams) if emf_diagrams else ''}")
+        print(f"TEXDEPS:{' '.join(pdf_diagrams) if pdf_diagrams else ''}")
+        print(f"DYNAMIC_DEPS:{' '.join(dynamic) if dynamic else ''}")
 
     # Temporarily commented out as extract_snippets function is not implemented in lynguine.util.talk
     # elif args.dependency == "snippets":
