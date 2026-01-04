@@ -13,7 +13,6 @@ endif
 # When profiling: TIME_CMD = $(SCRIPTDIR)/profile-command
 # When normal: TIME_CMD = (empty)
 
-# CIP-0009 Phase 2: Batch field extraction (5-10x faster)
 # Extract all fields in one call instead of 21 separate calls
 # This reduces redundant file I/O and Python startup overhead from ~6s to ~0.5s
 # Write batch output to temp file to avoid Make variable issues with multiline content
