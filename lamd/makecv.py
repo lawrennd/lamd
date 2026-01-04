@@ -51,6 +51,12 @@ def main() -> int:
 
     args = parser.parse_args()
     
+    # Check if the markdown file exists FIRST (before any other work)
+    if not os.path.exists(args.filename):
+        print(f"Error: File '{args.filename}' not found.")
+        print(f"Please check the filename and try again.")
+        sys.exit(1)
+    
     # Initialize profiler
     profiler = BuildProfiler(enabled=args.profile)
     profiler.start()

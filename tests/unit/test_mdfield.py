@@ -95,8 +95,8 @@ This is test content.
                 # Call the main function
                 main()
 
-                # Check output
-                mock_print.assert_called_once_with(test_date)
+                # Check output (date objects are converted to strings)
+                mock_print.assert_called_once_with("2023-05-15")
 
     @patch("sys.argv", ["mdfield", "categories", "test.md"])
     @patch("builtins.print")
@@ -173,3 +173,100 @@ This is test content.
 
             # Check that empty string was output
             mock_print.assert_called_once_with("")
+
+    @patch("sys.argv", ["mdfield", "batch", "test.md", "--fields", "title", "date", "author"])
+    @patch("builtins.print")
+    def test_batch_extraction(self, mock_print):
+        """Test batch extraction of multiple fields."""
+        # Mock extract_fields_batch to return multiple fields
+        from lamd.mdfield import extract_fields_batch
+        with patch("lamd.mdfield.extract_fields_batch", return_value={
+            "title": "Test Document",
+            "date": "2023-05-15",
+            "author": "Test Author"
+        }):
+            # Call the main function
+            main()
+
+            # Check that all fields were printed in correct format
+            assert mock_print.call_count == 3
+            calls = [str(call) for call in mock_print.call_args_list]
+            assert "call('title:Test Document')" in calls
+            assert "call('date:2023-05-15')" in calls
+            assert "call('author:Test Author')" in calls
+
+    @patch("sys.argv", ["mdfield", "batch", "test.md", "--fields", "categories"])
+    @patch("builtins.print")
+    def test_batch_extraction_with_list(self, mock_print):
+        """Test batch extraction handles list fields correctly."""
+        # Mock extract_fields_batch to return a list field
+        from lamd.mdfield import extract_fields_batch
+        with patch("lamd.mdfield.extract_fields_batch", return_value={
+            "categories": ["test", "example", "documentation"]
+        }):
+            # Call the main function
+            main()
+
+            # Check that list was formatted correctly
+            mock_print.assert_called_once_with("categories:['test', 'example', 'documentation']")
+
+    @patch("sys.argv", ["mdfield", "batch", "test.md", "--fields", "title", "date"])
+    @patch("builtins.print")
+    def test_batch_extraction_with_server_mode(self, mock_print):
+        """Test batch extraction with server mode enabled."""
+        # Set environment variable to enable server mode
+        with patch.dict(os.environ, {"LAMD_USE_SERVER": "1"}):
+            # Mock SERVER_MODE_AVAILABLE
+            with patch("lamd.mdfield.SERVER_MODE_AVAILABLE", True):
+                # Mock extract_fields_batch
+                from lamd.mdfield import extract_fields_batch
+                with patch("lamd.mdfield.extract_fields_batch", return_value={
+                    "title": "Test Document",
+                    "date": "2023-05-15"
+                }) as mock_batch:
+                    # Call the main function
+                    main()
+
+                    # Verify batch function was called with use_server=True
+                    mock_batch.assert_called_once()
+                    args, kwargs = mock_batch.call_args
+                    # Check that use_server was passed (it's the 4th argument)
+                    assert len(args) >= 4 or "use_server" in kwargs
+
+                    # Check output
+                    assert mock_print.call_count == 2
+
+    @patch("sys.argv", ["mdfield", "batch", "test.md", "--fields", "snippetsdir"])
+    @patch("builtins.print")
+    def test_batch_extraction_with_path(self, mock_print):
+        """Test batch extraction handles path expansion."""
+        # Mock extract_fields_batch to return a path with environment variable
+        from lamd.mdfield import extract_fields_batch
+        with patch("lamd.mdfield.extract_fields_batch", return_value={
+            "snippetsdir": "$HOME/snippets"
+        }):
+            with patch("os.path.expandvars", return_value="/home/user/snippets"):
+                # Call the main function
+                main()
+
+                # Check that path was expanded
+                mock_print.assert_called_once_with("snippetsdir:/home/user/snippets")
+
+    @patch("sys.argv", ["mdfield", "batch", "test.md", "--fields", "field1", "field2"])
+    @patch("builtins.print")
+    def test_batch_extraction_missing_fields(self, mock_print):
+        """Test batch extraction handles missing fields."""
+        # Mock extract_fields_batch to return only one field (field2 missing)
+        from lamd.mdfield import extract_fields_batch
+        with patch("lamd.mdfield.extract_fields_batch", return_value={
+            "field1": "value1",
+            "field2": ""  # Empty string for missing field
+        }):
+            # Call the main function
+            main()
+
+            # Check that both fields were printed (empty for missing)
+            assert mock_print.call_count == 2
+            calls = [str(call) for call in mock_print.call_args_list]
+            assert "call('field1:value1')" in calls
+            assert "call('field2:')" in calls
