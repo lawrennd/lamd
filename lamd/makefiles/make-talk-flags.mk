@@ -9,24 +9,28 @@ else
     MDFIELD = mdfield
 endif
 
-# Extract the date and the prefix of the produced files.
-DATE=$(shell $(MDFIELD) date ${BASE}.md)
+# TIME_CMD is set by maketalk/makecv when profiling is enabled
+# When profiling: TIME_CMD = $(SCRIPTDIR)/profile-command
+# When normal: TIME_CMD = (empty)
 
-CATEGORIES=$(shell $(MDFIELD) categories ${BASE}.md)
+# Extract the date and the prefix of the produced files.
+DATE=$(shell $(TIME_CMD) $(MDFIELD) date ${BASE}.md)
+
+CATEGORIES=$(shell $(TIME_CMD) $(MDFIELD) categories ${BASE}.md)
 
 # Extract the layout
-LAYOUT=$(shell $(MDFIELD) layout ${BASE}.md)
+LAYOUT=$(shell $(TIME_CMD) $(MDFIELD) layout ${BASE}.md)
 
 # Get macros path from frontmatter 
-MACROSDIR=$(shell $(MDFIELD) macrosdir ${BASE}.md)
+MACROSDIR=$(shell $(TIME_CMD) $(MDFIELD) macrosdir ${BASE}.md)
 
 MATHJAX="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_SVG"
 REVEALJS="https://inverseprobability.com/talks/slides/reveal.js/"
 
-SLIDESHEADER=$(shell $(MDFIELD) slidesheader ${BASE}.md)
-POSTSHEADER=$(shell $(MDFIELD) postssheader ${BASE}.md)
-ASSIGNMENT=$(shell $(MDFIELD) assignment ${BASE}.md)
-NOTATION=$(shell $(MDFIELD) notation ${BASE}.md)
+SLIDESHEADER=$(shell $(TIME_CMD) $(MDFIELD) slidesheader ${BASE}.md)
+POSTSHEADER=$(shell $(TIME_CMD) $(MDFIELD) postssheader ${BASE}.md)
+ASSIGNMENT=$(shell $(TIME_CMD) $(MDFIELD) assignment ${BASE}.md)
+NOTATION=$(shell $(TIME_CMD) $(MDFIELD) notation ${BASE}.md)
 
 PREFIX=$(shell flags prefix ${BASE})
 
@@ -37,7 +41,7 @@ PP=mdpp
 PPFLAGS=-T
 PPFLAGS=$(shell flags pp $(BASE))
 
-BIBDIRECTORY=$(shell $(MDFIELD) bibdir ${BASE}.md)
+BIBDIRECTORY=$(shell $(TIME_CMD) $(MDFIELD) bibdir ${BASE}.md)
 
 # Bibliography information not yet automatically extracted
 BIBFLAGS=--bibliography=${BIBDIRECTORY}/lawrence.bib --bibliography=${BIBDIRECTORY}/other.bib --bibliography=${BIBDIRECTORY}/zbooks.bib 
@@ -47,28 +51,28 @@ CITEFLAGS=--citeproc --csl=${INCLUDESDIR}/elsevier-harvard.csl ${BIBFLAGS}
 
 PDSFLAGS=-s ${CITEFLAGS} --mathjax=${MATHJAX} 
 
-SNIPPETSDIR=$(shell $(MDFIELD) snippetsdir $(BASE).md)
-DIAGRAMSDIR=$(shell $(MDFIELD) diagramsdir $(BASE).md)
-WRITEDIAGRAMSDIR=$(shell $(MDFIELD) writediagramsdir $(BASE).md)
-POSTSDIR=$(shell $(MDFIELD) postsdir $(BASE).md)
-PRACTICALSDIR=$(shell $(MDFIELD) practicalsdir $(BASE).md)
-NOTESDIR=$(shell $(MDFIELD) notesdir $(BASE).md)
-NOTEBOOKSDIR=$(shell $(MDFIELD) notebooksdir $(BASE).md)
-SLIDESDIR=$(shell $(MDFIELD) slidesdir $(BASE).md)
-TEXDIR=$(shell $(MDFIELD) texdir $(BASE).md)
-WEEK=$(shell $(MDFIELD) week $(BASE).md)
-SESSION=$(shell $(MDFIELD) session $(BASE).md)
-PEOPLEYAML=$(shell $(MDFIELD) people $(BASE).md)
+SNIPPETSDIR=$(shell $(TIME_CMD) $(MDFIELD) snippetsdir $(BASE).md)
+DIAGRAMSDIR=$(shell $(TIME_CMD) $(MDFIELD) diagramsdir $(BASE).md)
+WRITEDIAGRAMSDIR=$(shell $(TIME_CMD) $(MDFIELD) writediagramsdir $(BASE).md)
+POSTSDIR=$(shell $(TIME_CMD) $(MDFIELD) postsdir $(BASE).md)
+PRACTICALSDIR=$(shell $(TIME_CMD) $(MDFIELD) practicalsdir $(BASE).md)
+NOTESDIR=$(shell $(TIME_CMD) $(MDFIELD) notesdir $(BASE).md)
+NOTEBOOKSDIR=$(shell $(TIME_CMD) $(MDFIELD) notebooksdir $(BASE).md)
+SLIDESDIR=$(shell $(TIME_CMD) $(MDFIELD) slidesdir $(BASE).md)
+TEXDIR=$(shell $(TIME_CMD) $(MDFIELD) texdir $(BASE).md)
+WEEK=$(shell $(TIME_CMD) $(MDFIELD) week $(BASE).md)
+SESSION=$(shell $(TIME_CMD) $(MDFIELD) session $(BASE).md)
+PEOPLEYAML=$(shell $(TIME_CMD) $(MDFIELD) people $(BASE).md)
 
 
-DEPS=$(shell dependencies inputs $(BASE).md --snippets-path $(SNIPPETSDIR))
-DIAGDEPS=$(shell dependencies diagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
-DOCXDEPS=$(shell dependencies docxdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
-PPTXDEPS=$(shell dependencies docxdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
-TEXDEPS=$(shell dependencies texdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
+DEPS=$(shell $(TIME_CMD) dependencies inputs $(BASE).md --snippets-path $(SNIPPETSDIR))
+DIAGDEPS=$(shell $(TIME_CMD) dependencies diagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
+DOCXDEPS=$(shell $(TIME_CMD) dependencies docxdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
+PPTXDEPS=$(shell $(TIME_CMD) dependencies docxdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
+TEXDEPS=$(shell $(TIME_CMD) dependencies texdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
 
 # Get all dependencies and add "talk-people.gpp" as the first entry to trigger a rebuild if the people file changes
-DYNAMIC_DEPS=$(shell dependencies all $(BASE).md --snippets-path $(SNIPPETSDIR))
+DYNAMIC_DEPS=$(shell $(TIME_CMD) dependencies all $(BASE).md --snippets-path $(SNIPPETSDIR))
 ALL := talk-people.gpp $(DYNAMIC_DEPS)
 
 # After checks, show what dynamic dependencies are included
