@@ -1,7 +1,7 @@
 ---
 id: "2026-01-04_performance-profiling-infrastructure"
 title: "Add Performance Profiling Infrastructure"
-status: "Proposed"
+status: "Completed"
 priority: "Medium"
 created: "2026-01-04"
 last_updated: "2026-01-04"
@@ -408,7 +408,58 @@ maketalk large-talk.md --profile
 
 ## Progress Updates
 
-### 2026-01-04
+### 2026-01-04 - Created
 
 Task created as part of CIP-0009 Phase 1. This is the foundation for all future performance optimizations.
+
+### 2026-01-04 - Completed
+
+✅ **Phase 1 Implementation Complete**
+
+All acceptance criteria met:
+- ✅ Created `profile-command` shell script
+- ✅ Created `BuildProfiler` Python class  
+- ✅ Integrated profiler into `maketalk.py` and `makecv.py`
+- ✅ Updated `make-talk-flags.mk` and `make-cv-flags.mk` with TIME_CMD
+- ✅ Tested with real talk file (`ai-and-data-science.md`)
+
+**Test Results** (ai-and-data-science.md):
+
+```
+======================================================================
+Build Performance Profile (Hierarchical)
+======================================================================
+
+📦 Python Wrapper Operations:
+----------------------------------------------------------------------
+  Make execution (total)                            :  41.54s
+  Dependency git pulls                              :   2.83s
+  Local git pull                                    :   1.34s
+  Config file loading                               :   0.00s
+  Makefile generation                               :   0.00s
+
+🔨 Make Execution (Detailed Breakdown):
+----------------------------------------------------------------------
+  dependency scanning                     :  27.99s ( 19 calls, 1.473s avg)
+  mdfield calls                           :   7.77s ( 47 calls, 0.165s avg)
+
+======================================================================
+Total build time                                  :  45.72s
+======================================================================
+
+🎯 Top Bottlenecks:
+  1. dependency scanning           :  28.0s (61.2% of total) ← **MAJOR BOTTLENECK**
+  2. mdfield calls                 :   7.8s (17.0% of total)
+```
+
+**Key Insights:**
+- **Dependency scanning is the #1 bottleneck** (61% of build time!)
+- mdfield calls still account for 17% (room for batch optimization)
+- Git pulls: 4.2s (9% - optimization target for Phase 2)
+- Wrapper overhead is minimal (<0.1s)
+
+**Next Steps:**
+- Phase 2: Implement conditional git pulls (save 2-5s)
+- Phase 2: Implement parallel/batch mdfield calls (save 4-6s)
+- Investigate dependency scanning optimization (potential 10-15s savings)
 
