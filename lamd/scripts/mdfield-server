@@ -1,0 +1,66 @@
+#!/bin/bash
+# mdfield-server: Lightweight shell client for lynguine server
+#
+# Usage: mdfield-server FIELD MARKDOWN_FILE
+# Example: mdfield-server title my-talk.md
+
+set -euo pipefail
+
+FIELD="${1:-}"
+FILE="${2:-}"
+SERVER="${LAMD_SERVER_URL:-http://127.0.0.1:8765}"
+
+# Validate arguments
+if [ -z "$FIELD" ] || [ -z "$FILE" ]; then
+    echo "Usage: mdfield-server FIELD MARKDOWN_FILE" >&2
+    echo "Example: mdfield-server title my-talk.md" >&2
+    exit 1
+fi
+
+# Check if server is running, start if needed
+if ! curl -s -f "$SERVER/api/health" > /dev/null 2>&1; then
+    # Server not running, start it
+    # Use explicit Python path if available, otherwise fall back to python3
+    PYTHON="${LAMD_PYTHON:-/opt/anaconda3/envs/py311/bin/python}"
+    
+    if [ ! -x "$PYTHON" ]; then
+        PYTHON="python3"
+    fi
+    
+    $PYTHON -m lynguine.server --host 127.0.0.1 --port 8765 --idle-timeout 300 > /dev/null 2>&1 &
+    
+    # Wait for server to start (max 3 seconds)
+    for i in {1..30}; do
+        if curl -s -f "$SERVER/api/health" > /dev/null 2>&1; then
+            break
+        fi
+        sleep 0.1
+    done
+    
+    # Check if server started successfully
+    if ! curl -s -f "$SERVER/api/health" > /dev/null 2>&1; then
+        echo "Error: Failed to start lynguine server" >&2
+        echo "Try setting LAMD_PYTHON environment variable to your Python interpreter" >&2
+        exit 1
+    fi
+fi
+
+# Extract field via server API
+RESPONSE=$(curl -s -X POST "$SERVER/api/talk/field" \
+  -H "Content-Type: application/json" \
+  -d "{\"markdown_file\": \"$FILE\", \"field\": \"$FIELD\", \"config_files\": [\"_lamd.yml\", \"_config.yml\"]}")
+
+# Check response status
+STATUS=$(echo "$RESPONSE" | jq -r '.status' 2>/dev/null || echo "error")
+
+if [ "$STATUS" = "success" ]; then
+    # Extract and print value
+    echo "$RESPONSE" | jq -r '.value'
+    exit 0
+else
+    # Error occurred
+    ERROR_MSG=$(echo "$RESPONSE" | jq -r '.error // .error_message // "Unknown error"' 2>/dev/null || echo "Unknown error")
+    echo "Error extracting field '$FIELD' from '$FILE': $ERROR_MSG" >&2
+    exit 1
+fi
+
