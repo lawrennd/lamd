@@ -50,9 +50,9 @@ Deploy the shell-based `mdfield-server` client (developed in CIP-0008 Phase 2.5)
 - [ ] All tests passing and documented
 
 ### Packaging & Integration
-- [ ] Shell client (`mdfield-server.sh`) is packaged in lamd repository
+- [x] Shell client (`mdfield-server.sh`) is packaged in lamd repository (`lamd/scripts/mdfield-server`)
 - [ ] Installation script or setup.py updated to install the shell client
-- [ ] Makefile templates updated to use shell client by default (or via opt-in)
+- [x] Makefile templates updated to use shell client via opt-in (`LAMD_USE_SERVER_CLIENT=1`)
 - [ ] Dependencies documented and checked at runtime (`curl`, `jq`)
 
 ### Documentation
