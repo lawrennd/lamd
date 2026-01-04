@@ -76,6 +76,8 @@ DOCXDEPS:=$(shell grep '^DOCXDEPS:' $(_DEPS_CACHE) | sed 's/^DOCXDEPS://')
 PPTXDEPS:=$(shell grep '^PPTXDEPS:' $(_DEPS_CACHE) | sed 's/^PPTXDEPS://')
 TEXDEPS:=$(shell grep '^TEXDEPS:' $(_DEPS_CACHE) | sed 's/^TEXDEPS://')
 DYNAMIC_DEPS:=$(shell grep '^DYNAMIC_DEPS:' $(_DEPS_CACHE) | sed 's/^DYNAMIC_DEPS://')
+# Clean up temp file immediately after extraction
+_CLEANUP:=$(shell rm -f $(_DEPS_CACHE))
 
 # Add "talk-people.gpp" as the first entry to trigger a rebuild if the people file changes
 ALL := talk-people.gpp $(DYNAMIC_DEPS)
