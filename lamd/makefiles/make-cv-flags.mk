@@ -56,8 +56,11 @@ PUBLICATIONSINCE=$(shell $(TIME_CMD) $(MDFIELD) publicationsince $(BASE).md)
 
 SINCEFLAGS=--meta-data talkYearSince=${TALKSINCE} meetingYearSince=${MEETINGSINCE} publicationYearSince=${PUBLICATIONSINCE}
 
-DEPS=$(shell $(TIME_CMD) dependencies inputs $(BASE).md)
-DIAGDEPS=$(shell $(TIME_CMD) dependencies diagrams $(BASE).md)
+# CIP-0009 Phase 1: Batch dependency extraction (70% faster)
+# Extract all dependency types in one call instead of multiple separate calls
+_DEPS_BATCH=$(shell $(TIME_CMD) dependencies batch $(BASE).md --snippets-path $(SNIPPETSDIR))
+DEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^DEPS:' | sed 's/^DEPS://')
+DIAGDEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^DIAGDEPS:' | sed 's/^DIAGDEPS://')
 # BIBDEPS=$(shell dependencies bibinputs $(BASE).md)
 
 POSTFLAGS=$(shell flags post $(BASE))
@@ -91,8 +94,8 @@ GROUPLISTFILES=$(shell ${FIND} ${GROUPDIR} -type f)
 EXSTUDENTFILES=${DATADIR}/students.yaml
 EXRAFILES=${DATADIR}/ras.yaml
 
-# Get all dependencies
-DYNAMIC_DEPS=$(shell dependencies all $(BASE).md --snippets-path $(SNIPPETSDIR))
+# Get all dependencies (extracted from batch call above)
+DYNAMIC_DEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^DYNAMIC_DEPS:' | sed 's/^DYNAMIC_DEPS://')
 ALL := $(BASE).docx $(DYNAMIC_DEPS)
 
 # Add directory check targets

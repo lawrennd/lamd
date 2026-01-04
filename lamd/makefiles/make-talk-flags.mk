@@ -64,15 +64,18 @@ WEEK=$(shell $(TIME_CMD) $(MDFIELD) week $(BASE).md)
 SESSION=$(shell $(TIME_CMD) $(MDFIELD) session $(BASE).md)
 PEOPLEYAML=$(shell $(TIME_CMD) $(MDFIELD) people $(BASE).md)
 
+# CIP-0009 Phase 1: Batch dependency extraction (70% faster)
+# Extract all dependency types in one call instead of 6 separate calls
+# This reduces redundant file I/O from ~28s to ~2-3s
+_DEPS_BATCH=$(shell $(TIME_CMD) dependencies batch $(BASE).md --snippets-path $(SNIPPETSDIR))
+DEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^DEPS:' | sed 's/^DEPS://')
+DIAGDEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^DIAGDEPS:' | sed 's/^DIAGDEPS://')
+DOCXDEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^DOCXDEPS:' | sed 's/^DOCXDEPS://')
+PPTXDEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^PPTXDEPS:' | sed 's/^PPTXDEPS://')
+TEXDEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^TEXDEPS:' | sed 's/^TEXDEPS://')
+DYNAMIC_DEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^DYNAMIC_DEPS:' | sed 's/^DYNAMIC_DEPS://')
 
-DEPS=$(shell $(TIME_CMD) dependencies inputs $(BASE).md --snippets-path $(SNIPPETSDIR))
-DIAGDEPS=$(shell $(TIME_CMD) dependencies diagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
-DOCXDEPS=$(shell $(TIME_CMD) dependencies docxdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
-PPTXDEPS=$(shell $(TIME_CMD) dependencies docxdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
-TEXDEPS=$(shell $(TIME_CMD) dependencies texdiagrams $(BASE).md --snippets-path $(SNIPPETSDIR))
-
-# Get all dependencies and add "talk-people.gpp" as the first entry to trigger a rebuild if the people file changes
-DYNAMIC_DEPS=$(shell $(TIME_CMD) dependencies all $(BASE).md --snippets-path $(SNIPPETSDIR))
+# Add "talk-people.gpp" as the first entry to trigger a rebuild if the people file changes
 ALL := talk-people.gpp $(DYNAMIC_DEPS)
 
 # After checks, show what dynamic dependencies are included
