@@ -1,18 +1,27 @@
-# This file checks the header of the base file for information about how to produce the talk and stores it in relevant files.
+# This file checks the header of the base file for information about how to produce the CV and stores it in relevant files.
+
+# Choose mdfield implementation: mdfield-server (fast) or mdfield (compatible)
+# Set LAMD_USE_SERVER_CLIENT=1 to use shell client (8x faster)
+# Default: mdfield (for backward compatibility)
+ifeq ($(LAMD_USE_SERVER_CLIENT),1)
+    MDFIELD = $(SCRIPTDIR)/mdfield-server
+else
+    MDFIELD = mdfield
+endif
 
 # Extract the date and the prefix of the produced files.
-DATE=$(shell mdfield date ${BASE}.md)
+DATE=$(shell $(MDFIELD) date ${BASE}.md)
 
-CATEGORIES=$(shell mdfield categories ${BASE}.md)
+CATEGORIES=$(shell $(MDFIELD) categories ${BASE}.md)
 
 # Get macros path from frontmatter or use default
-MACROSDIR=$(shell mdfield macrosdir ${BASE}.md)
+MACROSDIR=$(shell $(MDFIELD) macrosdir ${BASE}.md)
 
 MATHJAX="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_SVG"
 REVEALJS="https://inverseprobability.com/talks/slides/reveal.js/"
 
-POSTSHEADER=$(shell mdfield postssheader ${BASE}.md)
-ASSIGNMENT=$(shell mdfield assignment ${BASE}.md)
+POSTSHEADER=$(shell $(MDFIELD) postssheader ${BASE}.md)
+ASSIGNMENT=$(shell $(MDFIELD) assignment ${BASE}.md)
 NOTATION=talk-notation.tex
 
 PREFIX=$(shell flags prefix ${BASE})
@@ -25,7 +34,7 @@ FIND=gfind
 PPFLAGS=-T --macros=$(MACROSDIR)
 PPFLAGS=$(shell flags pp $(BASE)) --macros=$(MACROSDIR)
 
-BIBDIRECTORY=$(shell mdfield bibdir ${BASE}.md)
+BIBDIRECTORY=$(shell $(MDFIELD) bibdir ${BASE}.md)
 
 # Bibliography information
 BIBFLAGS=--bibliography=${BIBDIRECTORY}/lawrence.bib --bibliography=${BIBDIRECTORY}/other.bib --bibliography=${BIBDIRECTORY}/zbooks.bib 
@@ -35,11 +44,11 @@ CITEFLAGS=--citeproc --csl=${INCLUDESDIR}/elsevier-harvard.csl ${BIBFLAGS}
 
 PDSFLAGS=-s ${CITEFLAGS} --mathjax=${MATHJAX} 
 
-CVDIR=$(shell mdfield cvdir $(BASE).md)
+CVDIR=$(shell $(MDFIELD) cvdir $(BASE).md)
 
-TALKSINCE=$(shell mdfield talksince ${BASE}.md)
-MEETINGSINCE=$(shell mdfield meetingsince ${BASE}.md)
-PUBLICATIONSINCE=$(shell mdfield publicationsince $(BASE).md)
+TALKSINCE=$(shell $(MDFIELD) talksince ${BASE}.md)
+MEETINGSINCE=$(shell $(MDFIELD) meetingsince ${BASE}.md)
+PUBLICATIONSINCE=$(shell $(MDFIELD) publicationsince $(BASE).md)
 
 SINCEFLAGS=--meta-data talkYearSince=${TALKSINCE} meetingYearSince=${MEETINGSINCE} publicationYearSince=${PUBLICATIONSINCE}
 
@@ -52,22 +61,22 @@ PPTXFLAGS=$(shell flags pptx $(BASE))
 DOCXFLAGS=$(shell flags docx $(BASE))
 SFLAGS=$(shell flags reveal $(BASE))
 
-SNIPPETSDIR=$(shell mdfield snippetsdir $(BASE).md)
-DIAGRAMSDIR=$(shell mdfield diagramsdir $(BASE).md)
-WRITEDIAGRAMSDIR=$(shell mdfield writediagramsdir $(BASE).md)
-POSTSDIR=$(shell mdfield postsdir $(BASE).md)
-NOTESDIR=$(shell mdfield notesdir $(BASE).md)
-NOTEBOOKSDIR=$(shell mdfield notebooksdir $(BASE).md)
-SLIDESDIR=$(shell mdfield slidesdir $(BASE).md)
-TEXDIR=$(shell mdfield texdir $(BASE).md)
-WEEK=$(shell mdfield week $(BASE).md)
-SESSION=$(shell mdfield session $(BASE).md)
+SNIPPETSDIR=$(shell $(MDFIELD) snippetsdir $(BASE).md)
+DIAGRAMSDIR=$(shell $(MDFIELD) diagramsdir $(BASE).md)
+WRITEDIAGRAMSDIR=$(shell $(MDFIELD) writediagramsdir $(BASE).md)
+POSTSDIR=$(shell $(MDFIELD) postsdir $(BASE).md)
+NOTESDIR=$(shell $(MDFIELD) notesdir $(BASE).md)
+NOTEBOOKSDIR=$(shell $(MDFIELD) notebooksdir $(BASE).md)
+SLIDESDIR=$(shell $(MDFIELD) slidesdir $(BASE).md)
+TEXDIR=$(shell $(MDFIELD) texdir $(BASE).md)
+WEEK=$(shell $(MDFIELD) week $(BASE).md)
+SESSION=$(shell $(MDFIELD) session $(BASE).md)
 
-TALKSDIR=$(shell mdfield talksdir $(BASE).md)
-PUBLICATIONSDIR=$(shell mdfield publicationsdir $(BASE).md)
-GROUPDIR=$(shell mdfield groupdir $(BASE).md)
-DATADIR=$(shell mdfield datadir $(BASE).md)
-PROJECTSDIR=$(shell mdfield projectsdir $(BASE).md)
+TALKSDIR=$(shell $(MDFIELD) talksdir $(BASE).md)
+PUBLICATIONSDIR=$(shell $(MDFIELD) publicationsdir $(BASE).md)
+GROUPDIR=$(shell $(MDFIELD) groupdir $(BASE).md)
+DATADIR=$(shell $(MDFIELD) datadir $(BASE).md)
+PROJECTSDIR=$(shell $(MDFIELD) projectsdir $(BASE).md)
 
 TALKLISTFILES=$(shell ${FIND} ${TALKSDIR} -type f)
 PUBLICATIONLISTFILES=$(shell ${FIND} ${PUBLICATIONSDIR} -type f)
