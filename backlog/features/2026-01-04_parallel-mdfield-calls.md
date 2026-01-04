@@ -1,0 +1,289 @@
+---
+id: "2026-01-04_parallel-mdfield-calls"
+title: "Parallelize mdfield Calls in Makefiles"
+status: "Proposed"
+priority: "High"
+created: "2026-01-04"
+last_updated: "2026-01-04"
+category: "feature"
+related_cips: ["0009"]
+owner: ""
+dependencies: ["2026-01-04_performance-profiling-infrastructure"]
+---
+
+# Task: Parallelize mdfield Calls in Makefiles
+
+## Description
+
+Currently, Makefiles execute 22 mdfield calls sequentially during variable assignment. Even with server mode (0.09s per call), this takes ~2s. Parallelizing these calls could reduce this to 0.2-0.5s.
+
+**Current**: Sequential execution (2s total)
+```make
+DATE=$(shell mdfield date ${BASE}.md)
+CATEGORIES=$(shell mdfield categories ${BASE}.md)
+LAYOUT=$(shell mdfield layout ${BASE}.md)
+# ... 19 more calls
+```
+
+**Proposed**: Parallel execution (0.2-0.5s total)
+
+**Expected Speedup**: 4-10x for field extraction phase
+
+## Acceptance Criteria
+
+### Implementation
+- [ ] Design approach for parallel field extraction
+- [ ] Implement batch field extraction in mdfield or new utility
+- [ ] Update make-talk-flags.mk and make-cv-flags.mk
+- [ ] Maintain backward compatibility
+
+### Performance
+- [ ] Field extraction time: 2s → <0.5s
+- [ ] No increase in server startup overhead
+- [ ] Works with both server and direct mode
+
+### Testing
+- [ ] All existing tests pass
+- [ ] New tests for batch extraction
+- [ ] Benchmark showing speedup
+- [ ] Works on macOS and Linux
+
+## Implementation Approaches
+
+### Option A: Single Batch Call (Recommended)
+
+Create a new utility that extracts all fields in one call:
+
+```python
+# lamd/mdfield_batch.py
+def main():
+    """Extract multiple fields from markdown in one call."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("filename", help="Markdown file")
+    parser.add_argument("--fields", nargs="+", help="Fields to extract")
+    parser.add_argument("--use-server", action="store_true")
+    args = parser.parse_args()
+    
+    # Extract all fields in one server call (or one file read)
+    if args.use_server:
+        result = client.extract_talk_fields_batch(
+            fields=args.fields,
+            markdown_file=args.filename
+        )
+    else:
+        # Read file once, extract all fields
+        result = extract_fields_direct(args.fields, args.filename)
+    
+    # Output as shell variables
+    for field, value in result.items():
+        print(f"{field.upper()}={shell_quote(value)}")
+```
+
+**Makefile usage**:
+```make
+# Extract all fields in one call
+$(eval $(shell mdfield-batch ${BASE}.md --fields date categories layout macrosdir ...))
+
+# Now use the variables
+DATE := $(DATE)
+CATEGORIES := $(CATEGORIES)
+LAYOUT := $(LAYOUT)
+```
+
+**Pros**: Minimal changes, single server round-trip, reads file once
+**Cons**: Requires new utility, different syntax
+
+### Option B: GNU Make Parallelism
+
+Use make's built-in parallelism:
+
+```make
+# Allow parallel execution
+.NOTPARALLEL: field-extraction
+
+# Mark field extractions as parallelizable
+field-extraction: date-field categories-field layout-field ...
+
+date-field:
+	$(eval DATE=$(shell mdfield date ${BASE}.md))
+
+categories-field:
+	$(eval CATEGORIES=$(shell mdfield categories ${BASE}.md))
+
+# ... etc
+```
+
+**Pros**: Uses standard make features, minimal code changes
+**Cons**: Complex makefile logic, may not work well with variable assignment
+
+### Option C: Parallel Shell Script
+
+Create a wrapper that launches all mdfield calls in parallel:
+
+```bash
+#!/bin/bash
+# extract-all-fields.sh
+
+parallel -j 10 ::: \
+  "mdfield date ${BASE}.md > /tmp/date" \
+  "mdfield categories ${BASE}.md > /tmp/categories" \
+  # ... etc
+
+# Read results back
+DATE=$(cat /tmp/date)
+CATEGORIES=$(cat /tmp/categories)
+# ... etc
+```
+
+**Pros**: True parallelism, simple to understand
+**Cons**: Requires GNU parallel, temp file management, shell overhead
+
+## Recommended Approach
+
+**Option A (Single Batch Call)** is most efficient:
+1. Single server round-trip (or single file read)
+2. Minimal overhead
+3. Clean implementation
+4. Best performance potential
+
+## Implementation Details
+
+### Server-Side Batch API
+
+Add to lynguine server:
+
+```python
+# lynguine/server_interface_handlers.py
+
+@app.post("/api/talk/fields/batch")
+async def extract_talk_fields_batch(request: Dict) -> Dict:
+    """Extract multiple fields from markdown in one call."""
+    fields = request.get('fields', [])
+    markdown_file = request.get('markdown_file')
+    config_files = request.get('config_files', [])
+    
+    results = {}
+    # Read file once
+    iface = Interface.from_file(
+        user_file=[markdown_file] + config_files,
+        directory=os.path.dirname(markdown_file) or '.'
+    )
+    
+    # Extract all fields
+    for field in fields:
+        try:
+            results[field] = iface.get(field, '')
+        except Exception:
+            results[field] = ''
+    
+    return {"status": "success", "fields": results}
+```
+
+### Client-Side Implementation
+
+```python
+# lamd/mdfield_batch.py
+
+def extract_batch_server_mode(fields, filename, config_files):
+    """Extract multiple fields via server."""
+    client = ServerClient(auto_start=True)
+    response = client.extract_talk_fields_batch(
+        fields=fields,
+        markdown_file=filename,
+        config_files=config_files
+    )
+    return response['fields']
+
+def extract_batch_direct(fields, filename, config_files):
+    """Extract multiple fields directly."""
+    iface = Interface.from_file(
+        user_file=[filename] + config_files,
+        directory='.'
+    )
+    results = {}
+    for field in fields:
+        try:
+            results[field] = iface.get(field, '')
+        except Exception:
+            results[field] = ''
+    return results
+```
+
+### Makefile Integration
+
+```make
+# In make-talk-flags.mk and make-cv-flags.mk
+
+# List all fields we need
+FIELDS_TO_EXTRACT = date categories layout macrosdir slidesheader postsheader \
+                   assignment notation bibdir snippetsdir diagramsdir writediagramsdir \
+                   postsdir practicalsdir notesdir notebooksdir slidesdir texdir \
+                   week session people
+
+# Extract all fields in one batch call
+ifeq ($(LAMD_USE_SERVER_CLIENT),1)
+    $(eval $(shell mdfield-batch ${BASE}.md --use-server --fields $(FIELDS_TO_EXTRACT)))
+else
+    $(eval $(shell mdfield-batch ${BASE}.md --fields $(FIELDS_TO_EXTRACT)))
+endif
+
+# Variables are now set: DATE, CATEGORIES, LAYOUT, etc.
+```
+
+## Testing Strategy
+
+### Unit Tests
+
+```python
+def test_batch_extraction():
+    """Test batch field extraction."""
+    result = extract_batch_direct(
+        fields=['title', 'author', 'date'],
+        filename='test.md',
+        config_files=[]
+    )
+    assert result['title'] == 'Test Document'
+    assert result['author'] == 'Test Author'
+    assert result['date'] == '2023-05-15'
+
+def test_batch_server_mode():
+    """Test batch extraction via server."""
+    with patch('ServerClient') as mock_client:
+        mock_client.extract_talk_fields_batch.return_value = {
+            'fields': {'title': 'Test', 'date': '2023-05-15'}
+        }
+        result = extract_batch_server_mode(...)
+        assert result['title'] == 'Test'
+```
+
+### Performance Benchmarks
+
+```bash
+# Benchmark sequential vs batch
+time make -B all  # Sequential (baseline)
+# Expected: 37s
+
+# Update to batch extraction
+time make -B all  # Batch
+# Expected: 35s (2s saved)
+```
+
+## Success Metrics
+
+- [ ] Field extraction: 2s → <0.5s (4x improvement)
+- [ ] Overall build: 37s → 35s (5% improvement)
+- [ ] No regressions in functionality
+- [ ] Maintains server mode benefits
+
+## Related
+
+- **CIP**: 0009 (Further Performance Optimization) - Phase 2
+- **Dependency**: Performance profiling infrastructure (to measure improvement)
+- **Impact**: Quick win, high ROI (small code change, measurable speedup)
+
+## Progress Updates
+
+### 2026-01-04
+
+Task created as part of CIP-0009 Phase 2 (Quick Wins). This is one of the highest ROI optimizations identified.
+
