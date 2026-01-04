@@ -1,23 +1,11 @@
 # This file checks the header of the base file for information about how to produce the CV and stores it in relevant files.
 
-# MDFIELD implementation selection (controlled by makecv wrapper)
-# Default behavior: LAMD_USE_SERVER_CLIENT=1 (uses fast shell client)
-# Override with --no-server flag in makecv to use Python mdfield
-ifeq ($(LAMD_USE_SERVER_CLIENT),1)
-    MDFIELD = $(SCRIPTDIR)/mdfield-server
-else
-    MDFIELD = mdfield
-endif
-
 # TIME_CMD is set by maketalk/makecv when profiling is enabled
 # When profiling: TIME_CMD = $(SCRIPTDIR)/profile-command
 # When normal: TIME_CMD = (empty)
 
-# CIP-0009 Phase 2: Batch field extraction (5-10x faster)
 # Extract all fields in one call instead of 25 separate calls
-# This reduces redundant file I/O and Python startup overhead from ~7s to ~0.5s
 # Write batch output to temp file to avoid Make variable issues with multiline content
-# NOTE: Always use Python mdfield for batch (mdfield-server shell script doesn't support batch)
 _FIELDS_CACHE:=$(shell mktemp)
 _FIELDS_EXTRACTED:=$(shell $(TIME_CMD) mdfield batch $(BASE).md --fields date categories macrosdir postssheader assignment bibdir cvdir talksince meetingsince publicationsince snippetsdir diagramsdir writediagramsdir postsdir notesdir notebooksdir slidesdir texdir week session talksdir publicationsdir groupdir datadir projectsdir > $(_FIELDS_CACHE))
 
