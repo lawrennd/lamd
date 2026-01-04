@@ -1,8 +1,8 @@
 # This file checks the header of the base file for information about how to produce the CV and stores it in relevant files.
 
-# Choose mdfield implementation: mdfield-server (fast) or mdfield (compatible)
-# Set LAMD_USE_SERVER_CLIENT=1 to use shell client (8x faster)
-# Default: mdfield (for backward compatibility)
+# MDFIELD implementation selection (controlled by makecv wrapper)
+# Default behavior: LAMD_USE_SERVER_CLIENT=1 (uses fast shell client)
+# Override with --no-server flag in makecv to use Python mdfield
 ifeq ($(LAMD_USE_SERVER_CLIENT),1)
     MDFIELD = $(SCRIPTDIR)/mdfield-server
 else
