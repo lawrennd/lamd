@@ -13,19 +13,47 @@ endif
 # When profiling: TIME_CMD = $(SCRIPTDIR)/profile-command
 # When normal: TIME_CMD = (empty)
 
-# Extract the date and the prefix of the produced files.
-DATE=$(shell $(TIME_CMD) $(MDFIELD) date ${BASE}.md)
+# CIP-0009 Phase 2: Batch field extraction (5-10x faster)
+# Extract all fields in one call instead of 25 separate calls
+# This reduces redundant file I/O and Python startup overhead from ~7s to ~0.5s
+# Write batch output to temp file to avoid Make variable issues with multiline content
+# NOTE: Always use Python mdfield for batch (mdfield-server shell script doesn't support batch)
+_FIELDS_CACHE:=$(shell mktemp)
+_FIELDS_EXTRACTED:=$(shell $(TIME_CMD) mdfield batch $(BASE).md --fields date categories macrosdir postssheader assignment bibdir cvdir talksince meetingsince publicationsince snippetsdir diagramsdir writediagramsdir postsdir notesdir notebooksdir slidesdir texdir week session talksdir publicationsdir groupdir datadir projectsdir > $(_FIELDS_CACHE))
 
-CATEGORIES=$(shell $(TIME_CMD) $(MDFIELD) categories ${BASE}.md)
+# Parse individual fields from batch output
+DATE:=$(shell grep '^date:' $(_FIELDS_CACHE) | sed 's/^date://')
+CATEGORIES:=$(shell grep '^categories:' $(_FIELDS_CACHE) | sed 's/^categories://')
+MACROSDIR:=$(shell grep '^macrosdir:' $(_FIELDS_CACHE) | sed 's/^macrosdir://')
+POSTSHEADER:=$(shell grep '^postssheader:' $(_FIELDS_CACHE) | sed 's/^postssheader://')
+ASSIGNMENT:=$(shell grep '^assignment:' $(_FIELDS_CACHE) | sed 's/^assignment://')
+BIBDIRECTORY:=$(shell grep '^bibdir:' $(_FIELDS_CACHE) | sed 's/^bibdir://')
+CVDIR:=$(shell grep '^cvdir:' $(_FIELDS_CACHE) | sed 's/^cvdir://')
+TALKSINCE:=$(shell grep '^talksince:' $(_FIELDS_CACHE) | sed 's/^talksince://')
+MEETINGSINCE:=$(shell grep '^meetingsince:' $(_FIELDS_CACHE) | sed 's/^meetingsince://')
+PUBLICATIONSINCE:=$(shell grep '^publicationsince:' $(_FIELDS_CACHE) | sed 's/^publicationsince://')
+SNIPPETSDIR:=$(shell grep '^snippetsdir:' $(_FIELDS_CACHE) | sed 's/^snippetsdir://')
+DIAGRAMSDIR:=$(shell grep '^diagramsdir:' $(_FIELDS_CACHE) | sed 's/^diagramsdir://')
+WRITEDIAGRAMSDIR:=$(shell grep '^writediagramsdir:' $(_FIELDS_CACHE) | sed 's/^writediagramsdir://')
+POSTSDIR:=$(shell grep '^postsdir:' $(_FIELDS_CACHE) | sed 's/^postsdir://')
+NOTESDIR:=$(shell grep '^notesdir:' $(_FIELDS_CACHE) | sed 's/^notesdir://')
+NOTEBOOKSDIR:=$(shell grep '^notebooksdir:' $(_FIELDS_CACHE) | sed 's/^notebooksdir://')
+SLIDESDIR:=$(shell grep '^slidesdir:' $(_FIELDS_CACHE) | sed 's/^slidesdir://')
+TEXDIR:=$(shell grep '^texdir:' $(_FIELDS_CACHE) | sed 's/^texdir://')
+WEEK:=$(shell grep '^week:' $(_FIELDS_CACHE) | sed 's/^week://')
+SESSION:=$(shell grep '^session:' $(_FIELDS_CACHE) | sed 's/^session://')
+TALKSDIR:=$(shell grep '^talksdir:' $(_FIELDS_CACHE) | sed 's/^talksdir://')
+PUBLICATIONSDIR:=$(shell grep '^publicationsdir:' $(_FIELDS_CACHE) | sed 's/^publicationsdir://')
+GROUPDIR:=$(shell grep '^groupdir:' $(_FIELDS_CACHE) | sed 's/^groupdir://')
+DATADIR:=$(shell grep '^datadir:' $(_FIELDS_CACHE) | sed 's/^datadir://')
+PROJECTSDIR:=$(shell grep '^projectsdir:' $(_FIELDS_CACHE) | sed 's/^projectsdir://')
 
-# Get macros path from frontmatter or use default
-MACROSDIR=$(shell $(TIME_CMD) $(MDFIELD) macrosdir ${BASE}.md)
+# Clean up temp file immediately after extraction
+_FIELDS_CLEANUP:=$(shell rm -f $(_FIELDS_CACHE))
 
 MATHJAX="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_SVG"
 REVEALJS="https://inverseprobability.com/talks/slides/reveal.js/"
 
-POSTSHEADER=$(shell $(TIME_CMD) $(MDFIELD) postssheader ${BASE}.md)
-ASSIGNMENT=$(shell $(TIME_CMD) $(MDFIELD) assignment ${BASE}.md)
 NOTATION=talk-notation.tex
 
 PREFIX=$(shell flags prefix ${BASE})
@@ -38,8 +66,6 @@ FIND=gfind
 PPFLAGS=-T --macros=$(MACROSDIR)
 PPFLAGS=$(shell flags pp $(BASE)) --macros=$(MACROSDIR)
 
-BIBDIRECTORY=$(shell $(TIME_CMD) $(MDFIELD) bibdir ${BASE}.md)
-
 # Bibliography information
 BIBFLAGS=--bibliography=${BIBDIRECTORY}/lawrence.bib --bibliography=${BIBDIRECTORY}/other.bib --bibliography=${BIBDIRECTORY}/zbooks.bib 
 BIBDEPS=${BIBDIRECTORY}/lawrence.bib ${BIBDIRECTORY}/other.bib ${BIBDIRECTORY}/zbooks.bib 
@@ -48,19 +74,14 @@ CITEFLAGS=--citeproc --csl=${INCLUDESDIR}/elsevier-harvard.csl ${BIBFLAGS}
 
 PDSFLAGS=-s ${CITEFLAGS} --mathjax=${MATHJAX} 
 
-CVDIR=$(shell $(TIME_CMD) $(MDFIELD) cvdir $(BASE).md)
-
-TALKSINCE=$(shell $(TIME_CMD) $(MDFIELD) talksince ${BASE}.md)
-MEETINGSINCE=$(shell $(TIME_CMD) $(MDFIELD) meetingsince ${BASE}.md)
-PUBLICATIONSINCE=$(shell $(TIME_CMD) $(MDFIELD) publicationsince $(BASE).md)
-
 SINCEFLAGS=--meta-data talkYearSince=${TALKSINCE} meetingYearSince=${MEETINGSINCE} publicationYearSince=${PUBLICATIONSINCE}
 
 # CIP-0009 Phase 1: Batch dependency extraction (70% faster)
 # Extract all dependency types in one call instead of multiple separate calls
 # Write batch output to temp file to avoid Make variable issues with multiline content
 _DEPS_CACHE:=$(shell mktemp)
-_DEPS_EXTRACTED:=$(shell $(TIME_CMD) dependencies batch $(BASE).md --snippets-path $(SNIPPETSDIR) > $(_DEPS_CACHE))
+# Only pass --snippets-path if SNIPPETSDIR is defined (use shell conditional)
+_DEPS_EXTRACTED:=$(shell if [ -n "$(SNIPPETSDIR)" ]; then $(TIME_CMD) dependencies batch $(BASE).md --snippets-path $(SNIPPETSDIR) > $(_DEPS_CACHE); else $(TIME_CMD) dependencies batch $(BASE).md > $(_DEPS_CACHE); fi)
 DEPS:=$(shell grep '^inputs:' $(_DEPS_CACHE) | sed 's/^inputs://')
 DIAGDEPS:=$(shell grep '^diagrams:' $(_DEPS_CACHE) | sed 's/^diagrams://')
 # BIBDEPS=$(shell dependencies bibinputs $(BASE).md)
@@ -69,23 +90,6 @@ POSTFLAGS=$(shell flags post $(BASE))
 PPTXFLAGS=$(shell flags pptx $(BASE))
 DOCXFLAGS=$(shell flags docx $(BASE))
 SFLAGS=$(shell flags reveal $(BASE))
-
-SNIPPETSDIR=$(shell $(TIME_CMD) $(MDFIELD) snippetsdir $(BASE).md)
-DIAGRAMSDIR=$(shell $(TIME_CMD) $(MDFIELD) diagramsdir $(BASE).md)
-WRITEDIAGRAMSDIR=$(shell $(TIME_CMD) $(MDFIELD) writediagramsdir $(BASE).md)
-POSTSDIR=$(shell $(TIME_CMD) $(MDFIELD) postsdir $(BASE).md)
-NOTESDIR=$(shell $(TIME_CMD) $(MDFIELD) notesdir $(BASE).md)
-NOTEBOOKSDIR=$(shell $(TIME_CMD) $(MDFIELD) notebooksdir $(BASE).md)
-SLIDESDIR=$(shell $(TIME_CMD) $(MDFIELD) slidesdir $(BASE).md)
-TEXDIR=$(shell $(TIME_CMD) $(MDFIELD) texdir $(BASE).md)
-WEEK=$(shell $(TIME_CMD) $(MDFIELD) week $(BASE).md)
-SESSION=$(shell $(TIME_CMD) $(MDFIELD) session $(BASE).md)
-
-TALKSDIR=$(shell $(TIME_CMD) $(MDFIELD) talksdir $(BASE).md)
-PUBLICATIONSDIR=$(shell $(TIME_CMD) $(MDFIELD) publicationsdir $(BASE).md)
-GROUPDIR=$(shell $(TIME_CMD) $(MDFIELD) groupdir $(BASE).md)
-DATADIR=$(shell $(TIME_CMD) $(MDFIELD) datadir $(BASE).md)
-PROJECTSDIR=$(shell $(TIME_CMD) $(MDFIELD) projectsdir $(BASE).md)
 
 TALKLISTFILES=$(shell ${FIND} ${TALKSDIR} -type f)
 PUBLICATIONLISTFILES=$(shell ${FIND} ${PUBLICATIONSDIR} -type f)
