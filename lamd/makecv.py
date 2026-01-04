@@ -138,10 +138,10 @@ def main() -> int:
                 fetch_head = os.path.join(git_dir, "FETCH_HEAD")
                 should_check_remote = True
                 
-                # If FETCH_HEAD exists and is less than 1 hour old, skip remote check
+                # If FETCH_HEAD exists and is less than 5 minutes old, skip remote check
                 if os.path.exists(fetch_head):
                     fetch_age = time.time() - os.path.getmtime(fetch_head)
-                    if fetch_age < 3600:  # 1 hour in seconds
+                    if fetch_age < 300:  # 5 minutes in seconds
                         should_check_remote = False
                 
                 if should_check_remote:
@@ -208,10 +208,10 @@ def main() -> int:
             fetch_head = os.path.join(git_dir, "FETCH_HEAD")
             should_check_remote = True
             
-            # If FETCH_HEAD exists and is less than 1 hour old, skip remote check
+            # If FETCH_HEAD exists and is less than 5 minutes old, skip remote check
             if os.path.exists(fetch_head):
                 fetch_age = time.time() - os.path.getmtime(fetch_head)
-                if fetch_age < 3600:  # 1 hour in seconds
+                if fetch_age < 300:  # 5 minutes in seconds
                     should_check_remote = False
         
         if should_check_remote:
