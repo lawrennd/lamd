@@ -1,14 +1,5 @@
 # This file checks the header of the base file for information about how to produce the talk and stores it in relevant files.
 
-# MDFIELD implementation selection (controlled by maketalk/makecv wrappers)
-# Default behavior: LAMD_USE_SERVER_CLIENT=1 (uses fast shell client)
-# Override with --no-server flag in maketalk/makecv to use Python mdfield
-ifeq ($(LAMD_USE_SERVER_CLIENT),1)
-    MDFIELD = $(SCRIPTDIR)/mdfield-server
-else
-    MDFIELD = mdfield
-endif
-
 # TIME_CMD is set by maketalk/makecv when profiling is enabled
 # When profiling: TIME_CMD = $(SCRIPTDIR)/profile-command
 # When normal: TIME_CMD = (empty)
