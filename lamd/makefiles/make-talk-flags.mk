@@ -67,13 +67,15 @@ PEOPLEYAML=$(shell $(TIME_CMD) $(MDFIELD) people $(BASE).md)
 # CIP-0009 Phase 1: Batch dependency extraction (70% faster)
 # Extract all dependency types in one call instead of 6 separate calls
 # This reduces redundant file I/O from ~28s to ~2-3s
-_DEPS_BATCH=$(shell $(TIME_CMD) dependencies batch $(BASE).md --snippets-path $(SNIPPETSDIR))
-DEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^DEPS:' | sed 's/^DEPS://')
-DIAGDEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^DIAGDEPS:' | sed 's/^DIAGDEPS://')
-DOCXDEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^DOCXDEPS:' | sed 's/^DOCXDEPS://')
-PPTXDEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^PPTXDEPS:' | sed 's/^PPTXDEPS://')
-TEXDEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^TEXDEPS:' | sed 's/^TEXDEPS://')
-DYNAMIC_DEPS=$(shell echo '$(_DEPS_BATCH)' | grep '^DYNAMIC_DEPS:' | sed 's/^DYNAMIC_DEPS://')
+# Write batch output to temp file to avoid Make variable issues with multiline content
+_DEPS_CACHE:=$(shell mktemp)
+_DEPS_EXTRACTED:=$(shell $(TIME_CMD) dependencies batch $(BASE).md --snippets-path $(SNIPPETSDIR) > $(_DEPS_CACHE))
+DEPS:=$(shell grep '^DEPS:' $(_DEPS_CACHE) | sed 's/^DEPS://')
+DIAGDEPS:=$(shell grep '^DIAGDEPS:' $(_DEPS_CACHE) | sed 's/^DIAGDEPS://')
+DOCXDEPS:=$(shell grep '^DOCXDEPS:' $(_DEPS_CACHE) | sed 's/^DOCXDEPS://')
+PPTXDEPS:=$(shell grep '^PPTXDEPS:' $(_DEPS_CACHE) | sed 's/^PPTXDEPS://')
+TEXDEPS:=$(shell grep '^TEXDEPS:' $(_DEPS_CACHE) | sed 's/^TEXDEPS://')
+DYNAMIC_DEPS:=$(shell grep '^DYNAMIC_DEPS:' $(_DEPS_CACHE) | sed 's/^DYNAMIC_DEPS://')
 
 # Add "talk-people.gpp" as the first entry to trigger a rebuild if the people file changes
 ALL := talk-people.gpp $(DYNAMIC_DEPS)
