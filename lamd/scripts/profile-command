@@ -1,0 +1,43 @@
+#!/bin/bash
+# profile-command: Wrapper script to time individual make commands
+# Part of CIP-0009 Phase 1: Performance Profiling Infrastructure
+#
+# Usage: profile-command <command> [args...]
+# 
+# This script times the execution of a command and logs the timing
+# to a profile file for later analysis.
+
+set -e
+
+# Check if command is provided
+if [ "$#" -eq 0 ]; then
+    echo "Error: No command provided to profile-command" >&2
+    exit 1
+fi
+
+# Get profile file from environment variable, or use default
+PROFILE_FILE="${LAMD_PROFILE_FILE:-/tmp/lamd_profile_$$.log}"
+
+# Record start time (using Python for high-precision timing)
+START=$(python3 -c "import time; print(time.perf_counter())")
+
+# Execute the command (pass all arguments)
+# Preserve exit code
+"$@"
+EXIT_CODE=$?
+
+# Record end time
+END=$(python3 -c "import time; print(time.perf_counter())")
+
+# Calculate elapsed time
+ELAPSED=$(python3 -c "print(${END} - ${START})")
+
+# Build command string for logging (join all arguments)
+COMMAND_STR="$*"
+
+# Log to profile file: format is "elapsed|command"
+echo "${ELAPSED}|${COMMAND_STR}" >> "${PROFILE_FILE}"
+
+# Preserve the original exit code
+exit ${EXIT_CODE}
+
