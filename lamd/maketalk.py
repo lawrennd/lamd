@@ -27,10 +27,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Process markdown files into various output formats.",
         epilog="Examples: \n"
-        "  maketalk talk.md                    # Create all output formats\n"
+        "  maketalk talk.md                    # Create all output formats (fast mode)\n"
         "  maketalk talk.md --format slides    # Create slides only\n"
         "  maketalk talk.md --format notes     # Create notes only\n"
-        "  maketalk talk.md --to html          # Output to HTML format\n",
+        "  maketalk talk.md --to html          # Output to HTML format\n"
+        "  maketalk talk.md --no-server        # Disable server mode (slower)\n",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
@@ -41,6 +42,12 @@ def main() -> int:
     )
 
     parser.add_argument("--to", "-t", type=str, choices=["html", "pptx", "docx", "pdf", "tex"], help="The output file format")
+
+    parser.add_argument(
+        "--no-server",
+        action="store_true",
+        help="Disable server mode (use direct mode, slower but more compatible)"
+    )
 
     args = parser.parse_args()
 
@@ -102,6 +109,10 @@ def main() -> int:
 
     # Make sure we have the latest files
     os.system("git pull")
+
+    # Enable server mode by default (4x faster), unless --no-server is specified
+    if not args.no_server:
+        os.environ["LAMD_USE_SERVER_CLIENT"] = "1"
 
     # Build the make command based on format and output options
     make_cmd = "make"

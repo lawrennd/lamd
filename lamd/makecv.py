@@ -27,8 +27,20 @@ def main() -> int:
     Returns:
         int: 0 for successful execution
     """
-    parser = argparse.ArgumentParser(description="Convert CV from markdown to other formats")
+    parser = argparse.ArgumentParser(
+        description="Convert CV from markdown to other formats",
+        epilog="Examples:\n"
+        "  makecv my-cv.md                # Standard build (fast mode)\n"
+        "  makecv my-cv.md --no-server    # Disable server mode (slower)\n",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument("filename", type=str, help="The markdown file containing the CV content")
+    
+    parser.add_argument(
+        "--no-server",
+        action="store_true",
+        help="Disable server mode (use direct mode, slower but more compatible)"
+    )
 
     args = parser.parse_args()
 
@@ -96,6 +108,10 @@ def main() -> int:
     # Make sure we have the latest files if in a git repo
     if os.path.isdir(".git"):
         os.system("git pull")
+
+    # Enable server mode by default (4x faster), unless --no-server is specified
+    if not args.no_server:
+        os.environ["LAMD_USE_SERVER_CLIENT"] = "1"
 
     # Final build step
     return os.system("make all")
