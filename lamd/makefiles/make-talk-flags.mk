@@ -1,23 +1,32 @@
 # This file checks the header of the base file for information about how to produce the talk and stores it in relevant files.
 
-# Extract the date and the prefix of the produced files.
-DATE=$(shell mdfield date ${BASE}.md)
+# Choose mdfield implementation: mdfield-server (fast) or mdfield (compatible)
+# Set LAMD_USE_SERVER_CLIENT=1 to use shell client (8x faster)
+# Default: mdfield (for backward compatibility)
+ifeq ($(LAMD_USE_SERVER_CLIENT),1)
+    MDFIELD = $(SCRIPTDIR)/mdfield-server
+else
+    MDFIELD = mdfield
+endif
 
-CATEGORIES=$(shell mdfield categories ${BASE}.md)
+# Extract the date and the prefix of the produced files.
+DATE=$(shell $(MDFIELD) date ${BASE}.md)
+
+CATEGORIES=$(shell $(MDFIELD) categories ${BASE}.md)
 
 # Extract the layout
-LAYOUT=$(shell mdfield layout ${BASE}.md)
+LAYOUT=$(shell $(MDFIELD) layout ${BASE}.md)
 
 # Get macros path from frontmatter 
-MACROSDIR=$(shell mdfield macrosdir ${BASE}.md)
+MACROSDIR=$(shell $(MDFIELD) macrosdir ${BASE}.md)
 
 MATHJAX="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_SVG"
 REVEALJS="https://inverseprobability.com/talks/slides/reveal.js/"
 
-SLIDESHEADER=$(shell mdfield slidesheader ${BASE}.md)
-POSTSHEADER=$(shell mdfield postssheader ${BASE}.md)
-ASSIGNMENT=$(shell mdfield assignment ${BASE}.md)
-NOTATION=$(shell mdfield notation ${BASE}.md)
+SLIDESHEADER=$(shell $(MDFIELD) slidesheader ${BASE}.md)
+POSTSHEADER=$(shell $(MDFIELD) postssheader ${BASE}.md)
+ASSIGNMENT=$(shell $(MDFIELD) assignment ${BASE}.md)
+NOTATION=$(shell $(MDFIELD) notation ${BASE}.md)
 
 PREFIX=$(shell flags prefix ${BASE})
 
@@ -28,7 +37,7 @@ PP=mdpp
 PPFLAGS=-T
 PPFLAGS=$(shell flags pp $(BASE))
 
-BIBDIRECTORY=$(shell mdfield bibdir ${BASE}.md)
+BIBDIRECTORY=$(shell $(MDFIELD) bibdir ${BASE}.md)
 
 # Bibliography information not yet automatically extracted
 BIBFLAGS=--bibliography=${BIBDIRECTORY}/lawrence.bib --bibliography=${BIBDIRECTORY}/other.bib --bibliography=${BIBDIRECTORY}/zbooks.bib 
@@ -38,18 +47,18 @@ CITEFLAGS=--citeproc --csl=${INCLUDESDIR}/elsevier-harvard.csl ${BIBFLAGS}
 
 PDSFLAGS=-s ${CITEFLAGS} --mathjax=${MATHJAX} 
 
-SNIPPETSDIR=$(shell mdfield snippetsdir $(BASE).md)
-DIAGRAMSDIR=$(shell mdfield diagramsdir $(BASE).md)
-WRITEDIAGRAMSDIR=$(shell mdfield writediagramsdir $(BASE).md)
-POSTSDIR=$(shell mdfield postsdir $(BASE).md)
-PRACTICALSDIR=$(shell mdfield practicalsdir $(BASE).md)
-NOTESDIR=$(shell mdfield notesdir $(BASE).md)
-NOTEBOOKSDIR=$(shell mdfield notebooksdir $(BASE).md)
-SLIDESDIR=$(shell mdfield slidesdir $(BASE).md)
-TEXDIR=$(shell mdfield texdir $(BASE).md)
-WEEK=$(shell mdfield week $(BASE).md)
-SESSION=$(shell mdfield session $(BASE).md)
-PEOPLEYAML=$(shell mdfield people $(BASE).md)
+SNIPPETSDIR=$(shell $(MDFIELD) snippetsdir $(BASE).md)
+DIAGRAMSDIR=$(shell $(MDFIELD) diagramsdir $(BASE).md)
+WRITEDIAGRAMSDIR=$(shell $(MDFIELD) writediagramsdir $(BASE).md)
+POSTSDIR=$(shell $(MDFIELD) postsdir $(BASE).md)
+PRACTICALSDIR=$(shell $(MDFIELD) practicalsdir $(BASE).md)
+NOTESDIR=$(shell $(MDFIELD) notesdir $(BASE).md)
+NOTEBOOKSDIR=$(shell $(MDFIELD) notebooksdir $(BASE).md)
+SLIDESDIR=$(shell $(MDFIELD) slidesdir $(BASE).md)
+TEXDIR=$(shell $(MDFIELD) texdir $(BASE).md)
+WEEK=$(shell $(MDFIELD) week $(BASE).md)
+SESSION=$(shell $(MDFIELD) session $(BASE).md)
+PEOPLEYAML=$(shell $(MDFIELD) people $(BASE).md)
 
 
 DEPS=$(shell dependencies inputs $(BASE).md --snippets-path $(SNIPPETSDIR))
