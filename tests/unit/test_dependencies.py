@@ -250,6 +250,103 @@ Here's a citation \cite{Smith2020}.
         # Verify the output
         mock_print.assert_called_once_with("references.bib")
 
+    @patch("sys.argv", ["dependencies", "batch", "test.md", "-S", "/custom/snippets", "-d", "/path/to/diagrams"])
+    @patch("lynguine.util.talk.extract_inputs")
+    @patch("lynguine.util.talk.extract_diagrams")
+    @patch("lynguine.util.talk.extract_all")
+    @patch("lynguine.util.yaml.header_fields")
+    @patch("lynguine.util.yaml.header_field")
+    @patch("lynguine.util.yaml.Interface.from_file")
+    @patch("builtins.print")
+    def test_batch_extraction(self, mock_print, mock_interface, mock_header_field, mock_header_fields, 
+                             mock_extract_all, mock_extract_diagrams, mock_extract_inputs):
+        """Test batch dependency extraction (CIP-0009 Phase 1)."""
+        # Mock the inputs extraction
+        mock_extract_inputs.return_value = ["/custom/snippets/intro.md", "/custom/snippets/conclusion.md"]
+        
+        # Mock the diagrams extraction (includes svg, png, pdf, emf)
+        mock_extract_diagrams.return_value = [
+            "/path/to/diagrams/example.svg",
+            "/path/to/diagrams/example.png", 
+            "/path/to/diagrams/example.pdf",
+            "/path/to/diagrams/example.emf",
+            "/path/to/diagrams/another.svg"
+        ]
+        
+        # Mock the dynamic dependencies extraction
+        mock_header_fields.return_value = {"title": "Test Document"}
+        mock_header_field.return_value = False
+        mock_extract_all.return_value = ["test.posts.html", "test.slides.html"]
+        
+        # Call the main function
+        main()
+        
+        # Verify all extraction functions were called
+        mock_extract_inputs.assert_called_once_with("test.md", snippets_path="/custom/snippets")
+        mock_extract_diagrams.assert_called_once_with(
+            "test.md",
+            absolute_path=True,
+            diagram_exts=['svg', 'png', 'pdf', 'emf'],
+            diagrams_dir="/path/to/diagrams",
+            snippets_path="/custom/snippets"
+        )
+        mock_extract_all.assert_called_once_with("test.md", user_file=["_lamd.yml", "_config.yml"])
+        
+        # Verify the output format (prefixed lines)
+        calls = mock_print.call_args_list
+        assert len(calls) == 6
+        
+        # Check each line starts with the correct prefix
+        assert calls[0][0][0].startswith("DEPS:")
+        assert calls[1][0][0].startswith("DIAGDEPS:")
+        assert calls[2][0][0].startswith("DOCXDEPS:")
+        assert calls[3][0][0].startswith("PPTXDEPS:")
+        assert calls[4][0][0].startswith("TEXDEPS:")
+        assert calls[5][0][0].startswith("DYNAMIC_DEPS:")
+        
+        # Verify content
+        assert "/custom/snippets/intro.md" in calls[0][0][0]
+        assert "/custom/snippets/conclusion.md" in calls[0][0][0]
+        assert "/path/to/diagrams/example.svg" in calls[1][0][0]
+        assert "/path/to/diagrams/example.emf" in calls[2][0][0]
+        assert "/path/to/diagrams/example.pdf" in calls[4][0][0]
+        assert "test.posts.html" in calls[5][0][0]
+        assert "test.slides.html" in calls[5][0][0]
+
+    @patch("sys.argv", ["dependencies", "batch", "nonexistent.md"])
+    @patch("lynguine.util.talk.extract_inputs")
+    @patch("lynguine.util.talk.extract_diagrams")
+    @patch("lynguine.util.talk.extract_all")
+    @patch("lynguine.util.yaml.header_fields")
+    @patch("lynguine.util.yaml.header_field")
+    @patch("builtins.print")
+    def test_batch_extraction_with_none_diagrams(self, mock_print, mock_header_field, mock_header_fields,
+                                                  mock_extract_all, mock_extract_diagrams, mock_extract_inputs):
+        """Test batch extraction handles None return from extract_diagrams (file doesn't exist)."""
+        # Mock inputs extraction
+        mock_extract_inputs.return_value = []
+        
+        # Mock extract_diagrams returning None (file doesn't exist)
+        mock_extract_diagrams.return_value = None
+        
+        # Mock dynamic dependencies
+        mock_header_fields.return_value = {"title": "Test"}
+        mock_header_field.return_value = False
+        mock_extract_all.return_value = []
+        
+        # Call the main function - should not raise an error
+        main()
+        
+        # Verify output contains empty values for diagram types
+        calls = mock_print.call_args_list
+        assert len(calls) == 6
+        
+        # All diagram-related lines should be empty (just the prefix)
+        assert calls[1][0][0] == "DIAGDEPS:"
+        assert calls[2][0][0] == "DOCXDEPS:"
+        assert calls[3][0][0] == "PPTXDEPS:"
+        assert calls[4][0][0] == "TEXDEPS:"
+
     # Note: There's no extract_snippets function in lynguine.util.talk module,
     # but the code in dependencies.py refers to it. This test is left
     # commented out until the function is implemented or the code is fixed.
