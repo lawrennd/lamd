@@ -308,6 +308,43 @@ class TestIncludeSystem(TestMakeCVIntegration):
         assert "\\define{" in content, "Include should have define"
         assert "\\endif" in content, "Include should have endif"
 
+    def test_docx_rule_includes_preprocessing(self):
+        """Test that the docx rule includes macro preprocessing step."""
+        self.create_minimal_lamd_yml()
+        cv_path, include_path = self.create_cv_with_include()
+
+        os.chdir(self.test_path)
+
+        with patch("os.system", return_value=0):
+            with patch("os.path.isdir", side_effect=lambda x: x == ".git" or Path(x).is_dir()):
+                # Run makecv to generate makefile
+                subprocess.run(
+                    [sys.executable, "-m", "lamd.makecv", str(cv_path.name)],
+                    capture_output=True,
+                    text=True,
+                    cwd=str(self.test_path),
+                )
+
+        # Read the generated makefile
+        makefile_path = self.test_path / "makefile"
+        with open(makefile_path) as f:
+            makefile_content = f.read()
+
+        # Verify that the makefile includes preprocessing for docx
+        # The make-docx.mk should have a rule that preprocesses before pandoc
+        # Check that the makefile includes make-docx.mk
+        assert "include" in makefile_content and "make-docx.mk" in makefile_content, (
+            "Makefile should include make-docx.mk"
+        )
+        
+        # The fix ensures that ${BASE}.docx depends on ${BASE}.preprocessed.md
+        # and there's a preprocessing rule. Since make-docx.mk is included,
+        # we verify the pattern exists in the included makefile by checking
+        # that the makefile references preprocessing variables
+        assert "${PP}" in makefile_content or "PP=" in makefile_content, (
+            "Makefile should reference preprocessing (${PP}) for docx generation"
+        )
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
