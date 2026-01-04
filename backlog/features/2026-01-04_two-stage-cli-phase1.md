@@ -7,7 +7,6 @@ created: "2026-01-04"
 last_updated: "2026-01-04"
 category: "feature"
 related_cips: ["0006"]
-related_requirements: ["0003"]
 owner: ""
 dependencies: []
 ---
