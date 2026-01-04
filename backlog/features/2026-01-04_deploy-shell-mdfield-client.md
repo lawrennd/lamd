@@ -26,20 +26,41 @@ Deploy the shell-based `mdfield-server` client (developed in CIP-0008 Phase 2.5)
 
 ## Acceptance Criteria
 
+### Testing (Must complete before deployment)
+- [ ] **Unit tests** for shell client:
+  - [ ] Test field extraction correctness (compare to Python mdfield)
+  - [ ] Test with various field types (string, date, list, categories)
+  - [ ] Test with missing fields (should return empty)
+  - [ ] Test with invalid/missing markdown files
+  - [ ] Test config file fallback behavior
+- [ ] **Integration tests**:
+  - [ ] Test with actual talk files from `~/lawrennd/talks/`
+  - [ ] Test with CV files
+  - [ ] Verify identical output to Python mdfield for all fields
+- [ ] **Error handling tests**:
+  - [ ] `jq` not installed (graceful error message)
+  - [ ] Server fails to start (fallback behavior)
+  - [ ] Network errors (server unreachable)
+  - [ ] Invalid JSON responses from server
+  - [ ] Timeout scenarios
+- [ ] **Performance tests**:
+  - [ ] Verify ≥5x speedup vs Python subprocess
+  - [ ] Measure overhead of server auto-start
+  - [ ] Test with multiple concurrent calls
+- [ ] All tests passing and documented
+
+### Packaging & Integration
 - [ ] Shell client (`mdfield-server.sh`) is packaged in lamd repository
 - [ ] Installation script or setup.py updated to install the shell client
 - [ ] Makefile templates updated to use shell client by default (or via opt-in)
-- [ ] Dependencies documented (`curl`, `jq`)
-- [ ] Integration tested with:
-  - [ ] Talk builds (`~/lawrennd/talks/_ai/`)
-  - [ ] CV builds (if applicable)
-  - [ ] Different markdown file formats
-- [ ] Performance verified (≥5x speedup vs current Python subprocess approach)
-- [ ] Documentation updated:
-  - [ ] Installation instructions
-  - [ ] Usage examples
-  - [ ] Environment variables (`LAMD_PYTHON`, `LAMD_SERVER_URL`)
-- [ ] Fallback behavior tested (what happens if `jq` not installed, server fails, etc.)
+- [ ] Dependencies documented and checked at runtime (`curl`, `jq`)
+
+### Documentation
+- [ ] Installation instructions (including dependency installation)
+- [ ] Usage examples and migration guide
+- [ ] Environment variables documented (`LAMD_PYTHON`, `LAMD_SERVER_URL`)
+- [ ] Troubleshooting guide for common issues
+- [ ] Performance benchmarks documented
 
 ## Implementation Notes
 
@@ -103,11 +124,65 @@ Document optional environment variables:
 - `LAMD_PYTHON`: Python interpreter for server startup (default: `/opt/anaconda3/envs/py311/bin/python`)
 - `LAMD_SERVER_URL`: Server URL (default: `http://127.0.0.1:8765`)
 
-**5. Testing**:
-- Test with various markdown files (talks, CVs, papers)
-- Test error cases (missing file, invalid field, server failure)
-- Verify fallback behavior
-- Benchmark to confirm ≥5x speedup
+**5. Testing** (Critical - must complete before deployment):
+
+Create comprehensive test suite in `tests/` directory:
+
+```bash
+# tests/test_mdfield_server.sh or tests/test_mdfield_server.py
+
+# Functional tests
+test_field_extraction() {
+  # Compare shell client output to Python mdfield
+  for field in title author date categories; do
+    python_result=$(mdfield --no-server $field test.md)
+    shell_result=$(mdfield-server $field test.md)
+    assert_equal "$python_result" "$shell_result"
+  done
+}
+
+test_missing_field() {
+  result=$(mdfield-server nonexistent test.md)
+  assert_empty "$result"
+}
+
+test_config_fallback() {
+  # Field not in markdown but in _lamd.yml
+  result=$(mdfield-server config_field test.md)
+  assert_not_empty "$result"
+}
+
+# Error handling tests
+test_missing_jq() {
+  PATH=/usr/bin mdfield-server title test.md
+  # Should fail gracefully with helpful message
+}
+
+test_server_failure() {
+  # Kill server, verify auto-restart or fallback
+  pkill -f lynguine.server
+  result=$(mdfield-server title test.md)
+  assert_not_empty "$result"
+}
+
+# Performance tests
+test_speedup() {
+  time_python=$(time_command "mdfield --no-server title test.md" 10)
+  time_shell=$(time_command "mdfield-server title test.md" 10)
+  speedup=$(calc "$time_python / $time_shell")
+  assert_greater "$speedup" 5
+}
+```
+
+**Test with real-world files**:
+- `~/lawrennd/talks/_ai/ai-and-data-science.md` (21 fields tested in benchmarks)
+- Various CV files
+- Edge cases: empty files, malformed YAML, missing frontmatter
+
+**Integration with CI/CD**:
+- Add tests to GitHub Actions / CI pipeline
+- Run tests on every commit to main
+- Block merges if tests fail
 
 ### Rollback Plan
 
