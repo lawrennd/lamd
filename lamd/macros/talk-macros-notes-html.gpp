@@ -5,7 +5,7 @@
 
 \define{\displaynotes{block}}{\notes{\block}}
 
-\define{\columns{one}{two}{width1}{width2}}{<table><tr><td width="\width1">\one</td><td width="\width2">\two</td></tr></table>}
-\define{\threeColumns{one}{two}{three}{width1}{width2}{width3}}{<table><tr><td width="\width1">\one</td><td width="\width2">\two</td><td width="\width3">\three</td></tr></table>}
+\define{\columns{one}{two}{width1}{width2}}{<div class="lamd-columns" style="display:flex; width:100%; justify-content:center; align-items:center; column-gap:1em;"><div style="flex:0 0 \width1; max-width:\width1;">\one</div><div style="flex:0 0 \width2; max-width:\width2;">\two</div></div>}
+\define{\threeColumns{one}{two}{three}{width1}{width2}{width3}}{<div class="lamd-columns" style="display:flex; width:100%; justify-content:center; align-items:center; column-gap:1em;"><div style="flex:0 0 \width1; max-width:\width1;">\one</div><div style="flex:0 0 \width2; max-width:\width2;">\two</div><div style="flex:0 0 \width3; max-width:\width3;">\three</div></div>}
 
 \endif
