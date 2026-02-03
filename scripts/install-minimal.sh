@@ -130,10 +130,34 @@ You are assisting with repositories that use **LaMD** to convert markdown-with-m
 ## Slides vs notes
 
 - Use `\slides{...}` for slide-visible content and `\notes{...}` for detailed speaker notes.
+- For presenter-only notes in reveal.js output, use `\speakernotes{...}` (does not appear on the slide itself).
 - Keep slide density low:
   - Aim for **≤ 3 bullets per slide** (or **≤ 2 formulae**).
   - Prefer multiple slides over one crowded slide.
 - Create new slides with `\newslides{Title}` (slides-only) or `\subsection{Title}` (both slides and notes).
+
+## Incremental / progressive reveal (slides)
+
+LaMD supports progressive reveal patterns for HTML slides (reveal.js):
+
+- `\slidesincremental{...}` wraps content (typically a bullet list) so bullets reveal incrementally.
+- `\fragment{...}{type}` marks an element as a reveal.js fragment (e.g. `fade-in`, `grow`).
+
+Examples:
+
+```markdown
+\newslides{Key points}
+
+\slidesincremental{
+* First point
+* Second point
+* Third point
+}
+```
+
+```markdown
+\slides{We can build this idea step-by-step: \fragment{first}{fade-in} \fragment{then}{fade-in}}
+```
 
 ## Repo structure expectations (common pattern)
 
@@ -183,6 +207,9 @@ You are supporting a machine learning expert with content written in the LaMD ma
 Key LaMD conventions:
 - `\slides{}` controls slide-visible content.
 - `\notes{}` controls speaker notes / detailed text.
+- `\speakernotes{}` adds presenter-only notes in reveal.js output.
+- `\slidesincremental{}` enables incremental bullet reveals in slides.
+- `\fragment{text}{type}` creates reveal.js fragments (e.g. `fade-in`).
 - `\newslides{Title}` creates a new slide (slides only).
 - `\subsection{Title}` creates a section that appears in both slides and notes.
 - Keep each slide to a maximum of three bullets (or two formulae).
@@ -217,6 +244,8 @@ install_agents_markdown() {
 
 - Keep slides low-density (≤ 3 bullets).
 - Use \`\\slides{...}\` vs \`\\notes{...}\` to control what shows where.
+- Use \`\\slidesincremental{...}\` and \`\\fragment{...}{...}\` for progressive reveal when presenting.
+- Use \`\\speakernotes{...}\` for presenter-only notes in reveal.js output.
 - Prefer reusable includes in a snippets repo rather than copy/paste duplication.
 <!-- LAMD:END -->
 EOF
@@ -252,11 +281,14 @@ This repository uses **LaMD** to build talks/lectures/notes from markdown-with-m
 
 - LaMD content is markdown preprocessed by **gpp** and converted by **pandoc**.
 - The project may pull in reusable content via \`\\include{...}\` from a snippets repository.
+- HTML slides (reveal.js) support \`\\slidesincremental{...}\` and \`\\fragment{...}{...}\` for progressive reveal.
+- Presenter-only notes are supported via \`\\speakernotes{...}\` (in reveal.js output).
 
 ## How to behave when editing content
 
 - Preserve macro style and frontmatter.
 - Keep slide text sparse; break content into multiple slides rather than dense slides.
+- Use incremental reveals sparingly; prefer clear slide structure over complex animation.
 - If a block is reusable, factor it into a snippets include.
 <!-- LAMD:END -->
 EOF

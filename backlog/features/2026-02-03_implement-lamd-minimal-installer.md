@@ -75,3 +75,14 @@ tags:
 
 Task created to bring CIP-000A implementation up to expected project standards.
 
+### 2026-02-03
+
+Improved the installed agent guidance content to better match how talks are authored and presented:
+
+- Added coverage for **incremental / progressive reveal** in slides (`\slidesincremental{...}` and `\fragment{...}{type}`).
+- Added coverage for **presenter-only speaker notes** in reveal.js (`\speakernotes{...}`).
+- Updated all installer-emitted hint locations consistently:
+  - `.cursor/rules/lamd_talks.mdc`
+  - `.cursorrules` (only when missing)
+  - `AGENTS.md` / `CLAUDE.md` (marked blocks)
+
