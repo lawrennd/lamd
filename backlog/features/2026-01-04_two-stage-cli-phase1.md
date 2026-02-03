@@ -4,11 +4,17 @@ title: "Create New lamd CLI Utility with talk/cv Subcommands"
 status: "Proposed"
 priority: "Medium"
 created: "2026-01-04"
-last_updated: "2026-01-04"
+last_updated: "2026-02-03"
 category: "feature"
 related_cips: ["0006"]
 owner: "Neil Lawrence"
-dependencies: []
+dependencies:
+- "2026-02-03_lamd-cli-entrypoint"
+- "2026-02-03_interface-schema-compute-section"
+- "2026-02-03_lamd-talk-subcommand"
+- "2026-02-03_lamd-cv-subcommand"
+- "2026-02-03_lamd-cli-tests"
+- "2026-02-03_lamd-cli-docs-and-migration"
 ---
 
 # Task: Create New lamd CLI Utility with talk/cv Subcommands
