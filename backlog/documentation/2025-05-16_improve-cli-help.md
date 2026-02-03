@@ -5,10 +5,10 @@ dependencies: []
 effort: Medium
 github_issue: null
 id: 2025-05-16_improve-cli-help
-last_updated: '2025-05-16'
-owner: lawrennd
+last_updated: '2026-02-03'
+owner: Neil Lawrence
 priority: High
-related_cips: []
+related_cips: ["0001", "0006"]
 status: In Progress
 title: Improve Command Line Help Text for All lamd Utilities
 type: documentation
@@ -19,6 +19,7 @@ type: documentation
 The lamd project provides several command line utilities for academic content generation and management, but the help text displayed when using these utilities with the `-h` or `--help` flag is minimal and lacks detailed explanations and examples. This task involves improving the command line help text for all lamd utilities to make them more user-friendly and informative.
 
 The utilities to improve include:
+0. `lamd` - New subcommand-style CLI (CIP-0006) for `talk`/`cv` workflows
 1. `mdpp` - Markdown preprocessor ✅
 2. `flags` - Extracts pandoc flags
 3. `dependencies` - Lists dependencies in markdown files
@@ -39,6 +40,11 @@ The utilities to improve include:
 - [ ] Help text is consistent across all utilities
 - [ ] Help text includes references to related utilities where appropriate
 - [ ] All updates are tested to ensure they display correctly
+
+Notes:
+
+- CIP-0006 introduces a new `lamd` CLI that *coexists* with legacy commands (`maketalk`, `makecv`), so this work should **continue** rather than being delayed.
+- Avoid duplication: detailed help/examples for `lamd talk`/`lamd cv` should primarily land with the CIP-0006 Phase 1 implementation + docs tasks, while this backlog item focuses on consistency across the *full* CLI surface area.
 
 ## Implementation Notes
 
@@ -61,6 +67,7 @@ parser.add_argument("--format", type=str,
 ## Related
 
 - CIP: 0001
+- CIP: 0006
 - Documentation: README.md
 
 ## Progress Updates
@@ -82,3 +89,10 @@ Improved the help text for the `mdpp` utility:
 Next steps:
 - Improve help text for other utilities following the same pattern
 - Ensure consistent style and terminology across all utilities
+
+### 2026-02-03
+
+Aligned this backlog item with CIP-0006 (new `lamd` CLI). This work remains in progress and should cover both:
+
+- legacy utilities (still supported)
+- new `lamd` subcommands (implemented via the CIP-0006 Phase 1 tasks)
