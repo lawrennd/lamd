@@ -43,6 +43,20 @@ cd lamd
 poetry install
 ```
 
+### Install agent hints (Cursor / Codex / Claude Code)
+
+To populate minimal **agent hints** (Cursor rules + `AGENTS.md`/`CLAUDE.md` blocks) in a LaMD-using repository (e.g. `talks/`, `execed/`), run this **from that repo root**. The installer writes files into the current directory (it doesn’t require any LaMD-specific files to already exist in the repo).
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/lawrennd/lamd/main/scripts/install-minimal.sh)"
+```
+
+To also create a local venv and install `lamd` (so `maketalk` is available without system Python), add:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/lawrennd/lamd/main/scripts/install-minimal.sh)" -- --with-venv
+```
+
 ## Dependencies
 
 LaMD requires:

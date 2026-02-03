@@ -7,7 +7,7 @@ effort: Medium
 github_issue: null
 id: 2025-05-21_logging-improvements
 last_updated: '2025-05-21'
-owner: ''
+owner: "Neil Lawrence"
 priority: Medium
 related_cips: []
 status: Proposed

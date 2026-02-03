@@ -6,6 +6,7 @@ last_updated: '2026-01-03'
 path: backlog/features/2025-05-16_implement-extract-snippets.md
 priority: Medium
 related_cips: []
+owner: "Neil Lawrence"
 status: Proposed
 title: Implement extract_snippets Function in lynguine.util.talk
 type: feature

@@ -6,7 +6,7 @@ effort: Large
 github_issue: null
 id: 2025-05-21_content-distribution-caching
 last_updated: '2025-05-21'
-owner: ''
+owner: "Neil Lawrence"
 priority: High
 related_cips: []
 status: Proposed
