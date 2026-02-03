@@ -6,7 +6,7 @@ effort: Medium
 github_issue: null
 id: 2025-05-22_path-handling-consistency
 last_updated: '2025-05-22'
-owner: ''
+owner: "Neil Lawrence"
 priority: High
 related_cips: []
 status: Proposed

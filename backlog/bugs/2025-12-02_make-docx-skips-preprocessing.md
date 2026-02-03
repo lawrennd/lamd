@@ -6,6 +6,7 @@ id: 2025-12-02_make-docx-skips-preprocessing
 last_updated: '2025-12-02'
 priority: High
 related_cips: []
+owner: "Neil Lawrence"
 status: Completed
 title: make-docx.mk CV rule bypasses macro preprocessing
 ---

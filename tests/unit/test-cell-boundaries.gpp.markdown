@@ -42,14 +42,14 @@ date: 2025-09-01
 \newcommand{\activationMatrix}{\boldsymbol{ \Phi}}
 \newcommand{\activationScalar}{\basisFunction}
 \newcommand{\activationVector}{\boldsymbol{ \basisFunction}}
-\newcommand{\bigO}{\mathcal{O}}
+\newcommand{\bigO}{\mathscr{O}}
 \newcommand{\binomProb}{\pi}
 \newcommand{\cMatrix}{\mathbf{C}}
 \newcommand{\cbasisMatrix}{\hat{\boldsymbol{ \Phi}}}
 \newcommand{\cdataMatrix}{\hat{\dataMatrix}}
 \newcommand{\cdataScalar}{\hat{\dataScalar}}
 \newcommand{\cdataVector}{\hat{\dataVector}}
-\newcommand{\centeredKernelMatrix}{\mathbf{ \MakeUppercase{\centeredKernelScalar}}}
+\newcommand{\centeredKernelMatrix}{\mathbf{B}}
 \newcommand{\centeredKernelScalar}{b}
 \newcommand{\centeredKernelVector}{\centeredKernelScalar}
 \newcommand{\centeringMatrix}{\mathbf{H}}
@@ -67,17 +67,19 @@ date: 2025-09-01
 \newcommand{\covarianceMatrixTwo}{\boldsymbol{ \Sigma}}
 \newcommand{\croupierScalar}{s}
 \newcommand{\croupierVector}{\mathbf{ \croupierScalar}}
-\newcommand{\croupierMatrix}{\mathbf{ \MakeUppercase{\croupierScalar}}}
-\newcommand{\dataDim}{p}
+\newcommand{\croupierMatrix}{\mathbf{ S}}
+\newcommand{\layerDim}{d}
+\newcommand{\layerIndex}{\ell}
+\newcommand{\dataDim}{d}
 \newcommand{\dataIndex}{i}
 \newcommand{\dataIndexTwo}{j}
 \newcommand{\dataMatrix}{\mathbf{Y}}
 \newcommand{\dataScalar}{y}
-\newcommand{\dataSet}{\mathcal{D}}
+\newcommand{\dataSet}{\mathscr{D}}
 \newcommand{\dataStd}{\sigma}
 \newcommand{\dataVector}{\mathbf{ \dataScalar}}
 \newcommand{\decayRate}{d}
-\newcommand{\degreeMatrix}{\mathbf{ \MakeUppercase{\degreeScalar}}}
+\newcommand{\degreeMatrix}{\mathbf{ D}}
 \newcommand{\degreeScalar}{d}
 \newcommand{\degreeVector}{\mathbf{ \degreeScalar}}
 \newcommand{\diag}[1]{\text{diag}\left(#1\right)}
@@ -86,7 +88,7 @@ date: 2025-09-01
 \newcommand{\diffTwo}[2]{\frac{\text{d}^2#1}{\text{d}#2^2}}
 \newcommand{\displacement}{x}
 \newcommand{\displacementVector}{\textbf{\displacement}}
-\newcommand{\distanceMatrix}{\mathbf{ \MakeUppercase{\distanceScalar}}}
+\newcommand{\distanceMatrix}{\mathbf{ D}}
 \newcommand{\distanceScalar}{d}
 \newcommand{\distanceVector}{\mathbf{ \distanceScalar}}
 \newcommand{\eigenvaltwo}{\ell}
@@ -101,30 +103,32 @@ date: 2025-09-01
 \newcommand{\eigenvectwo}{\mathbf{v}}
 \newcommand{\eigenvectwoMatrix}{\mathbf{V}}
 \newcommand{\eigenvectwoScalar}{v}
-\newcommand{\entropy}[1]{\mathcal{H}\left(#1\right)}
+\newcommand{\entropy}[1]{\mathscr{H}\left(#1\right)}
 \newcommand{\errorFunction}{E}
+\newcommand{\lossFunction}{L}
+\newcommand{\objectiveFunction}{E}
 \newcommand{\expDist}[2]{\left\langle#1\right\rangle_{#2}}
 \newcommand{\expSamp}[1]{\left\langle#1\right\rangle}
 \newcommand{\expectation}[1]{\left\langle #1 \right\rangle }
 \newcommand{\expectationDist}[2]{\left\langle #1 \right\rangle _{#2}}
-\newcommand{\expectedDistanceMatrix}{\mathcal{D}}
+\newcommand{\expectedDistanceMatrix}{\mathscr{D}}
 \newcommand{\eye}{\mathbf{I}}
 \newcommand{\fantasyDim}{r}
-\newcommand{\fantasyMatrix}{\mathbf{ \MakeUppercase{\fantasyScalar}}}
+\newcommand{\fantasyMatrix}{\mathbf{ Z}}
 \newcommand{\fantasyScalar}{z}
 \newcommand{\fantasyVector}{\mathbf{ \fantasyScalar}}
 \newcommand{\featureStd}{\varsigma}
-\newcommand{\gammaCdf}[3]{\mathcal{GAMMA CDF}\left(#1|#2,#3\right)}
-\newcommand{\gammaDist}[3]{\mathcal{G}\left(#1|#2,#3\right)}
-\newcommand{\gammaSamp}[2]{\mathcal{G}\left(#1,#2\right)}
-\newcommand{\gaussianDist}[3]{\mathcal{N}\left(#1|#2,#3\right)}
-\newcommand{\gaussianSamp}[2]{\mathcal{N}\left(#1,#2\right)}
-\newcommand{\uniformDist}[3]{\mathcal{U}\left(#1|#2,#3\right)}
-\newcommand{\uniformSamp}[2]{\mathcal{U}\left(#1,#2\right)}
+\newcommand{\gammaCdf}[3]{\mathscr{GAMMA CDF}\left(#1|#2,#3\right)}
+\newcommand{\gammaDist}[3]{\mathscr{G}\left(#1|#2,#3\right)}
+\newcommand{\gammaSamp}[2]{\mathscr{G}\left(#1,#2\right)}
+\newcommand{\gaussianDist}[3]{\mathscr{N}\left(#1|#2,#3\right)}
+\newcommand{\gaussianSamp}[2]{\mathscr{N}\left(#1,#2\right)}
+\newcommand{\uniformDist}[3]{\mathscr{U}\left(#1|#2,#3\right)}
+\newcommand{\uniformSamp}[2]{\mathscr{U}\left(#1,#2\right)}
 \newcommand{\given}{|}
 \newcommand{\half}{\frac{1}{2}}
 \newcommand{\heaviside}{H}
-\newcommand{\hiddenMatrix}{\mathbf{ \MakeUppercase{\hiddenScalar}}}
+\newcommand{\hiddenMatrix}{\mathbf{ H}}
 \newcommand{\hiddenScalar}{h}
 \newcommand{\hiddenVector}{\mathbf{ \hiddenScalar}}
 \newcommand{\identityMatrix}{\eye}
@@ -138,7 +142,7 @@ date: 2025-09-01
 \newcommand{\inputDim}{q}
 \newcommand{\inputMatrix}{\mathbf{X}}
 \newcommand{\inputScalar}{x}
-\newcommand{\inputSpace}{\mathcal{X}}
+\newcommand{\inputSpace}{\mathscr{X}}
 \newcommand{\inputVals}{\inputVector}
 \newcommand{\inputVector}{\mathbf{ \inputScalar}}
 \newcommand{\iterNum}{k}
@@ -153,7 +157,7 @@ date: 2025-09-01
 \newcommand{\lagrangeMultiplier}{\lambda}
 \newcommand{\lagrangeMultiplierMatrix}{\boldsymbol{ \Lambda}}
 \newcommand{\lagrangian}{L}
-\newcommand{\laplacianFactor}{\mathbf{ \MakeUppercase{\laplacianFactorScalar}}}
+\newcommand{\laplacianFactor}{\mathbf{ M}}
 \newcommand{\laplacianFactorScalar}{m}
 \newcommand{\laplacianFactorVector}{\mathbf{ \laplacianFactorScalar}}
 \newcommand{\laplacianMatrix}{\mathbf{L}}
@@ -166,7 +170,7 @@ date: 2025-09-01
 \newcommand{\latentForce}{f}
 \newcommand{\latentFunction}{u}
 \newcommand{\latentFunctionVector}{\mathbf{ \latentFunction}}
-\newcommand{\latentFunctionMatrix}{\mathbf{ \MakeUppercase{\latentFunction}}}
+\newcommand{\latentFunctionMatrix}{\mathbf{ U}}
 \newcommand{\latentIndex}{j}
 \newcommand{\latentScalar}{z}
 \newcommand{\latentVector}{\mathbf{ \latentScalar}}
@@ -174,7 +178,7 @@ date: 2025-09-01
 \newcommand{\learnRate}{\eta}
 \newcommand{\lengthScale}{\ell}
 \newcommand{\rbfWidth}{\ell}
-\newcommand{\likelihoodBound}{\mathcal{L}}
+\newcommand{\likelihoodBound}{\mathscr{L}}
 \newcommand{\likelihoodFunction}{L}
 \newcommand{\locationScalar}{\mu}
 \newcommand{\locationVector}{\boldsymbol{ \locationScalar}}
@@ -202,7 +206,7 @@ date: 2025-09-01
 \newcommand{\meanVector}{\boldsymbol{ \meanScalar}}
 \newcommand{\mrnaConcentration}{m}
 \newcommand{\naturalFrequency}{\omega}
-\newcommand{\neighborhood}[1]{\mathcal{N}\left( #1 \right)}
+\newcommand{\neighborhood}[1]{\mathscr{N}\left( #1 \right)}
 \newcommand{\neilurl}{http://inverseprobability.com/}
 \newcommand{\noiseMatrix}{\boldsymbol{ E}}
 \newcommand{\noiseScalar}{\epsilon}
@@ -220,7 +224,7 @@ date: 2025-09-01
 \newcommand{\numFeatures}{K}
 \newcommand{\numHidden}{h}
 \newcommand{\numInducing}{m}
-\newcommand{\numLayers}{\ell}
+\newcommand{\numLayers}{L}
 \newcommand{\numNeighbors}{K}
 \newcommand{\numSequences}{s}
 \newcommand{\numSuccess}{s}
@@ -232,6 +236,14 @@ date: 2025-09-01
 \newcommand{\parameterMatrix}{\boldsymbol{ \Theta}}
 \newcommand{\parameterScalar}{\theta}
 \newcommand{\parameterVector}{\boldsymbol{ \parameterScalar}}
+\newcommand{\naturalParameterMatrix}{\boldsymbol{ \Theta}}
+\newcommand{\naturalParameterScalar}{\theta}
+\newcommand{\naturalParameterVector}{\boldsymbol{ \naturalParameterScalar}}
+\newcommand{\cumulantGeneratingFunction}{A}
+\newcommand{\sufficientStatistics}{T}
+\newcommand{\baseMeasure}{h}
+\newcommand{\linkFunction}{g}
+\newcommand{\transformationFunction}{h}
 \newcommand{\partDiff}[2]{\frac{\partial#1}{\partial#2}}
 \newcommand{\precisionScalar}{j}
 \newcommand{\precisionVector}{\mathbf{ \precisionScalar}}
@@ -240,15 +252,15 @@ date: 2025-09-01
 \newcommand{\pseudotargetVector}{\mathbf{ \pseudotargetScalar}}
 \newcommand{\pseudotargetMatrix}{\mathbf{ \widetilde{Y}}}
 \newcommand{\rank}[1]{\text{rank}\left(#1\right)}
-\newcommand{\rayleighDist}[2]{\mathcal{R}\left(#1|#2\right)}
-\newcommand{\rayleighSamp}[1]{\mathcal{R}\left(#1\right)}
+\newcommand{\rayleighDist}[2]{\mathscr{R}\left(#1|#2\right)}
+\newcommand{\rayleighSamp}[1]{\mathscr{R}\left(#1\right)}
 \newcommand{\responsibility}{r}
 \newcommand{\rotationScalar}{r}
 \newcommand{\rotationVector}{\mathbf{ \rotationScalar}}
 \newcommand{\rotationMatrix}{\mathbf{R}}
 \newcommand{\sampleCovScalar}{s}
 \newcommand{\sampleCovVector}{\mathbf{ \sampleCovScalar}}
-\newcommand{\sampleCovMatrix}{\mathbf{s}}
+\newcommand{\sampleCovMatrix}{\mathbf{S}}
 \newcommand{\scalarProduct}[2]{\left\langle{#1},{#2}\right\rangle}
 \newcommand{\sign}[1]{\text{sign}\left(#1\right)}
 \newcommand{\sigmoid}[1]{\sigma\left(#1\right)}
@@ -271,7 +283,7 @@ date: 2025-09-01
 \newcommand{\sensitivity}{s}
 \newcommand{\springScalar}{\kappa}
 \newcommand{\springVector}{\boldsymbol{ \kappa}}
-\newcommand{\springMatrix}{\boldsymbol{ \mathcal{K}}}
+\newcommand{\springMatrix}{\boldsymbol{ \mathscr{K}}}
 \newcommand{\tfConcentration}{p}
 \newcommand{\tfDecayRate}{\delta}
 \newcommand{\tfMrnaConcentration}{f}
@@ -293,8 +305,11 @@ date: 2025-09-01
 \newcommand{\vMatrix}{\mathbf{V}}
 \newcommand{\varianceDist}[2]{\text{var}_{#2}\left( #1 \right)}
 \newcommand{\vecb}[1]{\left(#1\right):}
+\newcommand{\vec}[1]{#1:}
 \newcommand{\weightScalar}{w}
 \newcommand{\weightVector}{\mathbf{ \weightScalar}}
+\newcommand{\biasScalar}{b}
+\newcommand{\biasVector}{\mathbf{\biasScalar}}
 \newcommand{\weightMatrix}{\mathbf{W}}
 \newcommand{\weightedAdjacencyMatrix}{\mathbf{A}}
 \newcommand{\weightedAdjacencyScalar}{a}

@@ -5,6 +5,7 @@ id: 2025-12-02_mdlist-preprocess-filtering
 last_updated: '2025-12-02'
 priority: Medium
 related_cips: []
+owner: "Neil Lawrence"
 status: Proposed
 title: mdlist filtering not working due to preprocess/Compute interface mismatch
 ---

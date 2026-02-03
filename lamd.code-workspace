@@ -4,10 +4,13 @@
 			"path": "."
 		},
 		{
+			"path": "../snippets"
+		},
+		{
 			"path": "../cv"
 		},
 		{
-			"path": "../../mlatcl/mlfoundations"
+			"path": "../../mlatcl/execed"
 		},
 		{
 			"path": "../lynguine"

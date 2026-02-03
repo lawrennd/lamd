@@ -6,7 +6,7 @@ effort: Medium
 github_issue: null
 id: 2025-05-21_mdfield-lynguine-service
 last_updated: '2026-01-03'
-owner: ''
+owner: "Neil Lawrence"
 priority: High
 related_cips: ["0008"]
 status: Completed

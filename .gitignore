@@ -68,3 +68,6 @@ tenets/combine_tenets.py
 docs/whats_next_script.md
 docs/yaml_frontmatter_examples.md
 .venv-vibesafe/
+.github/copilot-instructions.md
+CLAUDE.md
+AGENTS.md
