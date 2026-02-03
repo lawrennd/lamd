@@ -1,0 +1,26 @@
+documentation:
+  # Documentation system used for "compression" (closed CIPs → stable docs).
+  system: "sphinx-myst"
+
+  # Repository path where the docs live.
+  root: "docs"
+
+  # Optional build hint for humans/automation.
+  build:
+    command: "cd docs && make html"
+
+  # Compression targets: where different CIP types should be distilled.
+  #
+  # `whats-next` will map each closed CIP to one of:
+  # - infrastructure
+  # - feature
+  # - process
+  # - guides (fallback)
+  #
+  # Targets can be a file or directory path.
+  targets:
+    process: "docs/guides/governance.md"
+    infrastructure: "docs/guides/performance.md"
+    feature: "docs/guides/performance.md"
+    guides: "docs/index.md"
+
