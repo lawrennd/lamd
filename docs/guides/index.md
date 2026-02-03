@@ -8,4 +8,6 @@ Detailed guides for working effectively with LaMD.
 snippets
 managing-people
 best-practices
+governance
+performance
 ```
