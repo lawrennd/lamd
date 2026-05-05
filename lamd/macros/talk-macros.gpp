@@ -25,6 +25,12 @@
 \ifdef{PPTX}
 \include{talk-macros-pptx.gpp}
 \endif
+\ifdef{MANIM}
+\include{talk-macros-slides-manim.gpp}
+\endif
+\ifdef{MANIM_VIDEO}
+\include{talk-macros-video-manim.gpp}
+\endif
 \ifdef{SLIDES}
 \ifdef{TEX}
 \include{talk-macros-slides-tex.gpp}
