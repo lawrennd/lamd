@@ -385,5 +385,81 @@ class TestMdppManim_DisplayMathFromInclude(unittest.TestCase):
             self.fail(f"Output is not valid Python after included-math conversion: {exc}")
 
 
+class TestHtmlManim(unittest.TestCase):
+    """Tests for the \\htmlmanim{html_content}{manim_alt} dispatching macro."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def _run(self, to_format: str, source: str) -> str:
+        fixture = os.path.join(self.tmp.name, "htmlmanim-test.md")
+        output = os.path.join(self.tmp.name, f"htmlmanim-test.{to_format}.py")
+        with open(fixture, "w") as f:
+            f.write(
+                "---\ntitle: HtmlManim Test\nauthor:\n- family: Test\n  given: Author\n"
+                "date: 2026-05-05\n---\n\n" + source
+            )
+        cmd = _MDPP + [
+            fixture, "--to", to_format, "--output", output,
+            "--macros-path", _MACROS_DIR, "--format", "slides",
+        ]
+        subprocess.run(cmd, capture_output=True, text=True)
+        return _read_output(output)
+
+    def test_manim_shows_manim_alt(self):
+        """In Manim output, \\htmlmanim should produce the Manim alternative."""
+        content = self._run(
+            "manim",
+            r"\htmlmanim{<div>widget</div>}{        self.play(FadeIn(Text(\"alt\")))}",
+        )
+        self.assertIn("FadeIn", content, "Manim alt not found in manim output")
+        self.assertNotIn("<div>widget</div>", content, "HTML block leaked into manim output")
+
+    def test_manim_output_valid_python_with_htmlmanim(self):
+        """Manim output containing \\htmlmanim should be valid Python."""
+        output_path = os.path.join(self.tmp.name, "htmlmanim-test.manim.py")
+        fixture = os.path.join(self.tmp.name, "htmlmanim-test.md")
+        # Use a plain self.play() call (no nested triple-quote) for the manim_alt
+        # to avoid quote-escaping issues in the test source string itself.
+        source = (
+            "---\ntitle: HtmlManim Test\nauthor:\n- family: Test\n  given: Author\n"
+            "date: 2026-05-05\n---\n\n"
+            "\\htmlmanim{<div>widget</div>}{        self.play(FadeIn(Text(\"alt\")))}"
+        )
+        with open(fixture, "w") as f:
+            f.write(source)
+        cmd = _MDPP + [
+            fixture, "--to", "manim", "--output", output_path,
+            "--macros-path", _MACROS_DIR, "--format", "slides",
+        ]
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode != 0 or not os.path.isfile(output_path):
+            self.skipTest(f"mdpp did not produce output (returncode={result.returncode})")
+        try:
+            py_compile.compile(output_path, doraise=True)
+        except py_compile.PyCompileError as exc:
+            self.fail(f"htmlmanim output is not valid Python: {exc}")
+
+    def test_minimal_fixture_valid_python_with_htmlmanim(self):
+        """The main minimal fixture (which now uses \\htmlmanim) should compile cleanly."""
+        with tempfile.NamedTemporaryFile(suffix=".manim.py", delete=False) as tmp:
+            out_path = tmp.name
+        try:
+            cmd = _MDPP + [
+                _FIXTURE, "--to", "manim", "--output", out_path,
+                "--macros-path", _MACROS_DIR, "--format", "slides",
+            ]
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, msg=result.stderr)
+            py_compile.compile(out_path, doraise=True)
+        except py_compile.PyCompileError as exc:
+            self.fail(f"Minimal fixture with htmlmanim is not valid Python: {exc}")
+        finally:
+            os.unlink(out_path)
+
+
 if __name__ == "__main__":
     unittest.main()

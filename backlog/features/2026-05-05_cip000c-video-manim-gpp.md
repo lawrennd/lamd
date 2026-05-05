@@ -1,7 +1,7 @@
 ---
 id: "2026-05-05_cip000c-video-manim-gpp"
 title: "Create talk-macros-video-manim.gpp for linear MP4 pipeline"
-status: "Proposed"
+status: "Completed"
 priority: "High"
 created: "2026-05-05"
 last_updated: "2026-05-05"

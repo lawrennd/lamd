@@ -1,7 +1,7 @@
 ---
 id: "2026-05-05_cip000c-slidesincremental-manim"
 title: "Implement \\slidesincremental{} in manim macro files"
-status: "Proposed"
+status: "Completed"
 priority: "Medium"
 created: "2026-05-05"
 last_updated: "2026-05-05"

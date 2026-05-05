@@ -1,7 +1,7 @@
 ---
 id: "2026-05-05_cip000c-wire-into-make-talk"
 title: "Wire make-manim.mk and make-video-manim.mk into make-talk.mk"
-status: "Proposed"
+status: "Completed"
 priority: "Medium"
 created: "2026-05-05"
 last_updated: "2026-05-05"

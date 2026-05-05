@@ -1,7 +1,7 @@
 ---
 id: "2026-05-05_cip000c-slidesmanim-macro"
 title: "Add \\slidesmanim{} macro (passthrough in manim, no-op elsewhere)"
-status: "Proposed"
+status: "Completed"
 priority: "High"
 created: "2026-05-05"
 last_updated: "2026-05-05"

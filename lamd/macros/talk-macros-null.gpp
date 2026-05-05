@@ -102,6 +102,7 @@
 \define{\slides{text}}{}
 \define{\slidesincremental{text}}{}
 \define{\slidesmanim{code}}{}
+\define{\htmlmanim{html_content}{manim_alt}}{}
 \define{\newslide{text}}{}
 
 \define{\notes{text}}{}

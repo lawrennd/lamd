@@ -1,7 +1,7 @@
 ---
 id: "2026-05-05_cip000c-make-video-manim-mk"
 title: "Create make-video-manim.mk build targets (preprocess → raw manim → mp4)"
-status: "Proposed"
+status: "Completed"
 priority: "High"
 created: "2026-05-05"
 last_updated: "2026-05-05"
