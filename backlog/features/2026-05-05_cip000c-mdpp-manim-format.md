@@ -1,10 +1,11 @@
 ---
 id: "2026-05-05_cip000c-mdpp-manim-format"
 title: "Add --to manim support in mdpp.py"
-status: "Ready"
+status: "Completed"
 priority: "High"
 created: "2026-05-05"
 last_updated: "2026-05-05"
+completed: "2026-05-05"
 category: "features"
 related_cips: ["000C"]
 owner: ""

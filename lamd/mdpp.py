@@ -31,7 +31,22 @@ INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
 
 VALID_FORMATS = ["notes", "slides", "code"]
 VALID_CODE_LEVELS = ["none", "sparse", "ipynb", "diagnostic", "plot", "full", "test"]
-VALID_OUTPUT_FORMATS = ["pptx", "html", "docx", "ipynb", "svg", "tex", "python"]
+VALID_OUTPUT_FORMATS = ["pptx", "html", "docx", "ipynb", "svg", "tex", "python", "manim", "manim-video"]
+
+# Python header injected by mdpp into Manim-output temp files (no YAML frontmatter).
+_MANIM_SLIDES_HEADER = (
+    "from manim import *\n"
+    "from manim_slides import Slide\n"
+    "from _lamd_manim import lamd_text, lamd_display_math\n\n"
+    "class Talk(Slide):\n"
+    "    def construct(self):\n"
+)
+_MANIM_VIDEO_HEADER = (
+    "from manim import *\n"
+    "from _lamd_manim import lamd_text, lamd_display_math\n\n"
+    "class Talk(Scene):\n"
+    "    def construct(self):\n"
+)
 
 
 def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list[str]:
@@ -57,6 +72,10 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
         gpp_args.append("-DPPTX=1")
     if args.to == "ipynb":
         gpp_args.append("-DIPYNB=1")
+    if args.to == "manim":
+        gpp_args.append("-DMANIM=1")
+    if args.to == "manim-video":
+        gpp_args.append("-DMANIM_VIDEO=1")
     if args.format == "slides":
         gpp_args.append("-DSLIDES=1")
     if args.format == "notes":
@@ -429,9 +448,25 @@ def main() -> int:
 
         # Write temporary file
         tmp_file, ext = os.path.splitext(args.filename)
-        tmp_file += ".gpp.markdown"
-        with open(tmp_file, "wb") as fd:
-            fm.dump(writepost, fd, sort_keys=False, default_flow_style=False)
+        if args.to in ("manim", "manim-video"):
+            # Manim output is a Python file; write a plain-text temp file that
+            # begins with the appropriate class header so that gpp expands the
+            # macros directly into the method body.
+            tmp_file += ".gpp.py"
+            python_header = _MANIM_SLIDES_HEADER if args.to == "manim" else _MANIM_VIDEO_HEADER
+            # Strip YAML frontmatter from the source: keep only the body.
+            with open(args.filename) as f:
+                source_post = fm.load(f)
+            body = source_post.content if not args.no_header else open(args.filename).read()
+            with open(tmp_file, "w") as fd:
+                fd.write(before_text)
+                fd.write(python_header)
+                fd.write(body)
+                fd.write(after_text)
+        else:
+            tmp_file += ".gpp.markdown"
+            with open(tmp_file, "wb") as fd:
+                fm.dump(writepost, fd, sort_keys=False, default_flow_style=False)
 
         # Run GPP
         runlist = ["gpp"] + arglist + [tmp_file]
@@ -439,6 +474,18 @@ def main() -> int:
         if args.verbose:
             print(f"Running command: {run_command}")
         os.system(run_command)
+
+        # For Manim targets, copy the runtime helper alongside the output.
+        if args.to in ("manim", "manim-video") and args.output:
+            import shutil
+            helper_src = os.path.join(os.path.dirname(__file__), "util", "lamd_manim_helper.py")
+            out_dir = os.path.dirname(os.path.abspath(args.output))
+            helper_dst = os.path.join(out_dir, "_lamd_manim.py")
+            if os.path.isfile(helper_src):
+                shutil.copy2(helper_src, helper_dst)
+                if args.verbose:
+                    print(f"Copied helper: {helper_src} -> {helper_dst}")
+
         return 0
 
     except ValidationError as e:
