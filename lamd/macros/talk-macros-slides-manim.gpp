@@ -1,6 +1,10 @@
 \ifndef{talkMacrosSlidesManim}
 \define{talkMacrosSlidesManim}
 
+\define{\slidesincremental{items}}{
+        self.play(FadeIn(lamd_text(r"""\items""")))
+        self.next_slide()}
+
 \define{\newslide{title}{commands}}{
         self.next_slide()
         self.play(FadeIn(lamd_text(r"""\title""")))}
