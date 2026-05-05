@@ -512,9 +512,11 @@ def main() -> int:
             with open(args.filename) as f:
                 source_post = fm.load(f)
             body = source_post.content if not args.no_header else open(args.filename).read()
-            # Pre-process display math ($$...$$) → \displaymath{...} so that
-            # GPP can expand the Manim macro definition for it.
-            body = _preprocess_math_for_manim(body)
+            # NOTE: We do NOT pre-process $$...$$ → \displaymath{} here.
+            # Pre-processing creates \slides{\displaymath{...}} nesting when $$
+            # appears inside \slides{}, causing nested r"""...""" Python strings
+            # that break the tokenizer. Top-level $$...$$ is handled correctly
+            # by the post-processing step (_convert_display_math_posthoc) instead.
             with open(tmp_file, "w") as fd:
                 # Ensure a newline separates the macro definitions (before_text)
                 # from the Python header so that gpp's `\endif` directive is on
