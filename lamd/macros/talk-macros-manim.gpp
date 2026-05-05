@@ -10,13 +10,13 @@
 
 \define{\speakernotes{text}}{        # speakernotes: \text}
 
-\define{\slidesincremental{items}}{        # incremental: \items}
+\define{\slidesincremental{items}}{        self.play(FadeIn(lamd_text(r"""\items""")))}
 
 \define{\slidesmanim{code}}{\code}
 
-\define{\fragment{text}{type}}{\text}
-\define{\fragmentindex{text}{type}{index}}{\text}
-\define{\fragmentdiv{contents}{number}{style}}{\contents}
+\define{\fragment{text}{type}}{        self.play(FadeIn(lamd_text(r"""\text""")))}
+\define{\fragmentindex{text}{type}{index}}{        self.play(FadeIn(lamd_text(r"""\text""")))}
+\define{\fragmentdiv{contents}{number}{style}}{        self.play(FadeIn(lamd_text(r"""\contents""")))}
 
 \define{\codeblockstart}{```}
 \define{\codeblockend}{```}
