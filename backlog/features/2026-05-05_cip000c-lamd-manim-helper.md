@@ -1,7 +1,7 @@
 ---
 id: "2026-05-05_cip000c-lamd-manim-helper"
 title: "Create lamd_manim_helper.py with lamd_text and lamd_display_math"
-status: "Ready"
+status: "Completed"
 priority: "High"
 created: "2026-05-05"
 last_updated: "2026-05-05"
@@ -71,3 +71,7 @@ Unit tests can mock the Manim imports using `unittest.mock` to avoid requiring a
 ### 2026-05-05
 
 Task created as part of CIP-000C Phase 1.
+
+### 2026-05-05 (implementation)
+
+Created `lamd/util/__init__.py` and `lamd/util/lamd_manim_helper.py` with public API `lamd_text()` and `lamd_display_math()`. `lamd_text` splits on `$...$` inline math, renders plain text as `MarkupText` (with `_md_to_pango` converting `**bold**`/`*italic*` to Pango markup) and math segments as `MathTex`, wrapping multiple segments in a `VGroup`. Added 17-test unit suite in `lamd/tests/test_lamd_manim_helper.py` that mocks Manim classes so no Manim install is required in CI. All tests pass.
