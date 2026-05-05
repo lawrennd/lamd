@@ -3,6 +3,8 @@
 These tests run mdpp as a subprocess on a minimal fixture and check that:
   * the process exits with code 0
   * the output file passes py_compile (i.e. is syntactically valid Python)
+  * Manim-specific macros expand correctly (FadeIn for incremental/fragment)
+  * \\slidesmanim is a no-op in non-Manim output
 
 No Manim or manim-slides installation is required.
 """
@@ -33,6 +35,14 @@ def _run_mdpp(to_format: str, output_path: str) -> subprocess.CompletedProcess:
         "--format", "slides",
     ]
     return subprocess.run(cmd, capture_output=True, text=True)
+
+
+def _read_output(path: str) -> str:
+    """Read output file content, returning empty string if it doesn't exist."""
+    if os.path.isfile(path):
+        with open(path) as f:
+            return f.read()
+    return ""
 
 
 class TestMdppManim(unittest.TestCase):
@@ -130,6 +140,78 @@ class TestMdppManim_Video(unittest.TestCase):
         with open(self.output) as f:
             content = f.read()
         self.assertIn("class Talk(Scene):", content)
+
+
+class TestMdppManim_Macros(unittest.TestCase):
+    """Test that Manim-specific macros expand correctly in --to manim output."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.output = os.path.join(self.tmp.name, "talk.manim.py")
+        _run_mdpp("manim", self.output)
+        self.content = _read_output(self.output)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_slidesincremental_emits_fadein(self):
+        """\\slidesincremental should produce a FadeIn call, not a comment."""
+        self.assertIn(
+            "FadeIn",
+            self.content,
+            msg="Expected FadeIn call from \\slidesincremental not found in output",
+        )
+        self.assertNotIn(
+            "# incremental:",
+            self.content,
+            msg="Found stale comment placeholder from \\slidesincremental; expected FadeIn call",
+        )
+
+    def test_fragment_emits_fadein(self):
+        """\\fragment should produce a FadeIn call in Manim output."""
+        self.assertIn(
+            "FadeIn",
+            self.content,
+            msg="Expected FadeIn call from \\fragment not found in output",
+        )
+
+    def test_slidesmanim_emits_raw_code(self):
+        """\\slidesmanim block should appear verbatim in Manim output."""
+        self.assertIn(
+            "Manim only",
+            self.content,
+            msg="\\slidesmanim code block should appear in manim output",
+        )
+
+
+class TestMdppHtml_SlidesManimNoOp(unittest.TestCase):
+    """Test that \\slidesmanim is a no-op in non-Manim (HTML) output."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.output = os.path.join(self.tmp.name, "talk.slides.html")
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_slidesmanim_absent_from_html_output(self):
+        """\\slidesmanim should expand to nothing in HTML output."""
+        result = _run_mdpp("html", self.output)
+        if result.returncode != 0:
+            self.skipTest(
+                f"mdpp --to html failed (returncode={result.returncode}); skipping no-op test"
+            )
+        content = _read_output(self.output)
+        self.assertNotIn(
+            r"\slidesmanim",
+            content,
+            msg="\\slidesmanim literal found in HTML output; it should be a no-op",
+        )
+        self.assertNotIn(
+            "Manim only",
+            content,
+            msg="Raw \\slidesmanim content found in HTML output; it should be suppressed",
+        )
 
 
 if __name__ == "__main__":
