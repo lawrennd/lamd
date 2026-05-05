@@ -364,11 +364,11 @@ This CIP contributes to the broad requirement that LaMD support multiple output 
 - [ ] Phase 2: Wire both makefiles into `make-talk.mk`
 - [ ] Phase 2: Add `manim` and `manim-video` to `maketalk.py` `--to` choices
 - [ ] Phase 2: Extract `manim:` frontmatter and pass as `MANIMFLAGS` / `MANIMCONVERTFLAGS`
-- [ ] GPP refactor: Create `talk-macros-manim.gpp` (shared definitions common to slides and video)
-- [ ] GPP refactor: Trim `talk-macros-slides-manim.gpp` to slide-break macros only (`self.next_slide()`)
-- [ ] GPP refactor: Trim `talk-macros-video-manim.gpp` to video-break macros only (`self.wait(1)`)
-- [ ] GPP refactor: Update `talk-macros.gpp` to two-level include structure (`\ifdef{MANIM}` for shared; `\ifdef{SLIDES}\ifdef{MANIM}` and `\ifdef{VIDEO}\ifdef{MANIM}` for format-specific)
-- [ ] GPP refactor: Update `mdpp.py` flags (`-DSLIDES=1` for `--to manim`; `-DVIDEO=1` replacing `-DMANIM_VIDEO` for `--to manim-video`)
+- [x] GPP refactor: Create `talk-macros-manim.gpp` (shared definitions common to slides and video)
+- [x] GPP refactor: Trim `talk-macros-slides-manim.gpp` to slide-break macros only (`self.next_slide()`)
+- [x] GPP refactor: Trim `talk-macros-video-manim.gpp` to video-break macros only (`self.wait(1)`)
+- [x] GPP refactor: Update `talk-macros.gpp` to two-level include structure (`\ifdef{MANIM}` for shared; `\ifdef{SLIDES}\ifdef{MANIM}` and `\ifdef{VIDEO}\ifdef{MANIM}` for format-specific)
+- [x] GPP refactor: Update `mdpp.py` flags (`-DSLIDES=1` for `--to manim`; `-DVIDEO=1` replacing `-DMANIM_VIDEO` for `--to manim-video`)
 - [ ] Phase 3: `\slidesincremental{}` → cumulative `FadeIn` + `next_slide()` per bullet
 - [ ] Phase 3: `\fragment{text}{type}` → `FadeIn` + `next_slide()`
 - [ ] Phase 4: Display math macros → `lamd_display_math()`

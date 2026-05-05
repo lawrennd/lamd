@@ -74,8 +74,10 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
         gpp_args.append("-DIPYNB=1")
     if args.to == "manim":
         gpp_args.append("-DMANIM=1")
+        gpp_args.append("-DSLIDES=1")
     if args.to == "manim-video":
-        gpp_args.append("-DMANIM_VIDEO=1")
+        gpp_args.append("-DMANIM=1")
+        gpp_args.append("-DVIDEO=1")
     if args.format == "slides":
         gpp_args.append("-DSLIDES=1")
     if args.format == "notes":
