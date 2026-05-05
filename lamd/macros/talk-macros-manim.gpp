@@ -27,9 +27,7 @@
 
 \define{\credit{name}{url}}{        # credit: \name (\url)}
 
-\define{\displaymath{text}}{        self.play(FadeIn(lamd_display_math(r"""\text""")))}
-
-\define{\inlineMath{text}}{        self.play(FadeIn(lamd_display_math(r"""\text""")))}
+\define{\displaymath{text}}{        self.play(FadeIn(lamd_display_math(r'''\text''')))}\define{\inlineMath{text}}{        self.play(FadeIn(lamd_display_math(r'''\text''')))}
 
 \define{\includediagram{filename}{width}{class}{style}}{
         _fig = SVGMobject('\filename.svg')
