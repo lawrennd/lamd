@@ -27,6 +27,24 @@
 
 \define{\credit{name}{url}}{        # credit: \name (\url)}
 
+\define{\displaymath{text}}{        self.play(FadeIn(lamd_display_math(r"""\text""")))}
+
+\define{\inlineMath{text}}{        self.play(FadeIn(lamd_display_math(r"""\text""")))}
+
+\define{\includediagram{filename}{width}{class}{style}}{
+        _fig = SVGMobject(r"""\filename.svg""")
+        self.play(FadeIn(_fig))}
+
+\define{\includediagramclass{filename}{width}{class}{style}}{
+        _fig = SVGMobject(r"""\filename.svg""")
+        self.play(FadeIn(_fig))}
+
+\define{\includeimg{filename}{width}{class}}{
+        _fig = ImageMobject(r"""\filename""")
+        self.play(FadeIn(_fig))}
+
+\define{\figure{contents}{captionContents}{label}}{\contents}
+
 \define{\newbanner{text}{color}{commands}}{}
 
 \define{\addblog{title}{link}}{}
