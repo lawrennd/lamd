@@ -16,6 +16,8 @@
 
 \define{\html{block}}{\block}
 
+\define{\htmlmanim{html_content}{manim_alt}}{\html_content}
+
 \define{\colorcyan{block}}{<font color="\cyanColor">\block</font>}
 \define{\colormagenta{block}}{<font color="\magentaColor">\block</font>}
 \define{\coloryellow{block}}{<font color="\yellowColor">\block</font>}

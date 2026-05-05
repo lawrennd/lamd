@@ -373,8 +373,9 @@ This CIP contributes to the broad requirement that LaMD support multiple output 
 - [x] Phase 3: `\fragment{text}{type}` → `FadeIn`
 - [x] Phase 4: Display math macros → `lamd_display_math()`
 - [x] Phase 4: Figure macros → `SVGMobject` / `ImageMobject`
-- [x] Phase 5: Unit and integration tests (`test_mdpp_manim.py` — 13 tests passing)
+- [x] Phase 5: Unit and integration tests (`test_mdpp_manim.py` — 24 tests passing)
 - [x] Phase 5: Documentation in `docs/guides/manim-output.md`
+- [x] Phase 6: `\htmlmanim{html_content}{manim_alt}` dispatching macro (HTML shows html_content, Manim shows manim_alt, all others no-op)
 
 ## References
 

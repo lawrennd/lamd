@@ -17,4 +17,6 @@
         self.wait(1)
         self.play(FadeIn(lamd_text(r"""\title""")))}
 
+\define{\htmlmanim{html_content}{manim_alt}}{\manim_alt}
+
 \endif

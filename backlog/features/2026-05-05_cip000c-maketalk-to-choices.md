@@ -1,7 +1,7 @@
 ---
 id: "2026-05-05_cip000c-maketalk-to-choices"
 title: "Add manim and manim-video to maketalk.py --to choices"
-status: "Proposed"
+status: "Completed"
 priority: "Medium"
 created: "2026-05-05"
 last_updated: "2026-05-05"

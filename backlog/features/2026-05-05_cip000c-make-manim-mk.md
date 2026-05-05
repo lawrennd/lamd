@@ -1,7 +1,7 @@
 ---
 id: "2026-05-05_cip000c-make-manim-mk"
 title: "Create make-manim.mk build targets (preprocess → render → html/pptx)"
-status: "Proposed"
+status: "Completed"
 priority: "High"
 created: "2026-05-05"
 last_updated: "2026-05-05"

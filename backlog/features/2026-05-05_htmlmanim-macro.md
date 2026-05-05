@@ -1,7 +1,7 @@
 ---
 id: "2026-05-05_htmlmanim-macro"
 title: "Introduce \\htmlmanim{html_content}{manim_alt} dispatching macro"
-status: "Proposed"
+status: "Completed"
 priority: "Low"
 created: "2026-05-05"
 last_updated: "2026-05-05"

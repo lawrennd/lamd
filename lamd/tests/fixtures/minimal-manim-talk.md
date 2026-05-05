@@ -30,3 +30,7 @@ date: 2026-05-05
         # raw manim code only shown in Manim output
         self.play(FadeIn(Text("Manim only")))
 }
+
+\htmlmanim{<div class="simulation">interactive widget</div>}{
+        self.play(FadeIn(lamd_text(r"""[Manim alt for widget]""")))}
+
