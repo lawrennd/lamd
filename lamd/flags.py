@@ -55,8 +55,8 @@ def main() -> int:
     parser.add_argument(
         "output",
         type=str,
-        choices=["pp", "post", "docx", "pptx", "prefix", "reveal", "cv"],
-        help="The type of output file (post is for a jekyll post, docx for word, pptx for powerpoint)",
+        choices=["pp", "post", "docx", "pptx", "prefix", "reveal", "cv", "manim", "manim-convert"],
+        help="The type of output file (post is for a jekyll post, docx for word, pptx for powerpoint, manim for manim-slides flags)",
     )
     parser.add_argument("base", type=str, help="The base part of the filename")
 
@@ -260,6 +260,26 @@ def main() -> int:
         # For CV output, we don't need to print any specific flags
         # This is a placeholder for future implementation
         pass
+
+    elif args.output == "manim":
+        # Return flags for manim-slides render from frontmatter 'manim:' block
+        # Returns empty string by default; frontmatter-driven customisation can follow later
+        try:
+            manim_flags = ny.header_field("manim", fields, user_file)
+            if isinstance(manim_flags, str):
+                print(manim_flags)
+        except ny.FileFormatError:
+            pass
+
+    elif args.output == "manim-convert":
+        # Return flags for manim-slides convert from frontmatter 'manim-convert:' block
+        # Returns empty string by default; frontmatter-driven customisation can follow later
+        try:
+            manim_convert_flags = ny.header_field("manim-convert", fields, user_file)
+            if isinstance(manim_convert_flags, str):
+                print(manim_convert_flags)
+        except ny.FileFormatError:
+            pass
 
     return 0
 
