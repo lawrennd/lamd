@@ -32,15 +32,15 @@
 \define{\inlineMath{text}}{        self.play(FadeIn(lamd_display_math(r"""\text""")))}
 
 \define{\includediagram{filename}{width}{class}{style}}{
-        _fig = SVGMobject(r"""\filename.svg""")
+        _fig = SVGMobject('\filename.svg')
         self.play(FadeIn(_fig))}
 
 \define{\includediagramclass{filename}{width}{class}{style}}{
-        _fig = SVGMobject(r"""\filename.svg""")
+        _fig = SVGMobject('\filename.svg')
         self.play(FadeIn(_fig))}
 
 \define{\includeimg{filename}{width}{class}}{
-        _fig = ImageMobject(r"""\filename""")
+        _fig = ImageMobject('\filename')
         self.play(FadeIn(_fig))}
 
 \define{\figure{contents}{captionContents}{label}}{\contents}
