@@ -101,6 +101,7 @@
 \define{\exercise{text}{answerstub}{codestub}}{}
 \define{\slides{text}}{}
 \define{\slidesincremental{text}}{}
+\define{\slidesmanim{code}}{}
 \define{\newslide{text}}{}
 
 \define{\notes{text}}{}
