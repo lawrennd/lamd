@@ -319,5 +319,71 @@ class TestMdppManim_DisplayMath(unittest.TestCase):
             self.fail(f"Output is not valid Python after display-math conversion: {exc}")
 
 
+class TestMdppManim_DisplayMathFromInclude(unittest.TestCase):
+    """$$...$$ in an *included snippet* should also be converted post-GPP."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        # Create a snippet file with bare display math (simulates a real snippet)
+        snippet_dir = os.path.join(self.tmp.name, "_topic", "includes")
+        os.makedirs(snippet_dir)
+        snippet = os.path.join(snippet_dir, "entropy-formula.md")
+        with open(snippet, "w") as f:
+            f.write(
+                "\\newslide{Entropy}\n\n"
+                "\\slides{The entropy formula:}\n\n"
+                "$$\n"
+                "H = -\\sum_i p_i \\log p_i\n"
+                "$$\n\n"
+                "\\notes{This is the standard definition.}\n"
+            )
+        # Main talk file that includes the snippet
+        fixture = os.path.join(self.tmp.name, "include-math-talk.md")
+        with open(fixture, "w") as f:
+            f.write(
+                "---\ntitle: Include Math Test\nauthor:\n- family: Test\n  given: Author\n"
+                "date: 2026-05-05\n---\n\n"
+                "\\include{_topic/includes/entropy-formula.md}\n"
+            )
+        self.output = os.path.join(self.tmp.name, "include-math-test.manim.py")
+        cmd = _MDPP + [
+            fixture,
+            "--to", "manim",
+            "--output", self.output,
+            "--macros-path", _MACROS_DIR,
+            "--include-path", self.tmp.name,
+        ]
+        subprocess.run(cmd, capture_output=True, text=True)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_bare_dollar_signs_absent_from_included_math(self):
+        """$$  from an included snippet should not appear raw in Manim output."""
+        if not os.path.isfile(self.output):
+            self.skipTest("Output file not created")
+        content = _read_output(self.output)
+        import re
+        bare = re.search(r"^\s*\$\$", content, re.MULTILINE)
+        self.assertIsNone(bare, "Bare $$ from included snippet found in Manim output")
+
+    def test_lamd_display_math_called_for_included_math(self):
+        """Included display math should produce a lamd_display_math call."""
+        if not os.path.isfile(self.output):
+            self.skipTest("Output file not created")
+        content = _read_output(self.output)
+        self.assertIn("lamd_display_math", content,
+                      msg="lamd_display_math not found; included display math was not converted")
+
+    def test_output_is_valid_python_with_included_math(self):
+        """Output should be valid Python after included-snippet display-math conversion."""
+        if not os.path.isfile(self.output):
+            self.skipTest("Output file not created")
+        try:
+            py_compile.compile(self.output, doraise=True)
+        except py_compile.PyCompileError as exc:
+            self.fail(f"Output is not valid Python after included-math conversion: {exc}")
+
+
 if __name__ == "__main__":
     unittest.main()
