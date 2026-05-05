@@ -496,6 +496,66 @@ def main() -> int:
                 with open(args.output, "w") as _f:
                     _f.writelines(_lines[_start:])
 
+            # Second pass: strip any residual block-level HTML tags from the
+            # generated Python.  This is a safety net for snippets that embed
+            # raw HTML without wrapping it in \html{}.  A simple stack-based
+            # scanner detects opening block tags and suppresses everything up to
+            # the matching closing tag, replacing the removed block with a
+            # single comment line.
+            _BLOCK_TAGS = {
+                "div", "canvas", "script", "button", "span", "select",
+                "option", "iframe", "p", "table", "thead", "tbody", "tr",
+                "td", "th", "ul", "ol", "li", "form", "input", "label",
+                "nav", "section", "article", "aside", "header", "footer",
+                "figure", "figcaption", "video", "audio", "source",
+            }
+            import re as _re
+            _open_re = _re.compile(
+                r"^\s*<(" + "|".join(_BLOCK_TAGS) + r")(\s[^>]*)?>",
+                _re.IGNORECASE,
+            )
+            _close_re_cache: dict = {}
+
+            def _close_re(tag: str):
+                if tag not in _close_re_cache:
+                    _close_re_cache[tag] = _re.compile(
+                        r"</" + _re.escape(tag) + r"\s*>",
+                        _re.IGNORECASE,
+                    )
+                return _close_re_cache[tag]
+
+            if os.path.isfile(args.output):
+                with open(args.output) as _f2:
+                    _raw = _f2.readlines()
+                _out: list = []
+                _i = 0
+                while _i < len(_raw):
+                    _m = _open_re.match(_raw[_i])
+                    if _m:
+                        _tag = _m.group(1).lower()
+                        _depth = 0
+                        _j = _i
+                        # Collect lines until we've seen the matching close tag
+                        # (accounting for nesting of the same tag).
+                        while _j < len(_raw):
+                            _line = _raw[_j]
+                            _depth += len(_re.findall(
+                                r"<" + _re.escape(_tag) + r"(\s[^>]*)?>",
+                                _line, _re.IGNORECASE,
+                            ))
+                            _depth -= len(_close_re(_tag).findall(_line))
+                            _j += 1
+                            if _depth <= 0:
+                                break
+                        _out.append(f"        # [html content suppressed: <{_tag}>]\n")
+                        _i = _j
+                    else:
+                        _out.append(_raw[_i])
+                        _i += 1
+                if _out != _raw:
+                    with open(args.output, "w") as _f2:
+                        _f2.writelines(_out)
+
         # For Manim targets, copy the runtime helper alongside the output.
         if args.to in ("manim", "manim-video") and args.output:
             import shutil
