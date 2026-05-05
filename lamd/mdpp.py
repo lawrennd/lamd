@@ -30,6 +30,33 @@ MACROS = os.path.join(os.path.dirname(__file__), "macros")
 INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
 
 
+def _convert_display_math_posthoc(src: str) -> str:
+    """Post-process generated Manim Python: convert bare ``$$...$$`` to calls.
+
+    ``$$...$$`` blocks that survive GPP (typically from ``\\include{}``d snippet
+    files) are invalid Python.  This function converts them to
+    ``self.play(FadeIn(lamd_display_math(r\"\"\"...\"\"\")))`` calls.
+
+    To avoid mangling ``$$`` that appears *inside* slide-text string literals
+    (produced by ``\\slides{...}`` → ``lamd_text(r\"\"\"...\"\"\")``), the function
+    splits the source on ``r\"\"\"...\"\"\"`` boundaries: only segments that are
+    outside string literals are rewritten.
+    """
+    import re
+
+    def _conv_code(segment: str) -> str:
+        def _repl(m: re.Match) -> str:
+            eq = m.group(1).strip()
+            eq = eq.replace('"""', r'\"\"\"')
+            return f'        self.play(FadeIn(lamd_display_math(r"""{eq}""")))'
+        return re.sub(r"\$\$(.*?)\$\$", _repl, segment, flags=re.DOTALL)
+
+    # Split on r"""...""" string literals (capturing group keeps the literals in
+    # the chunk list at odd indices).  Only even-index chunks are code segments.
+    chunks = re.split(r'(r""".*?""")', src, flags=re.DOTALL)
+    return "".join(_conv_code(c) if i % 2 == 0 else c for i, c in enumerate(chunks))
+
+
 def _preprocess_math_for_manim(body: str) -> str:
     """Convert ``$$...$$`` display math to ``\\displaymath{...}`` macro calls.
 
@@ -548,6 +575,18 @@ def main() -> int:
                 if _converted != _src:
                     with open(args.output, "w") as _f:
                         _f.write(_converted)
+
+                # Convert bare $$...$$ display math that survived GPP
+                # (typically from \include{}d snippet files) to
+                # lamd_display_math() calls.  Only code segments outside
+                # r"""...""" string literals are rewritten.
+                if os.path.isfile(args.output):
+                    with open(args.output) as _f:
+                        _math_src = _f.read()
+                    _math_converted = _convert_display_math_posthoc(_math_src)
+                    if _math_converted != _math_src:
+                        with open(args.output, "w") as _f:
+                            _f.write(_math_converted)
 
         # For Manim targets, copy the runtime helper alongside the output.
         if args.to in ("manim", "manim-video") and args.output:
