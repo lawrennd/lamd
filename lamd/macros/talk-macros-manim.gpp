@@ -1,0 +1,50 @@
+\ifndef{talkMacrosManim}
+\define{talkMacrosManim}
+
+\define{\slidenotes{slidetext}{notetext}}{\slidetext}
+\define{\gls{term}}{\term}
+
+\define{\slides{text}}{        self.play(FadeIn(lamd_text(r"""\text""")))}
+
+\define{\notes{text}}{}
+
+\define{\speakernotes{text}}{        # speakernotes: \text}
+
+\define{\slidesincremental{items}}{        # incremental: \items}
+
+\define{\slidesmanim{code}}{\code}
+
+\define{\fragment{text}{type}}{\text}
+\define{\fragmentindex{text}{type}{index}}{\text}
+\define{\fragmentdiv{contents}{number}{style}}{\contents}
+
+\define{\codeblockstart}{```}
+\define{\codeblockend}{```}
+\define{\pythonblockstart}{```{.python}}
+\define{\pythonblockend}{```}
+\define{\matlabblockstart}{```{.matlab}}
+\define{\matlabblockend}{```}
+
+\define{\credit{name}{url}}{        # credit: \name (\url)}
+
+\define{\newbanner{text}{color}{commands}}{}
+
+\define{\addblog{title}{link}}{}
+\define{\addatomicblog{title}{link}}{}
+\define{\addatomic{subject}{page}}{}
+\define{\addguardian{title}{link}}{}
+\define{\addglossary{term}{definition}}{}
+\define{\addarticle{title}{link}}{}
+\define{\addreading{reference}{section}}{}
+\define{\addexercise{reference}{exercise}}{}
+
+\define{\thanks}{}
+\define{\references}{}
+\define{\glossary}{}
+\define{\reading}{}
+\define{\exercises}{}
+\define{\editlink}{}
+\define{\slidesmall{block}}{\block}
+\define{\notesfigure{block}}{}
+
+\endif
