@@ -3,7 +3,7 @@ author: "Neil Lawrence"
 created: "2026-05-05"
 id: "000C"
 last_updated: "2026-05-05"
-status: "In Progress"
+status: "Implemented"
 compressed: false
 related_requirements: []
 related_cips: ["0007"]
@@ -24,7 +24,7 @@ title: "Manim Slides Output Format"
 - [x] Proposed - Initial idea documented
 - [x] Accepted - Approved, ready to start work
 - [x] In Progress - Actively being implemented
-- [ ] Implemented - Work complete, awaiting verification
+- [x] Implemented - Work complete, awaiting verification
 - [ ] Closed - Verified and complete
 - [ ] Rejected - Will not be implemented
 - [ ] Deferred - Postponed
@@ -357,24 +357,24 @@ This CIP contributes to the broad requirement that LaMD support multiple output 
 - [x] Phase 1: Create `lamd/util/lamd_manim_helper.py` with `lamd_text`, `lamd_display_math`, `_md_to_pango`
 - [x] Phase 1: Add `--to manim` support in `mdpp.py` (load new `.gpp`, write `_lamd_manim.py`)
 - [x] Phase 1: Smoke test with minimal talk (`py_compile` check)
-- [ ] Phase 2: Add `\slidesmanim{}` macro (manim passthrough + no-op in all other formats)
-- [ ] Phase 2: Create `lamd/makefiles/make-manim.mk` (preprocess → render → convert targets for html/pptx)
+- [x] Phase 2: Add `\slidesmanim{}` macro (manim passthrough + no-op in all other formats)
+- [x] Phase 2: Create `lamd/makefiles/make-manim.mk` (preprocess → render → convert targets for html/pptx)
 - [x] Phase 2: Create `talk-macros-video-manim.gpp` (linear Scene translations, no slide breaks)
-- [ ] Phase 2: Create `lamd/makefiles/make-video-manim.mk` (preprocess → raw manim render → mp4)
-- [ ] Phase 2: Wire both makefiles into `make-talk.mk`
-- [ ] Phase 2: Add `manim` and `manim-video` to `maketalk.py` `--to` choices
-- [ ] Phase 2: Extract `manim:` frontmatter and pass as `MANIMFLAGS` / `MANIMCONVERTFLAGS`
+- [x] Phase 2: Create `lamd/makefiles/make-video-manim.mk` (preprocess → raw manim render → mp4)
+- [x] Phase 2: Wire both makefiles into `make-talk.mk`
+- [x] Phase 2: Add `manim` and `manim-video` to `maketalk.py` `--to` choices
+- [x] Phase 2: Extract `manim:` frontmatter and pass as `MANIMFLAGS` / `MANIMCONVERTFLAGS`
 - [x] GPP refactor: Create `talk-macros-manim.gpp` (shared definitions common to slides and video)
 - [x] GPP refactor: Trim `talk-macros-slides-manim.gpp` to slide-break macros only (`self.next_slide()`)
 - [x] GPP refactor: Trim `talk-macros-video-manim.gpp` to video-break macros only (`self.wait(1)`)
 - [x] GPP refactor: Update `talk-macros.gpp` to two-level include structure (`\ifdef{MANIM}` for shared; `\ifdef{SLIDES}\ifdef{MANIM}` and `\ifdef{VIDEO}\ifdef{MANIM}` for format-specific)
 - [x] GPP refactor: Update `mdpp.py` flags (`-DSLIDES=1` for `--to manim`; `-DVIDEO=1` replacing `-DMANIM_VIDEO` for `--to manim-video`)
-- [ ] Phase 3: `\slidesincremental{}` → cumulative `FadeIn` + `next_slide()` per bullet
-- [ ] Phase 3: `\fragment{text}{type}` → `FadeIn` + `next_slide()`
-- [ ] Phase 4: Display math macros → `lamd_display_math()`
-- [ ] Phase 4: Figure macros → `ImageMobject`
-- [ ] Phase 5: Unit and integration tests
-- [ ] Phase 5: Documentation in `docs/`
+- [x] Phase 3: `\slidesincremental{}` → `FadeIn` + `next_slide()` (simplified single-object; per-bullet deferred to Phase 6+)
+- [x] Phase 3: `\fragment{text}{type}` → `FadeIn`
+- [x] Phase 4: Display math macros → `lamd_display_math()`
+- [x] Phase 4: Figure macros → `SVGMobject` / `ImageMobject`
+- [x] Phase 5: Unit and integration tests (`test_mdpp_manim.py` — 13 tests passing)
+- [x] Phase 5: Documentation in `docs/guides/manim-output.md`
 
 ## References
 
