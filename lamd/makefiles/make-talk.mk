@@ -18,6 +18,8 @@ include $(MAKEFILESDIR)/make-paper.mk
 include $(MAKEFILESDIR)/make-post.mk
 include $(MAKEFILESDIR)/make-docx.mk
 include $(MAKEFILESDIR)/make-ipynb.mk
+include $(MAKEFILESDIR)/make-manim.mk
+include $(MAKEFILESDIR)/make-video-manim.mk
 
 
 clean:
