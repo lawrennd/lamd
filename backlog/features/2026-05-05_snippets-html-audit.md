@@ -1,7 +1,7 @@
 ---
 id: "2026-05-05_snippets-html-audit"
 title: "Audit snippets repo: wrap raw HTML in \\figure{} with \\html{}"
-status: "In Progress"
+status: "Completed"
 priority: "Medium"
 created: "2026-05-05"
 last_updated: "2026-05-05"
@@ -43,9 +43,18 @@ Also search for `<div`, `<canvas`, `<script` etc. outside `\html{}` blocks.
 This is tracked separately from the `lamd` repo because it touches a different
 repository (`lawrennd/snippets`).
 
-## Known Fixed Files
+## Fixed Files
 
-- `_physics/includes/multigame-entropy.md` — fixed 2026-05-05 (commit 2aaa9b49)
+- `_physics/includes/multigame-entropy.md` — fixed 2026-05-05
+- `_physics/includes/dieroll.md` — fixed 2026-05-05
+- `_physics/includes/entropy-billiards.md` — fixed 2026-05-05
+- `_physics/includes/kappenball.md` — fixed 2026-05-05
+- `_physics/includes/observer-inside.md` — fixed 2026-05-05
+- `_physics/includes/maxwells-demon-short.md` — fixed 2026-05-05
+- `_physics/includes/maxwells-demon.md` — fixed 2026-05-05
+- `_physics/includes/joint-marginal-entropy.md` — fixed 2026-05-05
+- `_physics/includes/observer-outside.md` — fixed 2026-05-05
+- `_ml/includes/dasher.md` — fixed 2026-05-05
 
 ## Related
 
@@ -56,5 +65,9 @@ repository (`lawrennd/snippets`).
 ## Progress Updates
 
 ### 2026-05-05
-Task created.  `_physics/includes/multigame-entropy.md` has already been fixed.
-Status is In Progress pending a full audit of the snippets repo.
+Task created.  `_physics/includes/multigame-entropy.md` fixed.
+
+### 2026-05-05 (later)
+Full audit completed.  All interactive figures with raw HTML/JS in the snippets
+repo have been wrapped in `\html{}`.  9 additional files fixed in a single
+commit (8b411441).  Status set to Completed.
