@@ -459,7 +459,12 @@ def main() -> int:
                 source_post = fm.load(f)
             body = source_post.content if not args.no_header else open(args.filename).read()
             with open(tmp_file, "w") as fd:
+                # Ensure a newline separates the macro definitions (before_text)
+                # from the Python header so that gpp's `\endif` directive is on
+                # its own line and does not swallow the first line of the header.
                 fd.write(before_text)
+                if before_text and not before_text.endswith("\n"):
+                    fd.write("\n")
                 fd.write(python_header)
                 fd.write(body)
                 fd.write(after_text)
@@ -474,6 +479,20 @@ def main() -> int:
         if args.verbose:
             print(f"Running command: {run_command}")
         os.system(run_command)
+
+        # For Manim targets, strip macro-file verbatim output (HTML/TeX comments)
+        # that precedes the injected Python header, leaving a clean .py file.
+        if args.to in ("manim", "manim-video") and args.output and os.path.isfile(args.output):
+            with open(args.output) as _f:
+                _lines = _f.readlines()
+            # Locate the first line of the injected Python header.
+            _start = next(
+                (i for i, l in enumerate(_lines) if l.startswith("from manim import")),
+                None,
+            )
+            if _start is not None and _start > 0:
+                with open(args.output, "w") as _f:
+                    _f.writelines(_lines[_start:])
 
         # For Manim targets, copy the runtime helper alongside the output.
         if args.to in ("manim", "manim-video") and args.output:
