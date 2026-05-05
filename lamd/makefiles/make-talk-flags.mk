@@ -86,6 +86,8 @@ POSTFLAGS=$(shell flags post $(BASE))
 PPTXFLAGS=$(shell flags pptx $(BASE)) --resource-path .:$(INCLUDESDIR):$(SLIDESDIR)
 DOCXFLAGS=$(shell flags docx $(BASE)) --resource-path .:$(INCLUDESDIR):$(SLIDESDIR)
 SLIDEFLAGS=$(shell flags reveal $(BASE))
+MANIMFLAGS=$(shell flags manim $(BASE))
+MANIMCONVERTFLAGS=$(shell flags manim-convert $(BASE))
 
 .PHONY: check-snippetsdir
 check-snippetsdir:

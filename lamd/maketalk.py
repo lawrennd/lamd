@@ -41,7 +41,7 @@ def main() -> int:
         "--format", "-F", type=str, choices=["slides", "notes"], help="The content format to produce (slides, notes)"
     )
 
-    parser.add_argument("--to", "-t", type=str, choices=["html", "pptx", "docx", "pdf", "tex"], help="The output file format")
+    parser.add_argument("--to", "-t", type=str, choices=["html", "pptx", "docx", "pdf", "tex", "manim", "manim-video"], help="The output file format")
 
     parser.add_argument(
         "--profile",
@@ -248,7 +248,13 @@ def main() -> int:
     # Build the make command based on format and output options
     make_cmd = "make"
 
-    if args.format and args.to:
+    if args.format and args.to in ("manim", "manim-video"):
+        # Manim output is not sub-divided by --format; ignore --format
+        if args.to == "manim":
+            make_cmd += " manim"
+        else:
+            make_cmd += f" {base}.manim-video.mp4"
+    elif args.format and args.to:
         # Build specific format and output type
         target = f"{base}.{args.format}.{args.to}"
         make_cmd += f" {target}"
@@ -270,6 +276,10 @@ def main() -> int:
             make_cmd += " tex"
         elif args.to == "docx":
             make_cmd += " docx"
+        elif args.to == "manim":
+            make_cmd += " manim"
+        elif args.to == "manim-video":
+            make_cmd += f" {base}.manim-video.mp4"
     else:
         # Build everything
         make_cmd += " all"
