@@ -99,46 +99,25 @@ Do not edit `_lamd_manim.py` directly; it is regenerated each time `mdpp` runs.
 
 ## HTML and JavaScript Content
 
-Manim output is Python code, so raw HTML tags and JavaScript are invalid inside
-it.  LaMD provides two mechanisms to handle HTML-only content cleanly.
-
-### Using `\html{}` (recommended)
-
-The `\html{block}` macro is already a **no-op** in all non-HTML formats
-(including both Manim pipelines).  Wrap any HTML widget, JavaScript include, or
-browser-specific markup in `\html{}` so it is suppressed automatically:
+Manim output is Python code, so raw HTML tags and JavaScript are not valid inside
+it.  Always wrap HTML-only content in `\html{}`, which is a **no-op** in all
+non-HTML formats (including both Manim pipelines).
 
 ```markdown
-\figure{
-\html{
+\figure{\html{
 <div style="width:100%">
   <canvas id="my-canvas"></canvas>
   <button id="my-btn">Reset</button>
 </div>
 \include{_scripts/includes/my-widget-js.md}
-}
-}{Figure caption}{fig-label}
+}}{Figure caption}{fig-label}
 ```
 
 In HTML slide output the `\html{}` wrapper expands normally, producing the
 interactive widget.  In Manim (and PDF, PPTX, etc.) the entire block is
-suppressed, leaving the figure with no visual content — or you can add a
-fallback image alongside it.
-
-### Safety-net stripper
-
-As a fallback for snippets that have not yet been updated to use `\html{}`,
-`mdpp` automatically strips any block-level HTML tags (`<div>`, `<canvas>`,
-`<script>`, `<button>`, etc.) from the generated `.manim.py` file and replaces
-each removed block with a comment:
-
-```python
-        # [html content suppressed: <div>]
-```
-
-This prevents `SyntaxError` from leaking HTML into Python code, but the content
-will be silently absent from the presentation.  **Always prefer wrapping HTML
-in `\html{}` over relying on the safety-net stripper.**
+suppressed.  If you omit `\html{}`, `mdpp` will generate a Python file
+containing raw HTML tags, which will fail with a `SyntaxError` when compiled —
+this is intentional: the error tells you where the fix needs to go.
 
 ### Future: `\htmlmanim{}` dispatching macro
 

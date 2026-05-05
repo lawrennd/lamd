@@ -1,7 +1,7 @@
 ---
 id: "2026-05-05_html-stripping-safety-net"
 title: "HTML-block stripping safety net in mdpp.py Manim post-processor"
-status: "Completed"
+status: "Abandoned"
 priority: "Medium"
 created: "2026-05-05"
 last_updated: "2026-05-05"
@@ -53,3 +53,12 @@ safety-net post-processor in `mdpp.py` is needed as a backstop.
 Task created and implemented as part of handling HTML/JS content in Manim output.
 Status set to Completed. Implementation is in `lamd/mdpp.py` (second pass block,
 lines ~499–557). Tests added to `lamd/tests/test_mdpp_manim.py`.
+
+### 2026-05-05 (later)
+Approach abandoned. The safety net silently suppresses HTML content, which
+violates the "Explicit over Implicit" tenet — authors would not know their
+content was missing. The correct approach is to fix the source: wrap all
+HTML-only content in `\html{}`. All known snippets have been updated
+(see commit in snippets repo). The safety-net code and its tests have been
+removed. If raw HTML leaks into Manim output the resulting `SyntaxError`
+from `py_compile` is the desired signal.
