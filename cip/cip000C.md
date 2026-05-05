@@ -3,7 +3,7 @@ author: "Neil Lawrence"
 created: "2026-05-05"
 id: "000C"
 last_updated: "2026-05-05"
-status: "Accepted"
+status: "In Progress"
 compressed: false
 related_requirements: []
 related_cips: ["0007"]
@@ -257,7 +257,23 @@ Display math (`$$...$$` or `\begin{equation}...\end{equation}`) is handled by a 
 
 ### Relationship to `mdpp.py` / `--to` flag
 
-`mdpp.py` already accepts `--to html`, `--to pptx`, `--to tex`, etc. Adding `--to manim` causes it to load `talk-macros-slides-manim.gpp` instead of (e.g.) `talk-macros-slides-html.gpp`. No changes to `mdpp.py` logic are needed; the format is purely a selector for the macro file. The `_lamd_manim.py` helper is written to disk by `mdpp.py` when `--to manim` is used.
+`mdpp.py` already accepts `--to html`, `--to pptx`, `--to tex`, etc. Adding `--to manim`
+and `--to manim-video` required several changes to `mdpp.py`:
+
+- **GPP flag injection**: `--to manim` sets `-DMANIM=1 -DSLIDES=1`; `--to manim-video`
+  sets `-DMANIM=1 -DVIDEO=1`. This fires the correct `\ifdef` guards in `talk-macros.gpp`
+  so that the appropriate Manim macro file is included.
+- **Python class header injection**: instead of relying on GPP macros to emit the
+  `from manim import *` preamble and `class Talk(Slide): def construct(self):` header,
+  `mdpp.py` injects a constant Python header string (`_MANIM_SLIDES_HEADER` or
+  `_MANIM_VIDEO_HEADER`) directly before the GPP-processed body. This avoids GPP
+  consuming the first line of the header.
+- **Post-processing strip**: GPP emits verbatim content from included `.gpp` files
+  (HTML comments, TeX `%` comments) before the Python code starts. A post-processing
+  step reads the generated file, finds the first line beginning with `from manim import`,
+  and discards everything before it.
+- **Helper copy**: after `gpp` runs, `mdpp.py` copies `lamd/util/lamd_manim_helper.py`
+  to `_lamd_manim.py` in the output directory so the generated script can import it.
 
 ### What is out of scope
 
@@ -343,11 +359,16 @@ This CIP contributes to the broad requirement that LaMD support multiple output 
 - [x] Phase 1: Smoke test with minimal talk (`py_compile` check)
 - [ ] Phase 2: Add `\slidesmanim{}` macro (manim passthrough + no-op in all other formats)
 - [ ] Phase 2: Create `lamd/makefiles/make-manim.mk` (preprocess → render → convert targets for html/pptx)
-- [ ] Phase 2: Create `talk-macros-video-manim.gpp` (linear Scene translations, no slide breaks)
+- [x] Phase 2: Create `talk-macros-video-manim.gpp` (linear Scene translations, no slide breaks)
 - [ ] Phase 2: Create `lamd/makefiles/make-video-manim.mk` (preprocess → raw manim render → mp4)
 - [ ] Phase 2: Wire both makefiles into `make-talk.mk`
 - [ ] Phase 2: Add `manim` and `manim-video` to `maketalk.py` `--to` choices
 - [ ] Phase 2: Extract `manim:` frontmatter and pass as `MANIMFLAGS` / `MANIMCONVERTFLAGS`
+- [ ] GPP refactor: Create `talk-macros-manim.gpp` (shared definitions common to slides and video)
+- [ ] GPP refactor: Trim `talk-macros-slides-manim.gpp` to slide-break macros only (`self.next_slide()`)
+- [ ] GPP refactor: Trim `talk-macros-video-manim.gpp` to video-break macros only (`self.wait(1)`)
+- [ ] GPP refactor: Update `talk-macros.gpp` to two-level include structure (`\ifdef{MANIM}` for shared; `\ifdef{SLIDES}\ifdef{MANIM}` and `\ifdef{VIDEO}\ifdef{MANIM}` for format-specific)
+- [ ] GPP refactor: Update `mdpp.py` flags (`-DSLIDES=1` for `--to manim`; `-DVIDEO=1` replacing `-DMANIM_VIDEO` for `--to manim-video`)
 - [ ] Phase 3: `\slidesincremental{}` → cumulative `FadeIn` + `next_slide()` per bullet
 - [ ] Phase 3: `\fragment{text}{type}` → `FadeIn` + `next_slide()`
 - [ ] Phase 4: Display math macros → `lamd_display_math()`
