@@ -214,5 +214,52 @@ class TestMdppHtml_SlidesManimNoOp(unittest.TestCase):
         )
 
 
+class TestMdppManim_HtmlComments(unittest.TestCase):
+    """HTML comments in Markdown source should become Python comments in Manim output."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        fixture = os.path.join(self.tmp.name, "comment-talk.md")
+        with open(fixture, "w") as f:
+            f.write(
+                "---\ntitle: Comment Test\nauthor:\n- family: Test\n  given: Author\n"
+                "date: 2026-05-05\n---\n\n"
+                "\\newslide{Test}{}\n\n"
+                "<!-- single-line html comment -->\n\n"
+                "\\slides{After comment.}\n"
+            )
+        self.output = os.path.join(self.tmp.name, "comment-test.manim.py")
+        cmd = _MDPP + [
+            fixture,
+            "--to", "manim",
+            "--output", self.output,
+            "--macros-path", _MACROS_DIR,
+            "--format", "slides",
+        ]
+        subprocess.run(cmd, capture_output=True, text=True)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_html_comment_converted_to_python_comment(self):
+        """<!-- ... --> should become # ... in Manim output."""
+        if not os.path.isfile(self.output):
+            self.skipTest("Output file not created")
+        content = _read_output(self.output)
+        self.assertNotIn("<!--", content, msg="Raw HTML comment delimiter found in Manim output")
+        self.assertNotIn("-->", content, msg="Raw HTML comment delimiter found in Manim output")
+        self.assertIn("single-line html comment", content,
+                      msg="Comment content should be preserved as a Python comment")
+
+    def test_output_is_valid_python_with_comment(self):
+        """Output should be valid Python after comment conversion."""
+        if not os.path.isfile(self.output):
+            self.skipTest("Output file not created")
+        try:
+            py_compile.compile(self.output, doraise=True)
+        except py_compile.PyCompileError as exc:
+            self.fail(f"Output is not valid Python after comment conversion: {exc}")
+
+
 if __name__ == "__main__":
     unittest.main()

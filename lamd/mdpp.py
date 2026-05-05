@@ -496,6 +496,31 @@ def main() -> int:
                 with open(args.output, "w") as _f:
                     _f.writelines(_lines[_start:])
 
+            # Convert HTML comments (<!-- ... -->) to Python comments (# ...).
+            # HTML comment syntax is used in Markdown source for annotations,
+            # but is invalid Python.  The content is preserved; only the
+            # delimiters change.
+            if os.path.isfile(args.output):
+                import re as _re
+                with open(args.output) as _f:
+                    _src = _f.read()
+                def _html_comment_to_python(m):
+                    inner = m.group(1).strip("\n")
+                    lines = inner.split("\n")
+                    return "\n".join(
+                        ("# " + ln.strip()) if ln.strip() else "#"
+                        for ln in lines
+                    )
+                _converted = _re.sub(
+                    r"<!--(.*?)-->",
+                    _html_comment_to_python,
+                    _src,
+                    flags=_re.DOTALL,
+                )
+                if _converted != _src:
+                    with open(args.output, "w") as _f:
+                        _f.write(_converted)
+
         # For Manim targets, copy the runtime helper alongside the output.
         if args.to in ("manim", "manim-video") and args.output:
             import shutil
