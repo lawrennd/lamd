@@ -29,6 +29,31 @@ from lamd.validation import (
 MACROS = os.path.join(os.path.dirname(__file__), "macros")
 INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
 
+
+def _preprocess_math_for_manim(body: str) -> str:
+    """Convert ``$$...$$`` display math to ``\\displaymath{...}`` macro calls.
+
+    Raw ``$$...$$`` (Markdown/LaTeX display-math syntax) is not valid Python and
+    therefore causes a ``SyntaxError`` in generated Manim ``.py`` files.  By
+    converting display-math blocks to the LaMD ``\\displaymath{}`` macro *before*
+    GPP runs, the Manim macro definition in ``talk-macros-manim.gpp`` is applied
+    and produces a proper ``self.play(FadeIn(lamd_display_math(...)))`` call.
+
+    Only ``$$...$$`` (display math) is handled here.  Inline math ``$...$`` that
+    appears *inside* a ``\\slides{}`` or ``\\notes{}`` macro call is wrapped in a
+    ``r\"\"\"...\"\"\"`` string by those macros and is therefore already valid
+    Python (even though it will render as literal text rather than maths in
+    Manim).  Top-level inline math is unusual in practice and is left for a
+    future enhancement if needed.
+    """
+    import re
+
+    def _replace(m: re.Match) -> str:
+        equation = m.group(1).strip()
+        return f"\\displaymath{{{equation}}}"
+
+    return re.sub(r"\$\$(.*?)\$\$", _replace, body, flags=re.DOTALL)
+
 VALID_FORMATS = ["notes", "slides", "code"]
 VALID_CODE_LEVELS = ["none", "sparse", "ipynb", "diagnostic", "plot", "full", "test"]
 VALID_OUTPUT_FORMATS = ["pptx", "html", "docx", "ipynb", "svg", "tex", "python", "manim", "manim-video"]
@@ -460,6 +485,9 @@ def main() -> int:
             with open(args.filename) as f:
                 source_post = fm.load(f)
             body = source_post.content if not args.no_header else open(args.filename).read()
+            # Pre-process display math ($$...$$) → \displaymath{...} so that
+            # GPP can expand the Manim macro definition for it.
+            body = _preprocess_math_for_manim(body)
             with open(tmp_file, "w") as fd:
                 # Ensure a newline separates the macro definitions (before_text)
                 # from the Python header so that gpp's `\endif` directive is on

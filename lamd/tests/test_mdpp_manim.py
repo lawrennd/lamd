@@ -261,5 +261,63 @@ class TestMdppManim_HtmlComments(unittest.TestCase):
             self.fail(f"Output is not valid Python after comment conversion: {exc}")
 
 
+class TestMdppManim_DisplayMath(unittest.TestCase):
+    """$$...$$ display math at top level should become lamd_display_math calls."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        fixture = os.path.join(self.tmp.name, "math-talk.md")
+        with open(fixture, "w") as f:
+            f.write(
+                "---\ntitle: Math Test\nauthor:\n- family: Test\n  given: Author\n"
+                "date: 2026-05-05\n---\n\n"
+                "\\newslide{Entropy}{}\n\n"
+                "\\slides{The entropy is given by:}\n\n"
+                "$$\n"
+                "H(X) = -\\sum_x p(x) \\log p(x)\n"
+                "$$\n\n"
+                "\\notes{This is Shannon entropy.}\n"
+            )
+        self.output = os.path.join(self.tmp.name, "math-test.manim.py")
+        cmd = _MDPP + [
+            fixture,
+            "--to", "manim",
+            "--output", self.output,
+            "--macros-path", _MACROS_DIR,
+            "--format", "slides",
+        ]
+        subprocess.run(cmd, capture_output=True, text=True)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_dollar_signs_absent_from_output(self):
+        """Raw $$ should not appear at the top level of the Manim Python output."""
+        if not os.path.isfile(self.output):
+            self.skipTest("Output file not created")
+        content = _read_output(self.output)
+        # $$  on its own line (top-level math) should have been converted
+        import re
+        bare_dollars = re.search(r"^\s*\$\$", content, re.MULTILINE)
+        self.assertIsNone(bare_dollars, "Bare $$ found at top level of Manim output")
+
+    def test_lamd_display_math_called(self):
+        """Display math should produce a lamd_display_math call."""
+        if not os.path.isfile(self.output):
+            self.skipTest("Output file not created")
+        content = _read_output(self.output)
+        self.assertIn("lamd_display_math", content,
+                      msg="lamd_display_math not found; display math was not converted")
+
+    def test_output_is_valid_python_with_math(self):
+        """Output should be valid Python after display-math conversion."""
+        if not os.path.isfile(self.output):
+            self.skipTest("Output file not created")
+        try:
+            py_compile.compile(self.output, doraise=True)
+        except py_compile.PyCompileError as exc:
+            self.fail(f"Output is not valid Python after display-math conversion: {exc}")
+
+
 if __name__ == "__main__":
     unittest.main()
