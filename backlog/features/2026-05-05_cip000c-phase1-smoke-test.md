@@ -1,10 +1,11 @@
 ---
 id: "2026-05-05_cip000c-phase1-smoke-test"
 title: "Phase 1 smoke test: mdpp --to manim on minimal talk"
-status: "Ready"
+status: "Completed"
 priority: "Medium"
 created: "2026-05-05"
 last_updated: "2026-05-05"
+completed: "2026-05-05"
 category: "features"
 related_cips: ["000C"]
 owner: ""

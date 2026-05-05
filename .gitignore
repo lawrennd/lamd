@@ -71,3 +71,5 @@ docs/yaml_frontmatter_examples.md
 .github/copilot-instructions.md
 CLAUDE.md
 AGENTS.md
+*.gpp.py
+*.gpp.markdown

@@ -23,7 +23,7 @@ title: "Manim Slides Output Format"
 
 - [x] Proposed - Initial idea documented
 - [x] Accepted - Approved, ready to start work
-- [ ] In Progress - Actively being implemented
+- [x] In Progress - Actively being implemented
 - [ ] Implemented - Work complete, awaiting verification
 - [ ] Closed - Verified and complete
 - [ ] Rejected - Will not be implemented
@@ -337,10 +337,10 @@ This CIP contributes to the broad requirement that LaMD support multiple output 
 
 ## Implementation Status
 
-- [ ] Phase 1: Create `talk-macros-slides-manim.gpp` skeleton (`\newslide`, `\slides`, `\notes`, `\speakernotes`)
-- [ ] Phase 1: Create `lamd/util/lamd_manim_helper.py` with `lamd_text`, `lamd_display_math`, `_md_to_pango`
-- [ ] Phase 1: Add `--to manim` support in `mdpp.py` (load new `.gpp`, write `_lamd_manim.py`)
-- [ ] Phase 1: Smoke test with minimal talk (`py_compile` check)
+- [x] Phase 1: Create `talk-macros-slides-manim.gpp` skeleton (`\newslide`, `\slides`, `\notes`, `\speakernotes`)
+- [x] Phase 1: Create `lamd/util/lamd_manim_helper.py` with `lamd_text`, `lamd_display_math`, `_md_to_pango`
+- [x] Phase 1: Add `--to manim` support in `mdpp.py` (load new `.gpp`, write `_lamd_manim.py`)
+- [x] Phase 1: Smoke test with minimal talk (`py_compile` check)
 - [ ] Phase 2: Add `\slidesmanim{}` macro (manim passthrough + no-op in all other formats)
 - [ ] Phase 2: Create `lamd/makefiles/make-manim.mk` (preprocess → render → convert targets for html/pptx)
 - [ ] Phase 2: Create `talk-macros-video-manim.gpp` (linear Scene translations, no slide breaks)
