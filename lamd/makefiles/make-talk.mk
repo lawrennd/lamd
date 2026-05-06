@@ -20,6 +20,7 @@ include $(MAKEFILESDIR)/make-docx.mk
 include $(MAKEFILESDIR)/make-ipynb.mk
 include $(MAKEFILESDIR)/make-manim.mk
 include $(MAKEFILESDIR)/make-video-manim.mk
+include $(MAKEFILESDIR)/make-svg-manim.mk
 
 
 clean:

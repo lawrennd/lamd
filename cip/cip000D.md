@@ -3,7 +3,8 @@ author: "Neil Lawrence"
 created: "2026-05-06"
 id: "000D"
 last_updated: "2026-05-06"
-status: "Proposed"
+accepted: "2026-05-06"
+status: "Accepted"
 compressed: false
 related_requirements: []
 related_cips: ["000C"]
@@ -23,7 +24,7 @@ title: "SVG-Based Manim Output Format"
 ## Status
 
 - [x] Proposed - Initial idea documented
-- [ ] Accepted - Approved, ready to start work
+- [x] Accepted - Approved, ready to start work
 - [ ] In Progress - Actively being implemented
 - [ ] Implemented - Work complete, awaiting verification
 - [ ] Closed - Verified and complete
