@@ -103,7 +103,8 @@ _MANIM_SVG_HEADER = (
     "from manim import *\n"
     "from manim.constants import RendererType\n"
     "from _lamd_manim import lamd_text, lamd_display_math\n\n"
-    "config.renderer = RendererType.SVG\n\n"
+    "config.renderer = RendererType.SVG\n"
+    "config.frame_rate = 15  # 15fps is smooth enough for presentations; 4x fewer frames than 60fps\n\n"
     "class Talk(Scene):\n"
     "    def construct(self):\n"
 )

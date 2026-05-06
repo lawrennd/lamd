@@ -9,7 +9,9 @@
 #   MANIMSVGFLAGS  — extra flags passed to `manim` (e.g. -ql for low quality)
 #   MANIMSVGJS     — path to js/manim-svg.js from the lawrennd/manim install
 
-MANIMSVGFLAGS ?=
+# Use low quality by default (-ql) — faster renders, smaller SVGs.
+# Override with e.g. MANIMSVGFLAGS=-qh for high quality.
+MANIMSVGFLAGS ?= -ql
 MANIMSVGJS ?= $(shell python -c \
 	"import manim, os; print(os.path.join(os.path.dirname(manim.__file__), '..', 'js', 'manim-svg.js'))" \
 	2>/dev/null)
