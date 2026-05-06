@@ -83,7 +83,7 @@ def _preprocess_math_for_manim(body: str) -> str:
 
 VALID_FORMATS = ["notes", "slides", "code"]
 VALID_CODE_LEVELS = ["none", "sparse", "ipynb", "diagnostic", "plot", "full", "test"]
-VALID_OUTPUT_FORMATS = ["pptx", "html", "docx", "ipynb", "svg", "tex", "python", "manim", "manim-video"]
+VALID_OUTPUT_FORMATS = ["pptx", "html", "docx", "ipynb", "svg", "tex", "python", "manim", "manim-video", "manim-svg"]
 
 # Python header injected by mdpp into Manim-output temp files (no YAML frontmatter).
 _MANIM_SLIDES_HEADER = (
@@ -96,6 +96,14 @@ _MANIM_SLIDES_HEADER = (
 _MANIM_VIDEO_HEADER = (
     "from manim import *\n"
     "from _lamd_manim import lamd_text, lamd_display_math\n\n"
+    "class Talk(Scene):\n"
+    "    def construct(self):\n"
+)
+_MANIM_SVG_HEADER = (
+    "from manim import *\n"
+    "from manim.constants import RendererType\n"
+    "from _lamd_manim import lamd_text, lamd_display_math\n\n"
+    "config.renderer = RendererType.SVG\n\n"
     "class Talk(Scene):\n"
     "    def construct(self):\n"
 )
@@ -130,6 +138,9 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
     if args.to == "manim-video":
         gpp_args.append("-DMANIM=1")
         gpp_args.append("-DVIDEO=1")
+    if args.to == "manim-svg":
+        gpp_args.append("-DMANIM=1")
+        gpp_args.append("-DANIMSVG=1")
     if args.format == "slides":
         gpp_args.append("-DSLIDES=1")
     if args.format == "notes":
@@ -502,12 +513,17 @@ def main() -> int:
 
         # Write temporary file
         tmp_file, ext = os.path.splitext(args.filename)
-        if args.to in ("manim", "manim-video"):
+        if args.to in ("manim", "manim-video", "manim-svg"):
             # Manim output is a Python file; write a plain-text temp file that
             # begins with the appropriate class header so that gpp expands the
             # macros directly into the method body.
             tmp_file += ".gpp.py"
-            python_header = _MANIM_SLIDES_HEADER if args.to == "manim" else _MANIM_VIDEO_HEADER
+            if args.to == "manim":
+                python_header = _MANIM_SLIDES_HEADER
+            elif args.to == "manim-svg":
+                python_header = _MANIM_SVG_HEADER
+            else:
+                python_header = _MANIM_VIDEO_HEADER
             # Strip YAML frontmatter from the source: keep only the body.
             with open(args.filename) as f:
                 source_post = fm.load(f)
@@ -541,7 +557,7 @@ def main() -> int:
 
         # For Manim targets, strip macro-file verbatim output (HTML/TeX comments)
         # that precedes the injected Python header, leaving a clean .py file.
-        if args.to in ("manim", "manim-video") and args.output and os.path.isfile(args.output):
+        if args.to in ("manim", "manim-video", "manim-svg") and args.output and os.path.isfile(args.output):
             with open(args.output) as _f:
                 _lines = _f.readlines()
             # Locate the first line of the injected Python header.
@@ -591,7 +607,7 @@ def main() -> int:
                             _f.write(_math_converted)
 
         # For Manim targets, copy the runtime helper alongside the output.
-        if args.to in ("manim", "manim-video") and args.output:
+        if args.to in ("manim", "manim-video", "manim-svg") and args.output:
             import shutil
             helper_src = os.path.join(os.path.dirname(__file__), "util", "lamd_manim_helper.py")
             out_dir = os.path.dirname(os.path.abspath(args.output))

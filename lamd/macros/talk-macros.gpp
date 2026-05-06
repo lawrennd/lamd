@@ -63,6 +63,11 @@
 \include{talk-macros-video-manim.gpp}
 \endif
 \endif
+\ifdef{ANIMSVG}
+\ifdef{MANIM}
+\include{talk-macros-slides-svg-manim.gpp}
+\endif
+\endif
 \ifdef{NOTES}
 \ifdef{TEX}
 \include{talk-macros-notes-tex.gpp}

@@ -1,0 +1,19 @@
+\ifndef{talkMacrosSlidessvgManim}
+\define{talkMacrosSlidessvgManim}
+
+\define{\newslide{title}{commands}}{
+        self.play(FadeIn(lamd_text(r"""\title""")))}
+
+\define{\subsection{title}}{
+        self.play(FadeIn(lamd_text(r"""\title""")))}
+
+\define{\subsubsection{title}}{
+        self.play(FadeIn(lamd_text(r"""\title""")))}
+
+\define{\section{title}}{
+        self.play(FadeIn(lamd_text(r"""\title""")))}
+
+\define{\slidesincremental{items}}{
+        self.play(FadeIn(lamd_text(r"""\items""")))}
+
+\endif
