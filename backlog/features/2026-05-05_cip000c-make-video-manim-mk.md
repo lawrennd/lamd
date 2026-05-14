@@ -7,7 +7,7 @@ created: "2026-05-05"
 last_updated: "2026-05-05"
 category: "features"
 related_cips: ["000C"]
-owner: ""
+owner: "Neil Lawrence"
 dependencies: ["2026-05-05_cip000c-video-manim-gpp", "2026-05-05_cip000c-mdpp-manim-format"]
 tags:
 - backlog

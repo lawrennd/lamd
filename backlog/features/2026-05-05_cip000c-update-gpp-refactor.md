@@ -1,11 +1,14 @@
 ---
-id: "2026-05-05_cip000c-update-gpp-refactor"
-title: "Update CIP-000C: fix mdpp description, add GPP refactor items"
-status: "Completed"
-priority: "Medium"
-created: "2026-05-05"
-last_updated: "2026-05-05"
-related_cips: ["000C"]
+category: features
+created: '2026-05-05'
+id: 2026-05-05_cip000c-update-gpp-refactor
+last_updated: '2026-05-05'
+priority: Medium
+related_cips:
+- 000C
+status: Completed
+owner: "Neil Lawrence"
+title: 'Update CIP-000C: fix mdpp description, add GPP refactor items'
 ---
 
 # Task: Update CIP-000C to reflect Phase 1 reality and GPP refactor plan

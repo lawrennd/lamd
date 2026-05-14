@@ -1,11 +1,14 @@
 ---
-id: "2026-05-05_htmlmanim-macro"
-title: "Introduce \\htmlmanim{html_content}{manim_alt} dispatching macro"
-status: "Completed"
-priority: "Low"
-created: "2026-05-05"
-last_updated: "2026-05-05"
-related_cips: ["000C"]
+category: features
+created: '2026-05-05'
+id: 2026-05-05_htmlmanim-macro
+last_updated: '2026-05-05'
+priority: Low
+related_cips:
+- 000C
+status: Completed
+owner: "Neil Lawrence"
+title: Introduce \htmlmanim{html_content}{manim_alt} dispatching macro
 ---
 
 # Task: Introduce `\htmlmanim{html_content}{manim_alt}` dispatching macro
