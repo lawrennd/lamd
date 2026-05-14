@@ -1,11 +1,14 @@
 ---
-id: "2026-05-05_snippets-html-audit"
-title: "Audit snippets repo: wrap raw HTML in \\figure{} with \\html{}"
-status: "Completed"
-priority: "Medium"
-created: "2026-05-05"
-last_updated: "2026-05-05"
-related_cips: ["000C"]
+category: features
+created: '2026-05-05'
+id: 2026-05-05_snippets-html-audit
+last_updated: '2026-05-05'
+priority: Medium
+related_cips:
+- 000C
+status: Completed
+owner: "Neil Lawrence"
+title: 'Audit snippets repo: wrap raw HTML in \figure{} with \html{}'
 ---
 
 # Task: Audit snippets repo: wrap raw HTML in `\figure{}` with `\html{}`

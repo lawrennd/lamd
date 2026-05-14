@@ -8,7 +8,7 @@ last_updated: "2026-05-05"
 completed: "2026-05-05"
 category: "features"
 related_cips: ["000C"]
-owner: ""
+owner: "Neil Lawrence"
 dependencies: ["2026-05-05_cip000c-manim-gpp-skeleton", "2026-05-05_cip000c-lamd-manim-helper"]
 tags:
 - backlog

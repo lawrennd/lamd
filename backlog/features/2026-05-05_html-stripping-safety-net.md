@@ -1,11 +1,14 @@
 ---
-id: "2026-05-05_html-stripping-safety-net"
-title: "HTML-block stripping safety net in mdpp.py Manim post-processor"
-status: "Abandoned"
-priority: "Medium"
-created: "2026-05-05"
-last_updated: "2026-05-05"
-related_cips: ["000C"]
+category: features
+created: '2026-05-05'
+id: 2026-05-05_html-stripping-safety-net
+last_updated: '2026-05-05'
+priority: Medium
+related_cips:
+- 000C
+status: Abandoned
+owner: "Neil Lawrence"
+title: HTML-block stripping safety net in mdpp.py Manim post-processor
 ---
 
 # Task: HTML-block stripping safety net in mdpp.py Manim post-processor
