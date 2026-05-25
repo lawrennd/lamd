@@ -1,0 +1,294 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manim Output &mdash; LaMD 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=360bc84d"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LaMD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/index.html">Getting Started with LaMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contexts/index.html">Understanding LaMD Contexts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">LaMD Guides</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LaMD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Manim Output</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guides/manim-output.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="manim-output">
+<h1>Manim Output<a class="headerlink" href="#manim-output" title="Link to this heading"></a></h1>
+<p>LaMD can compile a talk into Manim presentations and videos through two pipelines:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Pipeline</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">--to</span></code> flag</p></th>
+<th class="head"><p>Output</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Interactive presentation</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">manim</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">.manim.html</span></code> and <code class="docutils literal notranslate"><span class="pre">.manim.pptx</span></code> via <code class="docutils literal notranslate"><span class="pre">manim-slides</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Continuous video</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">manim-video</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">.manim-video.mp4</span></code> via raw Manim</p></td>
+</tr>
+</tbody>
+</table>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.manim.community/">Manim</a> (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">manim</span></code>)</p></li>
+<li><p><a class="reference external" href="https://eertmans.be/manim-slides/">manim-slides</a> (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">manim-slides</span></code>) — interactive pipeline only</p></li>
+</ul>
+</section>
+<section id="writing-a-manim-talk">
+<h2>Writing a Manim Talk<a class="headerlink" href="#writing-a-manim-talk" title="Link to this heading"></a></h2>
+<p>Use the same macros you use for other LaMD outputs. The Manim pipeline automatically
+translates them into Manim Python code:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>LaMD macro</p></th>
+<th class="head"><p>Manim output</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">\slides{text}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">self.play(FadeIn(lamd_text(r&quot;&quot;&quot;text&quot;&quot;&quot;)))</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">\newslide{Title}{}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">self.next_slide()</span></code> + title FadeIn</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">\slidesincremental{...}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">self.play(FadeIn(...))</span></code> then <code class="docutils literal notranslate"><span class="pre">self.next_slide()</span></code> (interactive)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">\fragment{text}{type}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">self.play(FadeIn(lamd_text(r&quot;&quot;&quot;text&quot;&quot;&quot;)))</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">\includediagram{file}{width}{}{}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SVGMobject(&quot;file.svg&quot;)</span></code> + FadeIn</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">\includeimg{file}{width}{}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ImageMobject(&quot;file&quot;)</span></code> + FadeIn</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">\displaymath{expr}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">self.play(FadeIn(lamd_display_math(r&quot;&quot;&quot;expr&quot;&quot;&quot;)))</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">\notes{text}</span></code></p></td>
+<td><p>suppressed (no-op)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">\speakernotes{text}</span></code></p></td>
+<td><p>Python comment</p></td>
+</tr>
+</tbody>
+</table>
+<section id="slidesmanim-raw-manim-code">
+<h3><code class="docutils literal notranslate"><span class="pre">\slidesmanim</span></code> — Raw Manim Code<a class="headerlink" href="#slidesmanim-raw-manim-code" title="Link to this heading"></a></h3>
+<p>For effects not expressible through standard macros, use <code class="docutils literal notranslate"><span class="pre">\slidesmanim{code}</span></code> to
+inject Python code directly into the <code class="docutils literal notranslate"><span class="pre">construct</span></code> method. This block is a <strong>no-op</strong>
+in all non-Manim output formats (HTML, PDF, PPTX, etc.), making it safe to include
+in any talk file.</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\slidesmanim{
+        <span class="ge">_title = Text(&quot;My Talk&quot;, font_</span>size=60)
+        self.play(Write(_title))
+        self.wait(1)
+        self.play(FadeOut(_title))
+}
+</pre></div>
+</div>
+</section>
+</section>
+<section id="building">
+<h2>Building<a class="headerlink" href="#building" title="Link to this heading"></a></h2>
+<section id="interactive-presentation-html-pptx">
+<h3>Interactive presentation (HTML + PPTX)<a class="headerlink" href="#interactive-presentation-html-pptx" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>maketalk<span class="w"> </span>your-talk.md<span class="w"> </span>--to<span class="w"> </span>manim
+</pre></div>
+</div>
+<p>This runs:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mdpp</span> <span class="pre">your-talk.md</span> <span class="pre">--to</span> <span class="pre">manim</span></code> → <code class="docutils literal notranslate"><span class="pre">your-talk.manim.py</span></code>  (a <code class="docutils literal notranslate"><span class="pre">manim-slides</span></code> <code class="docutils literal notranslate"><span class="pre">Slide</span></code> subclass)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">manim-slides</span> <span class="pre">render</span> <span class="pre">your-talk.manim.py</span> <span class="pre">Talk</span> <span class="pre">-ql</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">manim-slides</span> <span class="pre">convert</span> <span class="pre">--to</span> <span class="pre">html</span> <span class="pre">Talk</span> <span class="pre">your-talk.manim.html</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">manim-slides</span> <span class="pre">convert</span> <span class="pre">--to</span> <span class="pre">pptx</span> <span class="pre">Talk</span> <span class="pre">your-talk.manim.pptx</span></code></p></li>
+</ol>
+</section>
+<section id="continuous-video-mp4">
+<h3>Continuous video (MP4)<a class="headerlink" href="#continuous-video-mp4" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>maketalk<span class="w"> </span>your-talk.md<span class="w"> </span>--to<span class="w"> </span>manim-video
+</pre></div>
+</div>
+<p>This runs:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mdpp</span> <span class="pre">your-talk.md</span> <span class="pre">--to</span> <span class="pre">manim-video</span></code> → <code class="docutils literal notranslate"><span class="pre">your-talk.manim-video.py</span></code>  (a raw Manim <code class="docutils literal notranslate"><span class="pre">Scene</span></code> subclass)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">manim</span> <span class="pre">render</span> <span class="pre">your-talk.manim-video.py</span> <span class="pre">Talk</span> <span class="pre">-ql</span></code></p></li>
+<li><p>Copies <code class="docutils literal notranslate"><span class="pre">media/videos/.../Talk.mp4</span></code> → <code class="docutils literal notranslate"><span class="pre">your-talk.manim-video.mp4</span></code></p></li>
+</ol>
+</section>
+</section>
+<section id="yaml-frontmatter">
+<h2>YAML Frontmatter<a class="headerlink" href="#yaml-frontmatter" title="Link to this heading"></a></h2>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">manim:</span></code> and <code class="docutils literal notranslate"><span class="pre">manim-convert:</span></code> blocks to pass extra flags to the render
+and convert steps respectively:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">My Talk</span>
+<span class="nt">manim</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;--disable_caching&quot;</span>
+<span class="nt">manim-convert</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;--open&quot;</span>
+<span class="nn">---</span>
+</pre></div>
+</div>
+<p>These are passed to <code class="docutils literal notranslate"><span class="pre">manim-slides</span> <span class="pre">render</span></code> (<code class="docutils literal notranslate"><span class="pre">MANIMFLAGS</span></code>) and
+<code class="docutils literal notranslate"><span class="pre">manim-slides</span> <span class="pre">convert</span></code> (<code class="docutils literal notranslate"><span class="pre">MANIMCONVERTFLAGS</span></code>) via the Makefile.</p>
+</section>
+<section id="helper-module">
+<h2>Helper Module<a class="headerlink" href="#helper-module" title="Link to this heading"></a></h2>
+<p>LaMD auto-generates a <code class="docutils literal notranslate"><span class="pre">_lamd_manim.py</span></code> file alongside the output <code class="docutils literal notranslate"><span class="pre">.py</span></code> file.
+This provides:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">lamd_text(markdown_string)</span></code> — converts Markdown + LaTeX to a Manim <code class="docutils literal notranslate"><span class="pre">MarkupText</span></code>
+or <code class="docutils literal notranslate"><span class="pre">MathTex</span></code> object.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lamd_display_math(latex_string)</span></code> — wraps a LaTeX expression in a <code class="docutils literal notranslate"><span class="pre">MathTex</span></code> object.</p></li>
+</ul>
+<p>Do not edit <code class="docutils literal notranslate"><span class="pre">_lamd_manim.py</span></code> directly; it is regenerated each time <code class="docutils literal notranslate"><span class="pre">mdpp</span></code> runs.</p>
+</section>
+<section id="html-and-javascript-content">
+<h2>HTML and JavaScript Content<a class="headerlink" href="#html-and-javascript-content" title="Link to this heading"></a></h2>
+<p>Manim output is Python code, so raw HTML tags and JavaScript are not valid inside
+it.  Always wrap HTML-only content in <code class="docutils literal notranslate"><span class="pre">\html{}</span></code>, which is a <strong>no-op</strong> in all
+non-HTML formats (including both Manim pipelines).</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\figure{\html{
+&lt;div style=&quot;width:100%&quot;&gt;
+  &lt;canvas id=&quot;my-canvas&quot;&gt;&lt;/canvas&gt;
+  &lt;button id=&quot;my-btn&quot;&gt;Reset&lt;/button&gt;
+&lt;/div&gt;
+\include{_scripts/includes/my-widget-js.md}
+}}{Figure caption}{fig-label}
+</pre></div>
+</div>
+<p>In HTML slide output the <code class="docutils literal notranslate"><span class="pre">\html{}</span></code> wrapper expands normally, producing the
+interactive widget.  In Manim (and PDF, PPTX, etc.) the entire block is
+suppressed.  If you omit <code class="docutils literal notranslate"><span class="pre">\html{}</span></code>, <code class="docutils literal notranslate"><span class="pre">mdpp</span></code> will generate a Python file
+containing raw HTML tags, which will fail with a <code class="docutils literal notranslate"><span class="pre">SyntaxError</span></code> when compiled —
+this is intentional: the error tells you where the fix needs to go.</p>
+<section id="future-htmlmanim-dispatching-macro">
+<h3>Future: <code class="docutils literal notranslate"><span class="pre">\htmlmanim{}</span></code> dispatching macro<a class="headerlink" href="#future-htmlmanim-dispatching-macro" title="Link to this heading"></a></h3>
+<p>A future enhancement (<code class="docutils literal notranslate"><span class="pre">backlog/features/2026-05-05_htmlmanim-macro.md</span></code>) will
+introduce a <code class="docutils literal notranslate"><span class="pre">\htmlmanim{html_content}{manim_alt}</span></code> macro, allowing you to provide
+a Manim-native alternative for HTML widgets:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\htmlmanim{
+  \html{&lt;canvas id=&quot;sim&quot;&gt;&lt;/canvas&gt;\include{_scripts/...}}
+}{
+  \slidesmanim{
+      _img = ImageMobject(&quot;simulation-screenshot.png&quot;)
+      self.play(FadeIn(_img))
+  }
+}
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>In HTML output → renders the JS widget (first argument)</p></li>
+<li><p>In Manim output → renders the Manim alternative (second argument)</p></li>
+<li><p>In all other formats → both arguments are no-ops</p></li>
+</ul>
+</section>
+</section>
+<section id="known-limitations">
+<h2>Known Limitations<a class="headerlink" href="#known-limitations" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Per-bullet incremental animation</strong> (<code class="docutils literal notranslate"><span class="pre">\slidesincremental</span></code>) currently animates the
+entire bullet list as a single object.  True per-bullet <code class="docutils literal notranslate"><span class="pre">FadeIn</span></code> is deferred to a
+future phase (CIP-000C Phase 6+).</p></li>
+<li><p><strong>Text styling</strong>: only basic Pango markup is supported inside <code class="docutils literal notranslate"><span class="pre">lamd_text</span></code>.
+Complex LaTeX formatting is not rendered; use <code class="docutils literal notranslate"><span class="pre">\displaymath</span></code> for formulae.</p></li>
+<li><p><strong>Image formats</strong>: <code class="docutils literal notranslate"><span class="pre">\includediagram</span></code> expects an SVG file; <code class="docutils literal notranslate"><span class="pre">\includeimg</span></code> expects
+a raster image path accepted by Manim’s <code class="docutils literal notranslate"><span class="pre">ImageMobject</span></code>.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Neil D. Lawrence.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
