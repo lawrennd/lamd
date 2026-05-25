@@ -12,6 +12,10 @@
 \text
 </aside>}
 
+\define{\narration{text}}{<aside class="notes">
+\text
+</aside>}
+
 \define{\fragment{text}{type}}{<span class="fragment \type">\text</span>}
 \define{\fragmentgroup{text}{index}}{<g class="fragment" data-fragment-index="\index">\text</g>}
 \define{\fragmentindex{text}{type}{index}}{<span class="fragment \type" data-fragment-index="\index">\text</span>}

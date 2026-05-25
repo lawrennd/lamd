@@ -25,6 +25,17 @@ $endif$
 $if(quotes)$
       q { quotes: "“" "”" "‘" "’"; }
 $endif$
+      /* scrollable slides: start content at top, left-align text */
+      .reveal section.scrollable {
+          overflow-y: auto !important;
+          height: 100% !important;
+          top: 0 !important;
+          text-align: left;
+      }
+      .reveal section.scrollable > h2:first-child,
+      .reveal section.scrollable > h2.scrollable:first-child {
+          margin-top: 0.2em;
+      }
   </style>
 $if(highlighting-css)$
   <style type="text/css">
