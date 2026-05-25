@@ -12,6 +12,7 @@
 \define{\fragmentindex{text}{type}{index}}{\text}
 \define{\fragmentdiv{contents}{number}{style}}{\contents}
 \define{\notes{text}}{\text}
+\define{\narration{text}}{}
 \define{\notesfigure{block}}{\block}
 \define{\recommendation{text}}{**Recommendation**: \text}
 \define{\gls{term}}{\emph{\term}\footnote{See glossary entry for \term.}}

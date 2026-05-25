@@ -106,6 +106,7 @@
 \define{\newslide{text}}{}
 
 \define{\notes{text}}{}
+\define{\narration{text}}{}
 
 \define{\speakernotes{text}}{}
 

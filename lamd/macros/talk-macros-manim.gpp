@@ -7,6 +7,7 @@
 \define{\slides{text}}{        self.play(FadeIn(lamd_text(r"""\text""")))}
 
 \define{\notes{text}}{}
+\define{\narration{text}}{}
 
 \define{\speakernotes{text}}{        # speakernotes: \text}
 
