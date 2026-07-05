@@ -63,9 +63,6 @@
 
 \define{\includempfour{filename}{width}{height}}{\media{\filename}}
 
-
-}
-
 \define{\columns{one}{two}{width1}{width2}}{--------  -----------
 \one  \two
 --------  -----------}

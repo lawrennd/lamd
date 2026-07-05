@@ -101,6 +101,34 @@ $endfor$
     <div class="slides">
 
 $if(title)$
+$if(cover-image)$
+<section id="$idprefix$title-slide" class="trent-cover">
+  <div class="trent-title-content">
+    <div class="trent-logo"></div>
+    <h1 class="title">$title$</h1>
+$if(subtitle)$
+    <p class="subtitle">$subtitle$</p>
+$endif$
+$if(date)$
+    <p class="date"><time>$date$</time></p>
+$endif$
+$if(venue)$
+    <p class="venue">$venue$</p>
+$endif$
+  </div>
+  <div class="trent-cover-photo">
+    <div class="trent-photo-card">
+      <img src="$cover-image$" alt="Speaker photo">
+    </div>
+$for(author)$
+    <p class="trent-speaker-name">$author.given$ $author.family$</p>
+$if(author.institute)$
+    <p class="trent-speaker-role">$author.institute$</p>
+$endif$
+$endfor$
+  </div>
+</section>
+$else$
 <section id="$idprefix$title-slide">
   <h1 class="title">$title$</h1>
 $if(subtitle)$
@@ -116,6 +144,7 @@ $if(venue)$
   <p class="venue" style="text-align:center">$venue$</p>
 $endif$
 </section>
+$endif$
 $endif$
 $if(toc)$
 <section id="$idprefix$TOC">
