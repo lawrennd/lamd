@@ -102,6 +102,7 @@ def _locate_js_plugin(js_src: Optional[pathlib.Path]) -> Optional[pathlib.Path]:
     # Installed lawrennd/manim package: look for js/manim-svg.js alongside it.
     try:
         import manim as _manim  # type: ignore[import]
+
         candidate = pathlib.Path(_manim.__file__).parent.parent / "js" / "manim-svg.js"
         if candidate.is_file():
             return candidate
@@ -137,8 +138,7 @@ def generate_html(
     anims = find_animations(animation_root)
     if not anims:
         raise FileNotFoundError(
-            f"No animation directories found under {animation_root!r}. "
-            "Run 'manim --renderer svg' first."
+            f"No animation directories found under {animation_root!r}. " "Run 'manim --renderer svg' first."
         )
 
     output_path = output_path.resolve()
@@ -147,9 +147,7 @@ def generate_html(
     # Resolve JS plugin.
     resolved_js = _locate_js_plugin(js_src)
     if resolved_js is None:
-        raise FileNotFoundError(
-            "Cannot find manim-svg.js. Install lawrennd/manim or set --js-src."
-        )
+        raise FileNotFoundError("Cannot find manim-svg.js. Install lawrennd/manim or set --js-src.")
 
     # Copy the plugin alongside the output HTML so it can be served locally.
     js_dest = output_path.parent / "manim-svg.js"
@@ -158,10 +156,7 @@ def generate_html(
     js_src_ref = "manim-svg.js"
 
     # Build section list.
-    sections = "\n".join(
-        _ANIM_SECTION.format(rel_path=_relative_path(d, output_path))
-        for d in anims
-    )
+    sections = "\n".join(_ANIM_SECTION.format(rel_path=_relative_path(d, output_path)) for d in anims)
 
     title_slide = _TITLE_SECTION.format(title=title) if title else ""
 

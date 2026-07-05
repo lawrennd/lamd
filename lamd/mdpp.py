@@ -47,8 +47,9 @@ def _convert_display_math_posthoc(src: str) -> str:
     def _conv_code(segment: str) -> str:
         def _repl(m: re.Match) -> str:
             eq = m.group(1).strip()
-            eq = eq.replace('"""', r'\"\"\"')
+            eq = eq.replace('"""', r"\"\"\"")
             return f'        self.play(FadeIn(lamd_display_math(r"""{eq}""")))'
+
         return re.sub(r"\$\$(.*?)\$\$", _repl, segment, flags=re.DOTALL)
 
     # Split on r"""...""" string literals (capturing group keeps the literals in
@@ -80,6 +81,7 @@ def _preprocess_math_for_manim(body: str) -> str:
         return f"\\displaymath{{{equation}}}"
 
     return re.sub(r"\$\$(.*?)\$\$", _replace, body, flags=re.DOTALL)
+
 
 VALID_FORMATS = ["notes", "slides", "code"]
 VALID_CODE_LEVELS = ["none", "sparse", "ipynb", "diagnostic", "plot", "full", "test"]
@@ -162,17 +164,17 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
     # Add code-specific arguments
     if args.code in ["sparse", "plot", "diagnostic", "full", "ipynb", "test"]:
         gpp_args.append("-DCODE=1")
-    
+
     if args.code in ["plot", "diagnostic", "full", "ipynb", "test"]:
         gpp_args.append("-DPLOTCODE=1")
-    
+
     if args.code in ["diagnostic", "full", "ipynb", "test"]:
         gpp_args.append("-DHELPERCODE=1")
         gpp_args.append("-DDISPLAYCODE=1")
-    
+
     if args.code in ["full", "ipynb", "test"]:
         gpp_args.append("-DMAGICCODE=1")
-    
+
     # Add test code flag when test level is selected
     if args.code == "test":
         gpp_args.append("-DTESTCODE=1")
@@ -576,15 +578,15 @@ def main() -> int:
             # delimiters change.
             if os.path.isfile(args.output):
                 import re as _re
+
                 with open(args.output) as _f:
                     _src = _f.read()
+
                 def _html_comment_to_python(m):
                     inner = m.group(1).strip("\n")
                     lines = inner.split("\n")
-                    return "\n".join(
-                        ("# " + ln.strip()) if ln.strip() else "#"
-                        for ln in lines
-                    )
+                    return "\n".join(("# " + ln.strip()) if ln.strip() else "#" for ln in lines)
+
                 _converted = _re.sub(
                     r"<!--(.*?)-->",
                     _html_comment_to_python,
@@ -610,6 +612,7 @@ def main() -> int:
         # For Manim targets, copy the runtime helper alongside the output.
         if args.to in ("manim", "manim-video", "manim-svg") and args.output:
             import shutil
+
             helper_src = os.path.join(os.path.dirname(__file__), "util", "lamd_manim_helper.py")
             out_dir = os.path.dirname(os.path.abspath(args.output))
             helper_dst = os.path.join(out_dir, "_lamd_manim.py")

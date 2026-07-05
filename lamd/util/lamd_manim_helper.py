@@ -149,9 +149,7 @@ def lamd_text(
             # Display-math block
             latex = seg.strip()
             if latex:
-                mobjects.append(
-                    MathTex(latex, font_size=display_font_size, **kwargs)
-                )
+                mobjects.append(MathTex(latex, font_size=display_font_size, **kwargs))
         else:
             # Plain / inline-math segment
             mobjects.extend(_process_inline_segment(seg, font_size, kwargs))

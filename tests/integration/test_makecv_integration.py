@@ -156,7 +156,7 @@ class TestMakefileGeneration(TestMakeCVIntegration):
         assert "include $(MAKEFILESDIR)/make-cv-flags.mk" in makefile_content
         assert "include $(MAKEFILESDIR)/make-lists.mk" in makefile_content, "make-lists.mk should be included"
         assert "include $(MAKEFILESDIR)/make-cv.mk" in makefile_content
-        
+
         # Verify the order: make-cv-flags.mk, then make-lists.mk, then make-cv.mk
         lines = makefile_content.split("\n")
         flags_line = next(i for i, line in enumerate(lines) if "make-cv-flags.mk" in line)
@@ -187,9 +187,9 @@ class TestMakefileGeneration(TestMakeCVIntegration):
         lamd_dir = Path(lamd.__file__).parent
         expected_makefiles_dir = str(lamd_dir / "makefiles")
 
-        assert expected_makefiles_dir in makefile_content, (
-            f"Expected makefiles dir {expected_makefiles_dir} not found in makefile"
-        )
+        assert (
+            expected_makefiles_dir in makefile_content
+        ), f"Expected makefiles dir {expected_makefiles_dir} not found in makefile"
 
 
 class TestConfigurationValidation(TestMakeCVIntegration):
@@ -333,19 +333,16 @@ class TestIncludeSystem(TestMakeCVIntegration):
         # Verify that the makefile includes preprocessing for docx
         # The make-docx.mk should have a rule that preprocesses before pandoc
         # Check that the makefile includes make-docx.mk
-        assert "include" in makefile_content and "make-docx.mk" in makefile_content, (
-            "Makefile should include make-docx.mk"
-        )
-        
+        assert "include" in makefile_content and "make-docx.mk" in makefile_content, "Makefile should include make-docx.mk"
+
         # The fix ensures that ${BASE}.docx depends on ${BASE}.preprocessed.md
         # and there's a preprocessing rule. Since make-docx.mk is included,
         # we verify the pattern exists in the included makefile by checking
         # that the makefile references preprocessing variables
-        assert "${PP}" in makefile_content or "PP=" in makefile_content, (
-            "Makefile should reference preprocessing (${PP}) for docx generation"
-        )
+        assert (
+            "${PP}" in makefile_content or "PP=" in makefile_content
+        ), "Makefile should reference preprocessing (${PP}) for docx generation"
 
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
-

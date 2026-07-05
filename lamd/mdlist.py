@@ -17,6 +17,7 @@ from lamd.util import set_since_year
 # Server mode support (optional dependency)
 try:
     from lynguine.client import ServerClient
+
     SERVER_MODE_AVAILABLE = True
 except ImportError:
     SERVER_MODE_AVAILABLE = False
@@ -112,14 +113,10 @@ def main() -> int:
     parser.add_argument(
         "--use-server",
         action="store_true",
-        help="Use lynguine server mode for faster repeated access (requires lynguine server mode)"
+        help="Use lynguine server mode for faster repeated access (requires lynguine server mode)",
     )
 
-    parser.add_argument(
-        "--no-server",
-        action="store_true",
-        help="Force direct mode even if LAMD_USE_SERVER is set"
-    )
+    parser.add_argument("--no-server", action="store_true", help="Force direct mode even if LAMD_USE_SERVER is set")
 
     parser.add_argument("file", type=str, nargs="+", help="The file names to read in")
 
@@ -175,12 +172,12 @@ def main() -> int:
         # Complexity: CustomDataFrame.from_flow() integrates tightly with compute operations
         # (preprocessors, augmentors, sorters) and mdlist's current architecture expects
         # local DataFrame processing for template rendering.
-        # 
+        #
         # For Phase 2 MVP, focus is on mdfield (38 calls in CV builds).
         # mdlist server integration will be addressed in Phase 3 with proper architecture.
         sys.stderr.write("Note: Server mode for mdlist deferred to Phase 3. Using direct mode.\n")
         use_server = False
-    
+
     # Load data (direct mode for now)
     data = assess.data.CustomDataFrame.from_flow(interface)
 

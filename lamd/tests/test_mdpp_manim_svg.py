@@ -9,6 +9,7 @@ Checks that:
 
 No Manim installation is required.
 """
+
 import os
 import py_compile
 import subprocess
@@ -24,10 +25,14 @@ _FIXTURE = os.path.join(os.path.dirname(__file__), "fixtures", "minimal-manim-ta
 def _run_mdpp(output_path: str) -> subprocess.CompletedProcess:
     cmd = _MDPP + [
         _FIXTURE,
-        "--to", "manim-svg",
-        "--output", output_path,
-        "--macros-path", _MACROS_DIR,
-        "--format", "slides",
+        "--to",
+        "manim-svg",
+        "--output",
+        output_path,
+        "--macros-path",
+        _MACROS_DIR,
+        "--format",
+        "slides",
     ]
     return subprocess.run(cmd, capture_output=True, text=True)
 
@@ -52,9 +57,9 @@ class TestMdppManim_SVG(unittest.TestCase):
     def test_exit_code_zero(self):
         result = _run_mdpp(self.output)
         self.assertEqual(
-            result.returncode, 0,
-            msg=f"mdpp --to manim-svg exited {result.returncode}.\n"
-                f"stdout: {result.stdout}\nstderr: {result.stderr}",
+            result.returncode,
+            0,
+            msg=f"mdpp --to manim-svg exited {result.returncode}.\n" f"stdout: {result.stdout}\nstderr: {result.stderr}",
         )
 
     def test_output_file_created(self):
