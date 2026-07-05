@@ -24,38 +24,38 @@ from lxml import etree
 # Paths
 # ---------------------------------------------------------------------------
 SCRIPT_DIR = Path(__file__).parent
-REPO_ROOT   = SCRIPT_DIR.parent          # lamd/
+REPO_ROOT = SCRIPT_DIR.parent  # lamd/
 SOURCE_POTX = REPO_ROOT / "lamd" / "includes" / "custom-reference.potx"
 OUTPUT_POTX = REPO_ROOT / "lamd" / "includes" / "trent-reference.potx"
 
 # Trent assets (from the slides repo sibling to talks)
-SLIDES_ROOT  = REPO_ROOT.parent.parent / "lawrennd" / "slides"
-PHOTO_PATH   = SLIDES_ROOT / "diagrams" / "people" / "neil-trent-portrait.jpg"
-LOGO_PATH    = SLIDES_ROOT / "diagrams" / "logos" / "trent-blue.png"
+SLIDES_ROOT = REPO_ROOT.parent.parent / "lawrennd" / "slides"
+PHOTO_PATH = SLIDES_ROOT / "diagrams" / "people" / "neil-trent-portrait.jpg"
+LOGO_PATH = SLIDES_ROOT / "diagrams" / "logos" / "trent-blue.png"
 
 WORK_DIR = Path("/tmp/trent_potx_work")
 
 # ---------------------------------------------------------------------------
 # Trent palette (hex without #)
 # ---------------------------------------------------------------------------
-ORANGE  = "F5821F"   # primary accent — headings, highlights
-NAVY    = "1A1A3E"   # dark text
-PEACH   = "FDE9D8"   # light background / gradient start
-PEACH2  = "FAE0C8"   # gradient end
-WHITE   = "FFFFFF"
-GREY    = "6A6A8A"   # muted text
+ORANGE = "F5821F"  # primary accent — headings, highlights
+NAVY = "1A1A3E"  # dark text
+PEACH = "FDE9D8"  # light background / gradient start
+PEACH2 = "FAE0C8"  # gradient end
+WHITE = "FFFFFF"
+GREY = "6A6A8A"  # muted text
 
 # EMU constants (914400 EMU = 1 inch)
 EMU = 914400
 # Standard widescreen slide: 10 × 7.5 inches → check source first, fallback here
-SLIDE_W = 9144000   # 10 inches — may be overridden after reading source
-SLIDE_H = 6858000   # 7.5 inches
+SLIDE_W = 9144000  # 10 inches — may be overridden after reading source
+SLIDE_H = 6858000  # 7.5 inches
 
 NS = {
-    "a":  "http://schemas.openxmlformats.org/drawingml/2006/main",
-    "p":  "http://schemas.openxmlformats.org/presentationml/2006/main",
-    "r":  "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
-    "rel":"http://schemas.openxmlformats.org/package/2006/relationships",
+    "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
+    "p": "http://schemas.openxmlformats.org/presentationml/2006/main",
+    "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+    "rel": "http://schemas.openxmlformats.org/package/2006/relationships",
 }
 for prefix, uri in NS.items():
     etree.register_namespace(prefix, uri)
@@ -64,8 +64,10 @@ for prefix, uri in NS.items():
 def a(tag):
     return "{%s}%s" % (NS["a"], tag)
 
+
 def p(tag):
     return "{%s}%s" % (NS["p"], tag)
+
 
 def r_ns(tag):
     return "{%s}%s" % (NS["r"], tag)
@@ -95,18 +97,18 @@ def patch_theme(work: Path):
     if clr_scheme is not None:
         # Map: dk1=black, lt1=white, dk2=navy, lt2=peach, accent1=orange
         mapping = {
-            "dk1":     ("sysClr", {"val": "windowText", "lastClr": "000000"}),
-            "lt1":     ("sysClr", {"val": "window",     "lastClr": "FFFFFF"}),
-            "dk2":     ("srgbClr", {"val": NAVY}),
-            "lt2":     ("srgbClr", {"val": PEACH}),
+            "dk1": ("sysClr", {"val": "windowText", "lastClr": "000000"}),
+            "lt1": ("sysClr", {"val": "window", "lastClr": "FFFFFF"}),
+            "dk2": ("srgbClr", {"val": NAVY}),
+            "lt2": ("srgbClr", {"val": PEACH}),
             "accent1": ("srgbClr", {"val": ORANGE}),
             "accent2": ("srgbClr", {"val": PEACH2}),
-            "accent3": ("srgbClr", {"val": "D4EDDA"}),   # soft green tint
-            "accent4": ("srgbClr", {"val": "B8D4F5"}),   # soft blue tint
-            "accent5": ("srgbClr", {"val": "F5C6A0"}),   # warm peach mid
-            "accent6": ("srgbClr", {"val": "C8650F"}),   # darker orange
-            "hlink":   ("srgbClr", {"val": ORANGE}),
-            "folHlink":("srgbClr", {"val": "C8650F"}),
+            "accent3": ("srgbClr", {"val": "D4EDDA"}),  # soft green tint
+            "accent4": ("srgbClr", {"val": "B8D4F5"}),  # soft blue tint
+            "accent5": ("srgbClr", {"val": "F5C6A0"}),  # warm peach mid
+            "accent6": ("srgbClr", {"val": "C8650F"}),  # darker orange
+            "hlink": ("srgbClr", {"val": ORANGE}),
+            "folHlink": ("srgbClr", {"val": "C8650F"}),
         }
         for slot_tag, (clr_tag, attrs) in mapping.items():
             slot = clr_scheme.find(a(slot_tag))
@@ -130,8 +132,7 @@ def patch_theme(work: Path):
                     latin = etree.SubElement(node, a("latin"))
                 latin.set("typeface", "Inter")
 
-    tree.write(str(theme_path), xml_declaration=True,
-               encoding="UTF-8", standalone=True)
+    tree.write(str(theme_path), xml_declaration=True, encoding="UTF-8", standalone=True)
     print("  ✓ theme patched")
 
 
@@ -151,7 +152,7 @@ def patch_title_layout(work: Path):
     w = int(sldSz.get("cx", SLIDE_W)) if sldSz is not None else SLIDE_W
     h = int(sldSz.get("cy", SLIDE_H)) if sldSz is not None else SLIDE_H
 
-    split = int(w * 0.57)   # left panel width (57%)
+    split = int(w * 0.57)  # left panel width (57%)
     right_x = split
     right_w = w - split
 
@@ -180,18 +181,20 @@ def patch_title_layout(work: Path):
         """Return a <p:sp> rectangle element."""
         sp = etree.Element(p("sp"))
         nvSpPr = etree.SubElement(sp, p("nvSpPr"))
-        cNvPr  = etree.SubElement(nvSpPr, p("cNvPr"))
+        cNvPr = etree.SubElement(nvSpPr, p("cNvPr"))
         cNvPr.set("id", str(sp_id))
         cNvPr.set("name", name)
         cNvSpPr = etree.SubElement(nvSpPr, p("cNvSpPr"))
-        nvPr    = etree.SubElement(nvSpPr, p("nvPr"))
+        nvPr = etree.SubElement(nvSpPr, p("nvPr"))
 
         spPr = etree.SubElement(sp, p("spPr"))
         xfrm = etree.SubElement(spPr, a("xfrm"))
-        off  = etree.SubElement(xfrm, a("off"))
-        off.set("x", str(x)); off.set("y", str(y))
-        ext  = etree.SubElement(xfrm, a("ext"))
-        ext.set("cx", str(cx)); ext.set("cy", str(cy))
+        off = etree.SubElement(xfrm, a("off"))
+        off.set("x", str(x))
+        off.set("y", str(y))
+        ext = etree.SubElement(xfrm, a("ext"))
+        ext.set("cx", str(cx))
+        ext.set("cy", str(cy))
         prstGeom = etree.SubElement(spPr, a("prstGeom"))
         prstGeom.set("prst", "rect")
         etree.SubElement(prstGeom, a("avLst"))
@@ -223,7 +226,7 @@ def patch_title_layout(work: Path):
       <a:srgbClr val="{WHITE}"/>
     </a:solidFill>"""
 
-    left_rect  = make_rect(100, "LeftPanel",  0,       0, split,   h, LEFT_FILL)
+    left_rect = make_rect(100, "LeftPanel", 0, 0, split, h, LEFT_FILL)
     right_rect = make_rect(101, "RightPanel", right_x, 0, right_w, h, RIGHT_FILL)
 
     # Insert background rects at position 1 (after nvGrpSpPr/grpSpPr)
@@ -260,22 +263,22 @@ def patch_title_layout(work: Path):
 
         def set_xfrm(xf, x, y, cx, cy):
             off = xf.find(a("off"))
-            if off is None: off = etree.SubElement(xf, a("off"))
-            off.set("x", str(x)); off.set("y", str(y))
+            if off is None:
+                off = etree.SubElement(xf, a("off"))
+            off.set("x", str(x))
+            off.set("y", str(y))
             ext = xf.find(a("ext"))
-            if ext is None: ext = etree.SubElement(xf, a("ext"))
-            ext.set("cx", str(cx)); ext.set("cy", str(cy))
+            if ext is None:
+                ext = etree.SubElement(xf, a("ext"))
+            ext.set("cx", str(cx))
+            ext.set("cy", str(cy))
 
-        margin = int(0.35 * EMU)   # ~0.35 inch margin
-        top_logo = int(0.65 * EMU) # space for logo at top
+        margin = int(0.35 * EMU)  # ~0.35 inch margin
+        top_logo = int(0.65 * EMU)  # space for logo at top
 
         if ph_type in ("ctrTitle", "title"):
             # Title: large, left-panel, orange
-            set_xfrm(xfrm,
-                     margin,
-                     int(h * 0.22),
-                     split - 2 * margin,
-                     int(h * 0.52))
+            set_xfrm(xfrm, margin, int(h * 0.22), split - 2 * margin, int(h * 0.52))
             # Force title colour to orange
             txBody = sp.find(p("txBody"))
             if txBody is not None:
@@ -300,11 +303,7 @@ def patch_title_layout(work: Path):
 
         elif ph_type == "subTitle":
             # Subtitle: below title, left panel
-            set_xfrm(xfrm,
-                     margin,
-                     int(h * 0.76),
-                     split - 2 * margin,
-                     int(h * 0.20))
+            set_xfrm(xfrm, margin, int(h * 0.76), split - 2 * margin, int(h * 0.20))
             txBody = sp.find(p("txBody"))
             if txBody is not None:
                 lstStyle = txBody.find(a("lstStyle"))
@@ -327,33 +326,37 @@ def patch_title_layout(work: Path):
 
     # ---- Photo placeholder in right panel ----------------------------------
     photo_margin = int(0.3 * EMU)
-    photo_x  = right_x + photo_margin
-    photo_y  = int(h * 0.08)
+    photo_x = right_x + photo_margin
+    photo_y = int(h * 0.08)
     photo_cx = right_w - 2 * photo_margin
     photo_cy = int(h * 0.70)
 
     # Add picture placeholder (type="pic") for the speaker photo
     pic_sp = etree.SubElement(spTree, p("sp"))
-    pic_nvSpPr  = etree.SubElement(pic_sp, p("nvSpPr"))
-    pic_cNvPr   = etree.SubElement(pic_nvSpPr, p("cNvPr"))
-    pic_cNvPr.set("id", "102"); pic_cNvPr.set("name", "SpeakerPhoto")
+    pic_nvSpPr = etree.SubElement(pic_sp, p("nvSpPr"))
+    pic_cNvPr = etree.SubElement(pic_nvSpPr, p("cNvPr"))
+    pic_cNvPr.set("id", "102")
+    pic_cNvPr.set("name", "SpeakerPhoto")
     pic_cNvSpPr = etree.SubElement(pic_nvSpPr, p("cNvSpPr"))
-    pic_nvPr    = etree.SubElement(pic_nvSpPr, p("nvPr"))
-    pic_ph      = etree.SubElement(pic_nvPr, p("ph"))
+    pic_nvPr = etree.SubElement(pic_nvSpPr, p("nvPr"))
+    pic_ph = etree.SubElement(pic_nvPr, p("ph"))
     pic_ph.set("type", "pic")
     pic_ph.set("idx", "1")
 
     pic_spPr = etree.SubElement(pic_sp, p("spPr"))
     pic_xfrm = etree.SubElement(pic_spPr, a("xfrm"))
-    pic_off  = etree.SubElement(pic_xfrm, a("off"))
-    pic_off.set("x", str(photo_x)); pic_off.set("y", str(photo_y))
-    pic_ext  = etree.SubElement(pic_xfrm, a("ext"))
-    pic_ext.set("cx", str(photo_cx)); pic_ext.set("cy", str(photo_cy))
+    pic_off = etree.SubElement(pic_xfrm, a("off"))
+    pic_off.set("x", str(photo_x))
+    pic_off.set("y", str(photo_y))
+    pic_ext = etree.SubElement(pic_xfrm, a("ext"))
+    pic_ext.set("cx", str(photo_cx))
+    pic_ext.set("cy", str(photo_cy))
     pic_geom = etree.SubElement(pic_spPr, a("prstGeom"))
     pic_geom.set("prst", "roundRect")
-    pic_avLst= etree.SubElement(pic_geom, a("avLst"))
-    pic_gd   = etree.SubElement(pic_avLst, a("gd"))
-    pic_gd.set("name", "adj"); pic_gd.set("fmla", "val 16667")  # ~corner radius
+    pic_avLst = etree.SubElement(pic_geom, a("avLst"))
+    pic_gd = etree.SubElement(pic_avLst, a("gd"))
+    pic_gd.set("name", "adj")
+    pic_gd.set("fmla", "val 16667")  # ~corner radius
     etree.SubElement(pic_spPr, a("noFill"))
 
     pic_txBody = etree.SubElement(pic_sp, p("txBody"))
@@ -365,13 +368,20 @@ def patch_title_layout(work: Path):
     etree.SubElement(r_el, a("t"))
 
     # ---- Speaker name text box (below photo) --------------------------------
-    name_x  = right_x + photo_margin
-    name_y  = photo_y + photo_cy + int(0.12 * EMU)
+    name_x = right_x + photo_margin
+    name_y = photo_y + photo_cy + int(0.12 * EMU)
     name_cx = right_w - 2 * photo_margin
     name_cy = int(0.35 * EMU)
 
-    name_sp = make_rect(103, "SpeakerName", name_x, name_y, name_cx, name_cy,
-                        f'<a:noFill xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"/>')
+    name_sp = make_rect(
+        103,
+        "SpeakerName",
+        name_x,
+        name_y,
+        name_cx,
+        name_cy,
+        f'<a:noFill xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"/>',
+    )
     # Override txBody with styled text placeholder
     name_txBody = name_sp.find(p("txBody"))
     for child in list(name_txBody):
@@ -384,7 +394,9 @@ def patch_title_layout(work: Path):
     name_pPr.set("algn", "ctr")
     name_r = etree.SubElement(name_p, a("r"))
     name_rPr = etree.SubElement(name_r, a("rPr"))
-    name_rPr.set("lang", "en-GB"); name_rPr.set("sz", "1400"); name_rPr.set("b", "1")
+    name_rPr.set("lang", "en-GB")
+    name_rPr.set("sz", "1400")
+    name_rPr.set("b", "1")
     name_solidFill = etree.SubElement(name_rPr, a("solidFill"))
     name_srgb = etree.SubElement(name_solidFill, a("srgbClr"))
     name_srgb.set("val", NAVY)
@@ -393,10 +405,17 @@ def patch_title_layout(work: Path):
     spTree.append(name_sp)
 
     # ---- Role / institute text box ------------------------------------------
-    role_y  = name_y + name_cy + int(0.05 * EMU)
+    role_y = name_y + name_cy + int(0.05 * EMU)
     role_cy = int(0.40 * EMU)
-    role_sp = make_rect(104, "SpeakerRole", name_x, role_y, name_cx, role_cy,
-                        f'<a:noFill xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"/>')
+    role_sp = make_rect(
+        104,
+        "SpeakerRole",
+        name_x,
+        role_y,
+        name_cx,
+        role_cy,
+        f'<a:noFill xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"/>',
+    )
     role_txBody = role_sp.find(p("txBody"))
     for child in list(role_txBody):
         role_txBody.remove(child)
@@ -408,7 +427,8 @@ def patch_title_layout(work: Path):
     role_pPr.set("algn", "ctr")
     role_r = etree.SubElement(role_p, a("r"))
     role_rPr = etree.SubElement(role_r, a("rPr"))
-    role_rPr.set("lang", "en-GB"); role_rPr.set("sz", "1100")
+    role_rPr.set("lang", "en-GB")
+    role_rPr.set("sz", "1100")
     role_solidFill = etree.SubElement(role_rPr, a("solidFill"))
     role_srgb = etree.SubElement(role_solidFill, a("srgbClr"))
     role_srgb.set("val", GREY)
@@ -416,8 +436,7 @@ def patch_title_layout(work: Path):
     role_t.text = "Chief Scientist & Co-Founder, Trent AI"
     spTree.append(role_sp)
 
-    tree.write(str(layout_path), xml_declaration=True,
-               encoding="UTF-8", standalone=True)
+    tree.write(str(layout_path), xml_declaration=True, encoding="UTF-8", standalone=True)
     print("  ✓ title slide layout patched")
 
 
@@ -445,8 +464,7 @@ def patch_master(work: Path):
                 solidFill = etree.SubElement(defRPr, a("solidFill"))
                 srgb = etree.SubElement(solidFill, a("srgbClr"))
                 srgb.set("val", ORANGE)
-        tree.write(str(master_file), xml_declaration=True,
-                   encoding="UTF-8", standalone=True)
+        tree.write(str(master_file), xml_declaration=True, encoding="UTF-8", standalone=True)
     print("  ✓ slide master heading colour patched")
 
 
