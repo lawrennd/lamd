@@ -10,7 +10,6 @@ import types
 import unittest
 from unittest.mock import MagicMock, patch
 
-
 # ---------------------------------------------------------------------------
 # Build a minimal fake Manim module so that the helper's TYPE_CHECKING block
 # and local imports inside the functions can succeed without a real install.

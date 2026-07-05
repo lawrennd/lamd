@@ -25,6 +25,7 @@ from lamd.config.interface import Interface
 # Server mode support (optional dependency)
 try:
     from lynguine.client import ServerClient
+
     SERVER_MODE_AVAILABLE = True
 except ImportError:
     SERVER_MODE_AVAILABLE = False
@@ -52,11 +53,7 @@ def extract_field_server_mode(field: str, filename: str, config_files: list) -> 
 
         # Extract field using server's talk_field endpoint
         # This wraps lynguine.util.talk.talk_field() with config fallback
-        answer = client.extract_talk_field(
-            field=field,
-            markdown_file=filename,
-            config_files=config_files
-        )
+        answer = client.extract_talk_field(field=field, markdown_file=filename, config_files=config_files)
 
         # Server returns empty string for missing fields (matching direct mode)
         return answer
@@ -125,11 +122,7 @@ def extract_fields_batch(fields: List[str], filename: str, config_files: list, u
         try:
             client = ServerClient(auto_start=True, idle_timeout=300)
             for field in fields:
-                answer = client.extract_talk_field(
-                    field=field,
-                    markdown_file=filename,
-                    config_files=config_files
-                )
+                answer = client.extract_talk_field(field=field, markdown_file=filename, config_files=config_files)
                 result[field] = answer if answer is not None else ""
             return result
         except Exception as e:
@@ -199,29 +192,16 @@ def main() -> int:
         # Batch mode: extract multiple fields in one call
         parser.add_argument("mode", choices=["batch"], help="Batch extraction mode")
         parser.add_argument("filename", type=str, help="The markdown file to extract fields from")
-        parser.add_argument(
-            "--fields",
-            nargs="+",
-            required=True,
-            help="Fields to extract (space-separated)"
-        )
+        parser.add_argument("--fields", nargs="+", required=True, help="Fields to extract (space-separated)")
     else:
         # Single field mode (original behavior)
         parser.add_argument("field", type=str, help="The field to extract from the markdown header")
         parser.add_argument("filename", type=str, help="The markdown file to extract the field from")
 
     # Server mode options (common to both modes)
-    parser.add_argument(
-        "--use-server",
-        action="store_true",
-        help="Use lynguine server mode for faster repeated access"
-    )
+    parser.add_argument("--use-server", action="store_true", help="Use lynguine server mode for faster repeated access")
 
-    parser.add_argument(
-        "--no-server",
-        action="store_true",
-        help="Force direct mode even if LAMD_USE_SERVER is set"
-    )
+    parser.add_argument("--no-server", action="store_true", help="Force direct mode even if LAMD_USE_SERVER is set")
 
     args = parser.parse_args()
 

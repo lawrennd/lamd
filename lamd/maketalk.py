@@ -41,36 +41,40 @@ def main() -> int:
         "--format", "-F", type=str, choices=["slides", "notes"], help="The content format to produce (slides, notes)"
     )
 
-    parser.add_argument("--to", "-t", type=str, choices=["html", "pptx", "docx", "pdf", "tex", "manim", "manim-video", "manim-svg"], help="The output file format")
+    parser.add_argument(
+        "--to",
+        "-t",
+        type=str,
+        choices=["html", "pptx", "docx", "pdf", "tex", "manim", "manim-video", "manim-svg"],
+        help="The output file format",
+    )
 
     parser.add_argument(
-        "--profile",
-        action="store_true",
-        help="Enable detailed performance profiling (shows where build time is spent)"
+        "--profile", action="store_true", help="Enable detailed performance profiling (shows where build time is spent)"
     )
 
     parser.add_argument(
         "--git-cache-minutes",
         type=int,
         default=5,
-        help="Cache git fetch results for N minutes (default: 5). Set to 0 to always check remote."
+        help="Cache git fetch results for N minutes (default: 5). Set to 0 to always check remote.",
     )
 
     args = parser.parse_args()
-    
+
     # Convert git cache minutes to seconds for internal use
     git_cache_seconds = args.git_cache_minutes * 60
-    
+
     # Check if the markdown file exists FIRST (before any other work)
     if not os.path.exists(args.filename):
         print(f"Error: File '{args.filename}' not found.")
         print(f"Please check the filename and try again.")
         sys.exit(1)
-    
+
     # Initialize profiler
     profiler = BuildProfiler(enabled=args.profile)
     profiler.start()
-    
+
     # Enable Makefile-level profiling if requested
     if args.profile:
         profiler.enable_makefile_profiling()
@@ -115,39 +119,34 @@ def main() -> int:
                 # This avoids repeated network calls for short build cycles
                 import subprocess
                 import time
-                
+
                 fetch_head = os.path.join(git_dir, "FETCH_HEAD")
                 should_check_remote = True
-                
+
                 # If FETCH_HEAD exists and is recent enough, skip remote check
                 if os.path.exists(fetch_head):
                     fetch_age = time.time() - os.path.getmtime(fetch_head)
                     if fetch_age < git_cache_seconds:
                         should_check_remote = False
-                
+
                 if should_check_remote:
                     try:
                         # Fetch remote info to update FETCH_HEAD
-                        subprocess.run(
-                            ["git", "-C", answer, "fetch"],
-                            capture_output=True,
-                            timeout=10,
-                            check=False
-                        )
-                        
+                        subprocess.run(["git", "-C", answer, "fetch"], capture_output=True, timeout=10, check=False)
+
                         # Check if behind remote
                         result = subprocess.run(
                             ["git", "-C", answer, "status", "-uno", "-sb"],
                             capture_output=True,
                             text=True,
                             timeout=5,
-                            check=False
+                            check=False,
                         )
-                        
+
                         # Only pull if behind
                         if "behind" in result.stdout.lower():
                             os.system(f"CURDIR=`pwd`;cd {answer}; git pull; cd $CURDIR")
-                        
+
                     except (subprocess.TimeoutExpired, Exception):
                         # If check fails, do safe pull
                         os.system(f"CURDIR=`pwd`;cd {answer}; git pull; cd $CURDIR")
@@ -171,7 +170,7 @@ def main() -> int:
             f.write(f"INCLUDESDIR={includes_dir}\n")
             f.write(f"TEMPLATESDIR={templates_dir}\n")
             f.write(f"SCRIPTDIR={script_dir}\n")
-            
+
             # Add profiling configuration if enabled
             if args.profile:
                 f.write("\n# Profiling enabled\n")
@@ -181,7 +180,7 @@ def main() -> int:
             else:
                 f.write("\n# Profiling disabled\n")
                 f.write("TIME_CMD=\n")
-            
+
             f.write("\n")
             f.write("include $(MAKEFILESDIR)/make-talk-flags.mk\n")
             f.write("include $(MAKEFILESDIR)/make-talk.mk\n")
@@ -191,55 +190,42 @@ def main() -> int:
         # Smart pull: only pull if not recently checked (within last hour)
         import subprocess
         import time
-        
+
         # Find git root directory (might be in parent dir)
         try:
             git_root = subprocess.run(
-                ["git", "rev-parse", "--git-dir"],
-                capture_output=True,
-                text=True,
-                timeout=1,
-                check=False
+                ["git", "rev-parse", "--git-dir"], capture_output=True, text=True, timeout=1, check=False
             )
             git_dir = git_root.stdout.strip() if git_root.returncode == 0 else None
         except:
             git_dir = None
-        
+
         should_check_remote = False
-        
+
         if git_dir and os.path.isdir(git_dir):
             fetch_head = os.path.join(git_dir, "FETCH_HEAD")
             should_check_remote = True
-            
+
             # If FETCH_HEAD exists and is recent enough, skip remote check
             if os.path.exists(fetch_head):
                 fetch_age = time.time() - os.path.getmtime(fetch_head)
                 if fetch_age < git_cache_seconds:
                     should_check_remote = False
-        
+
         if should_check_remote:
             try:
                 # Fetch remote info
-                subprocess.run(
-                    ["git", "fetch"],
-                    capture_output=True,
-                    timeout=10,
-                    check=False
-                )
-                
+                subprocess.run(["git", "fetch"], capture_output=True, timeout=10, check=False)
+
                 # Check if behind remote
                 result = subprocess.run(
-                    ["git", "status", "-uno", "-sb"],
-                    capture_output=True,
-                    text=True,
-                    timeout=5,
-                    check=False
+                    ["git", "status", "-uno", "-sb"], capture_output=True, text=True, timeout=5, check=False
                 )
-                
+
                 # Only pull if behind
                 if "behind" in result.stdout.lower():
                     os.system("git pull")
-                
+
             except (subprocess.TimeoutExpired, Exception):
                 # If check fails, do safe pull
                 os.system("git pull")
@@ -291,12 +277,12 @@ def main() -> int:
     # Run the make command (this is where most of the time is spent)
     with profiler.measure("Make execution (total)"):
         result = os.system(make_cmd)
-    
+
     # Generate profiling report if enabled
     if args.profile:
         profiler.report()
         profiler.cleanup()
-    
+
     return result
 
 

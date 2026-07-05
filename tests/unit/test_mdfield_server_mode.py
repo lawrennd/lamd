@@ -47,24 +47,22 @@ categories: [test, example]
         # Mock ServerClient instance
         mock_client = MagicMock()
         mock_server_client_class.return_value = mock_client
-        
+
         # Mock extract_talk_field method (returns string directly)
         mock_client.extract_talk_field.return_value = "Test Document"
-        
+
         # Call the main function
         main()
-        
+
         # Verify ServerClient was instantiated
         mock_server_client_class.assert_called_once()
-        
+
         # Verify extract_talk_field was called with correct arguments
         # Note: mdfield.py automatically adds default config files
         mock_client.extract_talk_field.assert_called_once_with(
-            field="title",
-            markdown_file="test.md",
-            config_files=["_lamd.yml", "_config.yml"]
+            field="title", markdown_file="test.md", config_files=["_lamd.yml", "_config.yml"]
         )
-        
+
         # Verify output
         mock_print.assert_called_once_with("Test Document")
 
@@ -75,13 +73,13 @@ categories: [test, example]
         """Test server mode extracts date field correctly."""
         mock_client = MagicMock()
         mock_server_client_class.return_value = mock_client
-        
+
         # Mock extract_talk_field method with date (returns string directly)
         mock_client.extract_talk_field.return_value = "2023-05-15"
-        
+
         # Call the main function
         main()
-        
+
         # Verify output
         mock_print.assert_called_once_with("2023-05-15")
 
@@ -92,13 +90,13 @@ categories: [test, example]
         """Test server mode extracts list field correctly."""
         mock_client = MagicMock()
         mock_server_client_class.return_value = mock_client
-        
+
         # Mock extract_talk_field method with list (returns list directly)
         mock_client.extract_talk_field.return_value = ["test", "example"]
-        
+
         # Call the main function
         main()
-        
+
         # Verify output (list should be formatted as Python list string)
         mock_print.assert_called_once_with("['test', 'example']")
 
@@ -109,13 +107,13 @@ categories: [test, example]
         """Test server mode handles missing field gracefully."""
         mock_client = MagicMock()
         mock_server_client_class.return_value = mock_client
-        
+
         # Mock extract_talk_field method with empty string (missing field)
         mock_client.extract_talk_field.return_value = ""
-        
+
         # Call the main function
         main()
-        
+
         # Verify empty string output
         mock_print.assert_called_once_with("")
 
@@ -126,20 +124,18 @@ categories: [test, example]
         """Test server mode uses config files for fallback."""
         mock_client = MagicMock()
         mock_server_client_class.return_value = mock_client
-        
+
         # Mock a field that's typically in config, not markdown (returns string directly)
         mock_client.extract_talk_field.return_value = "../_bibliography"
-        
+
         # Call the main function
         main()
-        
+
         # Verify extract_talk_field was called with default config files
         mock_client.extract_talk_field.assert_called_once_with(
-            field="bibdir",
-            markdown_file="test.md",
-            config_files=["_lamd.yml", "_config.yml"]
+            field="bibdir", markdown_file="test.md", config_files=["_lamd.yml", "_config.yml"]
         )
-        
+
         mock_print.assert_called_once_with("../_bibliography")
 
     @patch("sys.argv", ["mdfield", "--use-server", "title", "test.md"])
@@ -148,16 +144,17 @@ categories: [test, example]
     def test_server_mode_http_error(self, mock_server_client_class, mock_print):
         """Test server mode handles HTTP errors from server."""
         import requests
+
         mock_client = MagicMock()
         mock_server_client_class.return_value = mock_client
-        
+
         # Mock extract_talk_field to raise HTTP error
         mock_client.extract_talk_field.side_effect = requests.HTTPError("404 Not Found")
-        
+
         # Call the main function - should fall back to direct mode
         with patch("lynguine.util.talk.talk_field", return_value="Fallback Title"):
             main()
-        
+
         # Verify output from fallback mode
         mock_print.assert_called_once_with("Fallback Title")
 
@@ -169,13 +166,13 @@ categories: [test, example]
         """Test server mode handles exceptions gracefully."""
         mock_client = MagicMock()
         mock_server_client_class.return_value = mock_client
-        
+
         # Mock extract_talk_field to raise exception
         mock_client.extract_talk_field.side_effect = Exception("Server not available")
-        
+
         # Call the main function
         main()
-        
+
         # Verify error message and empty output
         assert mock_stderr.write.called
         mock_print.assert_called_once_with("")
@@ -187,13 +184,13 @@ categories: [test, example]
         """Test server mode handles complex nested fields (like author)."""
         mock_client = MagicMock()
         mock_server_client_class.return_value = mock_client
-        
+
         # Mock extract_talk_field with complex author structure (returns list directly)
         mock_client.extract_talk_field.return_value = [{"given": "James L.", "family": "Curtis"}]
-        
+
         # Call the main function
         main()
-        
+
         # Verify output is JSON-like string representation
         assert mock_print.called
 
@@ -205,14 +202,14 @@ categories: [test, example]
         """Test that LAMD_USE_SERVER environment variable enables server mode."""
         mock_client = MagicMock()
         mock_server_client_class.return_value = mock_client
-        
+
         mock_client.extract_talk_field.return_value = "Test Title"
-        
+
         # Call the main function (without --use-server flag, but with env var)
         # Note: This test depends on mdfield.py checking LAMD_USE_SERVER env var
         # If not implemented, this documents expected behavior
         main()
-        
+
         # This test may need adjustment based on actual implementation
 
     @patch("sys.argv", ["mdfield", "--no-server", "title", "test.md"])
@@ -224,10 +221,9 @@ categories: [test, example]
         with patch("lynguine.util.talk.talk_field", return_value="Test Document"):
             # Call the main function
             main()
-            
+
             # Verify ServerClient was NOT instantiated
             mock_server_client_class.assert_not_called()
-            
+
             # Verify output
             mock_print.assert_called_once_with("Test Document")
-

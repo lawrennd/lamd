@@ -158,6 +158,7 @@ filter: []
         # Verify the function calls - should use path to config/cvlists.yml
         # Get the expected path
         import lamd.mdlist as mdlist_module
+
         lamd_dir = os.path.dirname(os.path.abspath(mdlist_module.__file__))
         config_dir = os.path.join(lamd_dir, "config")
         expected_cvlists_path = os.path.join(config_dir, "cvlists.yml")
@@ -173,17 +174,17 @@ filter: []
     def test_cvlists_path_construction(self):
         """Test that cvlists.yml path is constructed correctly from package location."""
         import lamd.mdlist as mdlist_module
-        
+
         # Get the actual path construction logic
         lamd_dir = os.path.dirname(os.path.abspath(mdlist_module.__file__))
         config_dir = os.path.join(lamd_dir, "config")
         cvlists_path = os.path.join(config_dir, "cvlists.yml")
-        
+
         # Verify the path points to the config directory
         assert config_dir.endswith("lamd/config")
         assert cvlists_path.endswith("lamd/config/cvlists.yml")
         assert os.path.basename(config_dir) == "config"
-        
+
     @patch("sys.argv", ["mdlist", "talks", "-s", "2021", "talks.json"])
     @patch("pandas.to_datetime")
     @patch("lynguine.config.interface.Interface.from_file")
@@ -191,11 +192,13 @@ filter: []
     @patch("referia.assess.data.CustomDataFrame.from_flow")
     @patch("lamd.mdlist.load_template_env")
     @patch("os.getcwd")
-    def test_cvlists_path_independent_of_cwd(self, mock_getcwd, mock_load_template, mock_custom_df, mock_print, mock_interface, mock_to_datetime):
+    def test_cvlists_path_independent_of_cwd(
+        self, mock_getcwd, mock_load_template, mock_custom_df, mock_print, mock_interface, mock_to_datetime
+    ):
         """Test that cvlists.yml is found regardless of current working directory."""
         # Mock different working directories
         mock_getcwd.return_value = "/some/random/directory"
-        
+
         # Mock the current date
         mock_now = pd.Timestamp("2024-03-15")
         mock_to_datetime.return_value = mock_now
@@ -256,18 +259,20 @@ filter: []
         # Verify that the path used is from the package, not the current directory
         assert mock_interface.called, "Interface.from_file should have been called"
         call_args = mock_interface.call_args
-        
+
         # Get user_file from kwargs (it's a keyword argument)
         if call_args.kwargs:
             called_path = call_args.kwargs.get("user_file")
         else:
             # If no kwargs, check positional args
             called_path = call_args[0][0] if call_args[0] else None
-        
+
         # The path should be an absolute path to the config directory
         assert called_path is not None, f"user_file should have been provided. Call args: {call_args}"
         assert os.path.isabs(called_path), f"Path should be absolute, got {called_path}"
-        assert called_path.endswith("lamd/config/cvlists.yml"), f"Path should end with lamd/config/cvlists.yml, got {called_path}"
+        assert called_path.endswith(
+            "lamd/config/cvlists.yml"
+        ), f"Path should end with lamd/config/cvlists.yml, got {called_path}"
         assert "config" in called_path, f"Path should include config directory, got {called_path}"
 
     @patch("sys.argv", ["mdlist", "publications", "test1.md", "test2.md"])
@@ -276,7 +281,9 @@ filter: []
     @patch("builtins.print")
     @patch("referia.assess.data.CustomDataFrame.from_flow")
     @patch("lamd.mdlist.load_template_env")
-    def test_index_field_set_in_interface(self, mock_load_template, mock_custom_df, mock_print, mock_interface, mock_to_datetime):
+    def test_index_field_set_in_interface(
+        self, mock_load_template, mock_custom_df, mock_print, mock_interface, mock_to_datetime
+    ):
         """Test that the index field is set to 'filename' in the interface input configuration."""
         # Mock the current date
         mock_now = pd.Timestamp("2024-03-15")
@@ -342,6 +349,7 @@ filter: []
 
         # Update sys.argv to use the test files
         import sys
+
         original_argv = sys.argv
         sys.argv = ["mdlist", "publications", test_file1, test_file2]
 
@@ -362,9 +370,9 @@ filter: []
         assert passed_interface is not None, "Interface should have been passed to CustomDataFrame.from_flow"
         assert "input" in passed_interface, "Interface should have an 'input' key"
         assert "index" in passed_interface["input"], "Interface input should have an 'index' field"
-        assert passed_interface["input"]["index"] == "filename", (
-            f"Index field should be set to 'filename', got '{passed_interface['input']['index']}'"
-        )
+        assert (
+            passed_interface["input"]["index"] == "filename"
+        ), f"Index field should be set to 'filename', got '{passed_interface['input']['index']}'"
 
     @patch("sys.argv", ["mdlist", "talks", "talk1.md"])
     @patch("pandas.to_datetime")
@@ -372,7 +380,9 @@ filter: []
     @patch("builtins.print")
     @patch("referia.assess.data.CustomDataFrame.from_flow")
     @patch("lamd.mdlist.load_template_env")
-    def test_index_field_set_for_single_file(self, mock_load_template, mock_custom_df, mock_print, mock_interface, mock_to_datetime):
+    def test_index_field_set_for_single_file(
+        self, mock_load_template, mock_custom_df, mock_print, mock_interface, mock_to_datetime
+    ):
         """Test that the index field is set correctly when processing a single file."""
         # Mock the current date
         mock_now = pd.Timestamp("2024-03-15")
@@ -436,6 +446,7 @@ filter: []
 
         # Update sys.argv to use the test file
         import sys
+
         original_argv = sys.argv
         sys.argv = ["mdlist", "talks", test_file]
 
@@ -456,6 +467,6 @@ filter: []
         assert passed_interface is not None, "Interface should have been passed to CustomDataFrame.from_flow"
         assert "input" in passed_interface, "Interface should have an 'input' key"
         assert "index" in passed_interface["input"], "Interface input should have an 'index' field"
-        assert passed_interface["input"]["index"] == "filename", (
-            f"Index field should be set to 'filename', got '{passed_interface['input']['index']}'"
-        )
+        assert (
+            passed_interface["input"]["index"] == "filename"
+        ), f"Index field should be set to 'filename', got '{passed_interface['input']['index']}'"

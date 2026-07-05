@@ -160,28 +160,28 @@ def main() -> int:
     elif args.dependency == "batch":
         # Extract all dependency types in one pass (CIP-0009 Phase 1 optimization)
         # This reduces redundant file I/O by reading files once and extracting all types
-        
+
         # First extract inputs (reads all files once)
         inputs = nt.extract_inputs(args.filename, snippets_path=snippets_path)
-        
+
         # Then extract diagrams of all types (reuses the file list from inputs)
         all_diagrams = nt.extract_diagrams(
             args.filename,
             absolute_path=True,
-            diagram_exts=['svg', 'png', 'pdf', 'emf'],
+            diagram_exts=["svg", "png", "pdf", "emf"],
             diagrams_dir=diagrams_dir,
-            snippets_path=snippets_path
+            snippets_path=snippets_path,
         )
-        
+
         # Handle case where extract_diagrams returns None (file doesn't exist)
         if all_diagrams is None:
             all_diagrams = []
-        
+
         # Extract specific diagram types (filter from all_diagrams to avoid re-reading)
-        svg_diagrams = [d for d in all_diagrams if d.endswith('.svg')]
-        pdf_diagrams = [d for d in all_diagrams if d.endswith('.pdf')]
-        emf_diagrams = [d for d in all_diagrams if d.endswith('.emf')]
-        
+        svg_diagrams = [d for d in all_diagrams if d.endswith(".svg")]
+        pdf_diagrams = [d for d in all_diagrams if d.endswith(".pdf")]
+        emf_diagrams = [d for d in all_diagrams if d.endswith(".emf")]
+
         # Extract dynamic dependencies (what files the talk creates)
         try:
             fields = ny.header_fields(args.filename)
@@ -199,7 +199,7 @@ def main() -> int:
         except ny.FileFormatError as e:
             print(f"Error: {e}", file=sys.stderr)
             sys.exit(1)
-        
+
         # Output in a format easy to parse in Makefiles (one line per type with prefix)
         # Use dependency command names, not Makefile variable names
         print(f"inputs:{' '.join(inputs) if inputs else ''}")

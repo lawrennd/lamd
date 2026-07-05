@@ -131,11 +131,9 @@ def generate_macros_file(people: List[Dict[str, Any]], output_file: str = "talk-
     """
     with open(output_file, "w") as f:
         # Write header
-        f.write(
-            r"""\ifndef{talkPeople}
+        f.write(r"""\ifndef{talkPeople}
 \define{talkPeople}
-"""
-        )
+""")
 
         # Write base circle head macro
         f.write(create_circle_head_macro())
@@ -153,11 +151,9 @@ def generate_macros_file(people: List[Dict[str, Any]], output_file: str = "talk-
             f.write(f"\n{macro}\n")
 
         # Write footer
-        f.write(
-            r"""
+        f.write(r"""
 \endif
-"""
-        )
+""")
 
 
 def main() -> int:

@@ -154,7 +154,7 @@ def test_format_flags():
     """Test that format-specific flags are set correctly."""
     from lamd.mdpp import setup_gpp_arguments
     import argparse
-    
+
     # Test notes format
     args = argparse.Namespace(
         format="notes",
@@ -171,46 +171,46 @@ def test_format_flags():
         include_path=None,
         snippets_path=None,
         macros_path=None,
-        output="test.md"
+        output="test.md",
     )
     iface = {"diagramsdir": "diagrams", "scriptsdir": "scripts", "writediagramsdir": "diagrams"}
-    
+
     gpp_args = setup_gpp_arguments(args, iface)
-    
+
     # Check that NOTES flag is set
     assert "-DNOTES=1" in gpp_args
     assert "-DHTML=1" in gpp_args
-    
+
     # Test slides format
     args.format = "slides"
     gpp_args = setup_gpp_arguments(args, iface)
-    
+
     # Check that SLIDES flag is set
     assert "-DSLIDES=1" in gpp_args
     assert "-DHTML=1" in gpp_args
-    
+
     # Test different output formats
     args.format = "notes"
     args.to = "tex"
     gpp_args = setup_gpp_arguments(args, iface)
     assert "-DTEX=1" in gpp_args
     assert "-DNOTES=1" in gpp_args
-    
+
     args.to = "docx"
     gpp_args = setup_gpp_arguments(args, iface)
     assert "-DDOCX=1" in gpp_args
     assert "-DNOTES=1" in gpp_args
-    
+
     args.to = "pptx"
     gpp_args = setup_gpp_arguments(args, iface)
     assert "-DPPTX=1" in gpp_args
     assert "-DNOTES=1" in gpp_args
-    
+
     args.to = "ipynb"
     gpp_args = setup_gpp_arguments(args, iface)
     assert "-DIPYNB=1" in gpp_args
     assert "-DNOTES=1" in gpp_args
-    
+
     # Test code level flags
     args.code = "sparse"
     gpp_args = setup_gpp_arguments(args, iface)
@@ -219,7 +219,7 @@ def test_format_flags():
     assert "-DHELPERCODE=1" not in gpp_args
     assert "-DDISPLAYCODE=1" not in gpp_args
     assert "-DMAGICCODE=1" not in gpp_args
-    
+
     args.code = "plot"
     gpp_args = setup_gpp_arguments(args, iface)
     assert "-DCODE=1" in gpp_args
@@ -227,7 +227,7 @@ def test_format_flags():
     assert "-DHELPERCODE=1" not in gpp_args
     assert "-DDISPLAYCODE=1" not in gpp_args
     assert "-DMAGICCODE=1" not in gpp_args
-    
+
     args.code = "diagnostic"
     gpp_args = setup_gpp_arguments(args, iface)
     assert "-DCODE=1" in gpp_args
@@ -235,7 +235,7 @@ def test_format_flags():
     assert "-DHELPERCODE=1" in gpp_args
     assert "-DDISPLAYCODE=1" in gpp_args
     assert "-DMAGICCODE=1" not in gpp_args
-    
+
     args.code = "full"
     gpp_args = setup_gpp_arguments(args, iface)
     assert "-DCODE=1" in gpp_args
@@ -243,7 +243,7 @@ def test_format_flags():
     assert "-DHELPERCODE=1" in gpp_args
     assert "-DDISPLAYCODE=1" in gpp_args
     assert "-DMAGICCODE=1" in gpp_args
-    
+
     # Test test code level
     args.code = "test"
     gpp_args = setup_gpp_arguments(args, iface)
@@ -253,7 +253,7 @@ def test_format_flags():
     assert "-DHELPERCODE=1" in gpp_args
     assert "-DDISPLAYCODE=1" in gpp_args
     assert "-DMAGICCODE=1" in gpp_args
-    
+
     args.code = "ipynb"
     gpp_args = setup_gpp_arguments(args, iface)
     assert "-DCODE=1" in gpp_args

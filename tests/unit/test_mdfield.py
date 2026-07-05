@@ -50,6 +50,7 @@ This is test content.
         """Test that a string field is correctly extracted from _lamd.yml when not in markdown."""
         # Mock talk_field to raise FileFormatError (field not in markdown)
         import lynguine.util.yaml as ny
+
         with patch("lynguine.util.talk.talk_field", side_effect=ny.FileFormatError("Field not found")):
             # Mock Interface.from_file to return the field from config
             with patch("lamd.config.interface.Interface.from_file") as mock_interface:
@@ -87,6 +88,7 @@ This is test content.
 
         # Mock talk_field to raise FileFormatError (field not in markdown)
         import lynguine.util.yaml as ny
+
         with patch("lynguine.util.talk.talk_field", side_effect=ny.FileFormatError("Field not found")):
             # Mock Interface.from_file to return the field from config
             with patch("lamd.config.interface.Interface.from_file") as mock_interface:
@@ -104,6 +106,7 @@ This is test content.
         """Test that a list field is correctly extracted from _lamd.yml when not in markdown."""
         # Mock talk_field to raise FileFormatError (field not in markdown)
         import lynguine.util.yaml as ny
+
         with patch("lynguine.util.talk.talk_field", side_effect=ny.FileFormatError("Field not found")):
             # Mock Interface.from_file to return the field from config
             with patch("lamd.config.interface.Interface.from_file") as mock_interface:
@@ -140,6 +143,7 @@ This is test content.
         """Test that environment variables in paths from config are expanded."""
         # Mock talk_field to raise FileFormatError (field not in markdown)
         import lynguine.util.yaml as ny
+
         with patch("lynguine.util.talk.talk_field", side_effect=ny.FileFormatError("Field not found")):
             # Mock Interface.from_file to return the field from config
             with patch("lamd.config.interface.Interface.from_file") as mock_interface:
@@ -162,6 +166,7 @@ This is test content.
         """Test error handling when config files can't be accessed."""
         # Mock talk_field to raise FileFormatError (field not in markdown)
         import lynguine.util.yaml as ny
+
         with patch("lynguine.util.talk.talk_field", side_effect=ny.FileFormatError("Field not found")):
             # Mock Interface.from_file to raise an exception
             with patch("lamd.config.interface.Interface.from_file", side_effect=Exception("Could not access config file")):
@@ -180,11 +185,11 @@ This is test content.
         """Test batch extraction of multiple fields."""
         # Mock extract_fields_batch to return multiple fields
         from lamd.mdfield import extract_fields_batch
-        with patch("lamd.mdfield.extract_fields_batch", return_value={
-            "title": "Test Document",
-            "date": "2023-05-15",
-            "author": "Test Author"
-        }):
+
+        with patch(
+            "lamd.mdfield.extract_fields_batch",
+            return_value={"title": "Test Document", "date": "2023-05-15", "author": "Test Author"},
+        ):
             # Call the main function
             main()
 
@@ -201,9 +206,8 @@ This is test content.
         """Test batch extraction handles list fields correctly."""
         # Mock extract_fields_batch to return a list field
         from lamd.mdfield import extract_fields_batch
-        with patch("lamd.mdfield.extract_fields_batch", return_value={
-            "categories": ["test", "example", "documentation"]
-        }):
+
+        with patch("lamd.mdfield.extract_fields_batch", return_value={"categories": ["test", "example", "documentation"]}):
             # Call the main function
             main()
 
@@ -220,10 +224,10 @@ This is test content.
             with patch("lamd.mdfield.SERVER_MODE_AVAILABLE", True):
                 # Mock extract_fields_batch
                 from lamd.mdfield import extract_fields_batch
-                with patch("lamd.mdfield.extract_fields_batch", return_value={
-                    "title": "Test Document",
-                    "date": "2023-05-15"
-                }) as mock_batch:
+
+                with patch(
+                    "lamd.mdfield.extract_fields_batch", return_value={"title": "Test Document", "date": "2023-05-15"}
+                ) as mock_batch:
                     # Call the main function
                     main()
 
@@ -242,9 +246,8 @@ This is test content.
         """Test batch extraction handles path expansion."""
         # Mock extract_fields_batch to return a path with environment variable
         from lamd.mdfield import extract_fields_batch
-        with patch("lamd.mdfield.extract_fields_batch", return_value={
-            "snippetsdir": "$HOME/snippets"
-        }):
+
+        with patch("lamd.mdfield.extract_fields_batch", return_value={"snippetsdir": "$HOME/snippets"}):
             with patch("os.path.expandvars", return_value="/home/user/snippets"):
                 # Call the main function
                 main()
@@ -258,10 +261,11 @@ This is test content.
         """Test batch extraction handles missing fields."""
         # Mock extract_fields_batch to return only one field (field2 missing)
         from lamd.mdfield import extract_fields_batch
-        with patch("lamd.mdfield.extract_fields_batch", return_value={
-            "field1": "value1",
-            "field2": ""  # Empty string for missing field
-        }):
+
+        with patch(
+            "lamd.mdfield.extract_fields_batch",
+            return_value={"field1": "value1", "field2": ""},  # Empty string for missing field
+        ):
             # Call the main function
             main()
 

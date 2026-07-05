@@ -4,6 +4,7 @@ Tests exercise the public API (generate_html) with synthetic animation
 directories, checking that the output HTML has the correct structure without
 requiring a real manim installation or a live manim-svg.js file.
 """
+
 import json
 import pathlib
 import shutil
@@ -23,9 +24,7 @@ def _make_fake_anim_dir(root: pathlib.Path, index: int, frame_count: int = 3) ->
     }
     (anim / "animation.json").write_text(json.dumps(manifest))
     for i in range(frame_count):
-        (anim / f"frame_{i:04d}.svg").write_text(
-            f'<svg xmlns="http://www.w3.org/2000/svg"><text>frame {i}</text></svg>'
-        )
+        (anim / f"frame_{i:04d}.svg").write_text(f'<svg xmlns="http://www.w3.org/2000/svg"><text>frame {i}</text></svg>')
     return anim
 
 
@@ -45,6 +44,7 @@ class TestFindAnimations(unittest.TestCase):
 
     def test_finds_animation_dirs_in_order(self):
         from lamd.util.svg_to_html import find_animations
+
         _make_fake_anim_dir(self.tmp, 2)
         _make_fake_anim_dir(self.tmp, 0)
         _make_fake_anim_dir(self.tmp, 1)
@@ -53,6 +53,7 @@ class TestFindAnimations(unittest.TestCase):
 
     def test_ignores_dirs_without_manifest(self):
         from lamd.util.svg_to_html import find_animations
+
         _make_fake_anim_dir(self.tmp, 0)
         (self.tmp / "animation_1").mkdir()  # no animation.json
         dirs = find_animations(self.tmp)
@@ -60,6 +61,7 @@ class TestFindAnimations(unittest.TestCase):
 
     def test_returns_empty_for_empty_root(self):
         from lamd.util.svg_to_html import find_animations
+
         dirs = find_animations(self.tmp)
         self.assertEqual(dirs, [])
 
@@ -79,6 +81,7 @@ class TestGenerateHtml(unittest.TestCase):
 
     def _run(self, **kwargs):
         from lamd.util.svg_to_html import generate_html
+
         generate_html(
             animation_root=self.anim_root,
             output_path=self.output,
@@ -98,9 +101,9 @@ class TestGenerateHtml(unittest.TestCase):
 
     def test_data_manim_svg_attributes_present(self):
         html = self._run()
-        self.assertIn('data-manim-svg=', html)
+        self.assertIn("data-manim-svg=", html)
         # One section per animation directory.
-        self.assertEqual(html.count('data-manim-svg='), 2)
+        self.assertEqual(html.count("data-manim-svg="), 2)
 
     def test_title_slide_included_when_title_given(self):
         html = self._run(title="Test Talk")
@@ -116,6 +119,7 @@ class TestGenerateHtml(unittest.TestCase):
 
     def test_raises_if_no_animation_dirs(self):
         from lamd.util.svg_to_html import generate_html
+
         empty_root = self.tmp / "empty"
         empty_root.mkdir()
         with self.assertRaises(FileNotFoundError):
@@ -140,13 +144,13 @@ class TestMainCLI(unittest.TestCase):
 
     def test_cli_exit_code_zero(self):
         from lamd.util.svg_to_html import main
-        rc = main([str(self.anim_root), str(self.output),
-                   "--js-src", str(self.js_src), "--title", "CLI Test"])
+
+        rc = main([str(self.anim_root), str(self.output), "--js-src", str(self.js_src), "--title", "CLI Test"])
         self.assertEqual(rc, 0)
         self.assertTrue(self.output.exists())
 
     def test_cli_exit_code_one_on_missing_root(self):
         from lamd.util.svg_to_html import main
-        rc = main([str(self.tmp / "nonexistent"), str(self.output),
-                   "--js-src", str(self.js_src)])
+
+        rc = main([str(self.tmp / "nonexistent"), str(self.output), "--js-src", str(self.js_src)])
         self.assertEqual(rc, 1)

@@ -8,6 +8,7 @@ These tests run mdpp as a subprocess on a minimal fixture and check that:
 
 No Manim or manim-slides installation is required.
 """
+
 import os
 import py_compile
 import subprocess
@@ -29,10 +30,14 @@ def _run_mdpp(to_format: str, output_path: str) -> subprocess.CompletedProcess:
     """Run mdpp on the minimal fixture and return the completed process."""
     cmd = _MDPP + [
         _FIXTURE,
-        "--to", to_format,
-        "--output", output_path,
-        "--macros-path", _MACROS_DIR,
-        "--format", "slides",
+        "--to",
+        to_format,
+        "--output",
+        output_path,
+        "--macros-path",
+        _MACROS_DIR,
+        "--format",
+        "slides",
     ]
     return subprocess.run(cmd, capture_output=True, text=True)
 
@@ -58,9 +63,9 @@ class TestMdppManim(unittest.TestCase):
     def test_exit_code_zero(self):
         result = _run_mdpp("manim", self.output)
         self.assertEqual(
-            result.returncode, 0,
-            msg=f"mdpp --to manim exited with {result.returncode}.\n"
-                f"stdout: {result.stdout}\nstderr: {result.stderr}",
+            result.returncode,
+            0,
+            msg=f"mdpp --to manim exited with {result.returncode}.\n" f"stdout: {result.stdout}\nstderr: {result.stderr}",
         )
 
     def test_output_file_created(self):
@@ -117,9 +122,10 @@ class TestMdppManim_Video(unittest.TestCase):
     def test_exit_code_zero(self):
         result = _run_mdpp("manim-video", self.output)
         self.assertEqual(
-            result.returncode, 0,
+            result.returncode,
+            0,
             msg=f"mdpp --to manim-video exited with {result.returncode}.\n"
-                f"stdout: {result.stdout}\nstderr: {result.stderr}",
+            f"stdout: {result.stdout}\nstderr: {result.stderr}",
         )
 
     def test_output_is_valid_python(self):
@@ -198,9 +204,7 @@ class TestMdppHtml_SlidesManimNoOp(unittest.TestCase):
         """\\slidesmanim should expand to nothing in HTML output."""
         result = _run_mdpp("html", self.output)
         if result.returncode != 0:
-            self.skipTest(
-                f"mdpp --to html failed (returncode={result.returncode}); skipping no-op test"
-            )
+            self.skipTest(f"mdpp --to html failed (returncode={result.returncode}); skipping no-op test")
         content = _read_output(self.output)
         self.assertNotIn(
             r"\slidesmanim",
@@ -231,10 +235,14 @@ class TestMdppManim_HtmlComments(unittest.TestCase):
         self.output = os.path.join(self.tmp.name, "comment-test.manim.py")
         cmd = _MDPP + [
             fixture,
-            "--to", "manim",
-            "--output", self.output,
-            "--macros-path", _MACROS_DIR,
-            "--format", "slides",
+            "--to",
+            "manim",
+            "--output",
+            self.output,
+            "--macros-path",
+            _MACROS_DIR,
+            "--format",
+            "slides",
         ]
         subprocess.run(cmd, capture_output=True, text=True)
 
@@ -248,8 +256,7 @@ class TestMdppManim_HtmlComments(unittest.TestCase):
         content = _read_output(self.output)
         self.assertNotIn("<!--", content, msg="Raw HTML comment delimiter found in Manim output")
         self.assertNotIn("-->", content, msg="Raw HTML comment delimiter found in Manim output")
-        self.assertIn("single-line html comment", content,
-                      msg="Comment content should be preserved as a Python comment")
+        self.assertIn("single-line html comment", content, msg="Comment content should be preserved as a Python comment")
 
     def test_output_is_valid_python_with_comment(self):
         """Output should be valid Python after comment conversion."""
@@ -281,10 +288,14 @@ class TestMdppManim_DisplayMath(unittest.TestCase):
         self.output = os.path.join(self.tmp.name, "math-test.manim.py")
         cmd = _MDPP + [
             fixture,
-            "--to", "manim",
-            "--output", self.output,
-            "--macros-path", _MACROS_DIR,
-            "--format", "slides",
+            "--to",
+            "manim",
+            "--output",
+            self.output,
+            "--macros-path",
+            _MACROS_DIR,
+            "--format",
+            "slides",
         ]
         subprocess.run(cmd, capture_output=True, text=True)
 
@@ -298,6 +309,7 @@ class TestMdppManim_DisplayMath(unittest.TestCase):
         content = _read_output(self.output)
         # $$  on its own line (top-level math) should have been converted
         import re
+
         bare_dollars = re.search(r"^\s*\$\$", content, re.MULTILINE)
         self.assertIsNone(bare_dollars, "Bare $$ found at top level of Manim output")
 
@@ -306,8 +318,7 @@ class TestMdppManim_DisplayMath(unittest.TestCase):
         if not os.path.isfile(self.output):
             self.skipTest("Output file not created")
         content = _read_output(self.output)
-        self.assertIn("lamd_display_math", content,
-                      msg="lamd_display_math not found; display math was not converted")
+        self.assertIn("lamd_display_math", content, msg="lamd_display_math not found; display math was not converted")
 
     def test_output_is_valid_python_with_math(self):
         """Output should be valid Python after display-math conversion."""
@@ -348,10 +359,14 @@ class TestMdppManim_DisplayMathFromInclude(unittest.TestCase):
         self.output = os.path.join(self.tmp.name, "include-math-test.manim.py")
         cmd = _MDPP + [
             fixture,
-            "--to", "manim",
-            "--output", self.output,
-            "--macros-path", _MACROS_DIR,
-            "--include-path", self.tmp.name,
+            "--to",
+            "manim",
+            "--output",
+            self.output,
+            "--macros-path",
+            _MACROS_DIR,
+            "--include-path",
+            self.tmp.name,
         ]
         subprocess.run(cmd, capture_output=True, text=True)
 
@@ -364,6 +379,7 @@ class TestMdppManim_DisplayMathFromInclude(unittest.TestCase):
             self.skipTest("Output file not created")
         content = _read_output(self.output)
         import re
+
         bare = re.search(r"^\s*\$\$", content, re.MULTILINE)
         self.assertIsNone(bare, "Bare $$ from included snippet found in Manim output")
 
@@ -372,8 +388,7 @@ class TestMdppManim_DisplayMathFromInclude(unittest.TestCase):
         if not os.path.isfile(self.output):
             self.skipTest("Output file not created")
         content = _read_output(self.output)
-        self.assertIn("lamd_display_math", content,
-                      msg="lamd_display_math not found; included display math was not converted")
+        self.assertIn("lamd_display_math", content, msg="lamd_display_math not found; included display math was not converted")
 
     def test_output_is_valid_python_with_included_math(self):
         """Output should be valid Python after included-snippet display-math conversion."""
@@ -399,12 +414,18 @@ class TestHtmlManim(unittest.TestCase):
         output = os.path.join(self.tmp.name, f"htmlmanim-test.{to_format}.py")
         with open(fixture, "w") as f:
             f.write(
-                "---\ntitle: HtmlManim Test\nauthor:\n- family: Test\n  given: Author\n"
-                "date: 2026-05-05\n---\n\n" + source
+                "---\ntitle: HtmlManim Test\nauthor:\n- family: Test\n  given: Author\n" "date: 2026-05-05\n---\n\n" + source
             )
         cmd = _MDPP + [
-            fixture, "--to", to_format, "--output", output,
-            "--macros-path", _MACROS_DIR, "--format", "slides",
+            fixture,
+            "--to",
+            to_format,
+            "--output",
+            output,
+            "--macros-path",
+            _MACROS_DIR,
+            "--format",
+            "slides",
         ]
         subprocess.run(cmd, capture_output=True, text=True)
         return _read_output(output)
@@ -427,13 +448,20 @@ class TestHtmlManim(unittest.TestCase):
         source = (
             "---\ntitle: HtmlManim Test\nauthor:\n- family: Test\n  given: Author\n"
             "date: 2026-05-05\n---\n\n"
-            "\\htmlmanim{<div>widget</div>}{        self.play(FadeIn(Text(\"alt\")))}"
+            '\\htmlmanim{<div>widget</div>}{        self.play(FadeIn(Text("alt")))}'
         )
         with open(fixture, "w") as f:
             f.write(source)
         cmd = _MDPP + [
-            fixture, "--to", "manim", "--output", output_path,
-            "--macros-path", _MACROS_DIR, "--format", "slides",
+            fixture,
+            "--to",
+            "manim",
+            "--output",
+            output_path,
+            "--macros-path",
+            _MACROS_DIR,
+            "--format",
+            "slides",
         ]
         result = subprocess.run(cmd, capture_output=True, text=True)
         if result.returncode != 0 or not os.path.isfile(output_path):
@@ -449,8 +477,15 @@ class TestHtmlManim(unittest.TestCase):
             out_path = tmp.name
         try:
             cmd = _MDPP + [
-                _FIXTURE, "--to", "manim", "--output", out_path,
-                "--macros-path", _MACROS_DIR, "--format", "slides",
+                _FIXTURE,
+                "--to",
+                "manim",
+                "--output",
+                out_path,
+                "--macros-path",
+                _MACROS_DIR,
+                "--format",
+                "slides",
             ]
             result = subprocess.run(cmd, capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, msg=result.stderr)

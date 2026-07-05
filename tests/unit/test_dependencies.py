@@ -63,16 +63,14 @@ Here's a citation \cite{Smith2020}.
 
         # Create sample bibliography
         with open(os.path.join(self.temp_dir.name, "references.bib"), "w") as f:
-            f.write(
-                """@article{Smith2020,
+            f.write("""@article{Smith2020,
   author  = {Smith, John},
   title   = {Example Paper},
   journal = {Journal of Examples},
   year    = {2020},
   volume  = {1},
   pages   = {1--10}
-}"""
-            )
+}""")
 
         # Create a patch for opening the test file
         # This is needed for tests that don't use the temp directory
@@ -258,44 +256,52 @@ Here's a citation \cite{Smith2020}.
     @patch("lynguine.util.yaml.header_field")
     @patch("lynguine.util.yaml.Interface.from_file")
     @patch("builtins.print")
-    def test_batch_extraction(self, mock_print, mock_interface, mock_header_field, mock_header_fields, 
-                             mock_extract_all, mock_extract_diagrams, mock_extract_inputs):
+    def test_batch_extraction(
+        self,
+        mock_print,
+        mock_interface,
+        mock_header_field,
+        mock_header_fields,
+        mock_extract_all,
+        mock_extract_diagrams,
+        mock_extract_inputs,
+    ):
         """Test batch dependency extraction (CIP-0009 Phase 1)."""
         # Mock the inputs extraction
         mock_extract_inputs.return_value = ["/custom/snippets/intro.md", "/custom/snippets/conclusion.md"]
-        
+
         # Mock the diagrams extraction (includes svg, png, pdf, emf)
         mock_extract_diagrams.return_value = [
             "/path/to/diagrams/example.svg",
-            "/path/to/diagrams/example.png", 
+            "/path/to/diagrams/example.png",
             "/path/to/diagrams/example.pdf",
             "/path/to/diagrams/example.emf",
-            "/path/to/diagrams/another.svg"
+            "/path/to/diagrams/another.svg",
         ]
-        
+
         # Mock the dynamic dependencies extraction
         mock_header_fields.return_value = {"title": "Test Document"}
         mock_header_field.return_value = False
         mock_extract_all.return_value = ["test.posts.html", "test.slides.html"]
-        
+
         # Call the main function
         main()
-        
+
         # Verify all extraction functions were called
         mock_extract_inputs.assert_called_once_with("test.md", snippets_path="/custom/snippets")
         mock_extract_diagrams.assert_called_once_with(
             "test.md",
             absolute_path=True,
-            diagram_exts=['svg', 'png', 'pdf', 'emf'],
+            diagram_exts=["svg", "png", "pdf", "emf"],
             diagrams_dir="/path/to/diagrams",
-            snippets_path="/custom/snippets"
+            snippets_path="/custom/snippets",
         )
         mock_extract_all.assert_called_once_with("test.md", user_file=["_lamd.yml", "_config.yml"])
-        
+
         # Verify the output format (prefixed lines with dependency type names)
         calls = mock_print.call_args_list
         assert len(calls) == 6
-        
+
         # Check each line starts with the correct prefix (dependency type names, not Makefile variables)
         assert calls[0][0][0].startswith("inputs:")
         assert calls[1][0][0].startswith("diagrams:")
@@ -303,7 +309,7 @@ Here's a citation \cite{Smith2020}.
         assert calls[3][0][0].startswith("pptxdiagrams:")
         assert calls[4][0][0].startswith("texdiagrams:")
         assert calls[5][0][0].startswith("all:")
-        
+
         # Verify content
         assert "/custom/snippets/intro.md" in calls[0][0][0]
         assert "/custom/snippets/conclusion.md" in calls[0][0][0]
@@ -320,27 +326,28 @@ Here's a citation \cite{Smith2020}.
     @patch("lynguine.util.yaml.header_fields")
     @patch("lynguine.util.yaml.header_field")
     @patch("builtins.print")
-    def test_batch_extraction_with_none_diagrams(self, mock_print, mock_header_field, mock_header_fields,
-                                                  mock_extract_all, mock_extract_diagrams, mock_extract_inputs):
+    def test_batch_extraction_with_none_diagrams(
+        self, mock_print, mock_header_field, mock_header_fields, mock_extract_all, mock_extract_diagrams, mock_extract_inputs
+    ):
         """Test batch extraction handles None return from extract_diagrams (file doesn't exist)."""
         # Mock inputs extraction
         mock_extract_inputs.return_value = []
-        
+
         # Mock extract_diagrams returning None (file doesn't exist)
         mock_extract_diagrams.return_value = None
-        
+
         # Mock dynamic dependencies
         mock_header_fields.return_value = {"title": "Test"}
         mock_header_field.return_value = False
         mock_extract_all.return_value = []
-        
+
         # Call the main function - should not raise an error
         main()
-        
+
         # Verify output contains empty values for diagram types
         calls = mock_print.call_args_list
         assert len(calls) == 6
-        
+
         # All diagram-related lines should be empty (just the prefix with dependency type names)
         assert calls[1][0][0] == "diagrams:"
         assert calls[2][0][0] == "docxdiagrams:"
