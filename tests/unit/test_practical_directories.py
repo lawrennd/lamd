@@ -13,8 +13,8 @@ from unittest.mock import MagicMock, mock_open, patch
 
 import pytest
 
-from lamd.mdfield import main as mdfield_main
 from lamd.flags import main as flags_main
+from lamd.mdfield import main as mdfield_main
 
 
 class TestPracticalDirectories:

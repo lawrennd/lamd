@@ -25,7 +25,7 @@ import re
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from manim import MathTex, MarkupText, VGroup  # type: ignore[import]
+    from manim import MarkupText, MathTex, VGroup  # type: ignore[import]
 
 
 # ---------------------------------------------------------------------------
@@ -73,7 +73,7 @@ def _process_inline_segment(
     Each plain-text sub-segment becomes a ``MarkupText``; each math
     sub-segment becomes a ``MathTex``.  Whitespace-only segments are skipped.
     """
-    from manim import MathTex, MarkupText  # type: ignore[import]
+    from manim import MarkupText, MathTex  # type: ignore[import]
 
     mobjects = []
     parts = _INLINE_MATH_RE.split(text)
@@ -131,7 +131,7 @@ def lamd_text(
     VGroup | MathTex | MarkupText
         A Manim mobject ready to be added to a scene.
     """
-    from manim import DOWN, LEFT, MathTex, MarkupText, VGroup  # type: ignore[import]
+    from manim import DOWN, LEFT, MarkupText, MathTex, VGroup  # type: ignore[import]
 
     if not md_string:
         return MarkupText("", font_size=font_size, **kwargs)

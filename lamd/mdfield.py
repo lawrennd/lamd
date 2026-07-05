@@ -15,7 +15,7 @@ Commands:
 import argparse
 import os
 import sys
-from typing import Optional, Dict, List
+from typing import Dict, List, Optional
 
 import lynguine.util.talk as nt
 import lynguine.util.yaml as ny

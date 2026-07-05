@@ -152,8 +152,9 @@ def test_main():
 
 def test_format_flags():
     """Test that format-specific flags are set correctly."""
-    from lamd.mdpp import setup_gpp_arguments
     import argparse
+
+    from lamd.mdpp import setup_gpp_arguments
 
     # Test notes format
     args = argparse.Namespace(

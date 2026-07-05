@@ -6,13 +6,14 @@ identical output to the Python mdfield implementation, handles errors
 gracefully, and achieves the expected performance improvements.
 """
 
-import subprocess
-import os
-import time
-import json
 import ast
-import pytest
+import json
+import os
+import subprocess
+import time
 from pathlib import Path
+
+import pytest
 
 # Test data directory
 TEST_DIR = Path(__file__).parent
