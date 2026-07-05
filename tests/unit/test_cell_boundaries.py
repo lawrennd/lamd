@@ -1,14 +1,14 @@
 import json
 import os
 import subprocess
+
+# Add the parent directory to the Python path
+import sys
 import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-# Add the parent directory to the Python path
-import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
