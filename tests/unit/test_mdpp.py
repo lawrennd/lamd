@@ -2,14 +2,15 @@ import argparse
 import os
 import subprocess
 import sys
+import tempfile
 from unittest.mock import MagicMock, patch
-
-import pytest
 
 # Add the parent directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
-from lamd.mdpp import main, setup_gpp_arguments
+import frontmatter as fm
+
+from lamd.mdpp import main, process_content, setup_gpp_arguments
 from lamd.validation import check_dependency, check_version
 
 # Set LAMD_MACROS environment variable for testing
@@ -262,3 +263,150 @@ def test_format_flags():
     assert "-DHELPERCODE=1" in gpp_args
     assert "-DDISPLAYCODE=1" in gpp_args
     assert "-DMAGICCODE=1" in gpp_args
+
+
+class TestFrontmatterFileMode:
+    """Regression tests for the gpp.markdown temporary-file text/binary mode bug.
+
+    The bug: ``frontmatter.dump()`` was being called with a file opened in
+    binary mode (``"wb"``), but it requires a text-mode file object.  This
+    raised ``TypeError: a bytes-like object is required, not 'str'`` at
+    runtime — but only when processing a file that has YAML frontmatter,
+    because that is the only path that reaches ``fm.dump()``.
+
+    The tests below verify:
+    1. ``frontmatter.dump()`` succeeds when writing to a text-mode file.
+    2. ``frontmatter.dump()`` raises ``TypeError`` when writing to a binary
+       file — confirming the old code would have failed.
+    3. ``process_content()`` returns a valid ``frontmatter.Post`` object,
+       so the precondition for reaching the dump call is met.
+    4. The full temporary-file write path (the non-manim branch of ``main``)
+       produces a UTF-8 readable ``.gpp.markdown`` file.
+
+    History: introduced in commit 7bd349f (≥ Nov 2022) alongside the switch
+    to python-frontmatter, and fixed in 5ea8c4c (Aug 2026).
+    The existing ``test_main`` only mocks ``process_content`` and
+    ``os.path.isdir``, bypassing the actual file-write, so the bug slipped
+    through undetected until real mdpp invocation was tested.
+    """
+
+    def test_frontmatter_dump_to_text_file_succeeds(self) -> None:
+        """frontmatter.dump() must accept a text-mode file handle."""
+        post = fm.loads("---\ntitle: Test\n---\nHello world")
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as f:
+            tmp_path = f.name
+            # Must not raise
+            fm.dump(post, f, sort_keys=False, default_flow_style=False)
+        with open(tmp_path, encoding="utf-8") as f:
+            content = f.read()
+        os.unlink(tmp_path)
+        assert "title: Test" in content
+        assert "Hello world" in content
+
+    def test_frontmatter_dump_to_binary_file_raises(self) -> None:
+        """frontmatter.dump() must raise TypeError with a binary-mode file.
+
+        This documents the *old* broken behaviour so that if the regression
+        is ever re-introduced, this test will immediately flag it.
+        """
+        post = fm.loads("---\ntitle: Test\n---\nHello world")
+        with tempfile.NamedTemporaryFile(mode="wb", suffix=".md", delete=False) as f:
+            tmp_path = f.name
+            with self.raises_type_error_or_attribute_error():
+                fm.dump(post, f, sort_keys=False, default_flow_style=False)
+        os.unlink(tmp_path)
+
+    @staticmethod
+    def raises_type_error_or_attribute_error():
+        """Context manager that asserts a TypeError or AttributeError is raised.
+
+        ``frontmatter.dump`` may raise either depending on the internal
+        YAML dumper version, but both indicate the same root cause: binary
+        vs. text mode mismatch.
+        """
+        import contextlib
+
+        @contextlib.contextmanager
+        def _ctx():
+            try:
+                yield
+                raise AssertionError("Expected TypeError or AttributeError, but no exception was raised")
+            except (TypeError, AttributeError):
+                pass
+
+        return _ctx()
+
+    def test_process_content_returns_post(self) -> None:
+        """process_content() returns a frontmatter.Post that can be dumped."""
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as src:
+            src.write("---\ntitle: Regression Test\n---\nBody text.\n")
+            src_path = src.name
+
+        args = argparse.Namespace(
+            filename=src_path,
+            no_header=False,
+        )
+        with patch("os.path.isfile", return_value=False):
+            post = process_content(args, "", "")
+
+        os.unlink(src_path)
+        assert isinstance(post, fm.Post)
+        assert post.metadata.get("title") == "Regression Test"
+        assert "Body text." in post.content
+
+    def test_gpp_markdown_tempfile_is_readable_utf8(self) -> None:
+        """The .gpp.markdown temp file written by main() must be UTF-8 text.
+
+        This is an integration-level regression test for the binary-mode bug.
+        We create a real markdown source file, call main() with a mocked gpp
+        invocation (so no actual preprocessing is required), and then verify
+        the .gpp.markdown temp file is both present and valid UTF-8 text.
+        """
+        with tempfile.TemporaryDirectory() as tmpdir:
+            src_path = os.path.join(tmpdir, "talk.md")
+            tmp_gpp = os.path.join(tmpdir, "talk.gpp.markdown")
+            with open(src_path, "w", encoding="utf-8") as f:
+                f.write("---\ntitle: UTF-8 test — café\n---\nContent with accents: naïve\n")
+
+            args_ns = argparse.Namespace(
+                filename=src_path,
+                to="html",
+                format="slides",
+                output=os.path.join(tmpdir, "talk.html"),
+                exercises=False,
+                assignment=False,
+                edit_links=False,
+                draft=False,
+                meta_data=[],
+                code="none",
+                diagrams_dir=None,
+                scripts_dir=None,
+                write_diagrams_dir=None,
+                include_path=None,
+                snippets_path=None,
+                macros_path=tmpdir,
+                macros=None,
+                auto_install=False,
+                verbose=False,
+                no_header=False,
+                replace_notation=False,
+            )
+
+            with (
+                patch("argparse.ArgumentParser.parse_args", return_value=args_ns),
+                patch("lamd.mdpp.validate_file_exists"),
+                patch("lamd.mdpp.validate_include_paths"),
+                patch("lamd.mdpp.load_config", return_value={}),
+                patch("lamd.mdpp.setup_gpp_arguments", return_value=[]),
+                patch("lamd.mdpp.process_includes", return_value=("", "")),
+                patch("os.system"),  # Skip actual gpp invocation
+                patch("os.path.isdir", return_value=True),
+            ):
+                main()
+
+            # The temp file must exist and be valid UTF-8 text (not binary)
+            assert os.path.isfile(tmp_gpp), f".gpp.markdown temp file not created: {tmp_gpp}"
+            with open(tmp_gpp, encoding="utf-8") as f:
+                content = f.read()
+            assert "UTF-8 test" in content
+            assert "café" in content
