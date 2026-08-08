@@ -23,8 +23,8 @@ python-liquid = "*"
 referia = { git = "https://github.com/lawrennd/referia.git", branch = "main" }
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^6.2.5"
-pytest-cov = "^3.0.0"
+pytest = "^7.2"
+pytest-cov = "^4.0"
 pytest-mock = "^3.3.1"
 deepdiff = "^6.6.0"
 types-pyyaml = "^6.0.12.20250516"
