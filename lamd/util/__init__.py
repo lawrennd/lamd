@@ -143,12 +143,12 @@ def descending(df: pd.DataFrame, by: Union[str, List[str]]) -> pd.DataFrame:
 
 
 # Filters
-def recent(df: pd.DataFrame, column: str = "year") -> pd.Series:  # type: ignore[type-arg]
+def recent(df: pd.DataFrame, column: str = "year") -> pd.Series:
     """Filter on year of item"""
     return df[column] >= get_since_year()
 
 
-def current(df: pd.DataFrame, start: str = "start", end: str = "end", current: Optional[str] = None) -> pd.Series:  # type: ignore[type-arg]
+def current(df: pd.DataFrame, start: str = "start", end: str = "end", current: Optional[str] = None) -> pd.Series:
     """Filter on whether item is current"""
     now = pd.to_datetime(datetime.datetime.now().date())
     within = (df[start] <= now) & (pd.isna(df[end]) | (df[end] >= now))
@@ -158,13 +158,13 @@ def current(df: pd.DataFrame, start: str = "start", end: str = "end", current: O
         return within
 
 
-def former(df: pd.DataFrame, end: str = "end") -> pd.Series:  # type: ignore[type-arg]
+def former(df: pd.DataFrame, end: str = "end") -> pd.Series:
     """Filter on whether item is current"""
     now = pd.to_datetime(datetime.datetime.now().date())
     return df[end] < now
 
 
-def onbool(df: pd.DataFrame, column: str = "current", invert: bool = False) -> pd.Series:  # type: ignore[type-arg]
+def onbool(df: pd.DataFrame, column: str = "current", invert: bool = False) -> pd.Series:
     """Filter on whether column is positive (or negative if inverted)"""
     if invert:
         return ~df[column]
@@ -172,12 +172,12 @@ def onbool(df: pd.DataFrame, column: str = "current", invert: bool = False) -> p
         return df[column]
 
 
-def columnis(df: pd.DataFrame, column: str, value: Any) -> pd.Series:  # type: ignore[type-arg]
+def columnis(df: pd.DataFrame, column: str, value: Any) -> pd.Series:
     """Filter on whether item is equal to a given value"""
     return df[column] == value
 
 
-def columncontains(df: pd.DataFrame, column: str, value: Any) -> pd.Series:  # type: ignore[type-arg]
+def columncontains(df: pd.DataFrame, column: str, value: Any) -> pd.Series:
     """Filter on whether column contains a given value"""
     colis = columnis(df, column, value)
     return colis | df[column].apply(lambda x: (x == value).any() if type(x == value) is not bool else (x == value))
