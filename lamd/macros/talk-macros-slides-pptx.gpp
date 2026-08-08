@@ -1,3 +1,10 @@
 \ifndef{talkMacrosSlidesPptx}
 \define{talkMacrosSlidesPptx}
+
+\define{\startanimation{group}{start}{finish}{name}}{}
+\define{\newframe{contents}{name}{style}}{\contents
+
+}
+\define{\endanimation}{}
+
 \endif
