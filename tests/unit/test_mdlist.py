@@ -163,7 +163,10 @@ filter: []
         config_dir = os.path.join(lamd_dir, "config")
         expected_cvlists_path = os.path.join(config_dir, "cvlists.yml")
         mock_interface.assert_called_once_with(user_file=expected_cvlists_path)
-        mock_load_template.assert_called_once_with(ext=".md")
+        import lamd as lamd_pkg
+
+        expected_template_dir = os.path.join(os.path.dirname(os.path.abspath(lamd_pkg.__file__)), "templates")
+        mock_load_template.assert_called_once_with(ext=".md", template_dir=expected_template_dir)
         mock_custom_df.assert_called_once()
         mock_custom_df_instance.preprocess.assert_called_once()
 

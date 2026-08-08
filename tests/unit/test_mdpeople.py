@@ -58,7 +58,7 @@ class TestMdpeople:
     def test_create_person_macro_basic(self):
         """Test creating a person macro with basic information."""
         macro = create_person_macro(given="Jane", family="Doe", image_path="people/jane-doe.jpg", title="Professor")
-        assert "\\\\defeval{\\\\janeDoePicture" in macro
+        assert "\\defeval{\\janeDoePicture" in macro
         assert "\\diagramsDir/people/jane-doe.jpg" in macro
         assert "{Professor}" in macro
 
@@ -67,7 +67,7 @@ class TestMdpeople:
         macro = create_person_macro(
             given="Jane", family="Doe", image_path="people/jane-doe.jpg", url="https://example.com/jane", title="Professor"
         )
-        assert "\\\\defeval{\\\\janeDoePicture" in macro
+        assert "\\defeval{\\janeDoePicture" in macro
         assert "\\diagramsDir/people/jane-doe.jpg" in macro
         assert "{Professor}" in macro
         assert "{https://example.com/jane}" in macro
@@ -77,7 +77,7 @@ class TestMdpeople:
         macro = create_person_macro(
             given="John", family="Smith", image_path="people/john-smith.jpg", crop={"llx": 0, "lly": 0, "urx": 100, "ury": 100}
         )
-        assert "\\\\defeval{\\\\johnSmithPicture" in macro
+        assert "\\defeval{\\johnSmithPicture" in macro
         assert "\\includeimgclip{\\diagramsDir/people/john-smith.jpg}" in macro
         assert "{0}{0}{100}{100}" in macro
 
@@ -100,8 +100,8 @@ class TestMdpeople:
             content = f.read()
             assert "\\ifndef{talkPeople}" in content
             assert "\\define{talkPeople}" in content
-            assert "\\\\defeval{\\\\janeDoePicture" in content
-            assert "\\\\defeval{\\\\johnSmithPicture" in content
+            assert "\\defeval{\\janeDoePicture" in content
+            assert "\\defeval{\\johnSmithPicture" in content
             assert "\\endif" in content
 
     @patch("argparse.ArgumentParser.parse_args")
