@@ -45,7 +45,7 @@ def _convert_display_math_posthoc(src: str) -> str:
     import re
 
     def _conv_code(segment: str) -> str:
-        def _repl(m: re.Match) -> str:
+        def _repl(m: re.Match[str]) -> str:
             eq = m.group(1).strip()
             eq = eq.replace('"""', r"\"\"\"")
             return f'        self.play(FadeIn(lamd_display_math(r"""{eq}""")))'
@@ -76,7 +76,7 @@ def _preprocess_math_for_manim(body: str) -> str:
     """
     import re
 
-    def _replace(m: re.Match) -> str:
+    def _replace(m: re.Match[str]) -> str:
         equation = m.group(1).strip()
         return f"\\displaymath{{{equation}}}"
 
@@ -548,8 +548,8 @@ def main() -> int:
                 fd.write(after_text)
         else:
             tmp_file += ".gpp.markdown"
-            with open(tmp_file, "wb") as fd:
-                fm.dump(writepost, fd, sort_keys=False, default_flow_style=False)
+            with open(tmp_file, "wb") as fd_binary:
+                fm.dump(writepost, fd_binary, sort_keys=False, default_flow_style=False)
 
         # Run GPP
         runlist = ["gpp"] + arglist + [tmp_file]
@@ -582,7 +582,7 @@ def main() -> int:
                 with open(args.output) as _f:
                     _src = _f.read()
 
-                def _html_comment_to_python(m):
+                def _html_comment_to_python(m: _re.Match[str]) -> str:
                     inner = m.group(1).strip("\n")
                     lines = inner.split("\n")
                     return "\n".join(("# " + ln.strip()) if ln.strip() else "#" for ln in lines)
