@@ -131,9 +131,20 @@ Apply the design principles table above consistently across all lamd entry point
 
 A new requirement may be warranted after Phase 0 scoping: *"lamd installs and runs correctly in a first-use course environment"*. This will be assessed once the failure inventory is complete.
 
+## Scoping Results
+
+*To be populated during Phase 0. Add rows as failures are discovered.*
+
+| Command | Error / Symptom | Category | Root Cause | Proposed Fix |
+|---|---|---|---|---|
+| `maketalk` | Fails if `_lectures/`, `slides/` etc. don't exist | Crash | No `mkdir -p` before writing output | Auto-create directories |
+| `mdpeople` | `KeyError: 'image'` on sparse `people.yml` entries | Crash | No `.get()` / default for optional fields | Use `.get()` with sensible defaults |
+
+**Categories**: Crash · Silent failure · Confusing error · Dependency gap
+
 ## Implementation Status
 
-- [ ] Phase 0: Scoping experiment complete (`cip/cip000E/scoping-results.md` written)
+- [ ] Phase 0: Scoping experiment complete (results in table above)
 - [ ] Phase 1: Critical crash fixes
 - [ ] Phase 2: Graceful degradation across all utilities
 - [ ] Phase 3: First-use documentation and diagnostics
