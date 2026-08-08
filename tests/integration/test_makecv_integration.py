@@ -335,13 +335,10 @@ class TestIncludeSystem(TestMakeCVIntegration):
         # Check that the makefile includes make-docx.mk
         assert "include" in makefile_content and "make-docx.mk" in makefile_content, "Makefile should include make-docx.mk"
 
-        # The fix ensures that ${BASE}.docx depends on ${BASE}.preprocessed.md
-        # and there's a preprocessing rule. Since make-docx.mk is included,
-        # we verify the pattern exists in the included makefile by checking
-        # that the makefile references preprocessing variables
-        assert (
-            "${PP}" in makefile_content or "PP=" in makefile_content
-        ), "Makefile should reference preprocessing (${PP}) for docx generation"
+        # make-cv-flags.mk is always included and defines PP=mdpp there;
+        # make-docx.mk uses ${PP} for preprocessing. Both are included files,
+        # so ${PP} and PP= do not appear in the generated makefile directly.
+        assert "make-cv-flags.mk" in makefile_content, "Makefile should include make-cv-flags.mk (which defines PP)"
 
 
 if __name__ == "__main__":

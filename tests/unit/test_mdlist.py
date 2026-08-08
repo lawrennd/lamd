@@ -149,6 +149,7 @@ filter: []
         )
         mock_custom_df_instance = MagicMock()
         mock_custom_df_instance.df = mock_df
+        mock_custom_df_instance.to_pandas.return_value = mock_df
         mock_custom_df_instance.preprocess = MagicMock()
         mock_custom_df.return_value = mock_custom_df_instance
 
