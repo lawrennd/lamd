@@ -97,7 +97,9 @@ def extract_field_direct(field: str, filename: str, config_files: List[str]) -> 
     return str(answer)
 
 
-def extract_fields_batch(fields: List[str], filename: str, config_files: List[str], use_server: bool = False) -> Dict[str, str]:
+def extract_fields_batch(
+    fields: List[str], filename: str, config_files: List[str], use_server: bool = False
+) -> Dict[str, str]:
     """
     Extract multiple fields in one call.
 
