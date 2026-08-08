@@ -548,8 +548,8 @@ def main() -> int:
                 fd.write(after_text)
         else:
             tmp_file += ".gpp.markdown"
-            with open(tmp_file, "wb") as fd_binary:
-                fm.dump(writepost, fd_binary, sort_keys=False, default_flow_style=False)
+            with open(tmp_file, "w", encoding="utf-8") as fd_text:
+                fm.dump(writepost, fd_text, sort_keys=False, default_flow_style=False)
 
         # Run GPP
         runlist = ["gpp"] + arglist + [tmp_file]
