@@ -39,12 +39,6 @@ showDivs(\start, '\group');
 }
 
 
-\define{\newframe{contents}{name}{style}}{\newslide{}
-
-<div style="text-align:center;\style" class="\name">\contents</div>
-
-}
-
 \define{\newframe{contents}{name}{style}}{<div style="text-align:center;\style" class="\name">\contents</div>}
 
 \define{\endanimation}{</div>}
