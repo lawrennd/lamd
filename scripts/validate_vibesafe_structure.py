@@ -15,13 +15,13 @@ Checks:
 Implementation: CIP-0011 Phase 0a
 """
 
-import os
-import sys
-import re
 import argparse
-from pathlib import Path
+import os
+import re
+import sys
 from datetime import datetime
-from typing import Optional, List
+from pathlib import Path
+from typing import List, Optional
 
 try:
     import frontmatter
