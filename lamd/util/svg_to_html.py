@@ -101,7 +101,7 @@ def _locate_js_plugin(js_src: Optional[pathlib.Path]) -> Optional[pathlib.Path]:
 
     # Installed lawrennd/manim package: look for js/manim-svg.js alongside it.
     try:
-        import manim as _manim  # type: ignore[import]
+        import manim as _manim
 
         candidate = pathlib.Path(_manim.__file__).parent.parent / "js" / "manim-svg.js"
         if candidate.is_file():

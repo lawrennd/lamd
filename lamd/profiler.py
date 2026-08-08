@@ -12,7 +12,7 @@ import os
 import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, Generator, List, Optional
 
 
 class BuildProfiler:
@@ -31,18 +31,19 @@ class BuildProfiler:
         self.start_time: Optional[float] = None
 
         # Create unique profile file for this build
+        self.profile_file: Optional[str]
         if self.enabled:
             self.profile_file = f"/tmp/lamd_profile_{os.getpid()}.log"
         else:
             self.profile_file = None
 
-    def start(self):
+    def start(self) -> None:
         """Start overall build timing."""
         if self.enabled:
             self.start_time = time.perf_counter()
 
     @contextmanager
-    def measure(self, operation: str):
+    def measure(self, operation: str) -> Generator[None, None, None]:
         """
         Context manager to measure operation time at wrapper level.
 
@@ -64,7 +65,7 @@ class BuildProfiler:
             elapsed = time.perf_counter() - start
             self.wrapper_timings[operation] = elapsed
 
-    def enable_makefile_profiling(self):
+    def enable_makefile_profiling(self) -> None:
         """
         Enable Makefile-level profiling by setting environment variables.
 
@@ -76,7 +77,7 @@ class BuildProfiler:
             os.environ["LAMD_PROFILE"] = "1"
             os.environ["LAMD_PROFILE_FILE"] = self.profile_file
 
-    def parse_makefile_profile(self):
+    def parse_makefile_profile(self) -> None:
         """
         Parse timing data from Makefile execution.
 
@@ -138,7 +139,7 @@ class BuildProfiler:
         else:
             return "other make operations"
 
-    def report(self):
+    def report(self) -> None:
         """
         Generate hierarchical timing report.
 
@@ -207,7 +208,7 @@ class BuildProfiler:
 
         print("=" * 70 + "\n")
 
-    def cleanup(self):
+    def cleanup(self) -> None:
         """Clean up temporary profile file."""
         if self.enabled and self.profile_file:
             profile_path = Path(self.profile_file)

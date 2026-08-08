@@ -15,7 +15,7 @@ Commands:
 import argparse
 import os
 import sys
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import lynguine.util.talk as nt
 import lynguine.util.yaml as ny
@@ -32,7 +32,7 @@ except ImportError:
     ServerClient = None
 
 
-def extract_field_server_mode(field: str, filename: str, config_files: list) -> Optional[str]:
+def extract_field_server_mode(field: str, filename: str, config_files: List[str]) -> Optional[str]:
     """
     Extract field using lynguine server mode.
 
@@ -56,7 +56,7 @@ def extract_field_server_mode(field: str, filename: str, config_files: list) -> 
         answer = client.extract_talk_field(field=field, markdown_file=filename, config_files=config_files)
 
         # Server returns empty string for missing fields (matching direct mode)
-        return answer
+        return str(answer) if answer is not None else None
 
     except Exception as e:
         # Server mode failed, return None to trigger fallback
@@ -64,7 +64,7 @@ def extract_field_server_mode(field: str, filename: str, config_files: list) -> 
         return None
 
 
-def extract_field_direct(field: str, filename: str, config_files: list) -> str:
+def extract_field_direct(field: str, filename: str, config_files: List[str]) -> str:
     """
     Extract field in direct mode (no server).
 
@@ -94,10 +94,10 @@ def extract_field_direct(field: str, filename: str, config_files: list) -> str:
         # If we can't access config files, return empty string
         sys.stderr.write(f"Error accessing configuration: {e}\n")
         answer = ""
-    return answer
+    return str(answer)
 
 
-def extract_fields_batch(fields: List[str], filename: str, config_files: list, use_server: bool = False) -> Dict[str, str]:
+def extract_fields_batch(fields: List[str], filename: str, config_files: List[str], use_server: bool = False) -> Dict[str, str]:
     """
     Extract multiple fields in one call.
 
@@ -137,7 +137,7 @@ def extract_fields_batch(fields: List[str], filename: str, config_files: list, u
     return result
 
 
-def format_field_value(field: str, value) -> str:
+def format_field_value(field: str, value: Any) -> str:
     """
     Format a field value for output.
 

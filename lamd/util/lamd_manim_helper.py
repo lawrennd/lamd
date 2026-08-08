@@ -22,10 +22,10 @@ Design constraints
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING
+from typing import Any, Dict, List, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from manim import MarkupText, MathTex, VGroup  # type: ignore[import]
+    from manim import MarkupText, MathTex, VGroup
 
 
 # ---------------------------------------------------------------------------
@@ -66,14 +66,14 @@ def _md_to_pango(text: str) -> str:
 def _process_inline_segment(
     text: str,
     font_size: int,
-    kwargs: dict,
-) -> list:
+    kwargs: Dict[str, Any],
+) -> List[Any]:
     """Split a plain-text segment on ``$...$`` and return a list of mobjects.
 
     Each plain-text sub-segment becomes a ``MarkupText``; each math
     sub-segment becomes a ``MathTex``.  Whitespace-only segments are skipped.
     """
-    from manim import MarkupText, MathTex  # type: ignore[import]
+    from manim import MarkupText, MathTex
 
     mobjects = []
     parts = _INLINE_MATH_RE.split(text)
@@ -98,7 +98,7 @@ def lamd_text(
     md_string: str,
     font_size: int = 36,
     display_font_size: int = 48,
-    **kwargs,
+    **kwargs: Any,
 ) -> "VGroup | MathTex | MarkupText":
     """Convert a Markdown string into a Manim mobject.
 
@@ -131,7 +131,7 @@ def lamd_text(
     VGroup | MathTex | MarkupText
         A Manim mobject ready to be added to a scene.
     """
-    from manim import DOWN, LEFT, MarkupText, MathTex, VGroup  # type: ignore[import]
+    from manim import DOWN, LEFT, MarkupText, MathTex, VGroup
 
     if not md_string:
         return MarkupText("", font_size=font_size, **kwargs)
@@ -170,7 +170,7 @@ def lamd_text(
 def lamd_display_math(
     latex_string: str,
     font_size: int = 48,
-    **kwargs,
+    **kwargs: Any,
 ) -> "MathTex":
     """Return a centred ``MathTex`` for a display-mode equation.
 
@@ -187,6 +187,6 @@ def lamd_display_math(
     -------
     MathTex
     """
-    from manim import MathTex  # type: ignore[import]
+    from manim import MathTex
 
     return MathTex(latex_string, font_size=font_size, **kwargs)

@@ -9,6 +9,7 @@ and runs the appropriate commands to convert it to the requested formats.
 import argparse
 import os
 import sys
+from typing import Optional
 
 import lamd
 from lamd.profiler import BuildProfiler
@@ -192,18 +193,19 @@ def main() -> int:
         import time
 
         # Find git root directory (might be in parent dir)
+        local_git_dir: Optional[str]
         try:
             git_root = subprocess.run(
                 ["git", "rev-parse", "--git-dir"], capture_output=True, text=True, timeout=1, check=False
             )
-            git_dir = git_root.stdout.strip() if git_root.returncode == 0 else None
-        except:
-            git_dir = None
+            local_git_dir = git_root.stdout.strip() if git_root.returncode == 0 else None
+        except Exception:
+            local_git_dir = None
 
         should_check_remote = False
 
-        if git_dir and os.path.isdir(git_dir):
-            fetch_head = os.path.join(git_dir, "FETCH_HEAD")
+        if local_git_dir and os.path.isdir(local_git_dir):
+            fetch_head = os.path.join(local_git_dir, "FETCH_HEAD")
             should_check_remote = True
 
             # If FETCH_HEAD exists and is recent enough, skip remote check
@@ -276,14 +278,14 @@ def main() -> int:
 
     # Run the make command (this is where most of the time is spent)
     with profiler.measure("Make execution (total)"):
-        result = os.system(make_cmd)
+        exit_code = os.system(make_cmd)
 
     # Generate profiling report if enabled
     if args.profile:
         profiler.report()
         profiler.cleanup()
 
-    return result
+    return exit_code
 
 
 if __name__ == "__main__":
