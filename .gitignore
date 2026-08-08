@@ -73,3 +73,4 @@ CLAUDE.md
 AGENTS.md
 *.gpp.py
 *.gpp.markdown
+scripts/validate_vibesafe_structure.py
