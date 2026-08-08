@@ -1,10 +1,11 @@
 ---
 id: "2026-08-08_cip0007-fix-animation-macros"
 title: "CIP-0007 Phase 1: Fix Critical Animation Macro Bugs"
-status: "Proposed"
+status: "Completed"
 priority: "High"
 created: "2026-08-08"
 last_updated: "2026-08-08"
+completed: "2026-08-08"
 category: "bugs"
 related_cips: ["0007"]
 owner: "Neil Lawrence"
@@ -26,10 +27,10 @@ Fix the two critical bugs in the animation macro system identified in CIP-0007:
 
 ## Acceptance Criteria
 
-- [ ] Duplicate `\newframe` definition removed from `talk-macros-slides-html.gpp`
-- [ ] `\endanimation` macro implemented for HTML slides (closes animation container)
-- [ ] Existing animation sequences render correctly in HTML output
-- [ ] Tests confirm both fixes and prevent regression
+- [x] Duplicate `\newframe` definition removed from `talk-macros-slides-html.gpp`
+- [x] `\endanimation` macro implemented for HTML slides (closes animation container)
+- [x] Existing animation sequences render correctly in HTML output
+- [x] Tests confirm both fixes and prevent regression
 
 ## Implementation Notes
 
@@ -47,3 +48,8 @@ Fix the two critical bugs in the animation macro system identified in CIP-0007:
 ### 2026-08-08
 
 Task created — tracking Phase 1 of CIP-0007.
+
+Task completed:
+- Removed duplicate `\newframe` definition from `talk-macros-slides-html.gpp` (first definition with `\newslide{}` was overridden by the second and never used — removing it makes the intent clear)
+- `\endanimation` was already correctly implemented (`</div>`)
+- Added 5 regression tests in `tests/unit/test_animation_macros.py`
