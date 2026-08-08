@@ -30,16 +30,16 @@
 </div>
 <aside class="notes">\captionContents</aside>}
 
-\define{\startanimation{group}{start}{finish}{name}}{<div><script>
+\define{\startanimation{group}{start}{finish}{name}}{<div role="region" aria-label="\name"><script>
 showDivs(\start, '\group');
 </script>
-\smalltext{\name} <input id="range-\group" type="range" min="\start" max="\finish" value="\start" onchange="setDivs('\group')" oninput="setDivs('\group')">
-<button onclick="plusDivs(-1, '\group');">❮</button>
-<button onclick="plusDivs(1, '\group');">❯</button>
+\smalltext{\name} <input id="range-\group" type="range" min="\start" max="\finish" value="\start" aria-label="Frame slider for \name" aria-valuemin="\start" aria-valuemax="\finish" aria-valuenow="\start" onchange="setDivs('\group')" oninput="setDivs('\group')">
+<button onclick="plusDivs(-1, '\group');" aria-label="Previous frame">❮</button>
+<button onclick="plusDivs(1, '\group');" aria-label="Next frame">❯</button>
 }
 
 
-\define{\newframe{contents}{name}{style}}{<div style="text-align:center;\style" class="\name">\contents</div>}
+\define{\newframe{contents}{name}{style}}{<div style="text-align:center;\style" class="\name" role="img" aria-label="\name">\contents</div>}
 
 \define{\endanimation}{</div>}
 

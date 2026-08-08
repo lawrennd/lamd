@@ -175,3 +175,77 @@ class TestAnimationMacrosFallbacks:
         """PPTX \\newframe must pass through frame content so nothing is silently dropped."""
         body = self._newframe_body("talk-macros-slides-pptx.gpp")
         assert r"\contents" in body, f"PPTX \\newframe must include \\contents, got: {body!r}"
+
+
+class TestAnimationAccessibility:
+    """Phase 3: Verify ARIA attributes on HTML animation controls (CIP-0007)."""
+
+    def _html_content(self) -> str:
+        return _read_macro_file("talk-macros-slides-html.gpp")
+
+    def test_container_has_role_region(self) -> None:
+        """Animation container must have role='region' for screen-reader landmark."""
+        content = self._html_content()
+        idx = content.find(r"\define{\startanimation{")
+        snippet = content[idx : idx + 600]
+        assert 'role="region"' in snippet, "\\startanimation must add role='region' to the animation container div"
+
+    def test_container_has_aria_label(self) -> None:
+        """Animation container must have aria-label so screen readers announce its name."""
+        content = self._html_content()
+        idx = content.find(r"\define{\startanimation{")
+        snippet = content[idx : idx + 600]
+        assert "aria-label=" in snippet, "\\startanimation container must have aria-label"
+
+    def test_range_slider_has_aria_label(self) -> None:
+        """The range slider must have aria-label so screen readers describe its purpose."""
+        content = self._html_content()
+        idx = content.find('type="range"')
+        assert idx != -1, "Could not find range slider in \\startanimation"
+        line_start = content.rfind("\n", 0, idx)
+        line_end = content.find("\n", idx)
+        slider_line = content[line_start:line_end]
+        assert "aria-label=" in slider_line, "Range slider must have aria-label, got: " + slider_line
+
+    def test_range_slider_has_aria_value_attributes(self) -> None:
+        """Range slider should expose aria-valuemin/max/now for assistive technology."""
+        content = self._html_content()
+        assert "aria-valuemin=" in content, "Range slider must have aria-valuemin"
+        assert "aria-valuemax=" in content, "Range slider must have aria-valuemax"
+        assert "aria-valuenow=" in content, "Range slider must have aria-valuenow"
+
+    def test_previous_button_has_aria_label(self) -> None:
+        """Previous-frame button must have aria-label (icon-only buttons need text labels)."""
+        content = self._html_content()
+        prev_idx = content.find("plusDivs(-1")
+        assert prev_idx != -1, "Could not find previous-frame button"
+        line_start = content.rfind("\n", 0, prev_idx)
+        line_end = content.find("\n", prev_idx)
+        button_line = content[line_start:line_end]
+        assert "aria-label=" in button_line, "Previous-frame button must have aria-label, got: " + button_line
+
+    def test_next_button_has_aria_label(self) -> None:
+        """Next-frame button must have aria-label (icon-only buttons need text labels)."""
+        content = self._html_content()
+        next_idx = content.find("plusDivs(1")
+        assert next_idx != -1, "Could not find next-frame button"
+        line_start = content.rfind("\n", 0, next_idx)
+        line_end = content.find("\n", next_idx)
+        button_line = content[line_start:line_end]
+        assert "aria-label=" in button_line, "Next-frame button must have aria-label, got: " + button_line
+
+    def test_newframe_div_has_role_img(self) -> None:
+        """Each animation frame div should have role='img' to indicate it is a visual frame."""
+        content = self._html_content()
+        newframe_match = re.search(r"\\define\s*\{\\newframe[^}]*\}[^}]*\}[^}]*\}\}\s*\{([^\n]*)\}", content)
+        assert newframe_match is not None, "Could not locate \\newframe definition body"
+        body = newframe_match.group(1)
+        assert 'role="img"' in body, f"\\newframe div must have role='img', got: {body}"
+
+    def test_newframe_div_has_aria_label(self) -> None:
+        """Each animation frame div must have aria-label for screen readers."""
+        content = self._html_content()
+        newframe_match = re.search(r"\\define\s*\{\\newframe[^}]*\}[^}]*\}[^}]*\}\}\s*\{([^\n]*)\}", content)
+        assert newframe_match is not None, "Could not locate \\newframe definition body"
+        body = newframe_match.group(1)
+        assert "aria-label=" in body, f"\\newframe div must have aria-label, got: {body}"
