@@ -12,6 +12,8 @@ import os
 import sys
 from typing import Optional
 
+import frontmatter
+
 import lamd
 from lamd.profiler import BuildProfiler
 
@@ -75,6 +77,14 @@ def main() -> int:
     basename = os.path.basename(args.filename)
     base = os.path.splitext(basename)[0]
 
+    # Read frontmatter from the markdown file
+    with profiler.measure("Frontmatter reading"):
+        try:
+            post = frontmatter.load(args.filename)
+            cv_frontmatter = post.metadata
+        except Exception:
+            cv_frontmatter = {}
+
     # Check for _lamd.yml first
     with profiler.measure("Config file existence check"):
         if not os.path.exists("_lamd.yml"):
@@ -115,6 +125,8 @@ def main() -> int:
             f.write("include $(MAKEFILESDIR)/make-cv-flags.mk\n")
             f.write("include $(MAKEFILESDIR)/make-lists.mk\n")
             f.write("include $(MAKEFILESDIR)/make-cv.mk\n")
+            if cv_frontmatter.get("docx", False):
+                f.write("include $(MAKEFILESDIR)/make-docx.mk\n")
 
     # Update external dependencies if needed
     with profiler.measure("Dependency git pulls"):
