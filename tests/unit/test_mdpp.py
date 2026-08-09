@@ -266,72 +266,63 @@ def test_format_flags():
 
 
 class TestFrontmatterFileMode:
-    """Regression tests for the gpp.markdown temporary-file text/binary mode bug.
+    """Regression tests for the gpp.markdown temporary-file write path.
 
-    The bug: ``frontmatter.dump()`` was being called with a file opened in
-    binary mode (``"wb"``), but it requires a text-mode file object.  This
-    raised ``TypeError: a bytes-like object is required, not 'str'`` at
-    runtime — but only when processing a file that has YAML frontmatter,
-    because that is the only path that reaches ``fm.dump()``.
+    python-frontmatter 1.1+ writes encoded bytes inside ``dump()``, so passing
+    a text-mode file handle raises ``TypeError: write() argument must be str,
+    not bytes``.  mdpp therefore uses ``dumps()`` and writes the returned str
+    to a UTF-8 text file.
 
     The tests below verify:
-    1. ``frontmatter.dump()`` succeeds when writing to a text-mode file.
-    2. ``frontmatter.dump()`` raises ``TypeError`` when writing to a binary
-       file — confirming the old code would have failed.
-    3. ``process_content()`` returns a valid ``frontmatter.Post`` object,
-       so the precondition for reaching the dump call is met.
-    4. The full temporary-file write path (the non-manim branch of ``main``)
-       produces a UTF-8 readable ``.gpp.markdown`` file.
-
-    History: introduced in commit 7bd349f (≥ Nov 2022) alongside the switch
-    to python-frontmatter, and fixed in 5ea8c4c (Aug 2026).
-    The existing ``test_main`` only mocks ``process_content`` and
-    ``os.path.isdir``, bypassing the actual file-write, so the bug slipped
-    through undetected until real mdpp invocation was tested.
+    1. The mdpp write pattern (``dumps`` + text file) succeeds.
+    2. ``frontmatter.dump()`` to a text-mode file fails on current frontmatter,
+       documenting why mdpp avoids that API.
+    3. ``process_content()`` returns a valid ``frontmatter.Post`` object.
+    4. The full temporary-file write path produces a UTF-8 readable
+       ``.gpp.markdown`` file.
     """
 
-    def test_frontmatter_dump_to_text_file_succeeds(self) -> None:
-        """frontmatter.dump() must accept a text-mode file handle."""
+    @staticmethod
+    def _write_gpp_markdown(post: fm.Post, path: str) -> None:
+        """Mirror mdpp's gpp.markdown temp-file write path."""
+        content = fm.dumps(post, sort_keys=False, default_flow_style=False)
+        with open(path, "w", encoding="utf-8") as fd_text:
+            fd_text.write(content)
+
+    def test_gpp_markdown_write_pattern_succeeds(self) -> None:
+        """mdpp's dumps()+text write pattern must produce readable UTF-8."""
         post = fm.loads("---\ntitle: Test\n---\nHello world")
         with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as f:
             tmp_path = f.name
-            # Must not raise
-            fm.dump(post, f, sort_keys=False, default_flow_style=False)
-        with open(tmp_path, encoding="utf-8") as f:
-            content = f.read()
-        os.unlink(tmp_path)
-        assert "title: Test" in content
-        assert "Hello world" in content
+        try:
+            self._write_gpp_markdown(post, tmp_path)
+            with open(tmp_path, encoding="utf-8") as f:
+                content = f.read()
+            assert "title: Test" in content
+            assert "Hello world" in content
+        finally:
+            os.unlink(tmp_path)
 
-    def test_frontmatter_dump_to_binary_file_raises(self) -> None:
-        """frontmatter.dump() must raise TypeError with a binary-mode file.
-
-        This documents the *old* broken behaviour so that if the regression
-        is ever re-introduced, this test will immediately flag it.
-        """
+    def test_frontmatter_dump_to_text_file_raises(self) -> None:
+        """frontmatter.dump() must not be used with text-mode files on 1.1+."""
         post = fm.loads("---\ntitle: Test\n---\nHello world")
-        with tempfile.NamedTemporaryFile(mode="wb", suffix=".md", delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as f:
             tmp_path = f.name
-            with self.raises_type_error_or_attribute_error():
+            with self.raises_type_error():
                 fm.dump(post, f, sort_keys=False, default_flow_style=False)
         os.unlink(tmp_path)
 
     @staticmethod
-    def raises_type_error_or_attribute_error():
-        """Context manager that asserts a TypeError or AttributeError is raised.
-
-        ``frontmatter.dump`` may raise either depending on the internal
-        YAML dumper version, but both indicate the same root cause: binary
-        vs. text mode mismatch.
-        """
+    def raises_type_error():
+        """Context manager that asserts a TypeError is raised."""
         import contextlib
 
         @contextlib.contextmanager
         def _ctx():
             try:
                 yield
-                raise AssertionError("Expected TypeError or AttributeError, but no exception was raised")
-            except (TypeError, AttributeError):
+                raise AssertionError("Expected TypeError, but no exception was raised")
+            except TypeError:
                 pass
 
         return _ctx()

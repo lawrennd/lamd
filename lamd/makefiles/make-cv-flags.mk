@@ -69,7 +69,7 @@ SINCEFLAGS=--meta-data talkYearSince=${TALKSINCE} meetingYearSince=${MEETINGSINC
 # Write batch output to temp file to avoid Make variable issues with multiline content
 _DEPS_CACHE:=$(shell mktemp)
 # Only pass --snippets-path if SNIPPETSDIR is defined (use shell conditional)
-_DEPS_EXTRACTED:=$(shell if [ -n "$(SNIPPETSDIR)" ]; then $(TIME_CMD) dependencies batch $(BASE).md --snippets-path $(SNIPPETSDIR) > $(_DEPS_CACHE); else $(TIME_CMD) dependencies batch $(BASE).md > $(_DEPS_CACHE); fi)
+_DEPS_EXTRACTED:=$(shell if [ -n "$(SNIPPETSDIR)" ]; then $(TIME_CMD) dependencies batch $(BASE).md --snippets-path $(SNIPPETSDIR) --diagrams-dir $(DIAGRAMSDIR) > $(_DEPS_CACHE); else $(TIME_CMD) dependencies batch $(BASE).md --diagrams-dir $(DIAGRAMSDIR) > $(_DEPS_CACHE); fi)
 DEPS:=$(shell grep '^inputs:' $(_DEPS_CACHE) | sed 's/^inputs://')
 DIAGDEPS:=$(shell grep '^diagrams:' $(_DEPS_CACHE) | sed 's/^diagrams://')
 # BIBDEPS=$(shell dependencies bibinputs $(BASE).md)

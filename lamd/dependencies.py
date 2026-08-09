@@ -30,10 +30,22 @@ Options:
 """
 
 import argparse
+import os
 import sys
 
 import lynguine.util.talk as nt
 import lynguine.util.yaml as ny
+
+
+def resolve_diagrams_dir(cli_value: str | None) -> str:
+    """Resolve diagrams directory from CLI flag or project config."""
+    if cli_value:
+        return os.path.expandvars(cli_value)
+    try:
+        iface = ny.Interface.from_file(["_lamd.yml", "_config.yml"], directory=".")
+        return os.path.expandvars(iface.get("diagramsdir", "diagrams"))
+    except (ny.FileFormatError, OSError):
+        return "diagrams"
 
 
 def main() -> int:
@@ -92,9 +104,7 @@ def main() -> int:
 
     args = parser.parse_args()
 
-    diagrams_dir = "/Users/neil/lawrennd/slides/diagrams"
-    if args.diagrams_dir:
-        diagrams_dir = args.diagrams_dir
+    diagrams_dir = resolve_diagrams_dir(args.diagrams_dir)
 
     snippets_path = ".."
     if args.snippets_path:
@@ -165,9 +175,10 @@ def main() -> int:
         inputs = nt.extract_inputs(args.filename, snippets_path=snippets_path)
 
         # Then extract diagrams of all types (reuses the file list from inputs)
+        # Use paths relative to the build directory so make targets match mdpp/pandoc
         all_diagrams = nt.extract_diagrams(
             args.filename,
-            absolute_path=True,
+            absolute_path=False,
             diagram_exts=["svg", "png", "pdf", "emf"],
             diagrams_dir=diagrams_dir,
             snippets_path=snippets_path,
