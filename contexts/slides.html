@@ -203,11 +203,17 @@ same <code class="docutils literal notranslate"><span class="pre">group</span></
 <p>HTML slide builds load <code class="docutils literal notranslate"><span class="pre">figure-animate.js</span></code> from the slides header template
 (<code class="docutils literal notranslate"><span class="pre">lamd/includes/slides-header.html</span></code>):</p>
 <div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://inverseprobability.com/assets/js/figure-animate.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">  </span><span class="cm">/* lamdFrameIndex, lamdSetDivs, lamdPlusDivs — see slides-header.html */</span>
+<span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 </pre></div>
 </div>
 <p>Reference implementation:
 <a class="reference external" href="https://github.com/lawrennd/jekyll-theme/blob/main/assets/js/figure-animate.js">figure-animate.js</a></p>
-<p>The library exposes three functions used by the animation controls:</p>
+<p>The library exposes <code class="docutils literal notranslate"><span class="pre">showDivs(n,</span> <span class="pre">group)</span></code> with <strong>1-based</strong> frame indices. LaMD slide
+content typically uses <strong>0-based</strong> slider ranges (<code class="docutils literal notranslate"><span class="pre">\startanimation{group}{0}{4}</span></code> for five
+frames). The header shim maps slider values to frame indices:</p>
+<p><code class="docutils literal notranslate"><span class="pre">frameIndex</span> <span class="pre">=</span> <span class="pre">sliderValue</span> <span class="pre">-</span> <span class="pre">min</span> <span class="pre">+</span> <span class="pre">1</span></code></p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Function</p></th>
@@ -218,19 +224,20 @@ same <code class="docutils literal notranslate"><span class="pre">group</span></
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showDivs(n,</span> <span class="pre">group)</span></code></p></td>
 <td><p>Init script</p></td>
-<td><p>Show frame <em>n</em>, hide others with class <code class="docutils literal notranslate"><span class="pre">group</span></code></p></td>
+<td><p>Show frame <em>n</em> (1-based), hide others with class <code class="docutils literal notranslate"><span class="pre">group</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">setDivs(group)</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lamdSetDivs(group)</span></code></p></td>
 <td><p>Range slider</p></td>
-<td><p>Read slider value and call <code class="docutils literal notranslate"><span class="pre">showDivs</span></code></p></td>
+<td><p>Read slider value, map to 1-based index, call <code class="docutils literal notranslate"><span class="pre">showDivs</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plusDivs(delta,</span> <span class="pre">group)</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lamdPlusDivs(delta,</span> <span class="pre">group)</span></code></p></td>
 <td><p>Prev/next buttons</p></td>
-<td><p>Advance or rewind one frame (wraps at ends)</p></td>
+<td><p>Step slider within min/max, then call <code class="docutils literal notranslate"><span class="pre">showDivs</span></code></p></td>
 </tr>
 </tbody>
 </table>
-<p>Initialization runs on <code class="docutils literal notranslate"><span class="pre">DOMContentLoaded</span></code> so frame divs exist before <code class="docutils literal notranslate"><span class="pre">showDivs</span></code> is called.
+<p>Initialization runs on <code class="docutils literal notranslate"><span class="pre">DOMContentLoaded</span></code> and calls <code class="docutils literal notranslate"><span class="pre">showDivs(1,</span> <span class="pre">group)</span></code> so the first
+frame matches the slider at its minimum value.
 If the script fails to load, lamd degrades gracefully: controls are hidden, the first
 frame is shown, and a <code class="docutils literal notranslate"><span class="pre">[lamd]</span> <span class="pre">figure-animate.js</span> <span class="pre">not</span> <span class="pre">loaded</span></code> warning appears in the browser
 console.</p>
@@ -338,9 +345,9 @@ title so screen-reader users understand the sequence purpose.</p>
 <td><p><code class="docutils literal notranslate"><span class="pre">\newframe</span></code> <code class="docutils literal notranslate"><span class="pre">name</span></code> ≠ <code class="docutils literal notranslate"><span class="pre">\startanimation</span></code> <code class="docutils literal notranslate"><span class="pre">group</span></code></p></td>
 <td><p>Use the same identifier on every frame</p></td>
 </tr>
-<tr class="row-odd"><td><p>Slider range wrong</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">start</span></code>/<code class="docutils literal notranslate"><span class="pre">finish</span></code> mismatch frame count</p></td>
-<td><p>For frames 0…N, set <code class="docutils literal notranslate"><span class="pre">finish</span></code> to N</p></td>
+<tr class="row-odd"><td><p>Slider at left/right shows wrong frame</p></td>
+<td><p>0-based slider passed directly to 1-based <code class="docutils literal notranslate"><span class="pre">showDivs</span></code></p></td>
+<td><p>Rebuild with current lamd (uses <code class="docutils literal notranslate"><span class="pre">lamdSetDivs</span></code> shim in <code class="docutils literal notranslate"><span class="pre">slides-header.html</span></code>)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">[lamd]</span> <span class="pre">figure-animate.js</span> <span class="pre">not</span> <span class="pre">loaded</span></code> in console</p></td>
 <td><p>Script blocked or offline build</p></td>
