@@ -52,7 +52,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#content-control">Content Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#animation-control">Animation Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#presenter-notes">Presenter Notes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#animation-controls">Animation Controls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#frame-animations-startanimation-newframe-endanimation">Frame Animations (<code class="docutils literal notranslate"><span class="pre">\startanimation</span></code>, <code class="docutils literal notranslate"><span class="pre">\newframe</span></code>, <code class="docutils literal notranslate"><span class="pre">\endanimation</span></code>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#additional-display-controls">Additional Display Controls</a></li>
 </ul>
 </li>
@@ -142,79 +142,231 @@
 </pre></div>
 </div>
 </section>
-<section id="animation-controls">
-<h3>Animation Controls<a class="headerlink" href="#animation-controls" title="Link to this heading"></a></h3>
-<p>The animation system creates interactive animations in HTML slides with fallback support for other formats.</p>
-<section id="html-slides-interactive">
-<h4>HTML Slides (Interactive)<a class="headerlink" href="#html-slides-interactive" title="Link to this heading"></a></h4>
+<section id="frame-animations-startanimation-newframe-endanimation">
+<h3>Frame Animations (<code class="docutils literal notranslate"><span class="pre">\startanimation</span></code>, <code class="docutils literal notranslate"><span class="pre">\newframe</span></code>, <code class="docutils literal notranslate"><span class="pre">\endanimation</span></code>)<a class="headerlink" href="#frame-animations-startanimation-newframe-endanimation" title="Link to this heading"></a></h3>
+<p>The frame animation system creates multi-step figure sequences in HTML slides: a range
+slider and previous/next buttons let the audience step through frames. Other output formats
+show all frames without interactive controls.</p>
+<p>This is distinct from reveal.js <code class="docutils literal notranslate"><span class="pre">\fragment{}</span></code> animations (bullet-by-bullet reveal on a
+single slide).</p>
+<section id="macro-reference">
+<h4>Macro reference<a class="headerlink" href="#macro-reference" title="Link to this heading"></a></h4>
 <div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\startanimation{group}{start}{finish}{name}
-    Creates interactive animation controls
+    Opens an animation sequence and renders interactive controls (HTML only).
     Args:
-        group: Animation group identifier (used in JavaScript)
-        start: Starting frame number (minimum slider value)
-        finish: Ending frame number (maximum slider value)
-        name: Display name for the animation
-    Output: Range slider, navigation buttons, JavaScript initialization
-    Requirements: figure-animate.js JavaScript library
+        group: Unique identifier shared by all frames in this sequence. Must match
+               the <span class="sb">`name`</span> argument of every <span class="sb">`\newframe`</span> in the sequence — JavaScript
+               uses this value as the CSS class to find frames.
+        start: Minimum slider value (typically 0 or 1).
+        finish: Maximum slider value. Should equal start + (number of frames − 1)
+                when using consecutive numbering.
+        name: Human-readable title shown beside the controls and used as the
+              container&#39;s ARIA label. May be empty if you use the three-argument form
+              via <span class="sb">`\startslides{group}{start}{finish}`</span>.
 
 \newframe{contents}{name}{style}
-    Creates individual animation frame
+    Adds one frame to the current animation sequence.
     Args:
-        contents: Frame content
-        name: CSS class name for show/hide logic
-        style: CSS styling for frame
-    Output: HTML div with specified class and styling
+        contents: Frame content (diagrams, text, etc.).
+        name: CSS class for this frame — must equal <span class="sb">`group`</span> from <span class="sb">`\startanimation`</span>.
+        style: Optional inline CSS appended to the frame div (e.g. <span class="sb">`margin-top:1em`</span>).
 
 \endanimation
-    Closes animation sequence
-    Output: Closes animation container div
+    Closes the animation container opened by <span class="sb">`\startanimation`</span>.
 </pre></div>
 </div>
 </section>
-<section id="other-formats-fallback">
-<h4>Other Formats (Fallback)<a class="headerlink" href="#other-formats-fallback" title="Link to this heading"></a></h4>
-<ul class="simple">
-<li><p><strong>Notes</strong>: Shows all frames with clear labeling</p></li>
-<li><p><strong>IPynb</strong>: Displays frames as structured sections</p></li>
-<li><p><strong>Graceful degradation</strong> ensures content is always visible</p></li>
-</ul>
-</section>
-<section id="javascript-dependencies">
-<h4>JavaScript Dependencies<a class="headerlink" href="#javascript-dependencies" title="Link to this heading"></a></h4>
-<ul class="simple">
-<li><p>Requires <code class="docutils literal notranslate"><span class="pre">figure-animate.js</span></code> library</p></li>
-<li><p>Functions: <code class="docutils literal notranslate"><span class="pre">showDivs()</span></code>, <code class="docutils literal notranslate"><span class="pre">setDivs()</span></code>, <code class="docutils literal notranslate"><span class="pre">plusDivs()</span></code></p></li>
-<li><p>Loaded via: <code class="docutils literal notranslate"><span class="pre">https://inverseprobability.com/assets/js/figure-animate.js</span></code></p></li>
-</ul>
-</section>
-<section id="accessibility-features">
-<h4>Accessibility Features<a class="headerlink" href="#accessibility-features" title="Link to this heading"></a></h4>
-<ul class="simple">
-<li><p>ARIA labels for screen readers</p></li>
-<li><p>Proper labeling for range sliders</p></li>
-<li><p><strong>Keyboard navigation</strong>: Arrow keys (← →) to navigate frames</p></li>
-<li><p><strong>Reveal.js compatible</strong>: Works with slide navigation</p></li>
-<li><p>Semantic HTML structure</p></li>
-<li><p>Visible, styled buttons for mouse/touch users</p></li>
-</ul>
-<p>Example animation:</p>
-<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\startanimation{neural-net}{1}{5}{Neural Network Training}
+<section id="worked-example">
+<h4>Worked example<a class="headerlink" href="#worked-example" title="Link to this heading"></a></h4>
+<p>The pattern below matches real talk content: eight frames numbered 0–7, all sharing the
+same <code class="docutils literal notranslate"><span class="pre">group</span></code> class:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\startanimation{correlated_velocities}{0}{7}{Correlated velocity samples}
 
-\newframe{\includediagram{nn-frame1}{80%}}{frame1}{}
-\newframe{\includediagram{nn-frame2}{80%}}{frame2}{}
-\newframe{\includediagram{nn-frame3}{80%}}{frame3}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities000}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities001}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities002}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities003}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities004}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities005}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities006}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities007}{\width}}{correlated_velocities}{}
 
 \endanimation
 </pre></div>
 </div>
+</section>
+<section id="javascript-dependency">
+<h4>JavaScript dependency<a class="headerlink" href="#javascript-dependency" title="Link to this heading"></a></h4>
+<p>HTML slide builds load <code class="docutils literal notranslate"><span class="pre">figure-animate.js</span></code> from the slides header template
+(<code class="docutils literal notranslate"><span class="pre">lamd/includes/slides-header.html</span></code>):</p>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://inverseprobability.com/assets/js/figure-animate.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<p>Reference implementation:
+<a class="reference external" href="https://github.com/lawrennd/jekyll-theme/blob/main/assets/js/figure-animate.js">figure-animate.js</a></p>
+<p>The library exposes three functions used by the animation controls:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Called from</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">showDivs(n,</span> <span class="pre">group)</span></code></p></td>
+<td><p>Init script</p></td>
+<td><p>Show frame <em>n</em>, hide others with class <code class="docutils literal notranslate"><span class="pre">group</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">setDivs(group)</span></code></p></td>
+<td><p>Range slider</p></td>
+<td><p>Read slider value and call <code class="docutils literal notranslate"><span class="pre">showDivs</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plusDivs(delta,</span> <span class="pre">group)</span></code></p></td>
+<td><p>Prev/next buttons</p></td>
+<td><p>Advance or rewind one frame (wraps at ends)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Initialization runs on <code class="docutils literal notranslate"><span class="pre">DOMContentLoaded</span></code> so frame divs exist before <code class="docutils literal notranslate"><span class="pre">showDivs</span></code> is called.
+If the script fails to load, lamd degrades gracefully: controls are hidden, the first
+frame is shown, and a <code class="docutils literal notranslate"><span class="pre">[lamd]</span> <span class="pre">figure-animate.js</span> <span class="pre">not</span> <span class="pre">loaded</span></code> warning appears in the browser
+console.</p>
+</section>
+<section id="html-output-structure">
+<h4>HTML output structure<a class="headerlink" href="#html-output-structure" title="Link to this heading"></a></h4>
+<p>Each animation sequence renders a container with stable attributes for styling, testing,
+and scripting:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute / element</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">id=&quot;animation-{group}&quot;</span></code></p></td>
+<td><p>Unique container id</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">class=&quot;lamd-animation&quot;</span></code></p></td>
+<td><p>Shared class for all animation containers</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">data-animation-group=&quot;{group}&quot;</span></code></p></td>
+<td><p>Programmatic lookup</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">role=&quot;region&quot;</span></code> + <code class="docutils literal notranslate"><span class="pre">aria-label</span></code></p></td>
+<td><p>Landmark for assistive technology</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.animation-controls</span></code></p></td>
+<td><p>Wrapper around slider and buttons</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">data-animation-frame</span></code> on each frame</p></td>
+<td><p>Per-frame identification</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="format-specific-behaviour">
+<h4>Format-specific behaviour<a class="headerlink" href="#format-specific-behaviour" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Format</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">\startanimation</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">\newframe</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">\endanimation</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>HTML slides</strong></p></td>
+<td><p>Full interactive controls + JS init</p></td>
+<td><p>Frame div with show/hide class</p></td>
+<td><p>Closes container</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Notes</strong></p></td>
+<td><p>Prints <code class="docutils literal notranslate"><span class="pre">**Animation</span> <span class="pre">sequence:</span> <span class="pre">{name}**</span></code></p></td>
+<td><p>Emits frame content</p></td>
+<td><p>No-op</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>IPynb</strong></p></td>
+<td><p>No-op (HTML macros included, then overridden)</p></td>
+<td><p>Emits frame content</p></td>
+<td><p>No-op</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>TeX / PDF slides</strong></p></td>
+<td><p>No-op</p></td>
+<td><p>Emits frame content</p></td>
+<td><p>No-op</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>PPTX</strong></p></td>
+<td><p>No-op</p></td>
+<td><p>Emits frame content</p></td>
+<td><p>No-op</p></td>
+</tr>
+</tbody>
+</table>
+<p>In non-HTML formats every frame appears in document order. Authors should write frames
+so they read sensibly when shown sequentially (e.g. with diagram captions or brief labels).</p>
+</section>
+<section id="accessibility">
+<h4>Accessibility<a class="headerlink" href="#accessibility" title="Link to this heading"></a></h4>
+<p>HTML animations follow <a class="reference external" href="https://www.w3.org/TR/WCAG21/">WCAG 2.1</a> guidance for interactive
+controls:</p>
+<ul class="simple">
+<li><p><strong>Container</strong>: <code class="docutils literal notranslate"><span class="pre">role=&quot;region&quot;</span></code> with <code class="docutils literal notranslate"><span class="pre">aria-label</span></code> set from the <code class="docutils literal notranslate"><span class="pre">\startanimation</span></code> title.</p></li>
+<li><p><strong>Slider</strong>: <code class="docutils literal notranslate"><span class="pre">aria-label</span></code>, <code class="docutils literal notranslate"><span class="pre">aria-valuemin</span></code>, <code class="docutils literal notranslate"><span class="pre">aria-valuemax</span></code>, and <code class="docutils literal notranslate"><span class="pre">aria-valuenow</span></code>.</p></li>
+<li><p><strong>Buttons</strong>: <code class="docutils literal notranslate"><span class="pre">aria-label=&quot;Previous</span> <span class="pre">frame&quot;</span></code> / <code class="docutils literal notranslate"><span class="pre">&quot;Next</span> <span class="pre">frame&quot;</span></code>.</p></li>
+<li><p><strong>Frames</strong>: <code class="docutils literal notranslate"><span class="pre">role=&quot;img&quot;</span></code> with <code class="docutils literal notranslate"><span class="pre">aria-label</span></code> from the frame <code class="docutils literal notranslate"><span class="pre">name</span></code> parameter.</p></li>
+</ul>
+<p>Keyboard access uses native control behaviour: Tab to reach the slider and buttons; arrow
+keys adjust the range input when it has focus. Provide a descriptive <code class="docutils literal notranslate"><span class="pre">\startanimation</span></code>
+title so screen-reader users understand the sequence purpose.</p>
+<p>Because every frame currently shares the same <code class="docutils literal notranslate"><span class="pre">name</span></code> class (and thus the same
+<code class="docutils literal notranslate"><span class="pre">aria-label</span></code>), put the meaningful description in the visible frame content where possible.</p>
 </section>
 <section id="troubleshooting">
 <h4>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h4>
-<ul class="simple">
-<li><p><strong>Animations not working</strong>: Check that <code class="docutils literal notranslate"><span class="pre">figure-animate.js</span></code> is loaded</p></li>
-<li><p><strong>Frames not showing</strong>: Verify JavaScript console for errors</p></li>
-<li><p><strong>Accessibility issues</strong>: Ensure ARIA labels are properly set</p></li>
-</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Symptom</p></th>
+<th class="head"><p>Likely cause</p></th>
+<th class="head"><p>What to check</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Controls appear but frames do not change</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">\newframe</span></code> <code class="docutils literal notranslate"><span class="pre">name</span></code> ≠ <code class="docutils literal notranslate"><span class="pre">\startanimation</span></code> <code class="docutils literal notranslate"><span class="pre">group</span></code></p></td>
+<td><p>Use the same identifier on every frame</p></td>
+</tr>
+<tr class="row-odd"><td><p>Slider range wrong</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">start</span></code>/<code class="docutils literal notranslate"><span class="pre">finish</span></code> mismatch frame count</p></td>
+<td><p>For frames 0…N, set <code class="docutils literal notranslate"><span class="pre">finish</span></code> to N</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">[lamd]</span> <span class="pre">figure-animate.js</span> <span class="pre">not</span> <span class="pre">loaded</span></code> in console</p></td>
+<td><p>Script blocked or offline build</p></td>
+<td><p>Confirm <code class="docutils literal notranslate"><span class="pre">slides-header.html</span></code> is included; check network tab</p></td>
+</tr>
+<tr class="row-odd"><td><p>Only first frame visible, no controls</p></td>
+<td><p>Expected degradation without JS</p></td>
+<td><p>Enable JavaScript, or rely on noscript/fallback (first frame only)</p></td>
+</tr>
+<tr class="row-even"><td><p>Empty animation area</p></td>
+<td><p>No <code class="docutils literal notranslate"><span class="pre">\newframe</span></code> calls before <code class="docutils literal notranslate"><span class="pre">\endanimation</span></code></p></td>
+<td><p>Add at least one frame between start and end</p></td>
+</tr>
+<tr class="row-odd"><td><p>Frames flash all at once briefly</p></td>
+<td><p>Race before <code class="docutils literal notranslate"><span class="pre">DOMContentLoaded</span></code> init</p></td>
+<td><p>Normal; init hides non-active frames once JS runs</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="related-macros">
+<h4>Related macros<a class="headerlink" href="#related-macros" title="Link to this heading"></a></h4>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\fragment{text}{type}
+    Reveal.js fragment animation on a single slide (fade-in, grow, etc.) — not frame sequences.
+
+\startslides{group}{start}{finish}
+    Shorthand for <span class="sb">`\startanimation{group}{start}{finish}`</span> without a display title.
+</pre></div>
+</div>
 </section>
 </section>
 <section id="additional-display-controls">
@@ -270,6 +422,8 @@ Remember to mention real-world applications for each type
 <li><p>Use fragments for building complex ideas</p></li>
 <li><p>Include speaker notes for important points</p></li>
 <li><p>Consider both HTML and PPTX output when formatting</p></li>
+<li><p>For multi-frame diagrams, use <code class="docutils literal notranslate"><span class="pre">\startanimation</span></code>/<code class="docutils literal notranslate"><span class="pre">\newframe</span></code>/<code class="docutils literal notranslate"><span class="pre">\endanimation</span></code> and repeat
+the same <code class="docutils literal notranslate"><span class="pre">group</span></code> class on every frame (see Frame Animations above)</p></li>
 </ol>
 </section>
 </section>
