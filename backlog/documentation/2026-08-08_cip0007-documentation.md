@@ -1,10 +1,10 @@
 ---
 id: "2026-08-08_cip0007-documentation"
 title: "CIP-0007 Phase 5: Animation System Documentation"
-status: "Proposed"
+status: "Completed"
 priority: "Low"
 created: "2026-08-08"
-last_updated: "2026-08-08"
+last_updated: "2026-08-09"
 category: "documentation"
 related_cips: ["0007"]
 owner: "Neil Lawrence"
@@ -23,12 +23,12 @@ Update `slides.md` and related documentation to cover the animation macro system
 
 ## Acceptance Criteria
 
-- [ ] `slides.md` documents `\startanimation`, `\newframe`, `\endanimation` with parameters and examples
-- [ ] JavaScript dependency (`figure-animate.js`) and its required functions documented
-- [ ] Accessibility guidelines (ARIA, keyboard nav) described for content authors
-- [ ] Format-specific behaviour (HTML vs notes vs ipynb) explained
-- [ ] Troubleshooting section covers common failure modes (missing JS, empty frames, etc.)
-- [ ] At least one worked example of a complete animation sequence
+- [x] `slides.md` documents `\startanimation`, `\newframe`, `\endanimation` with parameters and examples
+- [x] JavaScript dependency (`figure-animate.js`) and its required functions documented
+- [x] Accessibility guidelines (ARIA, keyboard nav) described for content authors
+- [x] Format-specific behaviour (HTML vs notes vs ipynb) explained
+- [x] Troubleshooting section covers common failure modes (missing JS, empty frames, etc.)
+- [x] At least one worked example of a complete animation sequence
 
 ## Implementation Notes
 
@@ -46,3 +46,9 @@ Update `slides.md` and related documentation to cover the animation macro system
 ### 2026-08-08
 
 Task created — tracking Phase 5 of CIP-0007.
+
+### 2026-08-09
+
+Expanded `docs/contexts/slides.md` with macro reference, worked example (correlated
+velocities pattern), JavaScript dependency table, HTML container structure, format
+fallback matrix, WCAG accessibility notes, and troubleshooting table.

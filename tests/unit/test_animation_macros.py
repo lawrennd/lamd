@@ -2,6 +2,8 @@
 
 Phase 1 (CIP-0007): Guard against duplicate \\newframe in talk-macros-slides-html.gpp.
 Phase 2 (CIP-0007): Verify fallback implementations exist in notes, ipynb, tex, pptx.
+Phase 3 (CIP-0007): ARIA accessibility on animation controls and frames.
+Phase 4 (CIP-0007): JS fallback, noscript degradation, stable container attributes.
 """
 
 import os
@@ -249,3 +251,83 @@ class TestAnimationAccessibility:
         assert newframe_match is not None, "Could not locate \\newframe definition body"
         body = newframe_match.group(1)
         assert "aria-label=" in body, f"\\newframe div must have aria-label, got: {body}"
+
+
+class TestAnimationErrorHandling:
+    """Phase 4: Verify JS fallback and container structure (CIP-0007)."""
+
+    def _html_content(self) -> str:
+        return _read_macro_file("talk-macros-slides-html.gpp")
+
+    def _startanimation_snippet(self) -> str:
+        content = self._html_content()
+        idx = content.find(r"\define{\startanimation{")
+        return content[idx : idx + 2000]
+
+    def test_container_has_stable_id(self) -> None:
+        """Animation container must have id='animation-{group}' for stable targeting."""
+        snippet = self._startanimation_snippet()
+        assert 'id="animation-\\group"' in snippet, "\\startanimation must set id='animation-{group}' on the container"
+
+    def test_container_has_lamd_animation_class(self) -> None:
+        """Animation container must have class='lamd-animation' for styling and tests."""
+        snippet = self._startanimation_snippet()
+        assert 'class="lamd-animation"' in snippet, "\\startanimation container must have class='lamd-animation'"
+
+    def test_container_has_data_animation_group(self) -> None:
+        """Animation container must expose data-animation-group for programmatic access."""
+        snippet = self._startanimation_snippet()
+        assert "data-animation-group=" in snippet, "\\startanimation container must have data-animation-group attribute"
+
+    def test_controls_wrapped_in_animation_controls_div(self) -> None:
+        """Slider and buttons must be wrapped in .animation-controls for noscript/CSS fallback."""
+        snippet = self._startanimation_snippet()
+        assert 'class="animation-controls"' in snippet, "\\startanimation must wrap controls in div.animation-controls"
+
+    def test_noscript_fallback_present(self) -> None:
+        """A noscript block must hide controls and non-first frames when JS is disabled."""
+        snippet = self._startanimation_snippet()
+        assert "<noscript>" in snippet, "\\startanimation must include a <noscript> fallback"
+        assert ".animation-controls{display:none}" in snippet.replace(
+            " ", ""
+        ), "noscript fallback must hide .animation-controls"
+
+    def test_init_deferred_to_domcontentloaded(self) -> None:
+        """Init must wait for DOMContentLoaded so frame divs exist before showDivs runs."""
+        snippet = self._startanimation_snippet()
+        assert "DOMContentLoaded" in snippet, "\\startanimation init script must use DOMContentLoaded"
+
+    def test_init_checks_showdivs_exists(self) -> None:
+        """Init must guard against missing figure-animate.js before calling showDivs."""
+        snippet = self._startanimation_snippet()
+        assert "typeof showDivs" in snippet, "Init script must check typeof showDivs before calling it"
+
+    def test_init_emits_console_warning_on_missing_library(self) -> None:
+        """Init must warn in the console when figure-animate.js is not loaded."""
+        snippet = self._startanimation_snippet()
+        assert "console.warn" in snippet, "Init script must emit console.warn on failure"
+        assert "figure-animate.js" in snippet, "Warning message must mention figure-animate.js"
+
+    def test_init_wrapped_in_try_catch(self) -> None:
+        """Init must be wrapped in try/catch to avoid uncaught errors."""
+        snippet = self._startanimation_snippet()
+        assert "try{" in snippet.replace(" ", "") or "try {" in snippet, "Init script must use try/catch"
+        assert "catch" in snippet, "Init script must use try/catch"
+
+    def test_slider_handlers_guard_setdivs(self) -> None:
+        """Slider onchange/oninput must not throw if setDivs is undefined."""
+        snippet = self._startanimation_snippet()
+        assert "typeof setDivs" in snippet, "Slider handlers must guard with typeof setDivs"
+
+    def test_button_handlers_guard_plusdivs(self) -> None:
+        """Navigation buttons must not throw if plusDivs is undefined."""
+        snippet = self._startanimation_snippet()
+        assert snippet.count("typeof plusDivs") >= 2, "Both navigation buttons must guard with typeof plusDivs"
+
+    def test_newframe_has_data_animation_frame(self) -> None:
+        """Frame divs should expose data-animation-frame for testing and styling."""
+        content = self._html_content()
+        newframe_match = re.search(r"\\define\s*\{\\newframe[^}]*\}[^}]*\}[^}]*\}\}\s*\{([^\n]*)\}", content)
+        assert newframe_match is not None, "Could not locate \\newframe definition body"
+        body = newframe_match.group(1)
+        assert "data-animation-frame=" in body, f"\\newframe div must have data-animation-frame, got: {body}"
