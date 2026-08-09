@@ -100,20 +100,28 @@ HTML slide builds load `figure-animate.js` from the slides header template
 
 ```html
 <script src="https://inverseprobability.com/assets/js/figure-animate.js"></script>
+<script>
+  /* lamdFrameIndex, lamdSetDivs, lamdPlusDivs — see slides-header.html */
+</script>
 ```
 
 Reference implementation:
 [figure-animate.js](https://github.com/lawrennd/jekyll-theme/blob/main/assets/js/figure-animate.js)
 
-The library exposes three functions used by the animation controls:
+The library exposes `showDivs(n, group)` with **1-based** frame indices. LaMD slide
+content typically uses **0-based** slider ranges (`\startanimation{group}{0}{4}` for five
+frames). The header shim maps slider values to frame indices:
+
+`frameIndex = sliderValue - min + 1`
 
 | Function | Called from | Purpose |
 |----------|-------------|---------|
-| `showDivs(n, group)` | Init script | Show frame *n*, hide others with class `group` |
-| `setDivs(group)` | Range slider | Read slider value and call `showDivs` |
-| `plusDivs(delta, group)` | Prev/next buttons | Advance or rewind one frame (wraps at ends) |
+| `showDivs(n, group)` | Init script | Show frame *n* (1-based), hide others with class `group` |
+| `lamdSetDivs(group)` | Range slider | Read slider value, map to 1-based index, call `showDivs` |
+| `lamdPlusDivs(delta, group)` | Prev/next buttons | Step slider within min/max, then call `showDivs` |
 
-Initialization runs on `DOMContentLoaded` so frame divs exist before `showDivs` is called.
+Initialization runs on `DOMContentLoaded` and calls `showDivs(1, group)` so the first
+frame matches the slider at its minimum value.
 If the script fails to load, lamd degrades gracefully: controls are hidden, the first
 frame is shown, and a `[lamd] figure-animate.js not loaded` warning appears in the browser
 console.
@@ -167,7 +175,7 @@ Because every frame currently shares the same `name` class (and thus the same
 | Symptom | Likely cause | What to check |
 |---------|--------------|---------------|
 | Controls appear but frames do not change | `\newframe` `name` ≠ `\startanimation` `group` | Use the same identifier on every frame |
-| Slider range wrong | `start`/`finish` mismatch frame count | For frames 0…N, set `finish` to N |
+| Slider at left/right shows wrong frame | 0-based slider passed directly to 1-based `showDivs` | Rebuild with current lamd (uses `lamdSetDivs` shim in `slides-header.html`) |
 | `[lamd] figure-animate.js not loaded` in console | Script blocked or offline build | Confirm `slides-header.html` is included; check network tab |
 | Only first frame visible, no controls | Expected degradation without JS | Enable JavaScript, or rely on noscript/fallback (first frame only) |
 | Empty animation area | No `\newframe` calls before `\endanimation` | Add at least one frame between start and end |

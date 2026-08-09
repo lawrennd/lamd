@@ -31,13 +31,13 @@
 <aside class="notes">\captionContents</aside>}
 
 \define{\startanimation{group}{start}{finish}{name}}{<div id="animation-\group" class="lamd-animation" role="region" aria-label="\name" data-animation-group="\group"><noscript><style>#animation-\group .animation-controls{display:none}#animation-\group .\group~.\group{display:none}</style></noscript><div class="animation-controls">
-\smalltext{\name} <input id="range-\group" type="range" min="\start" max="\finish" value="\start" aria-label="Frame slider for \name" aria-valuemin="\start" aria-valuemax="\finish" aria-valuenow="\start" onchange="typeof setDivs==='function'&&setDivs('\group')" oninput="typeof setDivs==='function'&&setDivs('\group')">
-<button type="button" onclick="typeof plusDivs==='function'&&plusDivs(-1,'\group');" aria-label="Previous frame">❮</button>
-<button type="button" onclick="typeof plusDivs==='function'&&plusDivs(1,'\group');" aria-label="Next frame">❯</button>
+\smalltext{\name} <input id="range-\group" type="range" min="\start" max="\finish" value="\start" aria-label="Frame slider for \name" aria-valuemin="\start" aria-valuemax="\finish" aria-valuenow="\start" onchange="typeof lamdSetDivs==='function'&&lamdSetDivs('\group')" oninput="typeof lamdSetDivs==='function'&&lamdSetDivs('\group')">
+<button type="button" onclick="typeof lamdPlusDivs==='function'&&lamdPlusDivs(-1,'\group');" aria-label="Previous frame">❮</button>
+<button type="button" onclick="typeof lamdPlusDivs==='function'&&lamdPlusDivs(1,'\group');" aria-label="Next frame">❯</button>
 </div><script>
 document.addEventListener('DOMContentLoaded',function(){
 try{
-if(typeof showDivs==='function'){showDivs(\start,'\group');}
+if(typeof showDivs==='function'){showDivs(1,'\group');}
 else{
 console.warn('[lamd] figure-animate.js not loaded; animation "'+'\group'+'" degraded to static first frame.');
 var c=document.getElementById('animation-\group');
