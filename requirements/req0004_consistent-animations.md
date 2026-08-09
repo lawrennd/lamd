@@ -1,10 +1,10 @@
 ---
 id: "0004"
 title: "Animations Work Consistently and Accessibly Across Formats"
-status: "Ready"
+status: "Validated"
 priority: "Medium"
 created: "2026-01-03"
-last_updated: "2026-01-04"
+last_updated: "2026-08-09"
 related_tenets: ["single-source-multiple-contexts", "academic-rigor-through-tooling"]
 stakeholders: ["presentation authors", "accessibility users", "students", "educators"]
 tags: ["animations", "accessibility", "cross-format", "presentations"]
@@ -28,16 +28,17 @@ Academic presentations often include animated visualizations, progressive reveal
 
 What does "done" look like? Be specific about outcomes, not implementation:
 
-- [ ] Animation macros produce correct output in all supported formats (HTML, notes, PDF, IPynb)
-- [ ] Interactive animation controls in HTML have keyboard navigation support
-- [ ] Animation controls include proper ARIA labels for screen readers
-- [ ] Non-interactive formats show all animation frames or provide alternatives
-- [ ] Animation syntax produces consistent, predictable behavior without duplicate definitions
-- [ ] Missing JavaScript dependencies degrade gracefully with fallback behavior
+- [x] Animation macros produce correct output in all supported formats (HTML, notes, PDF, IPynb)
+- [x] Interactive animation controls in HTML have keyboard navigation support
+- [x] Animation controls include proper ARIA labels for screen readers
+- [x] Non-interactive formats show all animation frames or provide alternatives
+- [x] Animation syntax produces consistent, predictable behavior without duplicate definitions
+- [x] Missing JavaScript dependencies degrade gracefully with fallback behavior
 
 ## Notes (Optional)
 
-This requirement addresses issues documented in CIP-0007. Current animation macros have bugs (duplicate definitions, missing endanimation) and accessibility problems. Format support is inconsistent.
+Implemented by CIP-0007 (Closed 2026-08-09). See `docs/contexts/slides.md` for animation macro reference,
+format fallbacks, and troubleshooting.
 
 ## References
 
@@ -46,6 +47,10 @@ This requirement addresses issues documented in CIP-0007. Current animation macr
 - **Standards**: WCAG accessibility guidelines for interactive controls
 
 ## Progress Updates
+
+### 2026-08-09
+**Status changed to Validated**. CIP-0007 closed after browser validation of HTML animation controls
+(including 0-based slider index mapping). Unit tests in `tests/unit/test_animation_macros.py`.
 
 ### 2026-01-04
 **Status changed to Ready**. CIP-0007 has been accepted with a comprehensive implementation plan. Requirement is validated and ready for implementation. Phase 1 (critical bug fixes) will begin with backlog items for tracking.
