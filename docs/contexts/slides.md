@@ -37,68 +37,151 @@ The slides context is used when creating presentations. Content in this context 
         text: Notes for the presenter
 ```
 
-### Animation Controls
+### Frame Animations (`\startanimation`, `\newframe`, `\endanimation`)
 
-The animation system creates interactive animations in HTML slides with fallback support for other formats.
+The frame animation system creates multi-step figure sequences in HTML slides: a range
+slider and previous/next buttons let the audience step through frames. Other output formats
+show all frames without interactive controls.
 
-#### HTML Slides (Interactive)
+This is distinct from reveal.js `\fragment{}` animations (bullet-by-bullet reveal on a
+single slide).
+
+#### Macro reference
+
 ```markdown
 \startanimation{group}{start}{finish}{name}
-    Creates interactive animation controls
+    Opens an animation sequence and renders interactive controls (HTML only).
     Args:
-        group: Animation group identifier (used in JavaScript)
-        start: Starting frame number (minimum slider value)
-        finish: Ending frame number (maximum slider value)
-        name: Display name for the animation
-    Output: Range slider, navigation buttons, JavaScript initialization
-    Requirements: figure-animate.js JavaScript library
+        group: Unique identifier shared by all frames in this sequence. Must match
+               the `name` argument of every `\newframe` in the sequence — JavaScript
+               uses this value as the CSS class to find frames.
+        start: Minimum slider value (typically 0 or 1).
+        finish: Maximum slider value. Should equal start + (number of frames − 1)
+                when using consecutive numbering.
+        name: Human-readable title shown beside the controls and used as the
+              container's ARIA label. May be empty if you use the three-argument form
+              via `\startslides{group}{start}{finish}`.
 
 \newframe{contents}{name}{style}
-    Creates individual animation frame
+    Adds one frame to the current animation sequence.
     Args:
-        contents: Frame content
-        name: CSS class name for show/hide logic
-        style: CSS styling for frame
-    Output: HTML div with specified class and styling
+        contents: Frame content (diagrams, text, etc.).
+        name: CSS class for this frame — must equal `group` from `\startanimation`.
+        style: Optional inline CSS appended to the frame div (e.g. `margin-top:1em`).
 
 \endanimation
-    Closes animation sequence
-    Output: Closes animation container div
+    Closes the animation container opened by `\startanimation`.
 ```
 
-#### Other Formats (Fallback)
-- **Notes**: Shows all frames with clear labeling
-- **IPynb**: Displays frames as structured sections
-- **Graceful degradation** ensures content is always visible
+#### Worked example
 
-#### JavaScript Dependencies
-- Requires `figure-animate.js` library
-- Functions: `showDivs()`, `setDivs()`, `plusDivs()`
-- Loaded via: `https://inverseprobability.com/assets/js/figure-animate.js`
+The pattern below matches real talk content: eight frames numbered 0–7, all sharing the
+same `group` class:
 
-#### Accessibility Features
-- ARIA labels for screen readers
-- Proper labeling for range sliders
-- **Keyboard navigation**: Arrow keys (← →) to navigate frames
-- **Reveal.js compatible**: Works with slide navigation
-- Semantic HTML structure
-- Visible, styled buttons for mouse/touch users
-
-Example animation:
 ```markdown
-\startanimation{neural-net}{1}{5}{Neural Network Training}
+\startanimation{correlated_velocities}{0}{7}{Correlated velocity samples}
 
-\newframe{\includediagram{nn-frame1}{80%}}{frame1}{}
-\newframe{\includediagram{nn-frame2}{80%}}{frame2}{}
-\newframe{\includediagram{nn-frame3}{80%}}{frame3}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities000}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities001}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities002}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities003}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities004}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities005}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities006}{\width}}{correlated_velocities}{}
+\newframe{\includediagram{\diagramsDir/ml/correlated_velocities007}{\width}}{correlated_velocities}{}
 
 \endanimation
 ```
+
+#### JavaScript dependency
+
+HTML slide builds load `figure-animate.js` from the slides header template
+(`lamd/includes/slides-header.html`):
+
+```html
+<script src="https://inverseprobability.com/assets/js/figure-animate.js"></script>
+```
+
+Reference implementation:
+[figure-animate.js](https://github.com/lawrennd/jekyll-theme/blob/main/assets/js/figure-animate.js)
+
+The library exposes three functions used by the animation controls:
+
+| Function | Called from | Purpose |
+|----------|-------------|---------|
+| `showDivs(n, group)` | Init script | Show frame *n*, hide others with class `group` |
+| `setDivs(group)` | Range slider | Read slider value and call `showDivs` |
+| `plusDivs(delta, group)` | Prev/next buttons | Advance or rewind one frame (wraps at ends) |
+
+Initialization runs on `DOMContentLoaded` so frame divs exist before `showDivs` is called.
+If the script fails to load, lamd degrades gracefully: controls are hidden, the first
+frame is shown, and a `[lamd] figure-animate.js not loaded` warning appears in the browser
+console.
+
+#### HTML output structure
+
+Each animation sequence renders a container with stable attributes for styling, testing,
+and scripting:
+
+| Attribute / element | Purpose |
+|---------------------|---------|
+| `id="animation-{group}"` | Unique container id |
+| `class="lamd-animation"` | Shared class for all animation containers |
+| `data-animation-group="{group}"` | Programmatic lookup |
+| `role="region"` + `aria-label` | Landmark for assistive technology |
+| `.animation-controls` | Wrapper around slider and buttons |
+| `data-animation-frame` on each frame | Per-frame identification |
+
+#### Format-specific behaviour
+
+| Format | `\startanimation` | `\newframe` | `\endanimation` |
+|--------|-------------------|-------------|-----------------|
+| **HTML slides** | Full interactive controls + JS init | Frame div with show/hide class | Closes container |
+| **Notes** | Prints `**Animation sequence: {name}**` | Emits frame content | No-op |
+| **IPynb** | No-op (HTML macros included, then overridden) | Emits frame content | No-op |
+| **TeX / PDF slides** | No-op | Emits frame content | No-op |
+| **PPTX** | No-op | Emits frame content | No-op |
+
+In non-HTML formats every frame appears in document order. Authors should write frames
+so they read sensibly when shown sequentially (e.g. with diagram captions or brief labels).
+
+#### Accessibility
+
+HTML animations follow [WCAG 2.1](https://www.w3.org/TR/WCAG21/) guidance for interactive
+controls:
+
+- **Container**: `role="region"` with `aria-label` set from the `\startanimation` title.
+- **Slider**: `aria-label`, `aria-valuemin`, `aria-valuemax`, and `aria-valuenow`.
+- **Buttons**: `aria-label="Previous frame"` / `"Next frame"`.
+- **Frames**: `role="img"` with `aria-label` from the frame `name` parameter.
+
+Keyboard access uses native control behaviour: Tab to reach the slider and buttons; arrow
+keys adjust the range input when it has focus. Provide a descriptive `\startanimation`
+title so screen-reader users understand the sequence purpose.
+
+Because every frame currently shares the same `name` class (and thus the same
+`aria-label`), put the meaningful description in the visible frame content where possible.
 
 #### Troubleshooting
-- **Animations not working**: Check that `figure-animate.js` is loaded
-- **Frames not showing**: Verify JavaScript console for errors
-- **Accessibility issues**: Ensure ARIA labels are properly set
+
+| Symptom | Likely cause | What to check |
+|---------|--------------|---------------|
+| Controls appear but frames do not change | `\newframe` `name` ≠ `\startanimation` `group` | Use the same identifier on every frame |
+| Slider range wrong | `start`/`finish` mismatch frame count | For frames 0…N, set `finish` to N |
+| `[lamd] figure-animate.js not loaded` in console | Script blocked or offline build | Confirm `slides-header.html` is included; check network tab |
+| Only first frame visible, no controls | Expected degradation without JS | Enable JavaScript, or rely on noscript/fallback (first frame only) |
+| Empty animation area | No `\newframe` calls before `\endanimation` | Add at least one frame between start and end |
+| Frames flash all at once briefly | Race before `DOMContentLoaded` init | Normal; init hides non-active frames once JS runs |
+
+#### Related macros
+
+```markdown
+\fragment{text}{type}
+    Reveal.js fragment animation on a single slide (fade-in, grow, etc.) — not frame sequences.
+
+\startslides{group}{start}{finish}
+    Shorthand for `\startanimation{group}{start}{finish}` without a display title.
+```
 
 ### Additional Display Controls
 
@@ -149,4 +232,6 @@ Remember to mention real-world applications for each type
 2. Use fragments for building complex ideas
 3. Include speaker notes for important points
 4. Consider both HTML and PPTX output when formatting
+5. For multi-frame diagrams, use `\startanimation`/`\newframe`/`\endanimation` and repeat
+   the same `group` class on every frame (see Frame Animations above)
 

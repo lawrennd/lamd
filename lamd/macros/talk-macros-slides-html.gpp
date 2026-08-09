@@ -30,16 +30,29 @@
 </div>
 <aside class="notes">\captionContents</aside>}
 
-\define{\startanimation{group}{start}{finish}{name}}{<div role="region" aria-label="\name"><script>
-showDivs(\start, '\group');
+\define{\startanimation{group}{start}{finish}{name}}{<div id="animation-\group" class="lamd-animation" role="region" aria-label="\name" data-animation-group="\group"><noscript><style>#animation-\group .animation-controls{display:none}#animation-\group .\group~.\group{display:none}</style></noscript><div class="animation-controls">
+\smalltext{\name} <input id="range-\group" type="range" min="\start" max="\finish" value="\start" aria-label="Frame slider for \name" aria-valuemin="\start" aria-valuemax="\finish" aria-valuenow="\start" onchange="typeof setDivs==='function'&&setDivs('\group')" oninput="typeof setDivs==='function'&&setDivs('\group')">
+<button type="button" onclick="typeof plusDivs==='function'&&plusDivs(-1,'\group');" aria-label="Previous frame">❮</button>
+<button type="button" onclick="typeof plusDivs==='function'&&plusDivs(1,'\group');" aria-label="Next frame">❯</button>
+</div><script>
+document.addEventListener('DOMContentLoaded',function(){
+try{
+if(typeof showDivs==='function'){showDivs(\start,'\group');}
+else{
+console.warn('[lamd] figure-animate.js not loaded; animation "'+'\group'+'" degraded to static first frame.');
+var c=document.getElementById('animation-\group');
+if(c){var ctrl=c.querySelector('.animation-controls');if(ctrl){ctrl.style.display='none';}}
+var f=document.getElementsByClassName('\group');
+for(var i=1;i<f.length;i++){f[i].style.display='none';}
+if(f.length>0){f[0].style.display='block';}
+}
+}catch(e){console.warn('[lamd] Animation "'+'\group'+'" failed to initialize:',e);}
+});
 </script>
-\smalltext{\name} <input id="range-\group" type="range" min="\start" max="\finish" value="\start" aria-label="Frame slider for \name" aria-valuemin="\start" aria-valuemax="\finish" aria-valuenow="\start" onchange="setDivs('\group')" oninput="setDivs('\group')">
-<button onclick="plusDivs(-1, '\group');" aria-label="Previous frame">❮</button>
-<button onclick="plusDivs(1, '\group');" aria-label="Next frame">❯</button>
 }
 
 
-\define{\newframe{contents}{name}{style}}{<div style="text-align:center;\style" class="\name" role="img" aria-label="\name">\contents</div>}
+\define{\newframe{contents}{name}{style}}{<div style="text-align:center;\style" class="\name" role="img" aria-label="\name" data-animation-frame="\name">\contents</div>}
 
 \define{\endanimation}{</div>}
 
