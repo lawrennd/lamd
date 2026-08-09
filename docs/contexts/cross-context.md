@@ -53,7 +53,9 @@ Some LAMD features work across multiple contexts, adapting their behavior to the
     Behavior:
         - HTML: CSS color
         - LaTeX: LaTeX color
-        - Slides: Theme-aware color
+        - Slides (HTML): Theme-aware color
+        - PPTX: No-op (color stripped at gpp stage; pandoc cannot convert
+          `\color{...}{...}` inside math to OMML — see slides context docs)
 ```
 
 ## Content Adaptation

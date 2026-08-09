@@ -235,3 +235,27 @@ Remember to mention real-world applications for each type
 5. For multi-frame diagrams, use `\startanimation`/`\newframe`/`\endanimation` and repeat
    the same `group` class on every frame (see Frame Animations above)
 
+### Colored math in PPTX
+
+PowerPoint output converts display math through pandoc's TeX→OMML converter. That path
+does not support LaTeX `\color{...}{...}` inside `$$...$$` blocks. If color commands
+reach pandoc unchanged, the build emits a warning such as:
+
+```text
+[WARNING] Could not convert TeX math '... {\color{red}{w_0}} ...', rendering as TeX
+```
+
+and the equation may not render correctly in PowerPoint.
+
+For PPTX builds, `talk-macros-pptx.gpp` therefore no-ops color at the gpp stage:
+
+- `\color{name}{text}` → `text`
+- `\colorred{...}`, `\colorblue{...}`, and the other `\color*` wrapper macros → content only
+
+Colored math is preserved in HTML slides (MathJax), PDF/LaTeX, and notes. Authors who
+need color emphasis in PowerPoint should rely on diagram colors or surrounding slide
+text rather than math-mode `\color`.
+
+The same no-op pattern applies when `blackAndWhite` is set in `color-scheme.gpp` for
+other formats; PPTX always strips math color regardless of that flag.
+
