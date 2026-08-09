@@ -1,0 +1,404 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Directory paths in LaMD builds &mdash; LaMD 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=360bc84d"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Creating Effective Snippets" href="snippets.html" />
+    <link rel="prev" title="LaMD Guides" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            LaMD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro/index.html">Getting Started with LaMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contexts/index.html">Understanding LaMD Contexts</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">LaMD Guides</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Directory paths in LaMD builds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#anchor-where-is-the-build">Anchor: where is the build?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#field-reference">Field reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#diagramsdir"><code class="docutils literal notranslate"><span class="pre">diagramsdir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diagramsurl-optional"><code class="docutils literal notranslate"><span class="pre">diagramsurl</span></code> (optional)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#slidesdir"><code class="docutils literal notranslate"><span class="pre">slidesdir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#writediagramsdir"><code class="docutils literal notranslate"><span class="pre">writediagramsdir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#url-and-baseurl"><code class="docutils literal notranslate"><span class="pre">url</span></code> and <code class="docutils literal notranslate"><span class="pre">baseurl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#other-output-directories">Other output directories</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#end-to-end-flow-pptx-example">End-to-end flow (PPTX example)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-checklist">Configuration checklist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#related">Related</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="snippets.html">Creating Effective Snippets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="managing-people.html">Managing People Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="best-practices.html">LAMD Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="governance.html">Governance and Project Structure (VibeSafe)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html">Build Performance (Server Mode, Batching, Git Cache)</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">LaMD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">LaMD Guides</a></li>
+      <li class="breadcrumb-item active">Directory paths in LaMD builds</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guides/directory-paths.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="directory-paths-in-lamd-builds">
+<h1>Directory paths in LaMD builds<a class="headerlink" href="#directory-paths-in-lamd-builds" title="Link to this heading"></a></h1>
+<p>LaMD projects declare several directory fields in <code class="docutils literal notranslate"><span class="pre">_lamd.yml</span></code>. They look interchangeable
+(<code class="docutils literal notranslate"><span class="pre">slidesdir</span></code>, <code class="docutils literal notranslate"><span class="pre">diagramsdir</span></code>, …) but each answers a different question and is resolved
+relative to a <strong>different anchor</strong>. Mixing them up is the usual cause of “the file was
+built but pandoc cannot find it” failures.</p>
+<p>This guide documents <strong>current field semantics</strong> (as implemented in <code class="docutils literal notranslate"><span class="pre">mdpp</span></code>,
+<code class="docutils literal notranslate"><span class="pre">dependencies</span></code>, makefiles, and <code class="docutils literal notranslate"><span class="pre">copy_web_diagrams.sh</span></code>). Planned changes are described
+in <span class="xref myst">CIP-0010: Unified Diagram Path Resolution</span>.</p>
+<p>Authoring uses the gpp macro <code class="docutils literal notranslate"><span class="pre">\diagramsDir</span></code> (set at preprocess time). Content refers to
+diagrams as <code class="docutils literal notranslate"><span class="pre">\diagramsDir/ml/foo000</span></code>, which becomes a path in generated markdown
+(for example <code class="docutils literal notranslate"><span class="pre">../slides/diagrams//ml/foo000.emf</span></code> for PPTX).</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Consumer</p></th>
+<th class="head"><p>What it needs</p></th>
+<th class="head"><p>Typical anchor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Inkscape / make</strong></p></td>
+<td><p>Build <code class="docutils literal notranslate"><span class="pre">foo.emf</span></code> from <code class="docutils literal notranslate"><span class="pre">foo.svg</span></code></p></td>
+<td><p>cwd when <code class="docutils literal notranslate"><span class="pre">make</span></code> runs (usually <code class="docutils literal notranslate"><span class="pre">_lamd/</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>pandoc</strong></p></td>
+<td><p>Open the path embedded in markdown</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--resource-path</span></code> plus paths relative to cwd</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>dependencies</strong></p></td>
+<td><p>List files for makefile prerequisites</p></td>
+<td><p>Same as make (relative to cwd)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Published HTML</strong></p></td>
+<td><p>Browser URL for <code class="docutils literal notranslate"><span class="pre">&lt;img</span> <span class="pre">src=&quot;…&quot;&gt;</span></code></p></td>
+<td><p>Site root (<code class="docutils literal notranslate"><span class="pre">url</span></code> + <code class="docutils literal notranslate"><span class="pre">baseurl</span></code>), not the filesystem</p></td>
+</tr>
+</tbody>
+</table>
+<p>For local builds (pptx, docx, tex, …), paths resolve from the build cwd. <code class="docutils literal notranslate"><span class="pre">baseurl</span></code>
+affects <code class="docutils literal notranslate"><span class="pre">\diagramsDir</span></code> only when <code class="docutils literal notranslate"><span class="pre">mdpp</span> <span class="pre">--to</span> <span class="pre">html</span></code> or <code class="docutils literal notranslate"><span class="pre">mdpp</span> <span class="pre">--to</span> <span class="pre">ipynb</span></code>.</p>
+<hr class="docutils" />
+<section id="anchor-where-is-the-build">
+<h2>Anchor: where is the build?<a class="headerlink" href="#anchor-where-is-the-build" title="Link to this heading"></a></h2>
+<p>Most course/talk repos use this layout:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>project/
+├── _lamd/              ← maketalk / make run here (cwd)
+│   ├── _lamd.yml
+│   ├── talk.md
+│   └── makefile        ← generated
+├── slides/             ← slide HTML outputs + diagram sources
+│   └── diagrams/
+│       └── ml/
+│           └── foo000.svg
+└── _lectures/          ← published lecture HTML (posts)
+</pre></div>
+</div>
+<p><strong>Rule of thumb:</strong> paths in <code class="docutils literal notranslate"><span class="pre">_lamd.yml</span></code> are usually written <strong>relative to <code class="docutils literal notranslate"><span class="pre">_lamd/</span></code></strong>
+(the build cwd), not relative to the repository root and not relative to <code class="docutils literal notranslate"><span class="pre">baseurl</span></code>.</p>
+<p>For the layout above:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">slidesdir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../slides/</span>
+<span class="nt">diagramsdir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../slides/diagrams/</span>
+</pre></div>
+</div>
+<p>Using <code class="docutils literal notranslate"><span class="pre">./slides/diagrams/</span></code> is wrong here: that resolves to <code class="docutils literal notranslate"><span class="pre">_lamd/slides/diagrams/</span></code>,
+which is not where SVG sources live.</p>
+</section>
+<hr class="docutils" />
+<section id="field-reference">
+<h2>Field reference<a class="headerlink" href="#field-reference" title="Link to this heading"></a></h2>
+<section id="diagramsdir">
+<h3><code class="docutils literal notranslate"><span class="pre">diagramsdir</span></code><a class="headerlink" href="#diagramsdir" title="Link to this heading"></a></h3>
+<p><strong>Purpose:</strong> Directory containing diagram <strong>sources and converted assets</strong> (SVG, EMF,
+PDF, PNG) that macros reference via <code class="docutils literal notranslate"><span class="pre">\diagramsDir</span></code>.</p>
+<p><strong>Used by:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Tool</p></th>
+<th class="head"><p>How</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mdpp</span></code></p></td>
+<td><p>Sets gpp <code class="docutils literal notranslate"><span class="pre">-DdiagramsDir=…</span></code> (see dual behaviour below)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">dependencies</span></code></p></td>
+<td><p>Substitutes <code class="docutils literal notranslate"><span class="pre">\diagramsDir</span></code> when scanning <code class="docutils literal notranslate"><span class="pre">\includediagram{…}</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Make (<code class="docutils literal notranslate"><span class="pre">PPTXDEPS</span></code>, <code class="docutils literal notranslate"><span class="pre">DOCXDEPS</span></code>, …)</p></td>
+<td><p>Inkscape rules build <code class="docutils literal notranslate"><span class="pre">$(DIAGRAMSDIR)/…/*.emf</span></code> from <code class="docutils literal notranslate"><span class="pre">.svg</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">copy_web_diagrams.sh</span></code></p></td>
+<td><p>Locates source files to copy into publish trees</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dual behaviour in <code class="docutils literal notranslate"><span class="pre">mdpp</span></code></strong> (<code class="docutils literal notranslate"><span class="pre">lamd/mdpp.py</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="n">diagramsurl</span> <span class="ow">or</span> <span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="n">baseurl</span><span class="p">)</span>
+<span class="n">diagrams_dir</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="n">diagramsdir</span>          <span class="c1"># when --to html or ipynb</span>
+<span class="n">diagrams_dir</span> <span class="o">=</span> <span class="n">diagramsdir</span>              <span class="c1"># when --to pptx, docx, tex, …</span>
+<span class="c1"># Makefile always passes --diagrams-dir $(DIAGRAMSDIR), overriding the above</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Local formats (pptx, docx, tex, …):</strong> <code class="docutils literal notranslate"><span class="pre">\diagramsDir</span></code> is the filesystem path from
+config (or <code class="docutils literal notranslate"><span class="pre">--diagrams-dir</span></code>). Must be valid from <code class="docutils literal notranslate"><span class="pre">_lamd/</span></code> cwd.</p></li>
+<li><p><strong>HTML / ipynb:</strong> <code class="docutils literal notranslate"><span class="pre">\diagramsDir</span></code> becomes a <strong>URL prefix</strong> unless <code class="docutils literal notranslate"><span class="pre">--diagrams-dir</span></code>
+overrides it. Prefer explicit <code class="docutils literal notranslate"><span class="pre">diagramsurl</span></code> when the published path differs from the
+filesystem layout.</p></li>
+</ul>
+<p><strong>Not the same as:</strong> <code class="docutils literal notranslate"><span class="pre">slidesdir</span></code> (outputs and resource-path only), <code class="docutils literal notranslate"><span class="pre">writediagramsdir</span></code>
+(generated diagrams), or <code class="docutils literal notranslate"><span class="pre">baseurl</span></code> alone.</p>
+</section>
+<hr class="docutils" />
+<section id="diagramsurl-optional">
+<h3><code class="docutils literal notranslate"><span class="pre">diagramsurl</span></code> (optional)<a class="headerlink" href="#diagramsurl-optional" title="Link to this heading"></a></h3>
+<p><strong>Purpose:</strong> Override the URL prefix used for <code class="docutils literal notranslate"><span class="pre">\diagramsDir</span></code> in HTML/ipynb when
+<code class="docutils literal notranslate"><span class="pre">url</span> <span class="pre">+</span> <span class="pre">baseurl</span> <span class="pre">+</span> <span class="pre">diagramsdir</span></code> would be wrong.</p>
+<p><strong>Example:</strong> site at <code class="docutils literal notranslate"><span class="pre">https://example.org/course/</span></code> with diagrams served at
+<code class="docutils literal notranslate"><span class="pre">https://example.org/course/slides/diagrams/</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://example.org/</span>
+<span class="nt">baseurl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">course/</span>
+<span class="nt">diagramsurl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://example.org/course/slides/</span>
+<span class="nt">diagramsdir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">diagrams/</span><span class="w">    </span><span class="c1"># URL suffix after diagramsurl, or filesystem path for local builds</span>
+</pre></div>
+</div>
+<p>If unset, <code class="docutils literal notranslate"><span class="pre">mdpp</span></code> uses <code class="docutils literal notranslate"><span class="pre">url</span> <span class="pre">+</span> <span class="pre">baseurl</span></code> as the URL prefix.</p>
+</section>
+<hr class="docutils" />
+<section id="slidesdir">
+<h3><code class="docutils literal notranslate"><span class="pre">slidesdir</span></code><a class="headerlink" href="#slidesdir" title="Link to this heading"></a></h3>
+<p><strong>Purpose:</strong> Where <strong>built slide HTML</strong> is copied (<code class="docutils literal notranslate"><span class="pre">cp</span> <span class="pre">…</span> <span class="pre">${SLIDESDIR}/…</span></code>) and a root
+for pandoc <code class="docutils literal notranslate"><span class="pre">--resource-path</span></code> (with <code class="docutils literal notranslate"><span class="pre">.</span></code> and <code class="docutils literal notranslate"><span class="pre">includes</span></code>).</p>
+<p><strong>Used by:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Tool</p></th>
+<th class="head"><p>How</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">make-slides.mk</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">cp</span> <span class="pre">${BASE}.slides.html</span> <span class="pre">${SLIDESDIR}/${OUT}.slides.html</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">make-talk-flags.mk</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PPTXFLAGS=…</span> <span class="pre">--resource-path</span> <span class="pre">.:$(INCLUDESDIR):$(SLIDESDIR)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">copy_web_diagrams.sh</span></code></p></td>
+<td><p>Second argument pair: publish target under slides tree</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Relationship to diagrams:</strong> In many projects, <code class="docutils literal notranslate"><span class="pre">diagramsdir</span></code> is <strong><code class="docutils literal notranslate"><span class="pre">slidesdir</span></code> +
+<code class="docutils literal notranslate"><span class="pre">diagrams/</span></code></strong> (e.g. <code class="docutils literal notranslate"><span class="pre">../slides/</span></code> + <code class="docutils literal notranslate"><span class="pre">diagrams/</span></code> → <code class="docutils literal notranslate"><span class="pre">../slides/diagrams/</span></code>). That keeps
+diagram assets next to slide outputs. They are still <strong>separate keys</strong> with separate
+roles; duplicating the path in config is intentional.</p>
+<p><strong>Not combined with <code class="docutils literal notranslate"><span class="pre">baseurl</span></code> for local file lookup.</strong> <code class="docutils literal notranslate"><span class="pre">baseurl</span></code> does not appear in
+makefile diagram rules or <code class="docutils literal notranslate"><span class="pre">dependencies</span></code>.</p>
+</section>
+<hr class="docutils" />
+<section id="writediagramsdir">
+<h3><code class="docutils literal notranslate"><span class="pre">writediagramsdir</span></code><a class="headerlink" href="#writediagramsdir" title="Link to this heading"></a></h3>
+<p><strong>Purpose:</strong> Where <strong>generated</strong> diagrams are written (e.g. manim, dynamic figures),
+via gpp <code class="docutils literal notranslate"><span class="pre">-DwriteDiagramsDir=…</span></code>.</p>
+<p><strong>Default:</strong> <code class="docutils literal notranslate"><span class="pre">.</span></code> (often <code class="docutils literal notranslate"><span class="pre">_lamd/</span></code> itself).</p>
+<p><strong>Distinct from <code class="docutils literal notranslate"><span class="pre">diagramsdir</span></code>:</strong> <code class="docutils literal notranslate"><span class="pre">diagramsdir</span></code> is for checked-in SVG/EMF assets;
+<code class="docutils literal notranslate"><span class="pre">writediagramsdir</span></code> is for outputs produced during build.</p>
+</section>
+<hr class="docutils" />
+<section id="url-and-baseurl">
+<h3><code class="docutils literal notranslate"><span class="pre">url</span></code> and <code class="docutils literal notranslate"><span class="pre">baseurl</span></code><a class="headerlink" href="#url-and-baseurl" title="Link to this heading"></a></h3>
+<p><strong>Purpose:</strong> Jekyll/GitHub Pages <strong>site</strong> location for published lecture pages.</p>
+<p><strong>Used by:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Tool</p></th>
+<th class="head"><p>How</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mdpp</span></code></p></td>
+<td><p>Prefix for <code class="docutils literal notranslate"><span class="pre">\diagramsDir</span></code> when <code class="docutils literal notranslate"><span class="pre">--to</span> <span class="pre">html</span></code> or <code class="docutils literal notranslate"><span class="pre">--to</span> <span class="pre">ipynb</span></code> (unless <code class="docutils literal notranslate"><span class="pre">diagramsurl</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">flags</span> <span class="pre">post</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">edit_url</span></code> metadata for GitHub edit links</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Not used by:</strong> pptx/docx build, inkscape conversion, or <code class="docutils literal notranslate"><span class="pre">dependencies</span> <span class="pre">batch</span></code> (local
+paths only).</p>
+<p>Example from a course site:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://mlatcl.github.io/&quot;</span>
+<span class="nt">baseurl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mlfc/</span>
+</pre></div>
+</div>
+<p>Published pages live under <code class="docutils literal notranslate"><span class="pre">https://mlatcl.github.io/mlfc/…</span></code>. That is unrelated to
+<code class="docutils literal notranslate"><span class="pre">../slides/diagrams/</span></code> on disk except that you usually <strong>copy</strong> diagrams into the tree
+that GitHub Pages serves (<code class="docutils literal notranslate"><span class="pre">copy_web_diagrams.sh</span></code> → <code class="docutils literal notranslate"><span class="pre">${SLIDESDIR}/diagrams/</span></code>).</p>
+</section>
+<hr class="docutils" />
+<section id="other-output-directories">
+<h3>Other output directories<a class="headerlink" href="#other-output-directories" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">postsdir</span></code> / <code class="docutils literal notranslate"><span class="pre">practicalsdir</span></code></p></td>
+<td><p>Destination for compiled lecture/practical HTML</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">notesdir</span></code></p></td>
+<td><p>PDF notes output</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">notebooksdir</span></code></p></td>
+<td><p>Jupyter notebook output</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">snippetsdir</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">\include{…}</span></code> search path (often absolute or <code class="docutils literal notranslate"><span class="pre">$HOME/…</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bibdir</span></code></p></td>
+<td><p>Bibliography files</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">macrosdir</span></code></p></td>
+<td><p>gpp macro definitions</p></td>
+</tr>
+</tbody>
+</table>
+<p>These do not substitute for <code class="docutils literal notranslate"><span class="pre">diagramsdir</span></code>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="end-to-end-flow-pptx-example">
+<h2>End-to-end flow (PPTX example)<a class="headerlink" href="#end-to-end-flow-pptx-example" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Authoring:</strong> <code class="docutils literal notranslate"><span class="pre">\includediagram{\diagramsDir/ml/quadratic_basis000}{…}</span></code> in snippets.</p></li>
+<li><p><strong>dependencies batch</strong> (with <code class="docutils literal notranslate"><span class="pre">--diagrams-dir</span> <span class="pre">$(DIAGRAMSDIR)</span></code>): lists
+<code class="docutils literal notranslate"><span class="pre">../slides/diagrams//ml/quadratic_basis000.emf</span></code> as <code class="docutils literal notranslate"><span class="pre">pptxdiagrams</span></code> prerequisite.</p></li>
+<li><p><strong>make-figures.mk:</strong> <code class="docutils literal notranslate"><span class="pre">../slides/diagrams//ml/quadratic_basis000.emf</span></code> built from
+<code class="docutils literal notranslate"><span class="pre">.svg</span></code> via Inkscape.</p></li>
+<li><p><strong>mdpp</strong> (<code class="docutils literal notranslate"><span class="pre">--diagrams-dir</span> <span class="pre">../slides/diagrams/</span></code>): markdown contains
+<code class="docutils literal notranslate"><span class="pre">![](../slides/diagrams//ml/quadratic_basis000.emf)</span></code>.</p></li>
+<li><p><strong>pandoc</strong> (<code class="docutils literal notranslate"><span class="pre">--resource-path</span> <span class="pre">.:includes:../slides/</span></code>): resolves path from <code class="docutils literal notranslate"><span class="pre">_lamd/</span></code>
+cwd; EMF must exist at that relative path.</p></li>
+</ol>
+<p>All five steps must agree on the same filesystem path for <code class="docutils literal notranslate"><span class="pre">\diagramsDir</span></code>.</p>
+</section>
+<hr class="docutils" />
+<section id="configuration-checklist">
+<h2>Configuration checklist<a class="headerlink" href="#configuration-checklist" title="Link to this heading"></a></h2>
+<p>When diagram paths fail, verify in order:</p>
+<ol class="arabic simple">
+<li><p><strong>cwd:</strong> Are you building from <code class="docutils literal notranslate"><span class="pre">_lamd/</span></code> (where <code class="docutils literal notranslate"><span class="pre">_lamd.yml</span></code> and generated makefile live)?</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">diagramsdir</span></code>:</strong> From <code class="docutils literal notranslate"><span class="pre">_lamd/</span></code>, does <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">$(diagramsdir)/ml/*.svg</span></code> show sources?</p></li>
+<li><p><strong>Consistency:</strong> Does <code class="docutils literal notranslate"><span class="pre">dependencies</span> <span class="pre">batch</span> <span class="pre">…</span> <span class="pre">--diagrams-dir</span> <span class="pre">$(diagramsdir)</span></code> list the
+same <code class="docutils literal notranslate"><span class="pre">.emf</span></code> paths that appear in <code class="docutils literal notranslate"><span class="pre">*.slides.pptx.markdown</span></code>?</p></li>
+<li><p><strong>Regenerate:</strong> After changing <code class="docutils literal notranslate"><span class="pre">_lamd.yml</span></code>, run <code class="docutils literal notranslate"><span class="pre">maketalk</span></code> again so the makefile
+picks up new <code class="docutils literal notranslate"><span class="pre">DIAGRAMSDIR</span></code> / <code class="docutils literal notranslate"><span class="pre">PPTXDEPS</span></code>.</p></li>
+<li><p><strong>HTML only:</strong> If slides render locally but not on the site, check <code class="docutils literal notranslate"><span class="pre">url</span></code> / <code class="docutils literal notranslate"><span class="pre">baseurl</span></code>
+/ <code class="docutils literal notranslate"><span class="pre">diagramsurl</span></code>, not <code class="docutils literal notranslate"><span class="pre">diagramsdir</span></code> alone.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="related">
+<h2>Related<a class="headerlink" href="#related" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../contexts/slides.html"><span class="std std-doc">Slides context</span></a> — <code class="docutils literal notranslate"><span class="pre">\includediagram</span></code> and reveal.js</p></li>
+<li><p><span class="xref myst">CIP-0010: Unified Diagram Path Resolution</span></p></li>
+<li><p><a class="reference internal" href="#../../backlog/features/2026-08-09_macro-aware-diagram-dependency-extraction.md"><span class="xref myst">Macro-aware diagram extraction</span></a> — <code class="docutils literal notranslate"><span class="pre">\define</span></code> + <code class="docutils literal notranslate"><span class="pre">\concat</span></code> in diagram paths (lynguine)</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="LaMD Guides" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="snippets.html" class="btn btn-neutral float-right" title="Creating Effective Snippets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Neil D. Lawrence.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
