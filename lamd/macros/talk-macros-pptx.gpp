@@ -24,12 +24,17 @@
 \define{\includeyoutube{id}{width}{height}{start}{end}}{[![](https://img.youtube.com/vi/\id/0.jpg)](https://www.youtube.com/watch?v=\id\&t=\time)}
 \define{\includevimeo{id}{width}{height}{start}{end}}{[![](https://i.vimeocdn.com/video/\id_640x480.jpg)](https://vimeo.com/\id#t=\start)}
 
-\define{\colorcyan{block}}{{\color{\cyanColor} \block}}
-\define{\colormagenta{block}}{{\color{\magentaColor} \block}}
-\define{\coloryellow{block}}{{\color{\yellowColor} \block}}
-\define{\colorred{block}}{{\color{\redColor} \block}}
-\define{\colorgreen{block}}{{\color{\greenColor} \block}}
-\define{\colorblue{block}}{{\color{\blueColor} \block}}
+<!-- PPTX: pandoc's texmath→OMML path cannot convert \color{...}{...} inside math.
+     Without these no-ops, pandoc warns and falls back to raw TeX in the slide.
+     See docs/contexts/slides.md (Colored math in PPTX). -->
+\define{\color{col}{block}}{\block}
+
+\define{\colorcyan{block}}{\block}
+\define{\colormagenta{block}}{\block}
+\define{\coloryellow{block}}{\block}
+\define{\colorred{block}}{\block}
+\define{\colorgreen{block}}{\block}
+\define{\colorblue{block}}{\block}
 
 
 \define{\xrightarrow{block}}{\rightarrow{\block}}
