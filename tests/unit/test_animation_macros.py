@@ -72,7 +72,9 @@ class TestAnimationMacros:
         assert r"\define{\startanimation{" in content, "\\startanimation is not defined in talk-macros-slides-html.gpp"
         idx = content.find(r"\define{\startanimation{")
         snippet = content[idx : idx + 400]
-        assert "<div>" in snippet, "\\startanimation must open a <div> container for the animation group"
+        assert 'id="animation-\\group"' in snippet or "<div" in snippet, (
+            "\\startanimation must open a container div for the animation group"
+        )
 
     def test_newframe_produces_centered_div(self) -> None:
         """\\newframe definition must use text-align:center styling."""
@@ -219,7 +221,7 @@ class TestAnimationAccessibility:
     def test_previous_button_has_aria_label(self) -> None:
         """Previous-frame button must have aria-label (icon-only buttons need text labels)."""
         content = self._html_content()
-        prev_idx = content.find("plusDivs(-1")
+        prev_idx = content.find("lamdPlusDivs(-1")
         assert prev_idx != -1, "Could not find previous-frame button"
         line_start = content.rfind("\n", 0, prev_idx)
         line_end = content.find("\n", prev_idx)
@@ -229,7 +231,7 @@ class TestAnimationAccessibility:
     def test_next_button_has_aria_label(self) -> None:
         """Next-frame button must have aria-label (icon-only buttons need text labels)."""
         content = self._html_content()
-        next_idx = content.find("plusDivs(1")
+        next_idx = content.find("lamdPlusDivs(1")
         assert next_idx != -1, "Could not find next-frame button"
         line_start = content.rfind("\n", 0, next_idx)
         line_end = content.find("\n", next_idx)
@@ -315,14 +317,14 @@ class TestAnimationErrorHandling:
         assert "catch" in snippet, "Init script must use try/catch"
 
     def test_slider_handlers_guard_setdivs(self) -> None:
-        """Slider onchange/oninput must not throw if setDivs is undefined."""
+        """Slider onchange/oninput must not throw if lamdSetDivs is undefined."""
         snippet = self._startanimation_snippet()
-        assert "typeof setDivs" in snippet, "Slider handlers must guard with typeof setDivs"
+        assert "typeof lamdSetDivs" in snippet, "Slider handlers must guard with typeof lamdSetDivs"
 
     def test_button_handlers_guard_plusdivs(self) -> None:
-        """Navigation buttons must not throw if plusDivs is undefined."""
+        """Navigation buttons must not throw if lamdPlusDivs is undefined."""
         snippet = self._startanimation_snippet()
-        assert snippet.count("typeof plusDivs") >= 2, "Both navigation buttons must guard with typeof plusDivs"
+        assert snippet.count("typeof lamdPlusDivs") >= 2, "Both navigation buttons must guard with typeof lamdPlusDivs"
 
     def test_newframe_has_data_animation_frame(self) -> None:
         """Frame divs should expose data-animation-frame for testing and styling."""
