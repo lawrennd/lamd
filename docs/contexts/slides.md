@@ -179,6 +179,7 @@ Because every frame currently shares the same `name` class (and thus the same
 | `[lamd] figure-animate.js not loaded` in console | Script blocked or offline build | Confirm `slides-header.html` is included; check network tab |
 | Only first frame visible, no controls | Expected degradation without JS | Enable JavaScript, or rely on noscript/fallback (first frame only) |
 | Empty animation area | No `\newframe` calls before `\endanimation` | Add at least one frame between start and end |
+| Top slider stops before last frame (nested animations) | `\startanimation` `{finish}` smaller than outer frame count | Set `{finish}` to last index (e.g. six outer frames → `{0}{5}`); count only frames with the outer `group` class |
 | Frames flash all at once briefly | Race before `DOMContentLoaded` init | Normal; init hides non-active frames once JS runs |
 
 #### Related macros
