@@ -2,7 +2,7 @@
 	${PP} $< -o $@ --format notes --to docx --code sparse --snippets-path ${SNIPPETSDIR} --macros-path=$(MACROSDIR) --diagrams-dir ${DIAGRAMSDIR} --edit-links ${PPFLAGS} --replace-notation
 
 # Direct rule for CV generation with preprocessing
-${BASE}.preprocessed.md: ${BASE}.md ${DEPS}
+${BASE}.preprocessed.md: ${BASE}.md ${DEPS} check-reference-docs
 	${PP} $< -o $@ --format notes --to docx --code sparse --snippets-path ${SNIPPETSDIR} --macros-path=$(MACROSDIR) --diagrams-dir ${DIAGRAMSDIR} --edit-links ${PPFLAGS} --replace-notation
 
 ${BASE}.docx: ${BASE}.preprocessed.md

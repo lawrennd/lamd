@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 import lynguine.util.yaml as ny
 
-from lamd.flags import main
+from lamd.flags import main, resolve_reference_doc
 
 
 class TestFlags:
@@ -296,3 +296,24 @@ ghub:
 
                 # Check that an empty prefix is returned when date is missing
                 mock_print.assert_called_once_with("")
+
+
+class TestResolveReferenceDoc:
+    """Tests for bundled reference-doc path resolution."""
+
+    def test_existing_path_unchanged(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "my-template.potx")
+            open(path, "w").close()
+            assert resolve_reference_doc(path) == path
+
+    def test_bare_filename_falls_back_to_lamd_includes(self):
+        bundled = os.path.join(
+            os.path.dirname(__file__), "../../lamd/includes/custom-reference.potx"
+        )
+        bundled = os.path.abspath(bundled)
+        assert os.path.isfile(bundled)
+        assert resolve_reference_doc("custom-reference.potx") == bundled
+
+    def test_missing_path_returned_unchanged(self):
+        assert resolve_reference_doc("nonexistent-template.potx") == "nonexistent-template.potx"
