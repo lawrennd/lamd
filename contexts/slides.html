@@ -58,7 +58,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#example-usage">Example Usage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#output-formats">Output Formats</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tips">Tips</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tips">Tips</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#colored-math-in-pptx">Colored math in PPTX</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="notes.html">Documentation Context</a></li>
@@ -425,6 +428,26 @@ Remember to mention real-world applications for each type
 <li><p>For multi-frame diagrams, use <code class="docutils literal notranslate"><span class="pre">\startanimation</span></code>/<code class="docutils literal notranslate"><span class="pre">\newframe</span></code>/<code class="docutils literal notranslate"><span class="pre">\endanimation</span></code> and repeat
 the same <code class="docutils literal notranslate"><span class="pre">group</span></code> class on every frame (see Frame Animations above)</p></li>
 </ol>
+<section id="colored-math-in-pptx">
+<h3>Colored math in PPTX<a class="headerlink" href="#colored-math-in-pptx" title="Link to this heading"></a></h3>
+<p>PowerPoint output converts display math through pandoc’s TeX→OMML converter. That path
+does not support LaTeX <code class="docutils literal notranslate"><span class="pre">\color{...}{...}</span></code> inside <code class="docutils literal notranslate"><span class="pre">$$...$$</span></code> blocks. If color commands
+reach pandoc unchanged, the build emits a warning such as:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[WARNING] Could not convert TeX math &#39;... {\color{red}{w_0}} ...&#39;, rendering as TeX
+</pre></div>
+</div>
+<p>and the equation may not render correctly in PowerPoint.</p>
+<p>For PPTX builds, <code class="docutils literal notranslate"><span class="pre">talk-macros-pptx.gpp</span></code> therefore no-ops color at the gpp stage:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">\color{name}{text}</span></code> → <code class="docutils literal notranslate"><span class="pre">text</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">\colorred{...}</span></code>, <code class="docutils literal notranslate"><span class="pre">\colorblue{...}</span></code>, and the other <code class="docutils literal notranslate"><span class="pre">\color*</span></code> wrapper macros → content only</p></li>
+</ul>
+<p>Colored math is preserved in HTML slides (MathJax), PDF/LaTeX, and notes. Authors who
+need color emphasis in PowerPoint should rely on diagram colors or surrounding slide
+text rather than math-mode <code class="docutils literal notranslate"><span class="pre">\color</span></code>.</p>
+<p>The same no-op pattern applies when <code class="docutils literal notranslate"><span class="pre">blackAndWhite</span></code> is set in <code class="docutils literal notranslate"><span class="pre">color-scheme.gpp</span></code> for
+other formats; PPTX always strips math color regardless of that flag.</p>
+</section>
 </section>
 </section>
 
