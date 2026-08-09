@@ -4,7 +4,7 @@ title: "CIP-0005 Phase 4: Dependency Management for mdpp"
 status: "Proposed"
 priority: "Medium"
 created: "2026-08-08"
-last_updated: "2026-08-08"
+last_updated: "2026-08-09"
 category: "features"
 related_cips: ["0005"]
 owner: "Neil Lawrence"
@@ -28,7 +28,7 @@ Implement dependency checking and validation for mdpp as described in CIP-0005 P
 - [ ] Clear, actionable error messages emitted when dependencies are missing
 - [ ] Version compatibility checked and warnings issued for known-incompatible versions
 - [ ] Bibliography files existence verified when referenced in frontmatter
-- [ ] Template and include paths validated before processing begins
+- [x] Template and include paths validated before processing begins (partial: potx/dotx via `check-reference-docs` and `resolve_reference_doc()` — see `2026-08-09_reference-doc-template-resolution.md`)
 
 ## Implementation Notes
 
@@ -43,6 +43,12 @@ Implement dependency checking and validation for mdpp as described in CIP-0005 P
 - Documentation: cip/cip0005.md
 
 ## Progress Updates
+
+### 2026-08-09
+
+Partial completion: reference-doc template resolution and early makefile check
+(`2026-08-09_reference-doc-template-resolution.md`). Remaining: gpp/pandoc version
+checks, bibliography validation, mdpp integration.
 
 ### 2026-08-08
 

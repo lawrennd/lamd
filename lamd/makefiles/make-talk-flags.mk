@@ -145,6 +145,18 @@ check-macros:
 		exit 1; \
 	fi
 
+.PHONY: check-reference-docs
+check-reference-docs:
+	@for fmt in docx pptx; do \
+		ref=$$(flags $$fmt $(BASE) 2>/dev/null | sed 's/^--reference-doc //'); \
+		if [ -n "$$ref" ] && [ ! -f "$$ref" ]; then \
+			echo "Error: $$fmt reference template not found: $$ref"; \
+			echo "Configure 'dotx' / 'potx' in _lamd.yml with a valid path,"; \
+			echo "or use a bare filename shipped with lamd (e.g. custom-reference.potx)."; \
+			exit 1; \
+		fi; \
+	done
+
 # Check header for which formats to create in notes and slides.
 # Create PDF of reveal slides with something like decktape https://github.com/astefanutti/decktape
 

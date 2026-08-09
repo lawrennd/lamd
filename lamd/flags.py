@@ -23,9 +23,29 @@ Example:
 """
 
 import argparse
+import os
 import sys
 
 import lynguine.util.yaml as ny
+
+_LAMD_INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
+
+
+def resolve_reference_doc(path: str) -> str:
+    """Resolve a pandoc --reference-doc path.
+
+    Bare filenames (e.g. ``custom-reference.potx`` from ``_lamd.yml``) are
+    looked up in the lamd package ``includes/`` directory when absent from
+    the current working directory.
+    """
+    expanded = os.path.expanduser(path)
+    if os.path.isfile(expanded):
+        return expanded
+    if not os.path.dirname(expanded):
+        bundled = os.path.join(_LAMD_INCLUDES, os.path.basename(expanded))
+        if os.path.isfile(bundled):
+            return bundled
+    return expanded
 
 
 def main() -> int:
@@ -234,11 +254,11 @@ def main() -> int:
         print(lines.format(out=out, date=date))
 
     elif args.output == "docx":
-        lines += "--reference-doc " + ny.header_field("dotx", fields, user_file)
+        lines += "--reference-doc " + resolve_reference_doc(ny.header_field("dotx", fields, user_file))
         print(lines)
 
     elif args.output == "pptx":
-        lines += "--reference-doc " + ny.header_field("potx", fields, user_file)
+        lines += "--reference-doc " + resolve_reference_doc(ny.header_field("potx", fields, user_file))
         print(lines)
 
     elif args.output == "reveal":
