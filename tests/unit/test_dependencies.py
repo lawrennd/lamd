@@ -291,7 +291,7 @@ Here's a citation \cite{Smith2020}.
         mock_extract_inputs.assert_called_once_with("test.md", snippets_path="/custom/snippets")
         mock_extract_diagrams.assert_called_once_with(
             "test.md",
-            absolute_path=True,
+            absolute_path=False,
             diagram_exts=["svg", "png", "pdf", "emf"],
             diagrams_dir="/path/to/diagrams",
             snippets_path="/custom/snippets",

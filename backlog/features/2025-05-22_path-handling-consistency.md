@@ -5,11 +5,11 @@ dependencies: []
 effort: Medium
 github_issue: null
 id: 2025-05-22_path-handling-consistency
-last_updated: '2025-05-22'
+last_updated: '2026-08-09'
 owner: "Neil Lawrence"
 priority: High
-related_cips: []
-status: Proposed
+related_cips: ["0010"]
+status: Ready
 title: Standardize Path Handling Between URLs and Local Files
 type: feature
 ---
@@ -18,59 +18,33 @@ type: feature
 
 ## Description
 
-The current system has inconsistent path handling between URL paths and local file paths, particularly when dealing with the `_lamd` directory structure. This manifests in several ways:
+Umbrella task for architectural path handling between URL paths and local filesystem
+paths in LaMD builds. Design and audit live in [CIP-0010](../../cip/cip0010.md);
+execution is split into phased backlog tasks (2026-08-09).
 
-1. Source files are sometimes stored in `_lamd` directory
-2. `_lamd.yml` is stored in `_lamd` directory
-3. Relative paths are used in two different contexts:
-   - URL paths (e.g., for \diagramsDir in posts/notebooks)
-   - Local file paths (e.g., for finding files on the local computer)
-4. The `_lamd` directory exists in the local filesystem but not in the URL path
+## Execution tasks (CIP-0010)
 
-This has led to workarounds like the recent changes to `copy_web_diagrams.sh` to handle paths differently when running from `_lamd`, but this is treating the symptom rather than the cause.
+| Phase | Backlog task | Status |
+|-------|--------------|--------|
+| 1 | [2026-08-09_cip0010-paths-resolver-module](2026-08-09_cip0010-paths-resolver-module.md) | Ready |
+| 2 | [2026-08-09_cip0010-wire-mdpp-dependencies](2026-08-09_cip0010-wire-mdpp-dependencies.md) | Ready |
+| 3 | [2026-08-09_cip0010-makefiles-copy-web-scripts](2026-08-09_cip0010-makefiles-copy-web-scripts.md) | Ready |
+| 4 | [2026-08-09_cip0010-migrate-pattern-a-lamd-yml](2026-08-09_cip0010-migrate-pattern-a-lamd-yml.md) | Ready |
+| 5 | [2026-08-09_cip0010-integration-validation](2026-08-09_cip0010-integration-validation.md) | Ready |
+| 6 | [2026-08-09_cip0010-compress-directory-paths-docs](2026-08-09_cip0010-compress-directory-paths-docs.md) | Proposed (after CIP close) |
 
-## Current Implementation
+Close this umbrella task when all execution tasks are complete and CIP-0010 is Closed.
 
-The `copy_web_diagrams.sh` script currently:
-1. Detects when running from `_lamd` directory
-2. Adjusts relative input paths to be relative to parent directory
-3. Preserves absolute paths
-4. Maintains target directory as specified
+## Historical context
 
-While this works, it's a localized fix that doesn't address the underlying architectural issue of path handling inconsistency.
-
-## Proposed Solutions
-
-### Solution 1: Path Type Annotation
-- Add explicit path type annotations in makefiles and scripts
-- Use prefixes like `url:` and `file:` to distinguish path types
-- Implement path conversion functions to handle transformations
-- Update all makefiles to use these annotations
-- Pros: Clear distinction between path types
-- Cons: Requires changes to all path references
-
-### Solution 2: Path Context Objects
-- Create path context objects that maintain both URL and file paths
-- Implement path resolution based on current context
-- Use these objects throughout the build system
-- Pros: Encapsulated path handling
-- Cons: More complex implementation
-
-### Solution 3: Standardized Base Paths
-- Define standard base paths for different contexts
-- Implement path resolution relative to these bases
-- Use environment variables or configuration to set bases
-- Pros: Simpler implementation
-- Cons: Less flexible
+The `copy_web_diagrams.sh` script previously detected `_lamd` cwd and prepended `../`
+to `diagrams_dir` only — a localized workaround superseded by CIP-0010.
 
 ## Acceptance Criteria
 
-- [ ] Clear distinction between URL paths and local file paths
-- [ ] Consistent path handling across all makefiles and scripts
-- [ ] No special cases for `_lamd` directory
-- [ ] Documentation of path handling conventions
-- [ ] Tests for path resolution in different contexts
-- [ ] Migration plan for existing path references
+- [ ] All CIP-0010 execution tasks (phases 1–6) completed
+- [ ] CIP-0010 Closed and validated
+- [ ] [directory-paths.md](../../docs/guides/directory-paths.md) compressed to post-implementation reference (phase 6)
 
 ## Implementation Notes
 
@@ -87,11 +61,18 @@ The implementation will need to:
 
 ## Related
 
+- CIP: [CIP-0010: Unified Diagram Path Resolution](../../cip/cip0010.md)
 - Scripts: `lamd/lamd/scripts/copy_web_diagrams.sh`
 - Makefiles: All files in `lamd/lamd/makefiles/`
 - Configuration: `_lamd.yml`
 
 ## Progress Updates
+
+### 2026-08-09
+
+Split execution into six phased backlog tasks under CIP-0010. Trimmed
+[directory-paths.md](../../docs/guides/directory-paths.md) to reference-only (problem
+analysis stays in CIP). Umbrella task set to Ready.
 
 ### 2025-05-22
 

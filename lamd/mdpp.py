@@ -548,8 +548,11 @@ def main() -> int:
                 fd.write(after_text)
         else:
             tmp_file += ".gpp.markdown"
+            # Use dumps()+text write: python-frontmatter 1.1+ encodes inside dump()
+            # and writes bytes, which breaks text-mode file handles.
+            gpp_markdown = fm.dumps(writepost, sort_keys=False, default_flow_style=False)
             with open(tmp_file, "w", encoding="utf-8") as fd_text:
-                fm.dump(writepost, fd_text, sort_keys=False, default_flow_style=False)
+                fd_text.write(gpp_markdown)
 
         # Run GPP
         runlist = ["gpp"] + arglist + [tmp_file]
