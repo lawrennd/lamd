@@ -36,26 +36,18 @@ slides_dir=$4
 diagrams_dir=$5
 snippets_dir=$6
 
+# Resolve filesystem diagrams root via CIP-0010 paths module (replaces _lamd ../ hack)
+if command -v lamd-resolve-diagrams-dir &> /dev/null; then
+    resolved=$(lamd-resolve-diagrams-dir --filesystem --cwd "$PWD" -d "$diagrams_dir")
+    if [ -d "$resolved" ]; then
+        diagrams_dir="$resolved"
+    fi
+fi
+
 # Check if dependencies command exists
 if ! command -v dependencies &> /dev/null; then
     echo "Error: 'dependencies' command not found. Please ensure it is installed and in your PATH."
     exit 1
-fi
-
-# Check if we're in _lamd directory and adjust input paths if they're relative
-current_dir=$(basename "$PWD")
-if [ "$current_dir" = "_lamd" ]; then
-    # If we're in _lamd, adjust relative input paths to be relative to parent directory
-#     if [[ "$slides_dir" != /* ]]; then
-#         slides_dir="../$slides_dir"
-#     fi
-    if [[ "$diagrams_dir" != /* ]]; then
-        diagrams_dir="../$diagrams_dir"
-    fi
-#     if [[ "$snippets_dir" != /* ]]; then
-#         snippets_dir="../$snippets_dir"
-#     fi
-    [ $VERBOSE -eq 1 ] && echo "In _lamd directory, adjusting input paths to be relative to parent"
 fi
 
 # Check if required directories exist
@@ -65,7 +57,7 @@ if [ ! -d "$slides_dir" ]; then
 fi
 
 if [ ! -d "$diagrams_dir" ]; then
-    echo "Error: Diagrams directory '$diagrams_dir' does not exist"
+    echo "Error: Diagrams directory '$diagrams_dir' does not exist (check diagramsdir in _lamd.yml or pass --diagrams-dir; build cwd: $PWD)"
     exit 1
 fi
 
@@ -90,7 +82,7 @@ mkdir -p "$target_dir"
 
 # Get list of dependencies
 [ $VERBOSE -eq 1 ] && echo "Running dependencies command..."
-deps=$(dependencies $diagram_type $source_file --snippets-path $snippets_dir)
+deps=$(dependencies $diagram_type $source_file --snippets-path "$snippets_dir" --diagrams-dir "$diagrams_dir")
 if [ $? -ne 0 ]; then
     echo "Error: Failed to get dependencies"
     exit 1

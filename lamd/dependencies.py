@@ -36,16 +36,14 @@ import sys
 import lynguine.util.talk as nt
 import lynguine.util.yaml as ny
 
+from lamd.paths import load_config, resolve_diagrams_filesystem
+
 
 def resolve_diagrams_dir(cli_value: str | None) -> str:
     """Resolve diagrams directory from CLI flag or project config."""
     if cli_value:
-        return os.path.expandvars(cli_value)
-    try:
-        iface = ny.Interface.from_file(["_lamd.yml", "_config.yml"], directory=".")
-        return os.path.expandvars(iface.get("diagramsdir", "diagrams"))
-    except (ny.FileFormatError, OSError):
-        return "diagrams"
+        return resolve_diagrams_filesystem({}, cli=cli_value)
+    return resolve_diagrams_filesystem(load_config("."), cli=None)
 
 
 def main() -> int:

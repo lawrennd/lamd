@@ -1,4 +1,6 @@
 # Jupyter notebook generation using pandoc (notedown dependency removed)
+# mdpp --to ipynb resolves \diagramsDir as a web URL from _lamd.yml (diagramsurl /
+# url+baseurl+diagramswebpath); do not pass --diagrams-dir here (that forces filesystem paths).
 # Validation script usage: ${LAMDDIR}/scripts/validate_notebook.sh <notebook_file> <expected_min_cells>
 # The script will fail the build if the notebook has insufficient cells
 

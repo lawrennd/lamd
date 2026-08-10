@@ -12,6 +12,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 from lamd.dependencies import main
 
+# Default when no _lamd.yml and no --diagrams-dir (matches lamd.paths default "diagrams").
+DEFAULT_RESOLVED_DIAGRAMS_DIR = os.path.normpath(os.path.join(os.getcwd(), "diagrams"))
+
 
 class TestDependencies:
     """Test suite for the dependencies module."""
@@ -72,18 +75,10 @@ Here's a citation \cite{Smith2020}.
   pages   = {1--10}
 }""")
 
-        # Create a patch for opening the test file
-        # This is needed for tests that don't use the temp directory
-        self.open_patcher = patch("builtins.open", create=True)
-        self.mock_open = self.open_patcher.start()
-
     def teardown_method(self):
         """Clean up after each test."""
         # Remove temporary directory and its contents
         self.temp_dir.cleanup()
-
-        # Stop the open patch
-        self.open_patcher.stop()
 
     @patch("sys.argv", ["dependencies", "all", "test.md"])
     @patch("lynguine.util.talk.extract_all")
@@ -144,7 +139,7 @@ Here's a citation \cite{Smith2020}.
             "test.md",
             absolute_path=False,
             diagram_exts=["svg"],
-            diagrams_dir="/Users/neil/lawrennd/slides/diagrams",
+            diagrams_dir=DEFAULT_RESOLVED_DIAGRAMS_DIR,
             snippets_path="..",
         )
 
@@ -167,7 +162,7 @@ Here's a citation \cite{Smith2020}.
             "test.md",
             absolute_path=False,
             diagram_exts=["pdf"],
-            diagrams_dir="/Users/neil/lawrennd/slides/diagrams",
+            diagrams_dir=DEFAULT_RESOLVED_DIAGRAMS_DIR,
             snippets_path="..",
         )
 
@@ -190,7 +185,7 @@ Here's a citation \cite{Smith2020}.
             "test.md",
             absolute_path=False,
             diagram_exts=["emf"],
-            diagrams_dir="/Users/neil/lawrennd/slides/diagrams",
+            diagrams_dir=DEFAULT_RESOLVED_DIAGRAMS_DIR,
             snippets_path="..",
         )
 
