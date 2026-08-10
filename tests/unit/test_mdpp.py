@@ -55,6 +55,7 @@ def test_setup_gpp_arguments():
     args.meta_data = ["author=John Doe"]
     args.code = "ipynb"
     args.diagrams_dir = "/usr/diagrams"
+    args.diagrams_web_dir = None
     args.scripts_dir = "/usr/scripts"
     args.write_diagrams_dir = "/usr/diagrams"
     args.include_path = "/usr/include"
@@ -128,6 +129,7 @@ def test_main():
         meta_data=["author=John Doe"],
         code="ipynb",
         diagrams_dir=None,
+        diagrams_web_dir=None,
         scripts_dir=None,
         write_diagrams_dir=None,
         include_path="/usr/include",
@@ -168,6 +170,7 @@ def test_format_flags():
         meta_data=[],
         code="none",
         diagrams_dir=None,
+        diagrams_web_dir=None,
         scripts_dir=None,
         write_diagrams_dir=None,
         include_path=None,
@@ -268,15 +271,13 @@ def test_format_flags():
 class TestFrontmatterFileMode:
     """Regression tests for the gpp.markdown temporary-file write path.
 
-    python-frontmatter 1.1+ writes encoded bytes inside ``dump()``, so passing
-    a text-mode file handle raises ``TypeError: write() argument must be str,
-    not bytes``.  mdpp therefore uses ``dumps()`` and writes the returned str
-    to a UTF-8 text file.
+    mdpp uses ``dumps()`` and writes the returned str to a UTF-8 text file so
+    encoding is explicit regardless of python-frontmatter version.
 
     The tests below verify:
     1. The mdpp write pattern (``dumps`` + text file) succeeds.
-    2. ``frontmatter.dump()`` to a text-mode file fails on current frontmatter,
-       documenting why mdpp avoids that API.
+    2. ``frontmatter.dump()`` to a text-mode file matches ``dumps()`` on
+       python-frontmatter 1.3+ (mdpp still uses ``dumps`` for explicit UTF-8).
     3. ``process_content()`` returns a valid ``frontmatter.Post`` object.
     4. The full temporary-file write path produces a UTF-8 readable
        ``.gpp.markdown`` file.
@@ -303,29 +304,20 @@ class TestFrontmatterFileMode:
         finally:
             os.unlink(tmp_path)
 
-    def test_frontmatter_dump_to_text_file_raises(self) -> None:
-        """frontmatter.dump() must not be used with text-mode files on 1.1+."""
+    def test_frontmatter_dump_matches_dumps_on_text_file(self) -> None:
+        """dump() and dumps() agree on text-mode files (python-frontmatter 1.3+)."""
         post = fm.loads("---\ntitle: Test\n---\nHello world")
+        dumps_content = fm.dumps(post, sort_keys=False, default_flow_style=False)
         with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False, encoding="utf-8") as f:
             tmp_path = f.name
-            with self.raises_type_error():
+        try:
+            with open(tmp_path, "w", encoding="utf-8") as f:
                 fm.dump(post, f, sort_keys=False, default_flow_style=False)
-        os.unlink(tmp_path)
-
-    @staticmethod
-    def raises_type_error():
-        """Context manager that asserts a TypeError is raised."""
-        import contextlib
-
-        @contextlib.contextmanager
-        def _ctx():
-            try:
-                yield
-                raise AssertionError("Expected TypeError, but no exception was raised")
-            except TypeError:
-                pass
-
-        return _ctx()
+            with open(tmp_path, encoding="utf-8") as f:
+                dump_content = f.read()
+            assert dump_content == dumps_content
+        finally:
+            os.unlink(tmp_path)
 
     def test_process_content_returns_post(self) -> None:
         """process_content() returns a frontmatter.Post that can be dumped."""

@@ -1,7 +1,7 @@
 ---
 id: "2026-08-09_cip0010-paths-resolver-module"
 title: "CIP-0010 Phase 1: Add lamd.paths resolver module"
-status: "Ready"
+status: "Completed"
 priority: "High"
 created: "2026-08-09"
 last_updated: "2026-08-09"
@@ -26,12 +26,12 @@ CLI for shell scripts. No consumer wiring in this task — only the module and t
 
 ## Acceptance Criteria
 
-- [ ] `lamd/paths.py` exposes `resolve_diagrams_filesystem()` and `resolve_diagrams_web()`
-- [ ] `normalise_path()` collapses duplicate slashes and resolves `.` / `..` relative to a base cwd
-- [ ] Optional `diagramswebpath` config key supported in web resolver fallback chain
-- [ ] CLI entry point prints filesystem path (for make / `copy_web_diagrams.sh`)
-- [ ] Unit tests in `tests/unit/test_paths.py` cover cwd, CLI overrides, `diagramsurl`, env expansion
-- [ ] Deprecation warning when `diagramsdir` looks like a URL
+- [x] `lamd/paths.py` exposes `resolve_diagrams_filesystem()` and `resolve_diagrams_web()`
+- [x] `normalise_path()` collapses duplicate slashes and resolves `.` / `..` relative to a base cwd
+- [x] Optional `diagramswebpath` config key supported in web resolver fallback chain
+- [x] CLI entry point prints filesystem path (for make / `copy_web_diagrams.sh`)
+- [x] Unit tests in `tests/unit/test_paths.py` cover cwd, CLI overrides, `diagramsurl`, env expansion
+- [x] Deprecation warning when `diagramsdir` looks like a URL
 
 ## Implementation Notes
 

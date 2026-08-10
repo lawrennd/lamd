@@ -180,16 +180,19 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
         gpp_args.append("-DTESTCODE=1")
 
     # Add directory definitions
-    url = iface.get("diagramsurl", iface.get("url", "") + iface.get("baseurl", ""))
-    diagrams_dir = (
-        url + iface.get("diagramsdir", "diagrams") if args.to in ["html", "ipynb"] else iface.get("diagramsdir", "diagrams")
-    )
+    from lamd.paths import path_config_from_mapping, resolve_diagrams_filesystem, resolve_diagrams_web
+
+    path_config = path_config_from_mapping(iface)
+    if args.to in ["html", "ipynb"]:
+        diagrams_dir = resolve_diagrams_web(
+            path_config,
+            cli_fs=args.diagrams_dir,
+            cli_web=args.diagrams_web_dir,
+        )
+    else:
+        diagrams_dir = resolve_diagrams_filesystem(path_config, cli=args.diagrams_dir)
     scripts_dir = iface.get("scriptsdir", "scripts")
     write_diagrams_dir = iface.get("writediagramsdir", "diagrams")
-
-    # Override with command line arguments
-    if args.diagrams_dir:
-        diagrams_dir = args.diagrams_dir
     if args.scripts_dir:
         scripts_dir = args.scripts_dir
     if args.write_diagrams_dir:
@@ -415,6 +418,12 @@ def main() -> int:
 
     parser.add_argument("-d", "--diagrams-dir", type=str, help="Directory containing diagram files referenced in the content")
 
+    parser.add_argument(
+        "--diagrams-web-dir",
+        type=str,
+        help="Web URL prefix for diagram files (html/ipynb only; overrides diagramsurl)",
+    )
+
     parser.add_argument("-s", "--scripts-dir", type=str, help="Directory containing JavaScript files for interactive content")
 
     parser.add_argument("-W", "--write-diagrams-dir", type=str, help="Directory where generated diagrams should be written")
@@ -548,8 +557,7 @@ def main() -> int:
                 fd.write(after_text)
         else:
             tmp_file += ".gpp.markdown"
-            # Use dumps()+text write: python-frontmatter 1.1+ encodes inside dump()
-            # and writes bytes, which breaks text-mode file handles.
+            # Use dumps()+text write for explicit UTF-8 encoding of the temp file.
             gpp_markdown = fm.dumps(writepost, sort_keys=False, default_flow_style=False)
             with open(tmp_file, "w", encoding="utf-8") as fd_text:
                 fd_text.write(gpp_markdown)

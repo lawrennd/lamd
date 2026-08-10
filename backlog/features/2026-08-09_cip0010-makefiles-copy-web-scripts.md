@@ -1,7 +1,7 @@
 ---
 id: "2026-08-09_cip0010-makefiles-copy-web-scripts"
 title: "CIP-0010 Phase 3: Align makefiles and copy_web_diagrams with resolver"
-status: "Ready"
+status: "Completed"
 priority: "High"
 created: "2026-08-09"
 last_updated: "2026-08-09"
@@ -26,11 +26,11 @@ remaining hardcoded `diagrams` paths.
 
 ## Acceptance Criteria
 
-- [ ] `make-tex.mk` passes `--diagrams-dir $(DIAGRAMSDIR)` instead of hardcoded `diagrams`
-- [ ] `copy_web_diagrams.sh` removes `_lamd` basename hack; uses resolver CLI or pre-resolved path from make
-- [ ] Audit of `lamd/makefiles/` finds no other hardcoded diagram roots inconsistent with `DIAGRAMSDIR`
-- [ ] `make-ipynb.mk` reviewed; web vs filesystem flags passed explicitly if needed
-- [ ] Clear error when resolved diagrams root does not exist (message cites config key and cwd)
+- [x] `make-tex.mk` passes `--diagrams-dir $(DIAGRAMSDIR)` instead of hardcoded `diagrams`
+- [x] `copy_web_diagrams.sh` removes `_lamd` basename hack; uses resolver CLI or pre-resolved path from make
+- [x] Audit of `lamd/makefiles/` finds no other hardcoded diagram roots inconsistent with `DIAGRAMSDIR`
+- [x] `make-ipynb.mk` reviewed; web vs filesystem flags passed explicitly if needed
+- [x] Clear error when resolved diagrams root does not exist (message cites config key and cwd)
 
 ## Implementation Notes
 
@@ -48,3 +48,9 @@ same paths mdpp and dependencies use.
 ### 2026-08-09
 
 Task created from CIP-0010 implementation plan step 3.
+
+### 2026-08-09 (implementation)
+
+- `make-tex.mk`: `--diagrams-dir ${DIAGRAMSDIR}`
+- `copy_web_diagrams.sh`: resolver CLI + `--diagrams-dir` on dependencies; removed `_lamd` hack
+- `make-ipynb.mk`: documented web URL resolution (no `--diagrams-dir` on ipynb targets)
