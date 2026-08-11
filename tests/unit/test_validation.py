@@ -8,13 +8,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from lamd.validation import (
-    DependencyError,
-    check_dependency,
-    check_version,
-    install_dependency,
-    resolve_dependencies,
-)
+from lamd.validation import DependencyError, check_dependency, check_version, install_dependency, resolve_dependencies
 
 
 def test_check_dependency():

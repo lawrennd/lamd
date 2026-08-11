@@ -1,10 +1,10 @@
 ---
 id: "2026-08-08_pre-commit-hooks"
 title: "Add pre-commit hooks for black, isort, and mypy"
-status: "Proposed"
+status: "Completed"
 priority: "Medium"
 created: "2026-08-08"
-last_updated: "2026-08-08"
+last_updated: "2026-08-11"
 category: "infrastructure"
 related_cips: []
 owner: "Neil Lawrence"
@@ -29,13 +29,13 @@ Pre-commit hooks should mirror the blocking checks.
 
 ## Acceptance Criteria
 
-- [ ] `pre-commit` is added as a dev dependency in `pyproject.toml`
-- [ ] `.pre-commit-config.yaml` is created at the repo root
-- [ ] `black` runs on staged Python files and blocks commit on failure
-- [ ] `isort` runs on staged Python files and blocks commit on failure
-- [ ] `mypy` runs as a pre-push hook (not pre-commit, to keep commits fast)
-- [ ] Developer setup instructions note `pre-commit install` and `pre-commit install --hook-type pre-push`
-- [ ] Hooks match the CI configuration (same flags, same mypy strictness)
+- [x] `pre-commit` is added as a dev dependency in `pyproject.toml`
+- [x] `.pre-commit-config.yaml` is created at the repo root
+- [x] `black` runs on staged Python files and blocks commit on failure
+- [x] `isort` runs on staged Python files and blocks commit on failure
+- [x] `mypy` runs as a pre-push hook (not pre-commit, to keep commits fast)
+- [x] Developer setup instructions note `pre-commit install` and `pre-commit install --hook-type pre-push`
+- [x] Hooks match the CI configuration (same flags, same mypy strictness)
 
 ## Implementation Notes
 
@@ -75,6 +75,11 @@ Key decisions:
 - Documentation: `.github/workflows/lint.yml` for the CI configuration to mirror
 
 ## Progress Updates
+
+### 2026-08-11
+
+Implemented: local Poetry-backed hooks in `.pre-commit-config.yaml`, CI lint workflow
+uses `poetry install --with dev` instead of pip-installing latest black/isort.
 
 ### 2026-08-08
 

@@ -15,7 +15,14 @@ Thank you for your interest in contributing to LAMD! This document provides guid
    poetry install --with dev
    ```
 
-3. Install the GPP preprocessor:
+3. Install pre-commit hooks (recommended):
+   ```bash
+   poetry run pre-commit install --install-hooks
+   ```
+   This runs `black` and `isort` before each commit, and `mypy` before each push,
+   using the same tools and versions as CI (`poetry install --with dev`).
+
+4. Install the GPP preprocessor:
    - On macOS: `brew install gpp`
    - On Linux: `apt-get install gpp`
    - On Windows: See [https://github.com/logological/gpp](https://github.com/logological/gpp)
@@ -55,25 +62,20 @@ See the [Testing Documentation](docs/testing.md) for more details.
 
 ## Code Style
 
-We follow PEP 8 coding standards. Before submitting code:
+We follow PEP 8 coding standards. Lint tools are Poetry dev dependencies; CI uses
+`poetry install --with dev` so local and CI versions stay aligned.
 
-1. Run linters to check code quality:
-   ```bash
-   # Install linting tools
-   poetry run pip install flake8 mypy
+With pre-commit hooks installed (see Development Setup), formatting and import sorting
+run automatically on commit, and mypy runs on push.
 
-   # Run flake8
-   poetry run flake8 lamd/
+To run checks manually:
 
-   # Run mypy for type checking
-   poetry run mypy --ignore-missing-imports lamd/
-   ```
-
-2. Format your code:
-   ```bash
-   poetry run pip install black
-   poetry run black lamd/
-   ```
+```bash
+poetry run black --check .
+poetry run isort --check-only .
+poetry run flake8 .
+poetry run mypy --strict --ignore-missing-imports --disallow-untyped-defs --disallow-incomplete-defs lamd/
+```
 
 ## Pull Request Process
 

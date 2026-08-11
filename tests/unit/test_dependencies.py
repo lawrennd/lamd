@@ -66,14 +66,16 @@ Here's a citation \cite{Smith2020}.
 
         # Create sample bibliography
         with open(os.path.join(self.temp_dir.name, "references.bib"), "w") as f:
-            f.write("""@article{Smith2020,
+            f.write(
+                """@article{Smith2020,
   author  = {Smith, John},
   title   = {Example Paper},
   journal = {Journal of Examples},
   year    = {2020},
   volume  = {1},
   pages   = {1--10}
-}""")
+}"""
+            )
 
     def teardown_method(self):
         """Clean up after each test."""

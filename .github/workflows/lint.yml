@@ -25,9 +25,9 @@ jobs:
         virtualenvs-create: true
         virtualenvs-in-project: true
         
-    - name: Install linting tools
+    - name: Install dependencies
       run: |
-        poetry run pip install flake8 black isort mypy
+        poetry install --with dev
         
     - name: Check formatting with black
       run: |
@@ -43,10 +43,6 @@ jobs:
         poetry run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings
         poetry run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --select=E,W,F,C,N --ignore=E203,W503
-        
-    - name: Install type stubs
-      run: |
-        poetry run pip install types-PyYAML
         
     - name: Type check with mypy
       run: |
