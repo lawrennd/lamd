@@ -361,7 +361,11 @@ title so screen-reader users understand the sequence purpose.</p>
 <td><p>No <code class="docutils literal notranslate"><span class="pre">\newframe</span></code> calls before <code class="docutils literal notranslate"><span class="pre">\endanimation</span></code></p></td>
 <td><p>Add at least one frame between start and end</p></td>
 </tr>
-<tr class="row-odd"><td><p>Frames flash all at once briefly</p></td>
+<tr class="row-odd"><td><p>Top slider stops before last frame (nested animations)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">\startanimation</span></code> <code class="docutils literal notranslate"><span class="pre">{finish}</span></code> smaller than outer frame count</p></td>
+<td><p>Set <code class="docutils literal notranslate"><span class="pre">{finish}</span></code> to last index (e.g. six outer frames → <code class="docutils literal notranslate"><span class="pre">{0}{5}</span></code>); count only frames with the outer <code class="docutils literal notranslate"><span class="pre">group</span></code> class</p></td>
+</tr>
+<tr class="row-even"><td><p>Frames flash all at once briefly</p></td>
 <td><p>Race before <code class="docutils literal notranslate"><span class="pre">DOMContentLoaded</span></code> init</p></td>
 <td><p>Normal; init hides non-active frames once JS runs</p></td>
 </tr>
