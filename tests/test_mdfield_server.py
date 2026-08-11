@@ -62,7 +62,8 @@ def normalize_output(output_str):
 def test_markdown_file(tmp_path):
     """Create a test markdown file with frontmatter."""
     test_file = tmp_path / "test.md"
-    test_file.write_text("""---
+    test_file.write_text(
+        """---
 title: "Test Talk"
 author:
 - family: Lawrence
@@ -78,7 +79,8 @@ venue: "Test Venue"
 # Test Talk
 
 This is a test markdown file.
-""")
+"""
+    )
     return test_file
 
 
@@ -86,10 +88,12 @@ This is a test markdown file.
 def test_config_file(tmp_path):
     """Create a test configuration file."""
     config_file = tmp_path / "_lamd.yml"
-    config_file.write_text("""
+    config_file.write_text(
+        """
 default_field: "Default Value"
 another_field: "Another Value"
-""")
+"""
+    )
     return config_file
 
 
@@ -221,12 +225,14 @@ class TestConfigFallback:
         """
         # Create markdown without the field
         markdown_file = tmp_path / "test.md"
-        markdown_file.write_text("""---
+        markdown_file.write_text(
+            """---
 title: "Test"
 ---
 
 # Test
-""")
+"""
+        )
 
         python_result = subprocess.run(
             ["mdfield", "--no-server", "default_field", str(markdown_file)], capture_output=True, text=True, cwd=tmp_path
@@ -269,13 +275,15 @@ class TestErrorHandling:
     def test_malformed_frontmatter(self, tmp_path):
         """Test with malformed YAML frontmatter."""
         malformed_file = tmp_path / "malformed.md"
-        malformed_file.write_text("""---
+        malformed_file.write_text(
+            """---
 title: "Test
 author: [broken yaml
 ---
 
 # Test
-""")
+"""
+        )
 
         result = subprocess.run(
             [str(MDFIELD_SERVER_SCRIPT), "title", str(malformed_file)], capture_output=True, text=True, cwd=tmp_path
