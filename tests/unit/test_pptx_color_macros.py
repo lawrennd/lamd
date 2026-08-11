@@ -40,9 +40,7 @@ class TestPptxColorMacroNoops:
             content,
         )
         assert match is not None, r"\color{col}{block} must be defined in talk-macros-pptx.gpp"
-        assert match.group("body").strip() == r"\block", (
-            r"\color{col}{block} must pass through its second argument only"
-        )
+        assert match.group("body").strip() == r"\block", r"\color{col}{block} must pass through its second argument only"
 
     def test_color_wrapper_macros_are_identity(self) -> None:
         content = _read_macro_file()
@@ -52,9 +50,7 @@ class TestPptxColorMacroNoops:
                 content,
             )
             assert match is not None, f"\\{name}{{block}} must be defined in talk-macros-pptx.gpp"
-            assert match.group("body").strip() == r"\block", (
-                f"\\{name}{{block}} must be a no-op (content only) for PPTX"
-            )
+            assert match.group("body").strip() == r"\block", f"\\{name}{{block}} must be a no-op (content only) for PPTX"
 
     @pytest.mark.skipif(shutil.which("gpp") is None, reason="gpp not available")
     def test_gpp_strips_color_from_math_before_pandoc(self) -> None:

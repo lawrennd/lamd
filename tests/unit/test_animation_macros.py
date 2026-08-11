@@ -72,9 +72,9 @@ class TestAnimationMacros:
         assert r"\define{\startanimation{" in content, "\\startanimation is not defined in talk-macros-slides-html.gpp"
         idx = content.find(r"\define{\startanimation{")
         snippet = content[idx : idx + 400]
-        assert 'id="animation-\\group"' in snippet or "<div" in snippet, (
-            "\\startanimation must open a container div for the animation group"
-        )
+        assert (
+            'id="animation-\\group"' in snippet or "<div" in snippet
+        ), "\\startanimation must open a container div for the animation group"
 
     def test_newframe_produces_centered_div(self) -> None:
         """\\newframe definition must use text-align:center styling."""

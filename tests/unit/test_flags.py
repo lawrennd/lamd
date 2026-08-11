@@ -308,9 +308,7 @@ class TestResolveReferenceDoc:
             assert resolve_reference_doc(path) == path
 
     def test_bare_filename_falls_back_to_lamd_includes(self):
-        bundled = os.path.join(
-            os.path.dirname(__file__), "../../lamd/includes/custom-reference.potx"
-        )
+        bundled = os.path.join(os.path.dirname(__file__), "../../lamd/includes/custom-reference.potx")
         bundled = os.path.abspath(bundled)
         assert os.path.isfile(bundled)
         assert resolve_reference_doc("custom-reference.potx") == bundled
