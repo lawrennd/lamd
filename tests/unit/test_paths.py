@@ -24,21 +24,15 @@ from lamd.paths import (  # noqa: E402
 class TestNormalisePath:
     def test_resolves_relative_to_base(self):
         base = "/project/_lamd"
-        assert normalise_path("../slides/diagrams/", base) == os.path.normpath(
-            "/project/_lamd/../slides/diagrams"
-        )
+        assert normalise_path("../slides/diagrams/", base) == os.path.normpath("/project/_lamd/../slides/diagrams")
 
     def test_collapses_duplicate_slashes(self):
         base = "/project/_lamd"
-        assert normalise_path("./slides//diagrams/", base) == os.path.normpath(
-            "/project/_lamd/slides/diagrams"
-        )
+        assert normalise_path("./slides//diagrams/", base) == os.path.normpath("/project/_lamd/slides/diagrams")
 
     def test_expands_environment_variables(self, monkeypatch):
         monkeypatch.setenv("LAMD_TEST_ROOT", "/tmp/lamd-test")
-        assert normalise_path("$LAMD_TEST_ROOT/diagrams", "/ignored") == os.path.normpath(
-            "/tmp/lamd-test/diagrams"
-        )
+        assert normalise_path("$LAMD_TEST_ROOT/diagrams", "/ignored") == os.path.normpath("/tmp/lamd-test/diagrams")
 
     def test_leaves_urls_unchanged(self):
         url = "https://example.org/course/slides/diagrams/"
@@ -55,9 +49,7 @@ class TestResolveDiagramsFilesystem:
     def test_pattern_b_mlfc(self):
         config = {"diagramsdir": "../slides/diagrams/"}
         cwd = os.path.join("/repo", "mlfc", "_lamd")
-        assert resolve_diagrams_filesystem(config, cwd=cwd) == os.path.normpath(
-            os.path.join(cwd, "../slides/diagrams")
-        )
+        assert resolve_diagrams_filesystem(config, cwd=cwd) == os.path.normpath(os.path.join(cwd, "../slides/diagrams"))
 
     def test_pattern_a_wrong_under_lamd(self):
         config = {"diagramsdir": "./slides/diagrams/"}

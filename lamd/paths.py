@@ -74,8 +74,7 @@ def warn_if_diagramsdir_is_url(config: Mapping[str, str]) -> None:
     diagramsdir = _expand(str(config.get("diagramsdir", DEFAULT_DIAGRAMS_DIR)))
     if looks_like_url(diagramsdir):
         warnings.warn(
-            "diagramsdir looks like a URL; use diagramsurl for web paths "
-            "(diagramsdir is filesystem-only after CIP-0010)",
+            "diagramsdir looks like a URL; use diagramsurl for web paths " "(diagramsdir is filesystem-only after CIP-0010)",
             stacklevel=3,
         )
 
