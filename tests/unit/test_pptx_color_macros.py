@@ -2,7 +2,10 @@
 
 import os
 import re
+import shutil
 import subprocess
+
+import pytest
 
 import lamd
 
@@ -53,6 +56,7 @@ class TestPptxColorMacroNoops:
                 f"\\{name}{{block}} must be a no-op (content only) for PPTX"
             )
 
+    @pytest.mark.skipif(shutil.which("gpp") is None, reason="gpp not available")
     def test_gpp_strips_color_from_math_before_pandoc(self) -> None:
         """Integration: gpp with PPTX macros should remove \\color from display math."""
         gpp_input = r"""
