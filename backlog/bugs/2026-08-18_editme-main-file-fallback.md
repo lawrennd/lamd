@@ -1,7 +1,7 @@
 ---
 id: "2026-08-18_editme-main-file-fallback"
 title: "Section edit links on non-snippet content go to a missing snippets file"
-status: "Ready"
+status: "Completed"
 priority: "High"
 created: "2026-08-18"
 last_updated: "2026-08-18"
@@ -66,25 +66,25 @@ as metadata. GPP never sees it, so `\editme` cannot use it today.
 
 ## Acceptance Criteria
 
-- [ ] An `\editme` that expands while GPP is still in the main preprocessor
+- [x] An `\editme` that expands while GPP is still in the main preprocessor
       input (the talk file, including leftover snippet `\editme`s that fall
       through to a talk heading) links to the same GitHub URL as the page-level
       `edit_url` (`ghub` organization/repository/branch/directory plus the
       source basename with `.md`)
-- [ ] An `\editme` that expands inside an `\include` still links to
+- [x] An `\editme` that expands inside an `\include` still links to
       `githubBaseUrl` plus the snippet path (existing snippet behaviour
       unchanged)
-- [ ] The fallback does **not** sniff the `.gpp.markdown` suffix in GPP.
+- [x] The fallback does **not** sniff the `.gpp.markdown` suffix in GPP.
       `mdpp` passes the exact temp path it hands to GPP (`gppTempFile`) and
       the talks URL (`localEditUrl`); the edit macro uses `\ifeq{\file}{\gppTempFile}`
-- [ ] If `ghub` is missing, the macro still produces a snippets-style link
+- [x] If `ghub` is missing, the macro still produces a snippets-style link
       (current behaviour) rather than a broken empty href
-- [ ] Unit tests cover: (1) `mdpp` emits `-DgppTempFile` and `-DlocalEditUrl`
+- [x] Unit tests cover: (1) `mdpp` emits `-DgppTempFile` and `-DlocalEditUrl`
       when `ghub` is present; (2) a fixture where `\editme` is followed by a
       heading in the main file resolves to `localEditUrl`; (3) a fixture where
       `\editme` is followed by a heading inside an include still uses the
       snippets URL
-- [ ] Rebuilding `time-to-reset` posts HTML, the Sovereignty heading edit
+- [x] Rebuilding `time-to-reset` posts HTML, the Sovereignty heading edit
       control opens `_policy/time-to-reset.md` on the talks repo, not
       `time-to-reset.gpp.markdown` on snippets
 
@@ -143,3 +143,14 @@ Sovereignty edit link.
 
 Updated to Ready: approach agreed (pass `gppTempFile` and `localEditUrl`
 from mdpp; compare at expansion time). Implementation follows.
+
+Updated to In Progress.
+
+Implemented: `mdpp` always passes `-DgppTempFile` and, when `ghub` is
+complete, `-DlocalEditUrl`. The edit macro compares `\file` to
+`\gppTempFile` at expansion time. Unit and GPP fixture tests in
+`tests/unit/test_mdpp.py` pass. Rebuilt `time-to-reset` posts HTML: the
+Sovereignty heading now opens
+`https://github.com/lawrennd/talks/edit/gh-pages/_policy/time-to-reset.md`.
+
+Updated to Completed.

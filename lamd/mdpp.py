@@ -86,6 +86,55 @@ def _preprocess_math_for_manim(body: str) -> str:
 VALID_FORMATS = ["notes", "slides", "code"]
 VALID_CODE_LEVELS = ["none", "sparse", "ipynb", "diagnostic", "plot", "full", "test"]
 VALID_OUTPUT_FORMATS = ["pptx", "html", "docx", "ipynb", "svg", "tex", "python", "manim", "manim-video", "manim-svg"]
+_MANIM_TARGETS = ("manim", "manim-video", "manim-svg")
+
+
+def gpp_temp_path(filename: str, to: str | None) -> str:
+    """Return the preprocessor temp path GPP will see as ``\\file``.
+
+    This string must be identical to the infile later appended to the ``gpp``
+    command so ``\\ifeq{\\file}{\\gppTempFile}`` can use exact equality.
+    """
+    stem, _ext = os.path.splitext(filename)
+    if to in _MANIM_TARGETS:
+        return f"{stem}.gpp.py"
+    return f"{stem}.gpp.markdown"
+
+
+def _ghub_entry(iface: dict[str, Any]) -> dict[str, Any] | None:
+    """Return the first ``ghub`` mapping from config, if present."""
+    ghub = iface.get("ghub") if hasattr(iface, "get") else None
+    if isinstance(ghub, list):
+        if not ghub or not isinstance(ghub[0], dict):
+            return None
+        return ghub[0]
+    if isinstance(ghub, dict):
+        return ghub
+    return None
+
+
+def local_edit_url_from_iface(iface: dict[str, Any], filename: str) -> str | None:
+    """Build the document GitHub edit URL from ``ghub`` and the source basename.
+
+    Matches the page-level ``edit_url`` constructed in ``flags.py``. Returns
+    ``None`` when ``ghub`` is missing or incomplete so callers omit
+    ``-DlocalEditUrl`` and the edit macro keeps snippets-style behaviour.
+    """
+    entry = _ghub_entry(iface)
+    if entry is None:
+        return None
+    try:
+        org = entry["organization"]
+        repo = entry["repository"]
+        branch = entry["branch"]
+        directory = entry["directory"]
+    except (KeyError, TypeError):
+        return None
+    if not org or not repo or not branch or directory is None:
+        return None
+    stem = os.path.splitext(os.path.basename(filename))[0]
+    return f"https://github.com/{org}/{repo}/edit/{branch}/{directory}/{stem}.md"
+
 
 # Python header injected by mdpp into Manim-output temp files (no YAML frontmatter).
 _MANIM_SLIDES_HEADER = (
@@ -205,6 +254,11 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
     # Add include paths
     gpp_args.append(f"-Dtalksdir={os.path.dirname(os.path.abspath(__file__))}")
     gpp_args.append("-DgithubBaseUrl=https://github.com/lawrennd/snippets/edit/main/")
+    filename = getattr(args, "filename", "") or ""
+    gpp_args.append(f"-DgppTempFile={gpp_temp_path(filename, args.to)}")
+    local_edit_url = local_edit_url_from_iface(iface, filename)
+    if local_edit_url:
+        gpp_args.append(f"-DlocalEditUrl={local_edit_url}")
     if args.include_path:
         for include_dir in args.include_path.split(":"):
             gpp_args.append(f"-I{include_dir}")
@@ -524,12 +578,11 @@ def main() -> int:
         writepost = process_content(args, before_text, after_text)
 
         # Write temporary file
-        tmp_file, ext = os.path.splitext(args.filename)
-        if args.to in ("manim", "manim-video", "manim-svg"):
+        tmp_file = gpp_temp_path(args.filename, args.to)
+        if args.to in _MANIM_TARGETS:
             # Manim output is a Python file; write a plain-text temp file that
             # begins with the appropriate class header so that gpp expands the
             # macros directly into the method body.
-            tmp_file += ".gpp.py"
             if args.to == "manim":
                 python_header = _MANIM_SLIDES_HEADER
             elif args.to == "manim-svg":
@@ -556,7 +609,6 @@ def main() -> int:
                 fd.write(body)
                 fd.write(after_text)
         else:
-            tmp_file += ".gpp.markdown"
             # Use dumps()+text write for explicit UTF-8 encoding of the temp file.
             gpp_markdown = fm.dumps(writepost, sort_keys=False, default_flow_style=False)
             with open(tmp_file, "w", encoding="utf-8") as fd_text:
