@@ -1,16 +1,19 @@
 import argparse
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 # Add the parent directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
 import frontmatter as fm
 
-from lamd.mdpp import main, process_content, setup_gpp_arguments
+from lamd.mdpp import gpp_temp_path, local_edit_url_from_iface, main, process_content, setup_gpp_arguments
 from lamd.validation import check_dependency, check_version
 
 # Set LAMD_MACROS environment variable for testing
@@ -63,6 +66,7 @@ def test_setup_gpp_arguments():
     args.macros_path = "/usr/macros:/usr/macrostoo"
     args.output = "output.md"
     args.macros = "macros"
+    args.filename = "input.md"
 
     iface = {
         "diagramsurl": "http://example.com",
@@ -91,6 +95,7 @@ def test_setup_gpp_arguments():
         "-DMAGICCODE=1",
         f"-Dtalksdir={mdpp_dir}",
         "-DgithubBaseUrl=https://github.com/lawrennd/snippets/edit/main/",
+        "-DgppTempFile=input.gpp.markdown",
         "-DdiagramsDir=/usr/diagrams",
         "-DscriptsDir=/usr/scripts",
         "-DwriteDiagramsDir=/usr/diagrams",
@@ -177,6 +182,7 @@ def test_format_flags():
         snippets_path=None,
         macros_path=None,
         output="test.md",
+        filename="test.md",
     )
     iface = {"diagramsdir": "diagrams", "scriptsdir": "scripts", "writediagramsdir": "diagrams"}
 
@@ -393,3 +399,198 @@ class TestFrontmatterFileMode:
                 content = f.read()
             assert "UTF-8 test" in content
             assert "café" in content
+
+
+def test_gpp_temp_path_matches_html_and_manim_suffixes():
+    """Temp path must be the same string later passed as GPP's infile."""
+    assert gpp_temp_path("talk.md", "html") == "talk.gpp.markdown"
+    assert gpp_temp_path("_policy/talk.md", "html") == "_policy/talk.gpp.markdown"
+    assert gpp_temp_path("talk.md", "manim") == "talk.gpp.py"
+    assert gpp_temp_path("talk.md", "manim-svg") == "talk.gpp.py"
+
+
+def test_local_edit_url_from_ghub_list_and_mapping():
+    """URL construction matches flags.py: ghub fields plus source basename."""
+    expected = "https://github.com/lawrennd/talks/edit/gh-pages/_policy/time-to-reset.md"
+    list_iface = {
+        "ghub": [
+            {
+                "organization": "lawrennd",
+                "repository": "talks",
+                "branch": "gh-pages",
+                "directory": "_policy",
+            }
+        ]
+    }
+    dict_iface = {
+        "ghub": {
+            "organization": "lawrennd",
+            "repository": "talks",
+            "branch": "gh-pages",
+            "directory": "_policy",
+        }
+    }
+    assert local_edit_url_from_iface(list_iface, "time-to-reset.md") == expected
+    assert local_edit_url_from_iface(dict_iface, "_policy/time-to-reset.md") == expected
+    assert local_edit_url_from_iface({}, "time-to-reset.md") is None
+    assert local_edit_url_from_iface({"ghub": [{"organization": "lawrennd"}]}, "talk.md") is None
+
+
+def test_setup_gpp_arguments_emits_local_edit_url_when_ghub_present():
+    """mdpp must pass gppTempFile always and localEditUrl when ghub is complete."""
+    args = argparse.Namespace(
+        format="notes",
+        to="html",
+        exercises=False,
+        assignment=False,
+        edit_links=True,
+        draft=False,
+        meta_data=[],
+        code="none",
+        diagrams_dir=None,
+        diagrams_web_dir=None,
+        scripts_dir=None,
+        write_diagrams_dir=None,
+        include_path=None,
+        snippets_path=None,
+        macros_path=None,
+        output="out.md",
+        filename="time-to-reset.md",
+    )
+    iface = {
+        "diagramsdir": "diagrams",
+        "scriptsdir": "scripts",
+        "writediagramsdir": "diagrams",
+        "ghub": [
+            {
+                "organization": "lawrennd",
+                "repository": "talks",
+                "branch": "gh-pages",
+                "directory": "_policy",
+            }
+        ],
+    }
+    gpp_args = setup_gpp_arguments(args, iface)
+    assert "-DgppTempFile=time-to-reset.gpp.markdown" in gpp_args
+    assert "-DlocalEditUrl=https://github.com/lawrennd/talks/edit/gh-pages/_policy/time-to-reset.md" in gpp_args
+    assert "-DgithubBaseUrl=https://github.com/lawrennd/snippets/edit/main/" in gpp_args
+
+
+def test_setup_gpp_arguments_omits_local_edit_url_without_ghub():
+    args = argparse.Namespace(
+        format="notes",
+        to="html",
+        exercises=False,
+        assignment=False,
+        edit_links=True,
+        draft=False,
+        meta_data=[],
+        code="none",
+        diagrams_dir=None,
+        diagrams_web_dir=None,
+        scripts_dir=None,
+        write_diagrams_dir=None,
+        include_path=None,
+        snippets_path=None,
+        macros_path=None,
+        output="out.md",
+        filename="talk.md",
+    )
+    iface = {"diagramsdir": "diagrams", "scriptsdir": "scripts", "writediagramsdir": "diagrams"}
+    gpp_args = setup_gpp_arguments(args, iface)
+    assert "-DgppTempFile=talk.gpp.markdown" in gpp_args
+    assert not any(arg.startswith("-DlocalEditUrl=") for arg in gpp_args)
+
+
+def _gpp_editme_command(input_path: str, output_path: str, extra_defines: list[str], include_dirs: list[str]) -> list[str]:
+    import lamd.mdpp
+
+    macros_dir = os.path.join(os.path.dirname(os.path.abspath(lamd.mdpp.__file__)), "macros")
+    return [
+        "gpp",
+        "+n",
+        "-U",
+        "\\",
+        "",
+        "{",
+        "}{",
+        "}",
+        "{",
+        "}",
+        "#",
+        "",
+        "-DEDIT=1",
+        "-DgithubBaseUrl=https://github.com/lawrennd/snippets/edit/main/",
+        *extra_defines,
+        f"-I{macros_dir}",
+        *[f"-I{directory}" for directory in include_dirs],
+        "-o",
+        output_path,
+        input_path,
+    ]
+
+
+_EDITME_STUBS = r"""
+\define{\span{contents}{class}{style}}{\contents}
+\define{\alignright{block}}{\block}
+\define{\hrefOther{link}{label}{other}}{EDITURL:\link}
+\include{talk-macros-edit.gpp}
+\define{\section{text}}{# \text
+\ifdef{editText}\editText\undef{editText}\endif
+}
+"""
+
+
+@pytest.mark.skipif(shutil.which("gpp") is None, reason="gpp not available")
+def test_editme_in_main_file_uses_local_edit_url():
+    """Leftover \\editme emitted by a talk heading must open the document URL."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        infile = os.path.join(tmpdir, "talk.gpp.markdown")
+        outfile = os.path.join(tmpdir, "out.md")
+        with open(infile, "w", encoding="utf-8") as fd:
+            fd.write(_EDITME_STUBS)
+            fd.write("\\editme\n\\section{Sovereignty}\n")
+        local_url = "https://github.com/lawrennd/talks/edit/gh-pages/_policy/talk.md"
+        cmd = _gpp_editme_command(
+            infile,
+            outfile,
+            [
+                f"-DgppTempFile={infile}",
+                f"-DlocalEditUrl={local_url}",
+            ],
+            [tmpdir],
+        )
+        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        with open(outfile, encoding="utf-8") as fd:
+            output = fd.read()
+        assert f"EDITURL:{local_url}" in output
+        assert "snippets/edit/main/" not in output
+
+
+@pytest.mark.skipif(shutil.which("gpp") is None, reason="gpp not available")
+def test_editme_inside_include_keeps_snippets_url():
+    """\\editme expanded inside an include still uses githubBaseUrl plus the snippet path."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        infile = os.path.join(tmpdir, "talk.gpp.markdown")
+        snippet = os.path.join(tmpdir, "compute-concentration.md")
+        outfile = os.path.join(tmpdir, "out.md")
+        with open(snippet, "w", encoding="utf-8") as fd:
+            fd.write("\\editme\n\\section{Snippet heading}\n")
+        with open(infile, "w", encoding="utf-8") as fd:
+            fd.write(_EDITME_STUBS)
+            fd.write("\\include{compute-concentration.md}\n")
+        local_url = "https://github.com/lawrennd/talks/edit/gh-pages/_policy/talk.md"
+        cmd = _gpp_editme_command(
+            infile,
+            outfile,
+            [
+                f"-DgppTempFile={infile}",
+                f"-DlocalEditUrl={local_url}",
+            ],
+            [tmpdir],
+        )
+        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        with open(outfile, encoding="utf-8") as fd:
+            output = fd.read()
+        assert "EDITURL:https://github.com/lawrennd/snippets/edit/main/compute-concentration.md" in output
+        assert local_url not in output
