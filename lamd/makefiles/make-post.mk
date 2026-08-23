@@ -4,6 +4,7 @@ ${BASE}.posts.html.markdown: ${BASE}.md ${DEPS}
 ${BASE}.posts.html: ${BASE}.posts.html.markdown
 	pandoc --template ${TEMPLATESDIR}/pandoc/pandoc-jekyll-talk-template ${PDSFLAGS} \
 	       --markdown-headings=atx \
+	       --wrap=none \
 	       ${POSTFLAGS} \
                --to html \
                --out ${BASE}.posts.html  ${BASE}.posts.html.markdown 
