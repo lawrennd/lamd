@@ -55,7 +55,9 @@ YouTubeVideo('\id')
 \define{\includediagram{filename}{width}{class}{style}}{<img src="\filename.svg" class="\class" width="\width" style="vertical-align:middle;\style">}
 \define{\includediagramclass{filename}{width}{class}{style}}{<img src="\filename.svg" class="\class" width="\width" style="vertical-align:middle;\style">}
 
-\define{\references}{\subsection{References}
+\define{\references}{\endCell
+
+## References
 
 }
 

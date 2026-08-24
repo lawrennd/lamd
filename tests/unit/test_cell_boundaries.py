@@ -24,6 +24,24 @@ def check_dependency(dependency):
 class TestCellBoundaries:
     """Test class for cell boundary functionality in LaMD pipeline."""
 
+    STRAY_CELL_MARKER = "::: {.cell .markdown}"
+
+    @property
+    def repo_root(self) -> Path:
+        return Path(__file__).resolve().parents[2]
+
+    @property
+    def macros_dir(self) -> Path:
+        return self.repo_root / "lamd" / "macros"
+
+    @property
+    def ipynb_template(self) -> Path:
+        return self.repo_root / "lamd" / "templates" / "pandoc" / "pandoc-jekyll-ipynb-template"
+
+    @property
+    def csl_file(self) -> Path:
+        return self.repo_root / "lamd" / "includes" / "elsevier-harvard.csl"
+
     def setup_method(self):
         """Set up test fixtures."""
         self.test_dir = Path(__file__).parent
@@ -58,6 +76,90 @@ class TestCellBoundaries:
                 return False, f"❌ Notebook has only {cell_count} cells (expected >= {expected_min})"
         except Exception as e:
             return False, f"❌ Failed to read notebook: {e}"
+
+    def notebook_cell_sources(self, ipynb_file: Path) -> list[str]:
+        """Return the source text for each cell in a notebook."""
+        with open(ipynb_file, "r") as f:
+            notebook = json.load(f)
+        return ["".join(cell.get("source", [])) for cell in notebook.get("cells", [])]
+
+    def assert_no_stray_cell_markers(self, ipynb_file: Path) -> None:
+        """Fail if pandoc left cell-boundary syntax in notebook cell content."""
+        for index, source in enumerate(self.notebook_cell_sources(ipynb_file)):
+            assert (
+                self.STRAY_CELL_MARKER not in source
+            ), f"Cell {index} contains stray pandoc cell marker: {self.STRAY_CELL_MARKER!r}"
+
+    @pytest.mark.skipif(not check_dependency("mdpp"), reason="mdpp not available")
+    @pytest.mark.skipif(not check_dependency("pandoc"), reason="pandoc not available")
+    def test_references_cell_boundary_no_stray_markers(self):
+        """References must not open an unclosed ipynb cell at document end.
+
+        \\references used to expand to \\subsection{References}, which emitted
+        ::: {.cell .markdown} without a closing :::. Pandoc then left the opener
+        as literal notebook content.
+        """
+        test_file = self.test_dir / "test-references-cell-boundary.md"
+        notes_output = Path(self.temp_dir) / "test-references-cell-boundary.notes.ipynb.markdown"
+
+        subprocess.run(
+            [
+                "mdpp",
+                str(test_file),
+                "-o",
+                str(notes_output),
+                "--format",
+                "notes",
+                "--macros-path",
+                str(self.macros_dir),
+                "--to",
+                "ipynb",
+                "--code",
+                "ipynb",
+                "--replace-notation",
+            ],
+            check=True,
+            capture_output=True,
+        )
+
+        notes_text = notes_output.read_text()
+        assert f"{self.STRAY_CELL_MARKER}\n\n## References" not in notes_text
+
+        tmp_output = Path(self.temp_dir) / "test-references-cell-boundary.tmp.markdown"
+        subprocess.run(
+            [
+                "pandoc",
+                "--template",
+                str(self.ipynb_template),
+                "--markdown-headings=atx",
+                "--out",
+                str(tmp_output),
+                str(notes_output),
+            ],
+            check=True,
+            capture_output=True,
+        )
+
+        pandoc_output = Path(self.temp_dir) / "test-references-cell-boundary.ipynb"
+        subprocess.run(
+            [
+                "pandoc",
+                "-s",
+                "--citeproc",
+                f"--csl={self.csl_file}",
+                "--out",
+                str(pandoc_output),
+                str(tmp_output),
+            ],
+            check=True,
+            capture_output=True,
+        )
+
+        self.assert_no_stray_cell_markers(pandoc_output)
+
+        references_cells = [source for source in self.notebook_cell_sources(pandoc_output) if "## References" in source]
+        assert references_cells, "Expected a References markdown cell"
+        assert "Boltzmann" in references_cells[0], "Expected citeproc bibliography in References cell"
 
     @pytest.mark.skipif(not check_dependency("mdpp"), reason="mdpp not available")
     @pytest.mark.skipif(not check_dependency("pandoc"), reason="pandoc not available")
