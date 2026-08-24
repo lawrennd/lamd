@@ -49,7 +49,7 @@
 <div class="figure-frame" id="\concat{\label}{-figure}">
 \contents
 </div>
-<div class="magnify" id="\concat{\label}{-magnify}" onclick="magnifyFigure('\label')"><img class="img-button" src="{{ '/assets/images/Magnify_Large.svg' | relative_url }}" style="width:1.5ex"></div>
+<div class="magnify" id="\concat{\label}{-magnify}" onclick="magnifyFigure('\label')"><button type="button" class="img-button" aria-label="Enlarge figure"><img src="{{ '/assets/images/Magnify_Large.svg' | relative_url }}" style="width:1.5em; min-width:44px; min-height:44px; padding:0.5em"></button></div>
 <div class="caption-frame" id="\concat{\label}{-caption}">
 Figure: \captionContents
 </div>
@@ -59,10 +59,10 @@ Figure: \captionContents
 <div class="caption-frame" id="\concat{\label}{-caption}">
 Table: \captionContents
 </div>
-<div class="table-frame" id="\concat{\label}{-table}">
+<div class="table-frame figure-frame" id="\concat{\label}{-figure}">
 \contents
 </div>
-<div class="magnify" id="\concat{\label}{-magnify}" onclick="magnifyFigure('\label')"><img class="img-button" src="{{ '/assets/images/Magnify_Large.svg' | relative_url }}" style="width:1.5ex"></div>
+<div class="magnify" id="\concat{\label}{-magnify}" onclick="magnifyFigure('\label')"><button type="button" class="img-button" aria-label="Enlarge table"><img src="{{ '/assets/images/Magnify_Large.svg' | relative_url }}" style="width:1.5em; min-width:44px; min-height:44px; padding:0.5em"></button></div>
 </div>}
 
 
