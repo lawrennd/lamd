@@ -10,7 +10,53 @@ The slides context is used when creating presentations. Content in this context 
     Creates a new slide
     Args:
         title: Title of the slide
+
+\newslide{title}{attrs}
+    Creates a new slide with Reveal section attributes (HTML slides).
+    Args:
+        title: Title of the slide
+        attrs: Space-separated attributes, e.g. data-background="…" or .scrollable
 ```
+
+### JavaScript: content scripts vs Reveal setup
+
+Two separate concerns (do not mix them):
+
+| Track | Role | Where it runs | Authoring |
+|-------|------|---------------|-----------|
+| **A — Content scripts** | Interactive widgets in figures / body | All HTML outputs (slides, notes, notebooks) | `\includescript{relpath}` under `scriptsDir` |
+| **B — Reveal setup & backgrounds** | Deck chrome and full-bleed backdrops | Reveal HTML slides only | `slide_setup` frontmatter; `\newslide{…}{data-background…}` |
+
+**Rule of thumb:** if the interaction still makes sense without Reveal, it is Track A. If it is “behind the deck” or “this slide’s backdrop,” it is Track B.
+
+#### Track A — `\includescript`
+
+```markdown
+\includescript{ballworld/ballworld.js}
+```
+
+Emits `<script src="…/scriptsDir/…">` in HTML formats; no-op in TeX/PPTX. Prefer this over hand-written `<script>` tags in snippets. GPP `\ifndef` once-guards only accept `[A-Za-z0-9_]`, so wrap loaders in alphanumeric defines (e.g. `\ifndef{ballworldJs}`), not path-shaped names.
+
+#### Track B — `slide_setup` and backgrounds
+
+Optional frontmatter (filename under lamd `includes/`):
+
+```yaml
+slide_setup: slide-setup-ambient.html
+```
+
+When set, the slides makefile passes `--include-after-body` so the fragment runs **after** `Reveal.initialize` (correct place for Reveal API / ambient animation). Leave unset for most decks — default `slidesheader` stays for MathJax / figure-animate only.
+
+Per-slide backgrounds use Reveal `data-background*` on the section:
+
+```markdown
+\newslide{Title}{data-background-image="diagrams/bg.svg"}
+\includeplotly{plots/myplot}{100%}{100%}
+```
+
+**Clash policy:** a slide with its own `data-background*` wins; deck ambient from `slide_setup` should yield/pause on that slide. Reference: `lamd/includes/slide-setup-ambient.html`.
+
+**Pitfall:** YAML frontmatter `background:` is a *layout numbering* field, not a visual slide background.
 
 ### Content Control
 ```markdown
@@ -243,6 +289,8 @@ Remember to mention real-world applications for each type
 4. Consider both HTML and PPTX output when formatting
 5. For multi-frame diagrams, use `\startanimation`/`\newframe`/`\endanimation` and repeat
    the same `group` class on every frame (see Frame Animations above)
+6. Put figure widgets behind `\includescript`; put Reveal chrome / ambient animation in
+   `slide_setup` (see JavaScript tracks above) — do not put deck setup in `slidesheader`
 
 ### Colored math in PPTX
 
