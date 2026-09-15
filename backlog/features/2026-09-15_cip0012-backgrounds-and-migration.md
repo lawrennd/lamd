@@ -1,7 +1,7 @@
 ---
 id: "2026-09-15_cip0012-backgrounds-and-migration"
 title: "CIP-0012: Background helpers and migration examples"
-status: "Ready"
+status: "Completed"
 priority: "Medium"
 created: "2026-09-15"
 last_updated: "2026-09-15"
@@ -27,12 +27,12 @@ Document (and optionally implement) Track B background authoring helpers. Migrat
 
 ## Acceptance Criteria
 
-- [ ] Raw `data-background` / `data-background-iframe` documented as primary Track B API
-- [ ] `\slidebackground` / `\slidebackgroundiframe` added **or** explicitly deferred with rationale in CIP
-- [ ] At least one inventoried Track A loader migrated or twin-documented with `\includescript`
-- [ ] Example `slide_setup` fragment for ambient canvas implements §B3 yield/resume on `slidechanged`
-- [ ] Example slide using iframe background pattern (demonstrates ambient yielding while that slide is current)
-- [ ] Docs notes: `background:` pitfall + deck vs per-slide clash policy (for later compression)
+- [x] Raw `data-background` / `data-background-iframe` documented as primary Track B API
+- [x] `\slidebackground` / `\slidebackgroundiframe` deferred — raw `data-background*` is primary (CIP progress)
+- [x] At least one inventoried Track A loader migrated or twin-documented with `\includescript`
+- [x] Example `slide_setup` fragment for ambient canvas implements §B3 yield/resume on `slidechanged`
+- [x] Example slide using iframe background pattern (demonstrates ambient yielding while that slide is current)
+- [x] Docs notes: `background:` pitfall + deck vs per-slide clash policy (for later compression)
 - [ ] Manual spot-check notes for one live talk (e.g. Information Engines) if migration touches it
 
 ## Implementation Notes
@@ -53,3 +53,7 @@ Task created (Ready) when CIP-0012 Accepted.
 ### 2026-09-15 (later)
 
 Extended for §B3 deck ambient vs per-slide clash documentation and example behaviour.
+
+### 2026-09-15 (implementation)
+
+Completed as part of CIP-0012 implementation.

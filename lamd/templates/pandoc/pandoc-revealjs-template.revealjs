@@ -70,27 +70,6 @@ $endif$
 $for(header-includes)$
   $header-includes$
    $endfor$
-<!-- Initialize Mermaid after Reveal is loaded -->
-<script>
-  Reveal.addEventListener('ready', event => {
-    // Initialize mermaid
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: 'base',
-      // These are the same theme variables we used above
-      themeVariables: {
-          primaryColor: '#4a90e2',
-          primaryTextColor: '#fff',
-          primaryBorderColor: '#357abd',
-          lineColor: '#67b246',
-          fontSize: '30px',
-          fontFamily: 'arial',
-	  edgeLabelBackground: 'transparent',
-	  tertiaryColor: 'transparent'
-      }
-    });
-  });
-</script>
    
 </head>
 <body>
@@ -337,6 +316,28 @@ $endif$
         ]
       });
     </script>
+  <!-- Mermaid: after Reveal.initialize (CIP-0012 template hygiene) -->
+  <script>
+    if (typeof Reveal !== 'undefined' && Reveal.addEventListener) {
+      Reveal.addEventListener('ready', function () {
+        if (typeof mermaid === 'undefined') return;
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'base',
+          themeVariables: {
+            primaryColor: '#4a90e2',
+            primaryTextColor: '#fff',
+            primaryBorderColor: '#357abd',
+            lineColor: '#67b246',
+            fontSize: '30px',
+            fontFamily: 'arial',
+            edgeLabelBackground: 'transparent',
+            tertiaryColor: 'transparent'
+          }
+        });
+      });
+    }
+  </script>
   $for(include-after)$
   $include-after$
   $endfor$
