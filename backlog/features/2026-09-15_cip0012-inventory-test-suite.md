@@ -1,7 +1,7 @@
 ---
 id: "2026-09-15_cip0012-inventory-test-suite"
 title: "CIP-0012: Inventory-derived JS regression test suite"
-status: "Ready"
+status: "Completed"
 priority: "High"
 created: "2026-09-15"
 last_updated: "2026-09-15"
@@ -49,3 +49,7 @@ Follow patterns in existing unit tests for GPP/macro expansion (`tests/unit/`). 
 ### 2026-09-15
 
 Task created (Ready) when CIP-0012 Accepted.
+
+### 2026-09-15 (implementation)
+
+Completed as part of CIP-0012 implementation.

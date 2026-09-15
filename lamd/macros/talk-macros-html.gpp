@@ -122,4 +122,8 @@ Table: \captionContents
 
 \define{\jekyllinclude{filename}}{\{%-include \filename-%\}}
 
+<!-- CIP-0012 Track A: content script load. Once-guard with alphanumeric
+     names stays in the surrounding ifndef wrapper (GPP ifndef limitation). -->
+\define{\includescript{relpath}}{<script src="\scriptsDir/\relpath"></script>}
+
 \endif

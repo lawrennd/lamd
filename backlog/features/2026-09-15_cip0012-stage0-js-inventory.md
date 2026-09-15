@@ -1,7 +1,7 @@
 ---
 id: "2026-09-15_cip0012-stage0-js-inventory"
 title: "CIP-0012 Stage 0: Inventory JS use in snippets and talks"
-status: "Ready"
+status: "Completed"
 priority: "High"
 created: "2026-09-15"
 last_updated: "2026-09-15"
@@ -51,3 +51,7 @@ Keep the CIP as the decision document; put research detail in `cip/cip0012/`. Pr
 ### 2026-09-15
 
 Task created (Ready) when CIP-0012 Accepted.
+
+### 2026-09-15 (implementation)
+
+Completed as part of CIP-0012 implementation.

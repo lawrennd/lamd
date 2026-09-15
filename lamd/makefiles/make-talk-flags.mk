@@ -9,7 +9,7 @@
 # Write batch output to temp file to avoid Make variable issues with multiline content
 # NOTE: Always use Python mdfield for batch (mdfield-server shell script doesn't support batch)
 _FIELDS_CACHE:=$(shell mktemp)
-_FIELDS_EXTRACTED:=$(shell $(TIME_CMD) mdfield batch $(BASE).md --fields date categories layout macrosdir slidesheader postssheader assignment notation bibdir snippetsdir diagramsdir writediagramsdir postsdir practicalsdir notesdir notebooksdir slidesdir texdir week session people > $(_FIELDS_CACHE))
+_FIELDS_EXTRACTED:=$(shell $(TIME_CMD) mdfield batch $(BASE).md --fields date categories layout macrosdir slidesheader slide_setup postssheader assignment notation bibdir snippetsdir diagramsdir writediagramsdir postsdir practicalsdir notesdir notebooksdir slidesdir texdir week session people > $(_FIELDS_CACHE))
 
 # Parse individual fields from batch output
 DATE:=$(shell grep '^date:' $(_FIELDS_CACHE) | sed 's/^date://')
@@ -17,6 +17,7 @@ CATEGORIES:=$(shell grep '^categories:' $(_FIELDS_CACHE) | sed 's/^categories://
 LAYOUT:=$(shell grep '^layout:' $(_FIELDS_CACHE) | sed 's/^layout://')
 MACROSDIR:=$(shell grep '^macrosdir:' $(_FIELDS_CACHE) | sed 's/^macrosdir://')
 SLIDESHEADER:=$(shell grep '^slidesheader:' $(_FIELDS_CACHE) | sed 's/^slidesheader://')
+SLIDESETUP:=$(shell grep '^slide_setup:' $(_FIELDS_CACHE) | sed 's/^slide_setup://')
 POSTSHEADER:=$(shell grep '^postssheader:' $(_FIELDS_CACHE) | sed 's/^postssheader://')
 ASSIGNMENT:=$(shell grep '^assignment:' $(_FIELDS_CACHE) | sed 's/^assignment://')
 NOTATION:=$(shell grep '^notation:' $(_FIELDS_CACHE) | sed 's/^notation://')

@@ -1,7 +1,7 @@
 ---
 id: "2026-09-15_cip0012-includescript-macro"
 title: "CIP-0012 Track A: includescript macro for multi-format HTML"
-status: "Ready"
+status: "Completed"
 priority: "High"
 created: "2026-09-15"
 last_updated: "2026-09-15"
@@ -48,3 +48,7 @@ Track A must not be slides-only — that was the original CIP mistake. Exact HTM
 ### 2026-09-15
 
 Task created (Ready) when CIP-0012 Accepted.
+
+### 2026-09-15 (implementation)
+
+Completed as part of CIP-0012 implementation.

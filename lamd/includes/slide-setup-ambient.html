@@ -1,0 +1,119 @@
+<!--
+CIP-0012 reference slide_setup fragment.
+Deck ambient behind .reveal .slides; yields to per-slide data-background* (§B3).
+Place under includes/ and set: slide_setup: slide-setup-ambient.html
+-->
+<style>
+#lamd-slide-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.35;
+}
+.reveal .slides { position: relative; z-index: 1; }
+#lamd-slide-ambient.lamd-ambient-paused {
+  visibility: hidden;
+}
+</style>
+<canvas id="lamd-slide-ambient" width="1280" height="720" aria-hidden="true"></canvas>
+<script>
+(function () {
+  var canvas = document.getElementById('lamd-slide-ambient');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var running = false;
+  var raf = null;
+  var t0 = null;
+
+  function isPrintPdf() {
+    return !!(window.location.search && window.location.search.match(/print-pdf/gi));
+  }
+
+  function slideHasOwnBackground(slide) {
+    if (!slide || !slide.getAttribute) return false;
+    var attrs = [
+      'data-background',
+      'data-background-image',
+      'data-background-iframe',
+      'data-background-video',
+      'data-background-color'
+    ];
+    for (var i = 0; i < attrs.length; i++) {
+      var v = slide.getAttribute(attrs[i]);
+      if (v !== null && String(v).length > 0) return true;
+    }
+    return false;
+  }
+
+  function syncAmbientToSlide(slide) {
+    if (isPrintPdf()) {
+      pauseAmbient();
+      canvas.classList.add('lamd-ambient-paused');
+      return;
+    }
+    if (slideHasOwnBackground(slide)) {
+      pauseAmbient();
+      canvas.classList.add('lamd-ambient-paused');
+    } else {
+      canvas.classList.remove('lamd-ambient-paused');
+      startAmbient();
+    }
+  }
+
+  function draw(ts) {
+    if (!running) return;
+    if (t0 === null) t0 = ts;
+    var t = (ts - t0) / 1000;
+    var w = canvas.width;
+    var h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#0b1220';
+    ctx.fillRect(0, 0, w, h);
+    for (var i = 0; i < 24; i++) {
+      var x = (Math.sin(t * 0.4 + i) * 0.5 + 0.5) * w;
+      var y = (Math.cos(t * 0.33 + i * 0.7) * 0.5 + 0.5) * h;
+      ctx.beginPath();
+      ctx.arc(x, y, 3 + (i % 4), 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(120, 180, 255, 0.55)';
+      ctx.fill();
+    }
+    raf = requestAnimationFrame(draw);
+  }
+
+  function startAmbient() {
+    if (running || isPrintPdf()) return;
+    running = true;
+    t0 = null;
+    raf = requestAnimationFrame(draw);
+  }
+
+  function pauseAmbient() {
+    running = false;
+    if (raf !== null) {
+      cancelAnimationFrame(raf);
+      raf = null;
+    }
+  }
+
+  function onReady() {
+    var revealRoot = document.querySelector('.reveal');
+    if (revealRoot && canvas.parentNode !== revealRoot) {
+      revealRoot.insertBefore(canvas, revealRoot.firstChild);
+    }
+    var slide = (typeof Reveal !== 'undefined' && Reveal.getCurrentSlide)
+      ? Reveal.getCurrentSlide()
+      : null;
+    syncAmbientToSlide(slide);
+  }
+
+  if (typeof Reveal !== 'undefined' && Reveal.addEventListener) {
+    Reveal.addEventListener('ready', onReady);
+    Reveal.addEventListener('slidechanged', function (e) {
+      syncAmbientToSlide(e.currentSlide);
+    });
+  } else {
+    document.addEventListener('DOMContentLoaded', onReady);
+  }
+})();
+</script>
