@@ -23,25 +23,25 @@ tags:
 
 ## Description
 
-Document (and optionally implement) Track B background authoring helpers. Migrate or twin at least one inventoried content loader to `\includescript`. Provide a minimal `slide_setup` ambient example and one iframe-background slide example. Document the frontmatter `background:` pitfall (layout numbering ≠ slide background).
+Document (and optionally implement) Track B background authoring helpers. Migrate or twin at least one inventoried content loader to `\includescript`. Provide a minimal `slide_setup` ambient example and one iframe-background slide example. Document the frontmatter `background:` pitfall and **§B3 clash policy** (deck ambient vs per-slide, including shared snippet slides).
 
 ## Acceptance Criteria
 
 - [ ] Raw `data-background` / `data-background-iframe` documented as primary Track B API
 - [ ] `\slidebackground` / `\slidebackgroundiframe` added **or** explicitly deferred with rationale in CIP
 - [ ] At least one inventoried Track A loader migrated or twin-documented with `\includescript`
-- [ ] Example `slide_setup` fragment for ambient canvas (or equivalent) under includes / `_scripts`
-- [ ] Example slide using iframe background pattern
-- [ ] `background:` vs slide background pitfall written for later docs compression
+- [ ] Example `slide_setup` fragment for ambient canvas implements §B3 yield/resume on `slidechanged`
+- [ ] Example slide using iframe background pattern (demonstrates ambient yielding while that slide is current)
+- [ ] Docs notes: `background:` pitfall + deck vs per-slide clash policy (for later compression)
 - [ ] Manual spot-check notes for one live talk (e.g. Information Engines) if migration touches it
 
 ## Implementation Notes
 
-Helpers only if they nest cleanly inside `\newslide`’s second argument; otherwise keep raw attributes.
+Helpers only if they nest cleanly inside `\newslide`’s second argument; otherwise keep raw attributes. Shared snippet `\newslide{…}{data-background=…}` is per-slide precedence, not a third tier.
 
 ## Related
 
-- CIP: 0012
+- CIP: 0012 §B3
 - Depends on: slide_setup + includescript tasks
 
 ## Progress Updates
@@ -49,3 +49,7 @@ Helpers only if they nest cleanly inside `\newslide`’s second argument; otherw
 ### 2026-09-15
 
 Task created (Ready) when CIP-0012 Accepted.
+
+### 2026-09-15 (later)
+
+Extended for §B3 deck ambient vs per-slide clash documentation and example behaviour.
