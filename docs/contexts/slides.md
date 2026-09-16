@@ -16,6 +16,19 @@ The slides context is used when creating presentations. Content in this context 
     Args:
         title: Title of the slide
         attrs: Space-separated attributes, e.g. data-background="…" or .scrollable
+
+\section{title}
+    Creates a section-divider slide (title only).
+    Args:
+        title: Section heading
+
+\section{title}{attrs}
+    Section-divider slide with Reveal attributes (HTML slides).
+    Args:
+        title: Section heading
+        attrs: Space-separated attributes, e.g. data-background-color="…" or data-state="…"
+    If attrs is empty and sectionSlideBackground is defined, that default is used
+    (Trent decks set data-state="trent-section" for a CSS gradient backdrop).
 ```
 
 ### JavaScript: content scripts vs Reveal setup
@@ -25,7 +38,7 @@ Two separate concerns (do not mix them):
 | Track | Role | Where it runs | Authoring |
 |-------|------|---------------|-----------|
 | **A — Content scripts** | Interactive widgets in figures / body | All HTML outputs (slides, notes, notebooks) | `\includescript{relpath}` under `scriptsDir` |
-| **B — Reveal setup & backgrounds** | Deck chrome and full-bleed backdrops | Reveal HTML slides only | `slide_setup` frontmatter; `\newslide{…}{data-background…}` |
+| **B — Reveal setup & backgrounds** | Deck chrome and full-bleed backdrops | Reveal HTML slides only | `slide_setup` frontmatter; `\newslide{…}{data-background…}`; `\section{…}{attrs}` |
 
 **Rule of thumb:** if the interaction still makes sense without Reveal, it is Track A. If it is “behind the deck” or “this slide’s backdrop,” it is Track B.
 

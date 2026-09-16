@@ -27,7 +27,7 @@
 }
 \define{\endanimation}{}
 
-\define{\section{text}}{# \text
+\define{\section{text}{commands}}{# \text
 
 \ifdef{editText}\editText\undef{editText}\endif
 

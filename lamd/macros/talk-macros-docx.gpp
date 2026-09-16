@@ -29,7 +29,7 @@
 \define{\colorgreen{block}}{{\color{\greenColor} \block}}
 \define{\colorblue{block}}{{\color{\blueColor} \block}}
 
-\define{\section{text}}{# \text
+\define{\section{text}{commands}}{# \text
 
 \ifdef{editText}\editText\undef{editText}\endif
 
