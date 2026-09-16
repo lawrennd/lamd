@@ -4,7 +4,7 @@
 \include{talk-macros-notes-html.gpp}
 
 
-\define{\section{text}}{\endCell
+\define{\section{text}{commands}}{\endCell
 
 \startMarkdownCell
 # \text \ifdef{editText}

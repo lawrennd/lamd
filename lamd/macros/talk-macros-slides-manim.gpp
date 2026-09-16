@@ -17,7 +17,7 @@
         self.next_slide()
         self.play(FadeIn(lamd_text(r"""\title""")))}
 
-\define{\section{title}}{
+\define{\section{title}{commands}}{
         self.next_slide()
         self.play(FadeIn(lamd_text(r"""\title""")))}
 
