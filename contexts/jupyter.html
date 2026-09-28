@@ -242,7 +242,7 @@ plt.plot(x, np.sin(x))
 test_data = np.random.randn(100, 3)
 result = process_data(test_data)
 assert result.shape == (3,)
-print(&quot;Test passed!&quot;)
+print("Test passed!")
 }
 </pre></div>
 </div>
@@ -264,7 +264,7 @@ def plot_gaussian(mu=0, sigma=1):
     x = np.linspace(mu - 4<span class="ge">*sigma, mu + 4*</span>sigma, 100)
     y = 1/(sigma * np.sqrt(2*np.pi)) * np.exp(-(x-mu)**2/(2*sigma**2))
     plt.plot(x, y)
-    plt.title(f&#39;Gaussian (μ={mu}, σ={sigma})&#39;)
+    plt.title(f'Gaussian (μ={mu}, σ={sigma})')
 }
 
 \plotcode{

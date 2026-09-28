@@ -49,6 +49,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Presentation Context</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#key-macros">Key Macros</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#slide-creation">Slide Creation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#javascript-content-scripts-vs-reveal-setup">JavaScript: content scripts vs Reveal setup</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#content-control">Content Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#animation-control">Animation Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#presenter-notes">Presenter Notes</a></li>
@@ -114,8 +115,75 @@
     Creates a new slide
     Args:
         title: Title of the slide
+
+\newslide{title}{attrs}
+    Creates a new slide with Reveal section attributes (HTML slides).
+    Args:
+        title: Title of the slide
+        attrs: Space-separated attributes, e.g. data-background="…" or .scrollable
+
+\section{title}
+    Creates a section-divider slide (title only).
+    Args:
+        title: Section heading
+
+\section{title}{attrs}
+    Section-divider slide with Reveal attributes (HTML slides).
+    Args:
+        title: Section heading
+        attrs: Space-separated attributes, e.g. data-background-color="…" or data-state="…"
+    If attrs is empty and sectionSlideBackground is defined, that default is used
+    (Trent decks set data-state="trent-section" for a CSS gradient backdrop).
 </pre></div>
 </div>
+</section>
+<section id="javascript-content-scripts-vs-reveal-setup">
+<h3>JavaScript: content scripts vs Reveal setup<a class="headerlink" href="#javascript-content-scripts-vs-reveal-setup" title="Link to this heading"></a></h3>
+<p>Two separate concerns (do not mix them):</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Track</p></th>
+<th class="head"><p>Role</p></th>
+<th class="head"><p>Where it runs</p></th>
+<th class="head"><p>Authoring</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>A — Content scripts</strong></p></td>
+<td><p>Interactive widgets in figures / body</p></td>
+<td><p>All HTML outputs (slides, notes, notebooks)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">\includescript{relpath}</span></code> under <code class="docutils literal notranslate"><span class="pre">scriptsDir</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>B — Reveal setup &amp; backgrounds</strong></p></td>
+<td><p>Deck chrome and full-bleed backdrops</p></td>
+<td><p>Reveal HTML slides only</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">slide_setup</span></code> frontmatter; <code class="docutils literal notranslate"><span class="pre">\newslide{…}{data-background…}</span></code>; <code class="docutils literal notranslate"><span class="pre">\section{…}{attrs}</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule of thumb:</strong> if the interaction still makes sense without Reveal, it is Track A. If it is “behind the deck” or “this slide’s backdrop,” it is Track B.</p>
+<section id="track-a-includescript">
+<h4>Track A — <code class="docutils literal notranslate"><span class="pre">\includescript</span></code><a class="headerlink" href="#track-a-includescript" title="Link to this heading"></a></h4>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\includescript{ballworld/ballworld.js}
+</pre></div>
+</div>
+<p>Emits <code class="docutils literal notranslate"><span class="pre">&lt;script</span> <span class="pre">src=&quot;…/scriptsDir/…&quot;&gt;</span></code> in HTML formats; no-op in TeX/PPTX. Prefer this over hand-written <code class="docutils literal notranslate"><span class="pre">&lt;script&gt;</span></code> tags in snippets. GPP <code class="docutils literal notranslate"><span class="pre">\ifndef</span></code> once-guards only accept <code class="docutils literal notranslate"><span class="pre">[A-Za-z0-9_]</span></code>, so wrap loaders in alphanumeric defines (e.g. <code class="docutils literal notranslate"><span class="pre">\ifndef{ballworldJs}</span></code>), not path-shaped names.</p>
+</section>
+<section id="track-b-slide-setup-and-backgrounds">
+<h4>Track B — <code class="docutils literal notranslate"><span class="pre">slide_setup</span></code> and backgrounds<a class="headerlink" href="#track-b-slide-setup-and-backgrounds" title="Link to this heading"></a></h4>
+<p>Optional frontmatter (filename under lamd <code class="docutils literal notranslate"><span class="pre">includes/</span></code>):</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">slide_setup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slide-setup-ambient.html</span>
+</pre></div>
+</div>
+<p>When set, the slides makefile passes <code class="docutils literal notranslate"><span class="pre">--include-after-body</span></code> so the fragment runs <strong>after</strong> <code class="docutils literal notranslate"><span class="pre">Reveal.initialize</span></code> (correct place for Reveal API / ambient animation). Leave unset for most decks — default <code class="docutils literal notranslate"><span class="pre">slidesheader</span></code> stays for MathJax / figure-animate only.</p>
+<p>Per-slide backgrounds use Reveal <code class="docutils literal notranslate"><span class="pre">data-background*</span></code> on the section:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\newslide{Title}{data-background-image="diagrams/bg.svg"}
+\includeplotly{plots/myplot}{100%}{100%}
+</pre></div>
+</div>
+<p><strong>Clash policy:</strong> a slide with its own <code class="docutils literal notranslate"><span class="pre">data-background*</span></code> wins; deck ambient from <code class="docutils literal notranslate"><span class="pre">slide_setup</span></code> should yield/pause on that slide. Reference: <code class="docutils literal notranslate"><span class="pre">lamd/includes/slide-setup-ambient.html</span></code>.</p>
+<p><strong>Pitfall:</strong> YAML frontmatter <code class="docutils literal notranslate"><span class="pre">background:</span></code> is a <em>layout numbering</em> field, not a visual slide background.</p>
+</section>
 </section>
 <section id="content-control">
 <h3>Content Control<a class="headerlink" href="#content-control" title="Link to this heading"></a></h3>
@@ -132,7 +200,7 @@
     Creates animated elements in reveal.js
     Args:
         text: Content to animate
-        type: Animation type (e.g., &#39;fade-in&#39;, &#39;grow&#39;)
+        type: Animation type (e.g., 'fade-in', 'grow')
 </pre></div>
 </div>
 </section>
@@ -164,7 +232,7 @@ single slide).</p>
         finish: Maximum slider value. Should equal start + (number of frames − 1)
                 when using consecutive numbering.
         name: Human-readable title shown beside the controls and used as the
-              container&#39;s ARIA label. May be empty if you use the three-argument form
+              container's ARIA label. May be empty if you use the three-argument form
               via <span class="sb">`\startslides{group}{start}{finish}`</span>.
 
 \newframe{contents}{name}{style}
@@ -202,7 +270,7 @@ same <code class="docutils literal notranslate"><span class="pre">group</span></
 <h4>JavaScript dependency<a class="headerlink" href="#javascript-dependency" title="Link to this heading"></a></h4>
 <p>HTML slide builds load <code class="docutils literal notranslate"><span class="pre">figure-animate.js</span></code> from the slides header template
 (<code class="docutils literal notranslate"><span class="pre">lamd/includes/slides-header.html</span></code>):</p>
-<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://inverseprobability.com/assets/js/figure-animate.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">"https://inverseprobability.com/assets/js/figure-animate.js"</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
 <span class="w">  </span><span class="cm">/* lamdFrameIndex, lamdSetDivs, lamdPlusDivs — see slides-header.html */</span>
 <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
@@ -438,13 +506,15 @@ Remember to mention real-world applications for each type
 <li><p>Consider both HTML and PPTX output when formatting</p></li>
 <li><p>For multi-frame diagrams, use <code class="docutils literal notranslate"><span class="pre">\startanimation</span></code>/<code class="docutils literal notranslate"><span class="pre">\newframe</span></code>/<code class="docutils literal notranslate"><span class="pre">\endanimation</span></code> and repeat
 the same <code class="docutils literal notranslate"><span class="pre">group</span></code> class on every frame (see Frame Animations above)</p></li>
+<li><p>Put figure widgets behind <code class="docutils literal notranslate"><span class="pre">\includescript</span></code>; put Reveal chrome / ambient animation in
+<code class="docutils literal notranslate"><span class="pre">slide_setup</span></code> (see JavaScript tracks above) — do not put deck setup in <code class="docutils literal notranslate"><span class="pre">slidesheader</span></code></p></li>
 </ol>
 <section id="colored-math-in-pptx">
 <h3>Colored math in PPTX<a class="headerlink" href="#colored-math-in-pptx" title="Link to this heading"></a></h3>
 <p>PowerPoint output converts display math through pandoc’s TeX→OMML converter. That path
 does not support LaTeX <code class="docutils literal notranslate"><span class="pre">\color{...}{...}</span></code> inside <code class="docutils literal notranslate"><span class="pre">$$...$$</span></code> blocks. If color commands
 reach pandoc unchanged, the build emits a warning such as:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[WARNING] Could not convert TeX math &#39;... {\color{red}{w_0}} ...&#39;, rendering as TeX
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[WARNING] Could not convert TeX math '... {\color{red}{w_0}} ...', rendering as TeX
 </pre></div>
 </div>
 <p>and the equation may not render correctly in PowerPoint.</p>
