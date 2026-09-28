@@ -75,7 +75,7 @@ def _process_inline_segment(
     """
     from manim import MarkupText, MathTex
 
-    mobjects = []
+    mobjects: List[Any] = []
     parts = _INLINE_MATH_RE.split(text)
     for i, part in enumerate(parts):
         if not part or not part.strip():
