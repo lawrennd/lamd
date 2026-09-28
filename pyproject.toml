@@ -24,12 +24,12 @@ referia = { git = "https://github.com/lawrennd/referia.git", rev = "000328a14625
 gspread-pandas = ">=4.0.0,<5"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.2"
+pytest = ">=7.2,<10.0"
 pytest-cov = "^4.0"
 pytest-mock = "^3.3.1"
-deepdiff = "^6.6.0"
+deepdiff = ">=6.6,<9.0"
 types-pyyaml = "^6.0.12.20250516"
-black = "^24.2.0"
+black = ">=24.2,<27.0"
 isort = "^5.13.2"
 flake8 = "^7.0.0"
 mypy = "^1.8.0"
