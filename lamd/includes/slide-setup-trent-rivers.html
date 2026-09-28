@@ -81,12 +81,14 @@ html.reveal-full-page body {
 }
 #lamd-trent-logo {
   position: fixed !important;
-  top: 48px;
-  right: 18px;
+  /* Track Reveal deck scale so the mark stays aligned with river projection
+     (rivers pin Trent Falls to this logo; see logoJoinScreen / project). */
+  top: calc(48px * var(--slide-scale, 1));
+  right: calc(18px * var(--slide-scale, 1));
   /* Above Reveal slide sections (z-index 11) and progress (10). */
   z-index: 20;
   pointer-events: none;
-  width: 156px;
+  width: calc(156px * var(--slide-scale, 1));
   height: auto;
   opacity: 0.92;
   line-height: 0;
@@ -271,16 +273,20 @@ window.LAMD_TRENT_RIVERS = {"type":"FeatureCollection","properties":{"source":"O
     var NET_ROT = -0.08; // radians; negative = visual CCW with y-down
     var M_PER_DEG_LAT = 111320;
     var M_PER_DEG_LON = 111320 * Math.cos(JOIN_LAT * Math.PI / 180);
-    markDPx = LOGO_W * (LOGO_VB_MARK_D / LOGO_VB_W);
-    var pxPerM = markDPx / (MARK_DIAMETER_KM * 1000);
+    // Join + metres→px recompute from --slide-scale each frame so rivers
+    // stay pinned to the scaled logo chrome (not fixed CSS pixels).
     logoJoinScreen = function (w) {
-      var s = LOGO_W / LOGO_VB_W;
+      var L = logoLayout();
+      var s = L.w / LOGO_VB_W;
       return [
-        w - LOGO_RIGHT - LOGO_W + MARK_JOIN_X * s,
-        LOGO_TOP + MARK_JOIN_Y * s
+        w - L.right - L.w + MARK_JOIN_X * s,
+        L.top + MARK_JOIN_Y * s
       ];
     };
     project = function (lon, lat, w, h) {
+      var L = logoLayout();
+      markDPx = L.w * (LOGO_VB_MARK_D / LOGO_VB_W);
+      var pxPerM = markDPx / (MARK_DIAMETER_KM * 1000);
       var t = logoJoinScreen(w);
       // Local equirectangular metres from Trent Falls (+E, +N).
       var east = (lon - JOIN_LON) * M_PER_DEG_LON;
@@ -292,6 +298,7 @@ window.LAMD_TRENT_RIVERS = {"type":"FeatureCollection","properties":{"source":"O
       // Screen: +x east, +y down → north is −y.
       return [t[0] + pxPerM * re, t[1] - pxPerM * rn];
     };
+    markDPx = logoLayout().w * (LOGO_VB_MARK_D / LOGO_VB_W);
     // Basin axis ~SW→NE (source→mouth). Sample network points for seeds.
     networkSamples = [];
     for (var k = 0; k < list.length; k++) {
@@ -327,13 +334,27 @@ window.LAMD_TRENT_RIVERS = {"type":"FeatureCollection","properties":{"source":"O
   var seedPathIndex = -1;
   // Debug freeze for screenshots (?ambient=hold|early|alt); null in live play.
   var debugPhase = null;
-  // Logo chrome layout — IIFE scope so draw()'s soft wipe can read them.
+  // Logo chrome layout at scale=1 — multiplied by --slide-scale / Reveal.getScale().
   var LOGO_W = 156;
   var LOGO_TOP = 48;
   var LOGO_RIGHT = 18;
   // Logo mark screen helpers — set in buildPaths for soft wipe under the SVG.
   var logoJoinScreen = null;
   var markDPx = 0;
+
+  function getSlideScale() {
+    var raw = getComputedStyle(document.documentElement).getPropertyValue('--slide-scale').trim();
+    var s = parseFloat(raw);
+    if ((!s || !isFinite(s)) && typeof Reveal !== 'undefined' && typeof Reveal.getScale === 'function') {
+      try { s = Reveal.getScale(); } catch (e) { s = 1; }
+    }
+    return (s > 0 && isFinite(s)) ? s : 1;
+  }
+
+  function logoLayout() {
+    var s = getSlideScale();
+    return { scale: s, w: LOGO_W * s, top: LOGO_TOP * s, right: LOGO_RIGHT * s };
+  }
 
   function cyclePhase(t) {
     var cycle = Math.floor(t / CYCLE_S);
@@ -569,13 +590,14 @@ window.LAMD_TRENT_RIVERS = {"type":"FeatureCollection","properties":{"source":"O
     }
 
     var a = phase.alpha;
+    var sc = getSlideScale();
     // Soften the main stem during unfurl so it doesn't dominate; full weight on hold.
     // Keep rivers quieter than slide text (foreground stays primary).
     var mainBoost = (phase.kind === 'unfurl') ? (0.55 + 0.45 * local) : 1;
     if (p.isMain) {
-      strokeRange(2.0 * mainBoost, 'rgba(245, 130, 31, ' + (0.32 * mainBoost * a) + ')');
+      strokeRange(2.0 * mainBoost * sc, 'rgba(245, 130, 31, ' + (0.32 * mainBoost * a) + ')');
     } else {
-      strokeRange(1.45, 'rgba(245, 130, 31, ' + (0.36 * a) + ')');
+      strokeRange(1.45 * sc, 'rgba(245, 130, 31, ' + (0.36 * a) + ')');
     }
 
     // Single tip glow on the seed-bearing path while it is still growing
@@ -597,7 +619,7 @@ window.LAMD_TRENT_RIVERS = {"type":"FeatureCollection","properties":{"source":"O
           hx = pts[i][0];
           hy = pts[i][1];
         }
-        var glowR = 16;
+        var glowR = 16 * sc;
         var glow = ctx.createRadialGradient(hx, hy, 0, hx, hy, glowR);
         glow.addColorStop(0, 'rgba(255, 200, 80, ' + (0.28 * a) + ')');
         glow.addColorStop(1, 'rgba(245, 130, 31, 0)');
@@ -648,9 +670,11 @@ window.LAMD_TRENT_RIVERS = {"type":"FeatureCollection","properties":{"source":"O
       // rivers are cleared under the full wordmark so faceted chords never
       // sit beside the sharp SVG mark.
       if (logoJoinScreen && markDPx > 0) {
+        var L = logoLayout();
         var mj = logoJoinScreen(w);
-        var logoLeft = w - LOGO_RIGHT - LOGO_W;
-        var logoTop = LOGO_TOP;
+        var logoLeft = w - L.right - L.w;
+        var logoTop = L.top;
+        markDPx = L.w * (95.06 / 290);
         ctx.save();
         ctx.globalCompositeOperation = 'destination-out';
         // Hard clear under mark circle.
@@ -659,11 +683,11 @@ window.LAMD_TRENT_RIVERS = {"type":"FeatureCollection","properties":{"source":"O
         ctx.arc(mj[0], mj[1], markDPx * 0.78, 0, Math.PI * 2);
         ctx.fill();
         // Soft ellipse covering mark + "trent" wordmark (+ approach zone).
-        var cx = logoLeft + LOGO_W * 0.55;
-        var cy = logoTop + 42;
-        var wipeRx = LOGO_W * 0.88;
-        var wipeRy = 72;
-        var wipe = ctx.createRadialGradient(cx, cy, 8, cx, cy, wipeRx);
+        var cx = logoLeft + L.w * 0.55;
+        var cy = logoTop + 42 * L.scale;
+        var wipeRx = L.w * 0.88;
+        var wipeRy = 72 * L.scale;
+        var wipe = ctx.createRadialGradient(cx, cy, 8 * L.scale, cx, cy, wipeRx);
         wipe.addColorStop(0, 'rgba(0,0,0,0.98)');
         wipe.addColorStop(0.45, 'rgba(0,0,0,0.7)');
         wipe.addColorStop(0.8, 'rgba(0,0,0,0.2)');

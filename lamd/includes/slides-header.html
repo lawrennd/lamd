@@ -35,3 +35,39 @@ function lamdPlusDivs(n, group) {
   showDivs(slideIndex, group);
 }
 </script>
+<script>
+/* Theme chrome (logos) sits on Reveal's full-viewport .slide-background,
+   which does not receive the deck transform. Sync --slide-scale so CSS can
+   size that chrome with the slides (see ai-cam.css / mlatcl.css / trent.css). */
+(function () {
+  var bound = false;
+  function syncSlideScale() {
+    if (typeof Reveal === "undefined" || typeof Reveal.getScale !== "function") return false;
+    try {
+      var s = Reveal.getScale();
+      if (!s || !isFinite(s)) return false;
+      document.documentElement.style.setProperty("--slide-scale", String(s));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  function bind() {
+    if (bound) return typeof Reveal !== "undefined";
+    if (typeof Reveal === "undefined" || typeof Reveal.addEventListener !== "function") return false;
+    Reveal.addEventListener("ready", syncSlideScale);
+    window.addEventListener("resize", function () {
+      setTimeout(syncSlideScale, 0);
+      setTimeout(syncSlideScale, 50);
+    });
+    bound = true;
+    return true;
+  }
+  var n = 0;
+  var t = setInterval(function () {
+    bind();
+    /* Keep polling until getScale() works — Reveal exists before initialize. */
+    if (syncSlideScale() || ++n > 200) clearInterval(t);
+  }, 50);
+})();
+</script>
