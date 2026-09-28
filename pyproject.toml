@@ -16,11 +16,12 @@ include = [
 
 [tool.poetry.dependencies]
 python = ">=3.11,<4.0"
-lynguine = { git = "https://github.com/lawrennd/lynguine.git", branch = "main" } # You might need to specify a version if the repository has tags.
+lynguine = { git = "https://github.com/lawrennd/lynguine.git", rev = "e6095b66d1dc942ff8f8d28749c4a2b7c91bbe7c" }
 python-frontmatter = "*"
 pandas = "*"
 python-liquid = "*"
-referia = { git = "https://github.com/lawrennd/referia.git", branch = "main" }
+referia = { git = "https://github.com/lawrennd/referia.git", rev = "000328a14625a57de4bf791d103ac07cde78e7b7" }
+gspread-pandas = ">=4.0.0,<5"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2"
