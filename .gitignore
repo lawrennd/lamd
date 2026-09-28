@@ -18,9 +18,6 @@ coverage.xml
 # Log files
 *.log
 
-# Poetry
-poetry.lock
-
 # Sphinx documentation
 docs/_build/
 
