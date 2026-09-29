@@ -16,7 +16,7 @@
         'mlai': 'git+https://github.com/lawrennd/mlai.git',
         'pods': 'pods',
         'PyDeepGP': 'git+https://github.com/SheffieldML/PyDeepGP.git',
-        'notutils': 'notutils',
+        'notutils': 'git+https://github.com/lawrennd/notutils.git',
         'pods' : 'git+https://github.com/lawrennd/ods.git',
         'lamd': 'lamd',
         'GPy': 'gpy',
@@ -30,10 +30,10 @@
             return f'pip install {imp}'
     else:
         return f'echo "Package {imp} is already installed."'}
-\else
+\endif
 \setupcode{cmd = install_command('\library')}
 \setupcode{%system {cmd}}
-\endif}
+}
 
 \define{\setupcode{block}}{\pythonblockstart
 \block
