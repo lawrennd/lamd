@@ -30,10 +30,10 @@
             return f'pip install {imp}'
     else:
         return f'echo "Package {imp} is already installed."'}
-\else
+\endif
 \setupcode{cmd = install_command('\library')}
 \setupcode{%system {cmd}}
-\endif}
+}
 
 \define{\setupcode{block}}{\pythonblockstart
 \block
