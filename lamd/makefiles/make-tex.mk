@@ -5,6 +5,26 @@
 	sed -i -e 's/height=\(.*\)\%/height=0.\1\\textheight/g' $@
 
 
+# Exercise sheets (CIP-0013): no forced bibliography / bibtex.
+ifeq ($(TEX_TEMPLATE),exercise)
+
+${BASE}.notes.pdf: ${BASE}.notes.aux ${BASE}.notes.tex
+	pdflatex -shell-escape ${BASE}.notes.tex
+	cp ${BASE}.notes.pdf ${NOTESDIR}/${OUT}.notes.pdf
+
+${BASE}.notes.aux: ${BASE}.notes.tex
+	pdflatex -shell-escape ${BASE}.notes.tex
+
+${BASE}.notes.tex: ${BASE}.notes.tex.markdown 
+	pandoc  -s \
+		--template ${NOTES_TEX_TEMPLATE} \
+		--number-sections \
+		-B ${INCLUDESDIR}/${NOTATION} \
+		-o ${BASE}.notes.tex  \
+		${BASE}.notes.tex.markdown 
+
+else
+
 ${BASE}.notes.pdf: ${BASE}.notes.aux ${BASE}.notes.bbl ${BASE}.notes.tex
 	pdflatex -shell-escape ${BASE}.notes.tex
 	cp ${BASE}.notes.pdf ${NOTESDIR}/${OUT}.notes.pdf
@@ -15,16 +35,17 @@ ${BASE}.notes.bbl: ${BASE}.notes.aux ${BIBDEPS}
 ${BASE}.notes.aux: ${BASE}.notes.tex
 	pdflatex -shell-escape ${BASE}.notes.tex
 
-
 ${BASE}.notes.tex: ${BASE}.notes.tex.markdown 
 	pandoc  -s \
-		--template ${TEMPLATESDIR}/pandoc/pandoc-notes-tex-template.tex \
+		--template ${NOTES_TEX_TEMPLATE} \
 		--number-sections \
 		--natbib \
 		${BIBFLAGS} \
-		-B ../_includes/${NOTATION} \
+		-B ${INCLUDESDIR}/${NOTATION} \
 		-o ${BASE}.notes.tex  \
 		${BASE}.notes.tex.markdown 
+
+endif
 
 ${BASE}.include.tex: ${BASE}.notes.tex.markdown ${TEXDEPS}
 	pandoc  -s \
@@ -32,7 +53,7 @@ ${BASE}.include.tex: ${BASE}.notes.tex.markdown ${TEXDEPS}
 		--number-sections \
 		--natbib \
 		${BIBFLAGS} \
-		-B ../_includes/${NOTATION} \
+		-B ${INCLUDESDIR}/${NOTATION} \
 		-o ${BASE}.include.tex  \
 		${BASE}.notes.tex.markdown 
 	cp ${BASE}.include.tex ${TEXDIR}/${BASE}.include.tex

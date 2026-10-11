@@ -1,7 +1,7 @@
 ---
 id: "0011"
 title: "Authors can produce lean exercise-sheet PDFs from LaMD sources"
-status: "Proposed"
+status: "Implemented"
 priority: "Medium"
 created: "2026-10-11"
 last_updated: "2026-10-11"
@@ -32,10 +32,10 @@ Lecture notes PDFs that are not worksheets must keep their existing appearance u
 
 ## Acceptance Criteria
 
-- [ ] Authors can select an exercise-sheet LaTeX layout for notes PDF from frontmatter (explicitly, or by a documented convenience when the source is an assignment).
-- [ ] Exercise-sheet PDFs omit unused bibliography steps when the document has no citations.
-- [ ] Default notes PDF behaviour for non-exercise sources is unchanged.
-- [ ] At least one real worksheet (e.g. IEI Worksheet 1) builds cleanly with the exercise layout.
+- [x] Authors can select an exercise-sheet LaTeX layout for notes PDF from frontmatter (explicitly, or by a documented convenience when the source is an assignment).
+- [x] Exercise-sheet PDFs omit unused bibliography steps when the document has no citations.
+- [x] Default notes PDF behaviour for non-exercise sources is unchanged.
+- [x] At least one real worksheet (e.g. IEI Worksheet 1) builds cleanly with the exercise layout.
 
 ## Notes (Optional)
 
@@ -49,3 +49,9 @@ Related bug: empty bibtex failure on citation-free notes PDFs. Related design li
 
 ### 2026-10-11
 Requirement drafted alongside CIP-0013.
+
+### 2026-10-11 (later)
+CIP-0013 accepted; implementation started.
+
+### 2026-10-11 (impl)
+CIP-0013 implemented; Worksheet 1 builds with exercise template (2 pages).
