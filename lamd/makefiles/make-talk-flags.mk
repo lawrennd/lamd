@@ -9,7 +9,7 @@
 # Write batch output to temp file to avoid Make variable issues with multiline content
 # NOTE: Always use Python mdfield for batch (mdfield-server shell script doesn't support batch)
 _FIELDS_CACHE:=$(shell mktemp)
-_FIELDS_EXTRACTED:=$(shell $(TIME_CMD) mdfield batch $(BASE).md --fields date categories layout macrosdir slidesheader slide_setup postssheader assignment notation bibdir snippetsdir diagramsdir writediagramsdir postsdir practicalsdir notesdir notebooksdir slidesdir texdir week session people > $(_FIELDS_CACHE))
+_FIELDS_EXTRACTED:=$(shell $(TIME_CMD) mdfield batch $(BASE).md --fields date categories layout macrosdir slidesheader slide_setup postssheader assignment notation tex_template bibdir snippetsdir diagramsdir writediagramsdir postsdir practicalsdir notesdir notebooksdir slidesdir texdir week session people > $(_FIELDS_CACHE))
 
 # Parse individual fields from batch output
 DATE:=$(shell grep '^date:' $(_FIELDS_CACHE) | sed 's/^date://')
@@ -21,6 +21,23 @@ SLIDESETUP:=$(shell grep '^slide_setup:' $(_FIELDS_CACHE) | sed 's/^slide_setup:
 POSTSHEADER:=$(shell grep '^postssheader:' $(_FIELDS_CACHE) | sed 's/^postssheader://')
 ASSIGNMENT:=$(shell grep '^assignment:' $(_FIELDS_CACHE) | sed 's/^assignment://')
 NOTATION:=$(shell grep '^notation:' $(_FIELDS_CACHE) | sed 's/^notation://')
+# Package default when neither frontmatter nor _lamd.yml sets notation.
+ifeq ($(strip $(NOTATION)),)
+NOTATION=talk-notation.tex
+endif
+# Notes PDF LaTeX template: notes (default) or exercise (CIP-0013).
+# Convenience: assignment worksheets use exercise chrome unless overridden.
+TEX_TEMPLATE:=$(shell grep '^tex_template:' $(_FIELDS_CACHE) | sed 's/^tex_template://')
+ifeq ($(strip $(TEX_TEMPLATE)),)
+  ifeq ($(strip $(ASSIGNMENT)),True)
+    TEX_TEMPLATE:=exercise
+  else ifeq ($(strip $(ASSIGNMENT)),true)
+    TEX_TEMPLATE:=exercise
+  else
+    TEX_TEMPLATE:=notes
+  endif
+endif
+NOTES_TEX_TEMPLATE:=${TEMPLATESDIR}/pandoc/pandoc-$(TEX_TEMPLATE)-tex-template.tex
 BIBDIRECTORY:=$(shell grep '^bibdir:' $(_FIELDS_CACHE) | sed 's/^bibdir://')
 SNIPPETSDIR:=$(shell grep '^snippetsdir:' $(_FIELDS_CACHE) | sed 's/^snippetsdir://')
 DIAGRAMSDIR:=$(shell grep '^diagramsdir:' $(_FIELDS_CACHE) | sed 's/^diagramsdir://')

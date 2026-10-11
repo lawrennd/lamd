@@ -62,6 +62,25 @@ Start with simple architectures and gradually increase complexity as needed.
 - LaTeX papers
 - Word documents
 
+## Notes PDF templates (CIP-0013)
+
+Frontmatter field `tex_template` selects the pandoc LaTeX template for `notespdf`:
+
+| Value | Template | Use |
+|-------|----------|-----|
+| `notes` (default) | `pandoc-notes-tex-template.tex` | Lecture notes / long-form |
+| `exercise` | `pandoc-exercise-tex-template.tex` | Worksheets / assignments |
+
+Convenience: if `tex_template` is unset and `assignment: true`, the build uses `exercise`. Override with `tex_template: notes` when you need assignment macros but lecture-note chrome.
+
+Exercise PDFs skip forced bibliography / bibtex so citation-free handouts build cleanly.
+
+```yaml
+assignment: True
+notespdf: True
+tex_template: exercise   # optional when assignment is true
+```
+
 ## Best Practices
 
 1. Use clear section hierarchy
