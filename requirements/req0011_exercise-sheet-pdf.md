@@ -1,7 +1,7 @@
 ---
 id: "0011"
 title: "Authors can produce lean exercise-sheet PDFs from LaMD sources"
-status: "Implemented"
+status: "Validated"
 priority: "Medium"
 created: "2026-10-11"
 last_updated: "2026-10-11"
