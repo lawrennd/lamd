@@ -184,6 +184,49 @@
 <p><strong>Clash policy:</strong> a slide with its own <code class="docutils literal notranslate"><span class="pre">data-background*</span></code> wins; deck ambient from <code class="docutils literal notranslate"><span class="pre">slide_setup</span></code> should yield/pause on that slide. Reference: <code class="docutils literal notranslate"><span class="pre">lamd/includes/slide-setup-ambient.html</span></code>.</p>
 <p><strong>Pitfall:</strong> YAML frontmatter <code class="docutils literal notranslate"><span class="pre">background:</span></code> is a <em>layout numbering</em> field, not a visual slide background.</p>
 </section>
+<section id="typography-font-size">
+<h4>Typography (font size)<a class="headerlink" href="#typography-font-size" title="Link to this heading"></a></h4>
+<p>Deck-wide and per-slide text size for <strong>Reveal HTML</strong> (CIP-0014). Notes / notebooks / PPTX ignore these settings in v1.</p>
+<p><strong>Deck-wide</strong> (parallel to <code class="docutils literal notranslate"><span class="pre">talktheme</span></code>):</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">talkfontsize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">small</span><span class="w">   </span><span class="c1"># medium (default) | smaller/xs | small/sm | large/lg | larger/xl</span>
+</pre></div>
+</div>
+<p>Unset defaults to <code class="docutils literal notranslate"><span class="pre">medium</span></code> (no change from Reveal’s usual base). Lamd always attaches package CSS (<code class="docutils literal notranslate"><span class="pre">slide-fonts.css</span></code> + a scale override) alongside <code class="docutils literal notranslate"><span class="pre">talkcss</span></code>.</p>
+<p><strong>Per-slide</strong> (parallel to <code class="docutils literal notranslate"><span class="pre">.scrollable</span></code>), on <code class="docutils literal notranslate"><span class="pre">\newslide</span></code> / <code class="docutils literal notranslate"><span class="pre">\section</span></code> attrs:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\newslide{ELBO derivation}{.font-sm}
+\newslide{Key takeaway}{.font-lg}
+\newslide{References}{.scrollable .font-sm}
+\section{Appendix}{.font-xs}
+\newslide{Sparse}{\slidefont{lg}}
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Class / token</p></th>
+<th class="head"><p>Scale vs current deck base</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.font-xs</span></code> / <code class="docutils literal notranslate"><span class="pre">xs</span></code> / <code class="docutils literal notranslate"><span class="pre">smaller</span></code></p></td>
+<td><p>0.70</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.font-sm</span></code> / <code class="docutils literal notranslate"><span class="pre">sm</span></code> / <code class="docutils literal notranslate"><span class="pre">small</span></code></p></td>
+<td><p>0.85</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.font-md</span></code> / <code class="docutils literal notranslate"><span class="pre">md</span></code> / <code class="docutils literal notranslate"><span class="pre">medium</span></code></p></td>
+<td><p>1.00</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.font-lg</span></code> / <code class="docutils literal notranslate"><span class="pre">lg</span></code> / <code class="docutils literal notranslate"><span class="pre">large</span></code></p></td>
+<td><p>1.15</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.font-xl</span></code> / <code class="docutils literal notranslate"><span class="pre">xl</span></code> / <code class="docutils literal notranslate"><span class="pre">larger</span></code></p></td>
+<td><p>1.30</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Precedence:</strong> per-slide <code class="docutils literal notranslate"><span class="pre">.font-*</span></code> overrides deck <code class="docutils literal notranslate"><span class="pre">talkfontsize</span></code>; otherwise the deck token applies; otherwise <code class="docutils literal notranslate"><span class="pre">medium</span></code>. Use one size class per slide. <code class="docutils literal notranslate"><span class="pre">\subsection</span></code> does not take attrs in v1 — put size on <code class="docutils literal notranslate"><span class="pre">\newslide</span></code> or <code class="docutils literal notranslate"><span class="pre">\section</span></code>.</p>
+<p>Demo: <code class="docutils literal notranslate"><span class="pre">demos/cip0014-slide-fonts.html</span></code>.</p>
+</section>
 </section>
 <section id="content-control">
 <h3>Content Control<a class="headerlink" href="#content-control" title="Link to this heading"></a></h3>
