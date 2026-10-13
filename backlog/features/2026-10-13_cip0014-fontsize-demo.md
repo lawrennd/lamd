@@ -1,7 +1,7 @@
 ---
 id: "2026-10-13_cip0014-fontsize-demo"
 title: "CIP-0014: Font-size scale demo / fixture"
-status: "Ready"
+status: "Completed"
 priority: "Medium"
 created: "2026-10-13"
 last_updated: "2026-10-13"
@@ -49,3 +49,7 @@ Prefer a package-local demo under `demos/` or a unit fixture under `tests/fixtur
 ### 2026-10-13
 
 Task created (Ready) when CIP-0014 Accepted.
+
+### 2026-10-13 (implementation)
+
+Completed with CIP-0014 implementation.

@@ -1,7 +1,7 @@
 ---
 id: "2026-10-13_cip0014-compress-slides-docs"
 title: "CIP-0014: Compress font-size guidance into slides.md"
-status: "Proposed"
+status: "Completed"
 priority: "Medium"
 created: "2026-10-13"
 last_updated: "2026-10-13"
@@ -49,3 +49,7 @@ Land on Close (documentation lifecycle Phase 4), not during initial implementati
 ### 2026-10-13
 
 Task created (Proposed) when CIP-0014 Accepted; execute after Close / validation.
+
+### 2026-10-13 (implementation)
+
+Completed with CIP-0014 implementation.

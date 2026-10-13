@@ -1,7 +1,7 @@
 ---
 id: "2026-10-13_cip0014-slidefont-macros"
 title: "CIP-0014: Optional slidefont helper and subsection attrs"
-status: "Ready"
+status: "Completed"
 priority: "Medium"
 created: "2026-10-13"
 last_updated: "2026-10-13"
@@ -50,3 +50,7 @@ CIP-0014 recommends option A for v1 unless authors clearly need subsection attrs
 ### 2026-10-13
 
 Task created (Ready) when CIP-0014 Accepted.
+
+### 2026-10-13 (implementation)
+
+Completed with CIP-0014 implementation. Subsection attrs: **Decision A** (v1: size classes on `\\newslide` / `\\section` only).
