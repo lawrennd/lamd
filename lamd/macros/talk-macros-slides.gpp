@@ -64,6 +64,8 @@
 
 \endif}
 
+\define{\slidefont{size}}{.font-\size}
+
 
 \define{\newbanner{text}{color}{commands}}{
 * * * * * 

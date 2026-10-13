@@ -30,6 +30,44 @@ import lynguine.util.yaml as ny
 
 _LAMD_INCLUDES = os.path.join(os.path.dirname(__file__), "includes")
 
+# CIP-0014: talkfontsize aliases → short token (xs|sm|md|lg|xl)
+_TALKFONTSIZE_ALIASES = {
+    "xs": "xs",
+    "smaller": "xs",
+    "x-small": "xs",
+    "sm": "sm",
+    "small": "sm",
+    "md": "md",
+    "medium": "md",
+    "normal": "md",
+    "lg": "lg",
+    "large": "lg",
+    "xl": "xl",
+    "larger": "xl",
+    "x-large": "xl",
+}
+_TALKFONTSIZE_ALLOWED = "xs/smaller, sm/small, md/medium/normal, lg/large, xl/larger"
+
+
+def normalize_talkfontsize(value: str) -> str:
+    """Map a talkfontsize frontmatter value to a short token.
+
+    Returns one of ``xs``, ``sm``, ``md``, ``lg``, ``xl``.
+    Raises ``ValueError`` for unknown names.
+    """
+    key = str(value).strip().lower()
+    token = _TALKFONTSIZE_ALIASES.get(key)
+    if token is None:
+        raise ValueError(f"Unknown talkfontsize {value!r}. Allowed: {_TALKFONTSIZE_ALLOWED}.")
+    return token
+
+
+def talkfontsize_css_args(token: str = "md") -> str:
+    """Pandoc ``--css`` flags for the CIP-0014 slide font stylesheets."""
+    base = os.path.join(_LAMD_INCLUDES, "slide-fonts.css")
+    scale = os.path.join(_LAMD_INCLUDES, f"slide-fontsize-{token}.css")
+    return f" --css {base} --css {scale}"
+
 
 def resolve_reference_doc(path: str) -> str:
     """Resolve a pandoc --reference-doc path.
@@ -147,6 +185,19 @@ def main() -> int:
     talkcssarg = f" --css {talkcss}"
 
     try:
+        talkfontsize_raw = ny.header_field("talkfontsize", fields, user_file)
+    except ny.FileFormatError:
+        talkfontsize_raw = "medium"
+    if talkfontsize_raw is None or str(talkfontsize_raw).strip() == "":
+        talkfontsize_raw = "medium"
+    try:
+        talkfontsize_token = normalize_talkfontsize(talkfontsize_raw)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
+    talkfontsizearg = talkfontsize_css_args(talkfontsize_token)
+
+    try:
         layout = ny.header_field("layout", fields, user_file)
     except ny.FileFormatError:
         layout = "talk"
@@ -262,7 +313,7 @@ def main() -> int:
         print(lines)
 
     elif args.output == "reveal":
-        lines += "--slide-level 2 " + revealjs_urlarg + talkthemearg + talkcssarg
+        lines += "--slide-level 2 " + revealjs_urlarg + talkthemearg + talkcssarg + talkfontsizearg
         print(lines)
 
     elif args.output == "pp":

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>CIP-0014 — Slide font-size scale demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="https://unpkg.com/reveal.js@3.9.2/css/reveal.css"/>
+<link rel="stylesheet" href="https://unpkg.com/reveal.js@3.9.2/css/theme/black.css"/>
+<link rel="stylesheet" href="../lamd/includes/slide-fonts.css"/>
+<link rel="stylesheet" href="../lamd/includes/slide-fontsize-sm.css"/>
+<style>
+  html, body { background: #111 !important; }
+  .reveal h1 { font-size: 1.6em; text-transform: none; margin-bottom: 0.4em; }
+  .reveal h2 { font-size: 1.2em; text-transform: none; }
+  .reveal .slides section {
+    text-align: left;
+    color: #fff;
+  }
+  .reveal .center { text-align: center; }
+  .pill {
+    display: inline-block;
+    padding: 0.15em 0.55em;
+    border-radius: 999px;
+    font-size: 0.45em;
+    letter-spacing: 0.04em;
+    background: rgba(120, 180, 255, 0.2);
+    border: 1px solid rgba(120, 180, 255, 0.5);
+    color: #d7e8ff;
+  }
+  .muted { color: #c5d4e6; font-size: 0.85em; }
+  code {
+    background: rgba(0,0,0,0.45);
+    padding: 0.08em 0.3em;
+    border-radius: 4px;
+    color: #ffe6a8;
+  }
+  .scrollable {
+    height: 520px;
+    overflow-y: auto !important;
+  }
+</style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <section class="center">
+      <p><span class="pill">CIP-0014</span></p>
+      <h1>Slide font sizes</h1>
+      <p class="muted">Deck <code>talkfontsize: small</code> (0.85×). Per-slide classes override.</p>
+      <p class="muted">Press →</p>
+    </section>
+
+    <section>
+      <h2>Deck default (no class)</h2>
+      <p>Body text at the deck scale (<code>small</code> / <code>sm</code>).</p>
+      <ul>
+        <li>Useful for technical lectures</li>
+        <li>Equations and bullets stay denser</li>
+        <li>Headings use <code>em</code> and follow the base</li>
+      </ul>
+    </section>
+
+    <section class="font-xs">
+      <h2>Per-slide <code>.font-xs</code></h2>
+      <p>0.70× relative to the deck base — for dense derivations.</p>
+      <p>\[
+        \mathcal{L}(q) = \mathbb{E}_{q(\mathbf{z})}[\log p(\mathbf{x},\mathbf{z})]
+        - \mathbb{E}_{q(\mathbf{z})}[\log q(\mathbf{z})]
+      \]</p>
+    </section>
+
+    <section class="font-sm">
+      <h2>Per-slide <code>.font-sm</code></h2>
+      <p>0.85× relative to the deck — same step as this deck’s frontmatter token.</p>
+    </section>
+
+    <section class="font-md">
+      <h2>Per-slide <code>.font-md</code></h2>
+      <p>1.00× relative to the deck — “normal for this talk,” not Reveal’s absolute default.</p>
+    </section>
+
+    <section class="font-lg">
+      <h2>Per-slide <code>.font-lg</code></h2>
+      <p>1.15× — sparse emphasis.</p>
+    </section>
+
+    <section class="font-xl center">
+      <h2>Per-slide <code>.font-xl</code></h2>
+      <p>1.30× — key message.</p>
+    </section>
+
+    <section class="font-sm scrollable">
+      <h2>Combined <code>.font-sm .scrollable</code></h2>
+      <p>Smaller type plus scroll for long reference lists.</p>
+      <ul>
+        <li>Item one</li>
+        <li>Item two</li>
+        <li>Item three</li>
+        <li>Item four</li>
+        <li>Item five</li>
+        <li>Item six</li>
+        <li>Item seven</li>
+        <li>Item eight</li>
+        <li>Item nine</li>
+        <li>Item ten</li>
+      </ul>
+    </section>
+
+  </div>
+</div>
+<script src="https://unpkg.com/reveal.js@3.9.2/js/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: true,
+    width: 960,
+    height: 700,
+    margin: 0.08
+  });
+</script>
+</body>
+</html>
