@@ -71,6 +71,40 @@ Per-slide backgrounds use Reveal `data-background*` on the section:
 
 **Pitfall:** YAML frontmatter `background:` is a *layout numbering* field, not a visual slide background.
 
+#### Typography (font size)
+
+Deck-wide and per-slide text size for **Reveal HTML** (CIP-0014). Notes / notebooks / PPTX ignore these settings in v1.
+
+**Deck-wide** (parallel to `talktheme`):
+
+```yaml
+talkfontsize: small   # medium (default) | smaller/xs | small/sm | large/lg | larger/xl
+```
+
+Unset defaults to `medium` (no change from Reveal’s usual base). Lamd always attaches package CSS (`slide-fonts.css` + a scale override) alongside `talkcss`.
+
+**Per-slide** (parallel to `.scrollable`), on `\newslide` / `\section` attrs:
+
+```markdown
+\newslide{ELBO derivation}{.font-sm}
+\newslide{Key takeaway}{.font-lg}
+\newslide{References}{.scrollable .font-sm}
+\section{Appendix}{.font-xs}
+\newslide{Sparse}{\slidefont{lg}}
+```
+
+| Class / token | Scale vs current deck base |
+|---------------|----------------------------|
+| `.font-xs` / `xs` / `smaller` | 0.70 |
+| `.font-sm` / `sm` / `small` | 0.85 |
+| `.font-md` / `md` / `medium` | 1.00 |
+| `.font-lg` / `lg` / `large` | 1.15 |
+| `.font-xl` / `xl` / `larger` | 1.30 |
+
+**Precedence:** per-slide `.font-*` overrides deck `talkfontsize`; otherwise the deck token applies; otherwise `medium`. Use one size class per slide. `\subsection` does not take attrs in v1 — put size on `\newslide` or `\section`.
+
+Demo: `demos/cip0014-slide-fonts.html`.
+
 ### Content Control
 ```markdown
 \slides{content}

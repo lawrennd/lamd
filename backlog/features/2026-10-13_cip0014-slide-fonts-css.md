@@ -1,7 +1,7 @@
 ---
 id: "2026-10-13_cip0014-slide-fonts-css"
 title: "CIP-0014: Ship slide-fonts.css five-step scale"
-status: "Ready"
+status: "Completed"
 priority: "High"
 created: "2026-10-13"
 last_updated: "2026-10-13"
@@ -49,3 +49,7 @@ See CIP-0014 Detailed Description (size scale table and CSS sketch). Prefer pack
 ### 2026-10-13
 
 Task created (Ready) when CIP-0014 Accepted.
+
+### 2026-10-13 (implementation)
+
+Completed with CIP-0014 implementation.

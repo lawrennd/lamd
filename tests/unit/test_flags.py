@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 import lynguine.util.yaml as ny
 
-from lamd.flags import main, resolve_reference_doc
+from lamd.flags import main, normalize_talkfontsize, resolve_reference_doc, talkfontsize_css_args
 
 
 class TestFlags:
@@ -210,6 +210,8 @@ ghub:
                 assert "--variable revealjs-url=https://example.com/reveal.js" in output
                 assert "--variable theme=white" in output
                 assert "--css path/to/custom.css" in output
+                assert "slide-fonts.css" in output
+                assert "slide-fontsize-md.css" in output
 
     @patch("sys.argv", ["flags", "pp", "test"])
     @patch("builtins.print")
@@ -274,6 +276,8 @@ ghub:
                 assert "--variable revealjs-url=https://unpkg.com/reveal.js@3.9.2" in output
                 assert "--variable theme=black" in output
                 assert "--css https://inverseprobability.com/assets/css/talks.css" in output
+                assert "slide-fonts.css" in output
+                assert "slide-fontsize-md.css" in output
 
     @patch("sys.argv", ["flags", "prefix", "test"])
     @patch("builtins.print")
@@ -315,3 +319,108 @@ class TestResolveReferenceDoc:
 
     def test_missing_path_returned_unchanged(self):
         assert resolve_reference_doc("nonexistent-template.potx") == "nonexistent-template.potx"
+
+
+class TestTalkFontsize:
+    """CIP-0014 talkfontsize normalisation and CSS flag emission."""
+
+    def test_alias_normalisation(self):
+        assert normalize_talkfontsize("small") == "sm"
+        assert normalize_talkfontsize("Smaller") == "xs"
+        assert normalize_talkfontsize("MEDIUM") == "md"
+        assert normalize_talkfontsize("normal") == "md"
+        assert normalize_talkfontsize("lg") == "lg"
+        assert normalize_talkfontsize("x-large") == "xl"
+
+    def test_unknown_token_raises(self):
+        try:
+            normalize_talkfontsize("tiny")
+            assert False, "expected ValueError"
+        except ValueError as exc:
+            assert "talkfontsize" in str(exc)
+            assert "xs/smaller" in str(exc)
+
+    def test_css_args_include_base_and_scale(self):
+        args = talkfontsize_css_args("sm")
+        assert "slide-fonts.css" in args
+        assert "slide-fontsize-sm.css" in args
+        assert args.count("--css") == 2
+
+    @patch("sys.argv", ["flags", "reveal", "test"])
+    @patch("builtins.print")
+    def test_reveal_small_coexists_with_custom_talkcss(self, mock_print):
+        with patch("lynguine.util.yaml.header_fields", return_value={}):
+            with patch("lynguine.util.yaml.header_field") as mock_field:
+
+                def mock_header_field(field, *args, **kwargs):
+                    if field == "layout":
+                        return "talk"
+                    if field == "talktheme":
+                        return "white"
+                    if field == "talkcss":
+                        return "path/to/custom.css"
+                    if field == "talkfontsize":
+                        return "small"
+                    if field == "revealjs_url":
+                        return "https://example.com/reveal.js"
+                    raise ny.FileFormatError(f"Field not found: {field}")
+
+                mock_field.side_effect = mock_header_field
+                main()
+                output = mock_print.call_args[0][0]
+                assert "--css path/to/custom.css" in output
+                assert "slide-fonts.css" in output
+                assert "slide-fontsize-sm.css" in output
+
+    @patch("sys.argv", ["flags", "reveal", "test"])
+    @patch("builtins.print")
+    def test_reveal_invalid_talkfontsize_exits(self, mock_print):
+        with patch("lynguine.util.yaml.header_fields", return_value={}):
+            with patch("lynguine.util.yaml.header_field") as mock_field:
+
+                def mock_header_field(field, *args, **kwargs):
+                    if field == "layout":
+                        return "talk"
+                    if field == "talkfontsize":
+                        return "not-a-size"
+                    raise ny.FileFormatError(f"Field not found: {field}")
+
+                mock_field.side_effect = mock_header_field
+                rc = main()
+                assert rc == 1
+                # Error goes to stderr via print(..., file=sys.stderr); no reveal flags.
+                assert mock_print.call_count == 1
+                args, kwargs = mock_print.call_args
+                assert "Unknown talkfontsize" in args[0]
+                assert kwargs.get("file") is sys.stderr
+
+
+class TestSlideFontsCssAsset:
+    """Package CSS assets for CIP-0014."""
+
+    def test_slide_fonts_css_defines_scale_and_classes(self):
+        css_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../lamd/includes/slide-fonts.css"))
+        assert os.path.isfile(css_path)
+        text = open(css_path, encoding="utf-8").read()
+        for name in (
+            "--lamd-fs-base",
+            "--lamd-fs-scale",
+            "--lamd-fs-xs",
+            "--lamd-fs-sm",
+            "--lamd-fs-md",
+            "--lamd-fs-lg",
+            "--lamd-fs-xl",
+            "section.font-xs",
+            "section.font-sm",
+            "section.font-md",
+            "section.font-lg",
+            "section.font-xl",
+        ):
+            assert name in text
+
+    def test_scale_override_files_exist(self):
+        includes = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../lamd/includes"))
+        for token in ("xs", "sm", "md", "lg", "xl"):
+            path = os.path.join(includes, f"slide-fontsize-{token}.css")
+            assert os.path.isfile(path)
+            assert "--lamd-fs-scale" in open(path, encoding="utf-8").read()

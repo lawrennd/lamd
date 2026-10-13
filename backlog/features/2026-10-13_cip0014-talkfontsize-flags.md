@@ -1,7 +1,7 @@
 ---
 id: "2026-10-13_cip0014-talkfontsize-flags"
 title: "CIP-0014: talkfontsize frontmatter in flags.py"
-status: "Ready"
+status: "Completed"
 priority: "High"
 created: "2026-10-13"
 last_updated: "2026-10-13"
@@ -51,3 +51,7 @@ Mirror existing `talktheme` / `talkcss` handling in `lamd/flags.py` (`output == 
 ### 2026-10-13
 
 Task created (Ready) when CIP-0014 Accepted.
+
+### 2026-10-13 (implementation)
+
+Completed with CIP-0014 implementation.
