@@ -1,0 +1,115 @@
+% Lean exercise / worksheet template for LaMD notes PDF (CIP-0013).
+% Selected via frontmatter tex_template: exercise (or assignment: true convenience).
+\documentclass[$if(fontsize)$$fontsize$,$else$11pt,$endif$$if(papersize)$$papersize$paper,$else$a4paper,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{article}
+
+\usepackage{lmodern}
+\usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb,amsmath}
+\usepackage[$for(geometry)$$geometry$$sep$,$endfor$$if(geometry)$$else$margin=20mm$endif$]{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage[unicode=true]{hyperref}
+\hypersetup{
+$if(title-meta)$
+  pdftitle={$title-meta$},
+$endif$
+$if(author-meta)$
+  pdfauthor={$author-meta$},
+$endif$
+  pdfborder={0 0 0},
+  breaklinks=true
+}
+\urlstyle{same}
+
+\IfFileExists{microtype.sty}{%
+  \usepackage{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath}
+}{}
+
+$if(natbib)$
+\usepackage{natbib}
+\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+$endif$
+
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+$if(numbersections)$
+\setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$3$endif$}
+$else$
+\setcounter{secnumdepth}{0}
+$endif$
+
+% Compact section spacing for handouts
+\usepackage{titlesec}
+\titlespacing*{\section}{0pt}{1.2ex plus .2ex}{0.6ex plus .1ex}
+\titlespacing*{\subsection}{0pt}{1.0ex plus .2ex}{0.4ex plus .1ex}
+
+$for(header-includes)$
+$header-includes$
+$endfor$
+
+\begin{document}
+
+% --- Sheet header ---
+\noindent
+{\small
+$if(venue)$$venue$$endif$
+$if(week)$\hfill Week~$week$$endif$
+$if(practical)$\ \textbullet\ Practical~$practical$$endif$
+$if(date)$\hfill Due: $date$$endif$
+$if(released)$\\Released: $released$$endif$
+}
+
+\vspace{0.6em}
+
+$if(title)$
+{\LARGE\bfseries $title$}\\[0.4em]
+$endif$
+
+$if(author)$
+{\large $for(author)$$author.given$ $author.family$$sep$, $endfor$}\\[0.6em]
+$endif$
+
+\noindent\textbf{Candidate number:}\enspace\underline{\hspace{4.5cm}}
+
+\vspace{0.8em}
+\hrule
+\vspace{0.8em}
+
+$if(abstract)$
+\noindent\textit{Brief.}\enspace $abstract$
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+$endif$
+
+$for(include-before)$
+$include-before$
+$endfor$
+
+%%%%%%%%%% Start Body %%%%%%%%%%
+
+$body$
+
+%%%%%%%%%%  End Body  %%%%%%%%%%
+
+$if(natbib)$
+$if(bibliography)$
+\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+$endif$
+$endif$
+
+$for(include-after)$
+$include-after$
+$endfor$
+
+\end{document}
