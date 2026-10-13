@@ -16,7 +16,9 @@ include = [
 
 [tool.poetry.dependencies]
 python = ">=3.11,<4.0"
-lynguine = { git = "https://github.com/lawrennd/lynguine.git", rev = "e6095b66d1dc942ff8f8d28749c4a2b7c91bbe7c" }
+# Must match referia's transitive lynguine source (branch=main); a pinned rev
+# conflicts with that git ref and breaks `poetry install` in CI.
+lynguine = { git = "https://github.com/lawrennd/lynguine.git", branch = "main" }
 python-frontmatter = "*"
 pandas = "*"
 python-liquid = "*"
