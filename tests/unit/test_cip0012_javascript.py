@@ -169,6 +169,42 @@ class TestTrackBBackgrounds:
         assert "data-background-interactive" in out
         assert "https://example.com/plot" in out
 
+    def test_classtimer_iframe_background(self) -> None:
+        body = _read(FIXTURES / "classtimer.md")
+        out = _gpp(
+            ["-DSLIDES=1", "-DHTML=1"],
+            "talk-macros-null.gpp",
+            "talk-macros-html.gpp",
+            "talk-macros-slides.gpp",
+            "talk-macros-slides-html.gpp",
+            body=body,
+        )
+        assert "data-background-iframe=" in out
+        assert "data-background-interactive" in out
+        assert "SCRIPTS/timer/index.html?duration=10:00" in out
+
+    def test_classtimer_noop_outside_slides_html(self) -> None:
+        body = _read(FIXTURES / "classtimer.md")
+        out = _gpp(
+            [],
+            "talk-macros-null.gpp",
+            body=body,
+        )
+        assert "data-background-iframe" not in out
+        assert "index.html" not in out
+        assert "<section" not in out
+
+    def test_classtimer_notes_placeholder(self) -> None:
+        body = _read(FIXTURES / "classtimer.md")
+        out = _gpp(
+            ["-DNOTES=1"],
+            "talk-macros-null.gpp",
+            "talk-macros-notes.gpp",
+            body=body,
+        )
+        assert "Class test timer: 10:00" in out
+        assert "data-background-iframe" not in out
+
 
 class TestHeaderAndTemplateBaselines:
     """Shared header JS and template lifecycle (no gpp required)."""
@@ -225,6 +261,7 @@ class TestInventoryFixturePaths:
         "includescript-ballworld.md",
         "data-background-slide.md",
         "includeplotly-bg.md",
+        "classtimer.md",
     }
 
     def test_fixtures_present(self) -> None:
