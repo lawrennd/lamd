@@ -3,6 +3,8 @@
 
 \define{\includegooglebook{id}{page}}{[![](\diagramsDir/books/\id-\page.png)](https://play.google.com/books/reader?id=\id&pg=\page)}
 
+\define{\classtimer{duration}}{*Class test timer: \duration*}
+
 \define{\includeyoutube{id}{width}{height}{start}{end}}{[![](https://img.youtube.com/vi/\id/0.jpg)](https://www.youtube.com/watch?v=\id&t=\start)}
 \define{\includevimeo{id}{width}{height}{start}{end}}{[![](https://i.vimeocdn.com/video/\id_640x480.jpg)](https://vimeo.com/\id#t=\start)}
 

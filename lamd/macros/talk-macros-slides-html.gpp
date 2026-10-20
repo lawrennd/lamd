@@ -7,6 +7,8 @@
 
 \define{\includeplotly{filename}{width}{height}}{<section data-background-iframe="\filename\ifdef{DARKBACKGROUND}.dark\endif.html" data-background-interactive></section>}
 
+\define{\classtimer{duration}}{<section data-background-iframe="\scriptsDir/timer/index.html?duration=\duration" data-background-interactive></section>}
+
 
 \define{\speakernotes{text}}{<aside class="notes">
 \text
