@@ -50,4 +50,4 @@ Do not overwrite existing user pandoc makefiles as part of this task.
 
 ### 2026-10-22
 
-Task created from the recent-CV probe. those short CVs currently compile with direct pandoc on purpose.
+Task created from a recent user-CV probe. Those short CVs currently compile with direct pandoc on purpose.

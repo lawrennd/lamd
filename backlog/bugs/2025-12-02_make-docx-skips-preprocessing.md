@@ -3,7 +3,7 @@ category: bugs
 completed: '2025-12-02'
 created: '2025-12-02'
 id: 2025-12-02_make-docx-skips-preprocessing
-last_updated: '2025-12-02'
+last_updated: '2026-10-22'
 priority: High
 related_cips: []
 owner: "Neil Lawrence"
@@ -93,7 +93,7 @@ Option B: Remove the direct rule and use the original preprocessing pipeline.
 ## Progress Updates
 
 ### 2025-12-02
-Task created. Issue discovered when a user CV `.docx` output was nearly empty - just YAML header and blank lines. The `make-docx.mk` direct rule was identified as bypassing the macro preprocessing step entirely.
+Task created. Issue discovered when a user CV `.docx` was nearly empty — just YAML header and blank lines. The `make-docx.mk` direct rule was identified as bypassing the macro preprocessing step entirely.
 
 ### 2025-12-02 (Fixed)
 **Fix implemented**: Modified `make-docx.mk` to add preprocessing step before pandoc conversion:
