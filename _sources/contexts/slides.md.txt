@@ -67,6 +67,16 @@ Per-slide backgrounds use Reveal `data-background*` on the section:
 \includeplotly{plots/myplot}{100%}{100%}
 ```
 
+Full-bleed class-test countdown (slides HTML only; notes get a short placeholder):
+
+```markdown
+\classtimer{10:00}
+\classtimer{900}
+\classtimer{1:30:00}
+```
+
+This loads `\scriptsDir/timer/index.html?duration=…` as an interactive Reveal background iframe (Start / Pause / Reset, flashes when finished).
+
 **Clash policy:** a slide with its own `data-background*` wins; deck ambient from `slide_setup` should yield/pause on that slide. Reference: `lamd/includes/slide-setup-ambient.html`.
 
 **Pitfall:** YAML frontmatter `background:` is a *layout numbering* field, not a visual slide background.

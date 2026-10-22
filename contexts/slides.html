@@ -181,6 +181,13 @@
 \includeplotly{plots/myplot}{100%}{100%}
 </pre></div>
 </div>
+<p>Full-bleed class-test countdown (slides HTML only; notes get a short placeholder):</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\classtimer{10:00}
+\classtimer{900}
+\classtimer{1:30:00}
+</pre></div>
+</div>
+<p>This loads <code class="docutils literal notranslate"><span class="pre">\scriptsDir/timer/index.html?duration=…</span></code> as an interactive Reveal background iframe (Start / Pause / Reset, flashes when finished).</p>
 <p><strong>Clash policy:</strong> a slide with its own <code class="docutils literal notranslate"><span class="pre">data-background*</span></code> wins; deck ambient from <code class="docutils literal notranslate"><span class="pre">slide_setup</span></code> should yield/pause on that slide. Reference: <code class="docutils literal notranslate"><span class="pre">lamd/includes/slide-setup-ambient.html</span></code>.</p>
 <p><strong>Pitfall:</strong> YAML frontmatter <code class="docutils literal notranslate"><span class="pre">background:</span></code> is a <em>layout numbering</em> field, not a visual slide background.</p>
 </section>
