@@ -66,6 +66,8 @@ Magnify button uses `{{ '/assets/images/Magnify_Large.svg' | relative_url }}`. T
 - [ ] Magnify control has a minimum 44×44px touch target on mobile
 - [ ] Modal appears above site chrome (`z-index` sufficient)
 - [ ] `magnifyFigure` fails gracefully when modal or target is missing (console warning, no uncaught exception)
+- [x] Figures do not overlap adjacent code blocks (remove float-right layout)
+- [x] Modal close control visible above enlarged figure; Escape and backdrop dismiss
 - [ ] Manual verification on iPad Safari and desktop Chrome for IEI lecture pages
 - [ ] Document in lamd docs: zoom requires Jekyll `lecture` layout + theme assets
 
@@ -106,4 +108,10 @@ Investigation complete; root causes documented.
 - snippets: missing label on Bernoulli kinetic-theory `\figure` call
 - jekyll-theme (separate repo): null checks in `figure-magnify.js`; modal `z-index: 1000`; button styling
 
-**Still open:** content audit for other unlabelled figures; rebuild IEI lectures; manual iPad verification; formal docs.
+### 2026-08-24 (continued)
+
+**Figure/code overlap:** `.figure { float: right }` in `_figure-box.scss` let caption boxes sit beside following `.sourceCode` blocks. Figures are now block-level (`float: none`, centred); code blocks get `clear: both`.
+
+**Modal close:** The × control was `position: absolute` and painted under `.modal-figure`. Close is now `position: fixed` with higher `z-index`, visible bordered button styling, `aria-label`, Escape to dismiss, and click on the dark backdrop to close.
+
+**Still open:** content audit for other unlabelled figures; rebuild IEI lectures; deploy updated jekyll-theme; manual iPad verification.

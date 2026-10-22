@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>CIP-0012 — Animated slide background demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="https://unpkg.com/reveal.js@3.9.2/css/reveal.css"/>
+<link rel="stylesheet" href="https://unpkg.com/reveal.js@3.9.2/css/theme/black.css"/>
+<style>
+  /* Critical visibility even if theme is slow / odd zoom */
+  html, body { background: #111 !important; }
+  .reveal { font-size: 32px; }
+  .reveal h1 { font-size: 1.6em; text-transform: none; margin-bottom: 0.4em; }
+  .reveal h2 { font-size: 1.25em; text-transform: none; }
+  .reveal .slides section {
+    text-align: left;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.85);
+  }
+  .reveal .center { text-align: center; }
+  .pill {
+    display: inline-block;
+    padding: 0.15em 0.55em;
+    border-radius: 999px;
+    font-size: 0.45em;
+    letter-spacing: 0.04em;
+    background: rgba(120, 180, 255, 0.2);
+    border: 1px solid rgba(120, 180, 255, 0.5);
+    color: #d7e8ff;
+  }
+  .muted { color: #c5d4e6; font-size: 0.65em; }
+  code {
+    background: rgba(0,0,0,0.45);
+    padding: 0.08em 0.3em;
+    border-radius: 4px;
+    color: #ffe6a8;
+  }
+  .status {
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+    z-index: 30;
+    font: 12px/1.3 ui-sans-serif, system-ui, sans-serif;
+    color: #d7e8ff;
+    background: rgba(0,0,0,0.65);
+    border: 1px solid rgba(120,180,255,0.35);
+    padding: 6px 10px;
+    border-radius: 6px;
+    pointer-events: none;
+  }
+  /* Reveal backgrounds should cover the viewport; force iframe full-bleed */
+  .reveal .backgrounds,
+  .reveal .slide-background {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .reveal .slide-background iframe {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    border: 0;
+  }
+</style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <section class="center">
+      <p><span class="pill">Track B</span></p>
+      <h1>Animated backgrounds</h1>
+      <p class="muted">Two patterns: deck ambient, then a true slide iframe background</p>
+      <p class="muted">Press →</p>
+    </section>
+
+    <section data-background-iframe="background-animation.html">
+      <h2>This slide’s background is animated</h2>
+      <p>Reveal <code>data-background-iframe</code> loads <code>background-animation.html</code> behind the content.</p>
+      <p class="muted">You should see orbiting rings behind this text.</p>
+    </section>
+
+    <section data-background-color="#3a1d12">
+      <h2>Static per-slide colour</h2>
+      <p>Own <code>data-background-color</code> — iframe background gone; deck ambient (if any) yields.</p>
+    </section>
+
+    <section class="center">
+      <h2>Done</h2>
+      <p class="muted">In a real talk: <code>slide_setup: slide-setup-ambient.html</code> for deck-wide ambient</p>
+    </section>
+
+  </div>
+</div>
+
+<div class="status" id="demo-status">loading…</div>
+
+<script src="https://unpkg.com/reveal.js@3.9.2/js/reveal.js"></script>
+<script>
+Reveal.initialize({
+  controls: true,
+  progress: true,
+  history: true,
+  center: true,
+  transition: 'fade',
+  // Match common widescreen so scaling letterboxes less
+  width: 1920,
+  height: 1080,
+  margin: 0,
+  minScale: 0.2,
+  maxScale: 2.0,
+  dependencies: []
+});
+
+(function () {
+  var status = document.getElementById('demo-status');
+  function update(slide) {
+    if (!slide) return;
+    var iframe = slide.getAttribute('data-background-iframe');
+    var color = slide.getAttribute('data-background-color');
+    if (iframe) status.textContent = 'background: iframe → ' + iframe;
+    else if (color) status.textContent = 'background: colour ' + color;
+    else status.textContent = 'background: theme default';
+  }
+  Reveal.addEventListener('ready', function (e) { update(e.currentSlide); });
+  Reveal.addEventListener('slidechanged', function (e) { update(e.currentSlide); });
+  setTimeout(function () { update(Reveal.getCurrentSlide()); }, 0);
+})();
+</script>
+</body>
+</html>

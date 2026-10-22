@@ -18,6 +18,9 @@ coverage.xml
 # Log files
 *.log
 
+# Local scratch / probe artifacts
+tmp/
+
 # Sphinx documentation
 docs/_build/
 

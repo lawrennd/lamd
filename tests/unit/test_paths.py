@@ -86,13 +86,21 @@ class TestResolveDiagramsWeb:
         }
         assert resolve_diagrams_web(config, cwd="/repo/mlfc/_lamd") == "https://mlatcl.github.io/mlfc/slides/diagrams"
 
-    def test_basename_fallback(self):
+    def test_repo_relative_fallback(self):
         config = {
             "url": "https://mlatcl.github.io/",
             "baseurl": "mlfc/",
             "diagramsdir": "../slides/diagrams/",
         }
-        assert resolve_diagrams_web(config, cwd="/repo/mlfc/_lamd") == "https://mlatcl.github.io/mlfc/diagrams"
+        assert resolve_diagrams_web(config, cwd="/repo/mlfc/_lamd") == "https://mlatcl.github.io/mlfc/slides/diagrams"
+
+    def test_basename_fallback_when_outside_repo_root(self):
+        config = {
+            "url": "https://example.org/",
+            "baseurl": "course/",
+            "diagramsdir": "/var/shared/diagrams/",
+        }
+        assert resolve_diagrams_web(config, cwd="/repo/course/_lamd") == "https://example.org/course/diagrams"
 
     def test_cli_web_override(self):
         config = {"diagramsdir": "../slides/diagrams/"}

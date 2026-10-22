@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>lamd demo — animated iframe background</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #050814; }
+  canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+(function () {
+  var canvas = document.getElementById('c');
+  var ctx = canvas.getContext('2d');
+  var t0 = null;
+
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(1, Math.floor(innerWidth * dpr));
+    canvas.height = Math.max(1, Math.floor(innerHeight * dpr));
+  }
+  resize();
+  addEventListener('resize', resize);
+
+  function frame(ts) {
+    if (t0 === null) t0 = ts;
+    var t = (ts - t0) / 1000;
+    var w = canvas.width, h = canvas.height;
+    var dpr = window.devicePixelRatio || 1;
+
+    // Full-bleed base
+    var g = ctx.createLinearGradient(0, 0, w, h);
+    g.addColorStop(0, '#04070f');
+    g.addColorStop(0.5, '#0a1630');
+    g.addColorStop(1, '#07101f');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+
+    // Edge-to-edge drifting bands
+    for (var b = 0; b < 5; b++) {
+      var y = ((t * 40 + b * h / 5) % (h + 80)) - 40;
+      var band = ctx.createLinearGradient(0, y, w, y + 60);
+      band.addColorStop(0, 'rgba(60,140,255,0)');
+      band.addColorStop(0.5, 'rgba(60,140,255,0.12)');
+      band.addColorStop(1, 'rgba(60,140,255,0)');
+      ctx.fillStyle = band;
+      ctx.fillRect(0, y, w, 60 * dpr);
+    }
+
+    // Rings sized to the shorter edge so they reach near the borders
+    var R = 0.55 * Math.min(w, h);
+    for (var ring = 0; ring < 7; ring++) {
+      var r = R * (0.25 + ring * 0.12);
+      var pulse = 1 + 0.04 * Math.sin(t * 1.6 + ring);
+      ctx.beginPath();
+      ctx.arc(w * 0.5, h * 0.5, r * pulse, 0, Math.PI * 2);
+      ctx.strokeStyle = 'hsla(' + (195 + ring * 8) + ', 90%, 65%, ' + (0.4 - ring * 0.04) + ')';
+      ctx.lineWidth = 2.5 * dpr;
+      ctx.stroke();
+    }
+
+    // Particles across the full frame
+    for (var i = 0; i < 90; i++) {
+      var px = ((i * 97.3 + t * (20 + i % 11)) % (w + 40)) - 20;
+      var py = ((i * 53.1 + t * (12 + i % 7)) % (h + 40)) - 20;
+      ctx.beginPath();
+      ctx.arc(px, py, (1.5 + (i % 4)) * dpr, 0, Math.PI * 2);
+      ctx.fillStyle = 'hsla(' + (180 + (i % 50)) + ', 95%, 72%, 0.85)';
+      ctx.fill();
+    }
+
+    ctx.fillStyle = 'rgba(220, 235, 255, 0.9)';
+    ctx.font = (13 * dpr) + 'px sans-serif';
+    ctx.fillText('full-bleed data-background-iframe', 20 * dpr, 28 * dpr);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
