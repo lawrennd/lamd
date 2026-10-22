@@ -5,6 +5,13 @@
 
 \define{\displaynotes{block}}{\notes{\block}}
 
+\define{\machinereviewlink}{
+<aside class="machine-review-link" style="border-left:4px solid #ccc;padding:0.6em 1em;margin:1em 0;background:#f7f7f7">
+<p><strong>Machine review.</strong> A <a href="#machine-review">machine review of this lecture</a> is at the end of these notes. It fact-checks historical and technical claims. It is not assessed.</p>
+</aside>
+
+}
+
 \define{\columns{one}{two}{width1}{width2}}{<div class="lamd-columns" style="display:flex; width:100%; justify-content:center; align-items:center; column-gap:1em;"><div style="flex:0 0 \width1; max-width:\width1;">\one</div><div style="flex:0 0 \width2; max-width:\width2;">\two</div></div>}
 \define{\threeColumns{one}{two}{three}{width1}{width2}{width3}}{<div class="lamd-columns" style="display:flex; width:100%; justify-content:center; align-items:center; column-gap:1em;"><div style="flex:0 0 \width1; max-width:\width1;">\one</div><div style="flex:0 0 \width2; max-width:\width2;">\two</div><div style="flex:0 0 \width3; max-width:\width3;">\three</div></div>}
 
