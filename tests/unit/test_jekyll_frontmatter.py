@@ -19,24 +19,21 @@ def _load_frontmatter(text: str) -> dict:
 
 
 def test_quoted_abstract_with_math_span_is_invalid_yaml():
-    broken = textwrap.dedent(
-        """\
+    broken = textwrap.dedent("""\
         ---
         title: "Motivation"
         abstract: "<p>The free-energy decomposition <span class="math inline">\\(F = U - TS\\)</span>.</p>"
         week: 1
         layout: lecture
         ---
-        """
-    )
+        """)
     with pytest.raises(yaml.YAMLError):
         _load_frontmatter(broken)
 
 
 def test_literal_abstract_with_math_span_keeps_week_and_layout():
     html = "<p>The free-energy decomposition " '<span class="math inline">\\(F = U - TS\\)</span>.</p>'
-    text = textwrap.dedent(
-        f"""\
+    text = textwrap.dedent(f"""\
         ---
         title: "Motivation"
         abstract: |-
@@ -44,8 +41,7 @@ def test_literal_abstract_with_math_span_keeps_week_and_layout():
         week: 1
         layout: lecture
         ---
-        """
-    )
+        """)
     data = _load_frontmatter(text)
     assert data["week"] == 1
     assert data["layout"] == "lecture"

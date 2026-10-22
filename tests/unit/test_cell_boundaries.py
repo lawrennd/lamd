@@ -297,8 +297,7 @@ class TestCellBoundaries:
 
         # Create a simple test markdown file with LaMD \code{} syntax
         test_md = Path(self.temp_dir) / "simple-test.md"
-        test_md.write_text(
-            """# Header 1
+        test_md.write_text("""# Header 1
 Content 1
 
 \\code{print("Code 1")}
@@ -307,8 +306,7 @@ Content 1
 Content 2
 
 \\code{print("Code 2")}
-"""
-        )
+""")
 
         # Step 1: mdpp preprocessing (convert \code{} to proper markdown)
         notes_output = Path(self.temp_dir) / "simple-test.notes.ipynb.markdown"
@@ -397,16 +395,14 @@ Content 2
 
         # Create a test file that should cause notedown to fail or create insufficient cells
         test_md = Path(self.temp_dir) / "notedown-failure-test.md"
-        test_md.write_text(
-            """# Test Header
+        test_md.write_text("""# Test Header
 
 This is a simple test without any code blocks or complex structure.
 
 # Another Header
 
 More content here.
-"""
-        )
+""")
 
         # Try to convert with notedown
         output_ipynb = Path(self.temp_dir) / "notedown-failure-test.ipynb"
