@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 from pathlib import Path
+
+import pytest
 
 import lamd
 
 MACROS = Path(os.path.dirname(lamd.__file__)) / "macros"
+_GPP = pytest.mark.skipif(shutil.which("gpp") is None, reason="gpp not available")
 
 
 def _gpp(defines: list[str], body: str) -> str:
@@ -26,6 +30,17 @@ def _gpp(defines: list[str], body: str) -> str:
     return result.stdout
 
 
+def test_machine_review_macros_are_defined():
+    notes = (MACROS / "talk-macros-notes.gpp").read_text()
+    html = (MACROS / "talk-macros-notes-html.gpp").read_text()
+    null = (MACROS / "talk-macros-null.gpp").read_text()
+    assert r"\define{\machinereviewlink}" in notes
+    assert r"\define{\machinereview}" in notes
+    assert r"\define{\machinereviewlink}" in html
+    assert r"\define{\machinereview}" in null
+
+
+@_GPP
 def test_machine_review_macros_notes_markdown():
     out = _gpp(
         ["-DNOTES=1"],
@@ -37,6 +52,7 @@ def test_machine_review_macros_notes_markdown():
     assert "<aside" not in out
 
 
+@_GPP
 def test_machine_review_macros_notes_html_aside():
     out = _gpp(
         ["-DNOTES=1", "-DHTML=1"],
@@ -48,6 +64,7 @@ def test_machine_review_macros_notes_html_aside():
     assert "Machine Review" in out
 
 
+@_GPP
 def test_machine_review_macros_slides_empty():
     out = _gpp(
         ["-DSLIDES=1"],
