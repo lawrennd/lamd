@@ -12,8 +12,17 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 import pandas as pd
 
-from lamd.mdlist import main
+from lamd.mdlist import cvlists_config_dir, load_cvlists_interface, main
 from lamd.util import get_since_year, set_since_year
+
+
+def _expected_cvlists_from_file_kwargs() -> dict[str, object]:
+    config_dir = cvlists_config_dir()
+    return {
+        "user_file": "cvlists.yml",
+        "directory": config_dir,
+        "allowed_roots": [config_dir],
+    }
 
 
 class TestMdlist:
@@ -156,14 +165,7 @@ filter: []
         # Run the main function
         main()
 
-        # Verify the function calls - should use path to config/cvlists.yml
-        # Get the expected path
-        import lamd.mdlist as mdlist_module
-
-        lamd_dir = os.path.dirname(os.path.abspath(mdlist_module.__file__))
-        config_dir = os.path.join(lamd_dir, "config")
-        expected_cvlists_path = os.path.join(config_dir, "cvlists.yml")
-        mock_interface.assert_called_once_with(user_file=expected_cvlists_path)
+        mock_interface.assert_called_once_with(**_expected_cvlists_from_file_kwargs())
         import lamd as lamd_pkg
 
         expected_template_dir = os.path.join(os.path.dirname(os.path.abspath(lamd_pkg.__file__)), "templates")
@@ -260,24 +262,8 @@ filter: []
         # Run the main function
         main()
 
-        # Verify that the path used is from the package, not the current directory
         assert mock_interface.called, "Interface.from_file should have been called"
-        call_args = mock_interface.call_args
-
-        # Get user_file from kwargs (it's a keyword argument)
-        if call_args.kwargs:
-            called_path = call_args.kwargs.get("user_file")
-        else:
-            # If no kwargs, check positional args
-            called_path = call_args[0][0] if call_args[0] else None
-
-        # The path should be an absolute path to the config directory
-        assert called_path is not None, f"user_file should have been provided. Call args: {call_args}"
-        assert os.path.isabs(called_path), f"Path should be absolute, got {called_path}"
-        assert called_path.endswith(
-            "lamd/config/cvlists.yml"
-        ), f"Path should end with lamd/config/cvlists.yml, got {called_path}"
-        assert "config" in called_path, f"Path should include config directory, got {called_path}"
+        mock_interface.assert_called_once_with(**_expected_cvlists_from_file_kwargs())
 
     @patch("sys.argv", ["mdlist", "publications", "test1.md", "test2.md"])
     @patch("pandas.to_datetime")
@@ -474,3 +460,11 @@ filter: []
         assert (
             passed_interface["input"]["index"] == "filename"
         ), f"Index field should be set to 'filename', got '{passed_interface['input']['index']}'"
+
+
+def test_load_cvlists_interface_from_other_cwd(tmp_path, monkeypatch) -> None:
+    """Package cvlists.yml must load when cwd is a CV directory (lynguine path jail)."""
+    monkeypatch.chdir(tmp_path)
+    iface = load_cvlists_interface()
+    assert "publications" in iface
+    assert os.path.isfile(os.path.join(cvlists_config_dir(), "cvlists.yml"))

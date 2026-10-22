@@ -64,6 +64,26 @@ global SINCE_YEAR
 SINCE_YEAR: Optional[int] = None
 
 
+def cvlists_config_dir() -> str:
+    """Directory that contains the packaged ``cvlists.yml``."""
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "config")
+
+
+def load_cvlists_interface() -> Interface:
+    """Load packaged list settings even when cwd is a CV directory.
+
+    lynguine confines ``Interface.from_file`` to ``allowed_roots`` (cwd by
+    default). An absolute ``user_file`` under the lamd package is therefore
+    rejected unless that package config directory is an allowed root.
+    """
+    config_dir = cvlists_config_dir()
+    return Interface.from_file(
+        user_file="cvlists.yml",
+        directory=config_dir,
+        allowed_roots=[config_dir],
+    )
+
+
 def main() -> int:
     """Main function to process and generate markdown lists.
 
@@ -134,11 +154,7 @@ def main() -> int:
     now = pd.to_datetime(datetime.datetime.now().date())
     now_year = now.year
 
-    # Load interface configuration for the specified list type
-    # Look for cvlists.yml in the lamd config directory (lamd_dir already defined above)
-    config_dir = os.path.join(lamd_dir, "config")
-    cvlists_path = os.path.join(config_dir, "cvlists.yml")
-    interface = Interface.from_file(user_file=cvlists_path)[args.listtype]
+    interface = load_cvlists_interface()[args.listtype]
 
     # Set the year filter - either from command line or default to 5 years ago
     if args.since_year:
