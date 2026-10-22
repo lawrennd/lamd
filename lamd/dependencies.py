@@ -32,7 +32,7 @@ Options:
 import argparse
 import os
 import sys
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from lamd.paths import load_config, resolve_diagrams_filesystem
 
@@ -41,13 +41,13 @@ if TYPE_CHECKING:
     import lynguine.util.yaml as ny
 
 
-def _lynguine_talk():
+def _lynguine_talk() -> Any:
     import lynguine.util.talk as nt
 
     return nt
 
 
-def _lynguine_yaml():
+def _lynguine_yaml() -> Any:
     import lynguine.util.yaml as ny
 
     return ny

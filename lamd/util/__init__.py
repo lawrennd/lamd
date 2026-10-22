@@ -12,11 +12,11 @@ if TYPE_CHECKING:
 # Module-level variable for tracking the since year
 SINCE_YEAR: Optional[int] = None
 
-_pd = None
-_log = None
+_pd: Any = None
+_log: Any = None
 
 
-def _pandas():
+def _pandas() -> Any:
     """Import pandas on first use (avoids pyarrow tax at CLI startup)."""
     global _pd
     if _pd is None:
@@ -26,7 +26,7 @@ def _pandas():
     return _pd
 
 
-def _logger():
+def _logger() -> Any:
     """Import lynguine logging on first use."""
     global _log
     if _log is None:
