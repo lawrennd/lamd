@@ -4,7 +4,7 @@ created: '2025-12-02'
 dependencies: ''
 github_issue: ''
 id: 2025-12-02_makecv-missing-lists-include
-last_updated: '2025-12-02'
+last_updated: '2026-10-22'
 owner: Neil Lawrence
 priority: High
 related_cips: []
@@ -77,7 +77,7 @@ This should be added between `make-cv-flags.mk` and `make-cv.mk` includes.
 
 ### 2025-12-02
 
-Task created. Issue discovered while attempting to add publication list to a user CV.
+Task created. Issue discovered while adding a generated publication list to a user CV.
 
 ### 2025-12-02 (Completed)
 

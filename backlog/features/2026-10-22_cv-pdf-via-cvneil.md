@@ -25,7 +25,7 @@ title: Honour pdf true for CVs via cvneil template
 
 Recent CVs set `pdf: true` in frontmatter. `make-cv.mk` only builds `${BASE}.docx`. The commented notes-PDF line is the talks notes template, not a CV class.
 
-Some CVs already produce PDF outside lamd:
+Some CVs already produce PDF outside lamd with a local pandoc makefile of the form:
 
 ```makefile
 TEXINPUTS=.:$(TEXINPUTS) pandoc $< -o $@ \
@@ -34,8 +34,6 @@ TEXINPUTS=.:$(TEXINPUTS) pandoc $< -o $@ \
 ```
 
 That template uses `\documentclass{cvneil}`. The class currently lives in the user’s CV tree, not in lamd.
-
-
 
 ## Acceptance Criteria
 
@@ -47,9 +45,9 @@ That template uses `\documentclass{cvneil}`. The class currently lives in the us
 
 ## Implementation Notes
 
-The template today lives in the publications repo. Either vendor a copy under `lamd/` (so CV builds do not depend on publications) or document a `_lamd.yml` / frontmatter key for the template path. `TEXINPUTS` must include the directory that holds `cvneil.cls`.
+The template today lives outside lamd. Either vendor a copy under `lamd/` or document a `_lamd.yml` / frontmatter key for the template path. `TEXINPUTS` must include the directory that holds `cvneil.cls`.
 
-This is HOW for CIP-0005's remaining “verify PDF” item. It can stay a backlog feature until the `.docx` blockers are closed.
+This can stay a backlog feature until the `.docx` blockers are closed.
 
 ## Related
 
@@ -61,4 +59,4 @@ This is HOW for CIP-0005's remaining “verify PDF” item. It can stay a backlo
 
 ### 2026-10-22
 
-Confirmed `make-cv.mk` never requests a CV PDF. Existing user PDFs are from their own makefiles.
+Confirmed `make-cv.mk` never requests a CV PDF. Existing user PDFs are from their own pandoc makefiles.
