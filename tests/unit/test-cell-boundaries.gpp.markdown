@@ -239,7 +239,9 @@ date: 2025-09-01
 \newcommand{\naturalParameterMatrix}{\boldsymbol{ \Theta}}
 \newcommand{\naturalParameterScalar}{\theta}
 \newcommand{\naturalParameterVector}{\boldsymbol{ \naturalParameterScalar}}
-\newcommand{\cumulantGeneratingFunction}{A}
+\newcommand{\naturalParameters}{\boldsymbol{ \naturalParameterScalar}}
+\newcommand{\naturalParameter}{\naturalParameterScalar}
+\newcommand{\cumulantGeneratingFunction}{\psi}
 \newcommand{\sufficientStatistics}{T}
 \newcommand{\baseMeasure}{h}
 \newcommand{\linkFunction}{g}
@@ -343,6 +345,9 @@ date: 2025-09-01
 \ifdef{PPTX}
 \include{talk-macros-pptx.gpp}
 \endif
+\ifdef{MANIM}
+\include{talk-macros-manim.gpp}
+\endif
 \ifdef{SLIDES}
 \ifdef{TEX}
 \include{talk-macros-slides-tex.gpp}
@@ -366,6 +371,21 @@ date: 2025-09-01
 \ifdef{SLIDES}
 \ifdef{PPTX}
 \include{talk-macros-slides-pptx.gpp}
+\endif
+\endif
+\ifdef{SLIDES}
+\ifdef{MANIM}
+\include{talk-macros-slides-manim.gpp}
+\endif
+\endif
+\ifdef{VIDEO}
+\ifdef{MANIM}
+\include{talk-macros-video-manim.gpp}
+\endif
+\endif
+\ifdef{ANIMSVG}
+\ifdef{MANIM}
+\include{talk-macros-slides-svg-manim.gpp}
 \endif
 \endif
 \ifdef{NOTES}

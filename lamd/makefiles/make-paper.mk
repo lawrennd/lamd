@@ -21,6 +21,6 @@ ${BASE}.paper.tex: ${BASE}.paper.tex.markdown
 		--number-sections \
 		--natbib \
 		${BIBFLAGS} \
-		-B ../_includes/${NOTATION} \
+		-B ${INCLUDESDIR}/${NOTATION} \
 		-o ${BASE}.paper.tex  \
 		${BASE}.paper.tex.markdown 

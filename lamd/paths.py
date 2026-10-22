@@ -12,8 +12,6 @@ import sys
 import warnings
 from typing import Mapping, MutableMapping
 
-import lynguine.util.yaml as ny
-
 DEFAULT_DIAGRAMS_DIR = "diagrams"
 
 
@@ -118,6 +116,15 @@ def resolve_diagrams_web(
         return join_url(prefix, diagramswebpath)
 
     fs_dir = resolve_diagrams_filesystem(config, cwd=cwd)
+    build_cwd = get_build_cwd(cwd)
+    repo_root = os.path.normpath(os.path.join(build_cwd, ".."))
+    try:
+        rel = os.path.relpath(fs_dir, repo_root)
+    except ValueError:
+        rel = ""
+    if rel and not rel.startswith(".."):
+        return join_url(prefix, rel.replace(os.sep, "/"))
+
     web_suffix = os.path.basename(fs_dir) or DEFAULT_DIAGRAMS_DIR
     return join_url(prefix, web_suffix)
 
@@ -137,6 +144,8 @@ def validate_diagrams_root(path: str, *, cwd: str | None = None) -> None:
 
 def load_config(cwd: str = ".") -> dict[str, str]:
     """Load path-related keys from ``_lamd.yml`` / ``_config.yml`` in cwd."""
+    import lynguine.util.yaml as ny
+
     defaults: MutableMapping[str, str] = {
         "diagramsdir": DEFAULT_DIAGRAMS_DIR,
         "diagramsurl": "",

@@ -32,11 +32,25 @@ Options:
 import argparse
 import os
 import sys
-
-import lynguine.util.talk as nt
-import lynguine.util.yaml as ny
+from typing import TYPE_CHECKING, Any
 
 from lamd.paths import load_config, resolve_diagrams_filesystem
+
+if TYPE_CHECKING:
+    import lynguine.util.talk as nt
+    import lynguine.util.yaml as ny
+
+
+def _lynguine_talk() -> Any:
+    import lynguine.util.talk as nt
+
+    return nt
+
+
+def _lynguine_yaml() -> Any:
+    import lynguine.util.yaml as ny
+
+    return ny
 
 
 def resolve_diagrams_dir(cli_value: str | None) -> str:
@@ -107,6 +121,10 @@ def main() -> int:
     snippets_path = ".."
     if args.snippets_path:
         snippets_path = args.snippets_path
+
+    # Lazy: argparse and path resolution stay fast; lynguine loads only when extracting.
+    nt = _lynguine_talk()
+    ny = _lynguine_yaml()
 
     if args.dependency == "all":
         try:
