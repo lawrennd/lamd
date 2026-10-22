@@ -25,17 +25,15 @@ title: Honour pdf true for CVs via cvneil template
 
 Recent CVs set `pdf: true` in frontmatter. `make-cv.mk` only builds `${BASE}.docx`. The commented notes-PDF line is the talks notes template, not a CV class.
 
-`corporate/` and `no10/` already produce PDF outside lamd:
+Some CVs already produce PDF outside lamd with a local pandoc makefile of the form:
 
 ```makefile
-TEXINPUTS=../corporate/:$(TEXINPUTS) pandoc $< -o $@ \
+TEXINPUTS=.:$(TEXINPUTS) pandoc $< -o $@ \
   --pdf-engine=pdflatex \
-  --template=$(HOME)/lawrennd/publications/papers/pandoc/_templates/pandoc-cv-tex-template.tex
+  --template=/path/to/pandoc-cv-tex-template.tex
 ```
 
-That template uses `\documentclass{cvneil}`. The class currently lives beside the corporate variant, not in lamd.
-
-CV CIP-0005 still has “Verify PDF generation pathway” unchecked.
+That template uses `\documentclass{cvneil}`. The class currently lives in the user’s CV tree, not in lamd.
 
 ## Acceptance Criteria
 
@@ -43,22 +41,22 @@ CV CIP-0005 still has “Verify PDF generation pathway” unchecked.
 - [ ] PDF uses the cvneil pandoc template (or a lamd-shipped equivalent), not the notes-article template
 - [ ] `cvneil.cls` is discoverable without copying it into every variant directory by hand
 - [ ] CVs with `pdf: false` or omitted do not require LaTeX
-- [ ] Existing `no10/` and `corporate/` pandoc makefiles are not overwritten by this work
+- [ ] Existing user pandoc makefiles are not overwritten by this work
 
 ## Implementation Notes
 
-The template today lives in the publications repo. Either vendor a copy under `lamd/` (so CV builds do not depend on publications) or document a `_lamd.yml` / frontmatter key for the template path. `TEXINPUTS` must include the directory that holds `cvneil.cls`.
+The template today lives outside lamd. Either vendor a copy under `lamd/` or document a `_lamd.yml` / frontmatter key for the template path. `TEXINPUTS` must include the directory that holds `cvneil.cls`.
 
-This is HOW for CIP-0005's remaining “verify PDF” item. It can stay a backlog feature until the `.docx` blockers are closed.
+This can stay a backlog feature until the `.docx` blockers are closed.
 
 ## Related
 
-- CV CIP-0005 (PDF pathway still open)
-- Template: `publications/papers/pandoc/_templates/pandoc-cv-tex-template.tex`
-- Class: `cv/corporate/cvneil.cls` (and older `cv/tex/*/cvneil.cls`)
+- User CV probe, 2026-10-22 (PDF pathway still open)
+- Template: pandoc `cvneil` TeX template (outside this repo)
+- Class: `cvneil.cls` (outside this repo)
 
 ## Progress Updates
 
 ### 2026-10-22
 
-Confirmed `make-cv.mk` never requests a CV PDF. Corporate/no10 PDFs are from their own makefiles.
+Confirmed `make-cv.mk` never requests a CV PDF. Existing user PDFs are from their own pandoc makefiles.

@@ -54,10 +54,10 @@ Depends on the lists crash being fixed, or tests must use a talks tree without c
 
 - CIP: 0005 (mdpp validation; Phase 4 template paths)
 - Completed: `2026-08-09_reference-doc-template-resolution.md`
-- CV CIP-0005 (2026-10-22 probe)
+- User CV probe, 2026-10-22
 
 ## Progress Updates
 
 ### 2026-10-22
 
-Confirmed in isolated copies of `no10/`, `corporate/`, and `sheffield/` after pointing `talksdir` at an empty directory.
+Confirmed in isolated copies of recent user CVs after pointing `talksdir` at an empty directory.

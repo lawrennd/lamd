@@ -49,7 +49,7 @@ Prefer `subprocess.run(..., check=False).returncode` over `os.system`. Do not `s
 
 ## Related
 
-- CV CIP-0005 (2026-10-22 probe)
+- User CV probe, 2026-10-22
 - File: `lamd/makecv.py`
 
 ## Progress Updates

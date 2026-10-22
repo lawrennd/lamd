@@ -37,7 +37,7 @@ invited-talk-list.markdown: ${TALKLISTFILES}
 
 GNU Make treats `:` in a prerequisite as a static-pattern separator. A file in the talks tree named with a URL path:
 
-`talks/_notebooks/https:/inverseprobability.com/slides/diagrams/physics/pendulum_energy_conservation.gif`
+`talks/_notebooks/https:/example.com/path/file.gif`
 
 causes:
 
@@ -67,7 +67,7 @@ Do not pass raw `find` output into Make's prerequisite list. Narrow the glob (ma
 
 ## Related
 
-- CV CIP-0005 (known issues, 2026-10-22 probe)
+- User CV probe, 2026-10-22
 - Completed: `2025-12-02_makecv-missing-lists-include.md` (this include made the crash reachable)
 - Follow-on: `2026-10-22_optional-cv-list-generation.md`
 
@@ -75,4 +75,4 @@ Do not pass raw `find` output into Make's prerequisite list. Narrow the glob (ma
 
 ### 2026-10-22
 
-Found while compiling copies of `no10/`, `corporate/`, and `sheffield/` CVs. Original artefacts were not overwritten.
+Found while compiling isolated copies of recent user CVs. Original artefacts were not overwritten.

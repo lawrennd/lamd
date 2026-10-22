@@ -49,7 +49,7 @@ Either drop the extra include from `makecv.py` (keep it in `make-cv.mk`) or stop
 
 ## Related
 
-- CV CIP-0005 (2026-10-22 probe)
+- User CV probe, 2026-10-22
 - Files: `lamd/makecv.py`, `lamd/makefiles/make-cv.mk`
 
 ## Progress Updates

@@ -22,9 +22,9 @@ title: Do not require list generation for plain CVs
 
 ## Description
 
-Recent CVs (`no10/`, `corporate/`) are self-contained markdown: no `\include{publication-list.md}`, no generated lists. `makecv` still includes `make-lists.mk` and scans `talksdir` / `publicationsdir` / `groupdir` at makefile parse time.
+Some CVs are self-contained markdown: no `\include{publication-list.md}`, no generated lists. `makecv` still includes `make-lists.mk` and scans `talksdir` / `publicationsdir` / `groupdir` at makefile parse time.
 
-That coupling is why a junk file in the talks tree blocks a two-page political CV that never mentions talks.
+That coupling is why a junk file in the talks tree blocks a short CV that never mentions talks.
 
 After the colon-filename crash is fixed, list scanning should still be skipped unless the CV actually depends on a generated `.markdown` list.
 
@@ -33,21 +33,21 @@ After the colon-filename crash is fixed, list scanning should still be skipped u
 - [ ] A CV with no list includes builds `.docx` without `gfind` over `talksdir` / `publicationsdir` / `groupdir`
 - [ ] A CV that `\include`s `publication-list.md` (or equivalent) still generates `publication-list.markdown`
 - [ ] Plain variants are not required to invent a full `_lamd.yml` data-source block solely to satisfy list rules
-- [ ] Sheffield-style CVs keep current list behaviour
+- [ ] CVs that already generate publication/talk lists keep current list behaviour
 
 ## Implementation Notes
 
 Options: include `make-lists.mk` only when the source mentions list artefacts; or keep the include but give list rules no prerequisites until those artefacts are required; or split “flags” from “scan the world”. Prefer explicit over magic — the CV file or `_lamd.yml` should show whether lists are in play.
 
-Do not overwrite existing `no10/` / `corporate/` pandoc makefiles as part of this task.
+Do not overwrite existing user pandoc makefiles as part of this task.
 
 ## Related
 
-- CV CIP-0005 (2026-10-22 probe)
+- User CV probe, 2026-10-22
 - Blocked by: `2026-10-22_make-lists-colon-filenames.md`
 
 ## Progress Updates
 
 ### 2026-10-22
 
-Task created from the recent-CV probe. `no10/` and `corporate/` currently compile with direct pandoc on purpose.
+Task created from a recent user-CV probe. Those short CVs currently compile with direct pandoc on purpose.
