@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 import frontmatter as fm
 
-from lamd.mdpp import gpp_temp_path, local_edit_url_from_iface, main, process_content, setup_gpp_arguments
+from lamd.mdpp import gpp_temp_path, local_edit_url_from_iface, main, process_content, process_includes, setup_gpp_arguments
 from lamd.validation import check_dependency, check_version
 
 # Set LAMD_MACROS environment variable for testing
@@ -594,3 +594,21 @@ def test_editme_inside_include_keeps_snippets_url():
             output = fd.read()
         assert "EDITURL:https://github.com/lawrennd/snippets/edit/main/compute-concentration.md" in output
         assert local_url not in output
+
+
+def test_process_includes_separates_macros_from_document_body():
+    """talk-macros.gpp must end with a newline so \\endif is not glued to ## Contact."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        macros = os.path.join(tmpdir, "talk-macros.gpp")
+        with open(macros, "w", encoding="utf-8") as fd:
+            fd.write("\\ifdef{CODE}\n\\endif")  # no trailing newline, the historical bug
+        args = argparse.Namespace(
+            include_before_body=None,
+            replace_notation=False,
+            macros_path=tmpdir,
+            include_after_body=None,
+        )
+        before, after = process_includes(args)
+        assert before.endswith("\n")
+        assert before.endswith("\\endif\n")
+        assert after == ""

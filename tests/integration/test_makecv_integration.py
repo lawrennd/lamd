@@ -341,6 +341,19 @@ class TestIncludeSystem(TestMakeCVIntegration):
         # so ${PP} and PP= do not appear in the generated makefile directly.
         assert "make-cv-flags.mk" in makefile_content, "Makefile should include make-cv-flags.mk (which defines PP)"
 
+    def test_cv_preprocessed_rule_skips_talk_notation_and_edit_links(self):
+        """CV Word output must not dump talk-notation.tex or GitHub [edit] links."""
+        make_docx = Path(lamd.__file__).parent / "makefiles" / "make-docx.mk"
+        text = make_docx.read_text()
+        cv_start = text.index("${BASE}.preprocessed.md:")
+        cv_end = text.index("${BASE}.docx:", cv_start)
+        cv_rule = text[cv_start:cv_end]
+        notes_rule = text.split("%.notes.docx.markdown:", 1)[1].split("${BASE}.preprocessed.md:", 1)[0]
+        assert "--replace-notation" not in cv_rule
+        assert "--edit-links" not in cv_rule
+        assert "--replace-notation" in notes_rule
+        assert "--edit-links" in notes_rule
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
