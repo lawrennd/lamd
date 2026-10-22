@@ -116,6 +116,9 @@
 
 \define{\speakernotes{text}}{}
 
+\define{\machinereviewlink}{}
+\define{\machinereview}{}
+
 \define{\comment{text}}{}
 
 \define{\codeblockstart}{}
