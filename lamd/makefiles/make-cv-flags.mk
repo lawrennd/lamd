@@ -49,7 +49,7 @@ PREFIX=$(shell flags prefix ${BASE})
 # Local calls for the preprocessor and inkscape
 INKSCAPE=inkscape #/Applications/Inkscape.app/Contents/Resources/bin/inkscape
 PP=mdpp
-FIND=gfind
+FIND ?= $(shell command -v gfind >/dev/null 2>&1 && echo gfind || echo find)
 
 PPFLAGS=-T --macros=$(MACROSDIR)
 PPFLAGS=$(shell flags pp $(BASE)) --macros=$(MACROSDIR)
@@ -79,12 +79,12 @@ PPTXFLAGS=$(shell flags pptx $(BASE))
 DOCXFLAGS=$(shell flags docx $(BASE))
 SFLAGS=$(shell flags reveal $(BASE))
 
-TALKLISTFILES=$(shell ${FIND} ${TALKSDIR} -type f)
-PUBLICATIONLISTFILES=$(shell ${FIND} ${PUBLICATIONSDIR} -type f)
+# List sources are discovered at recipe time in make-lists.mk. Do not
+# $(shell find) here: empty TALKSDIR would search ".", and ":" in a
+# path is a static-pattern separator in GNU Make prerequisites.
 TEACHINGLISTFILES=${PROJECTSDIR}/teaching.yaml
 PROJECTLISTFILES=${PROJECTSDIR}/grants.yaml
 MEETINGLISTFILES=${PROJECTSDIR}/workshops.yaml
-GROUPLISTFILES=$(shell ${FIND} ${GROUPDIR} -type f)  
 EXSTUDENTFILES=${DATADIR}/students.yaml
 EXRAFILES=${DATADIR}/ras.yaml
 
@@ -136,6 +136,8 @@ check-macros:
 		echo "macrosdir: macros"; \
 		exit 1; \
 	fi
+
+include $(MAKEFILESDIR)/make-check-reference-docs.mk
 
 # Add check-macros to the all target
 all: check-snippetsdir check-postsdir check-bibdir check-macros $(ALL)

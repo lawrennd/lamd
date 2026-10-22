@@ -9,7 +9,7 @@ last_updated: "2026-10-22"
 owner: Neil Lawrence
 priority: High
 related_cips: ["0005"]
-status: Proposed
+status: Completed
 tags:
 - backlog
 - bug
@@ -39,10 +39,10 @@ This is the second failure after the `make-lists.mk` parse crash. It is leftover
 
 ## Acceptance Criteria
 
-- [ ] `make-cv-flags.mk` defines `check-reference-docs` (share with talk flags, do not duplicate logic ad hoc)
-- [ ] A CV makefile that includes `make-cv-flags.mk` + `make-docx.mk` can run `make ${BASE}.docx` without a missing-target error
-- [ ] Missing `dotx` still fails fast with the existing “reference template not found” message
-- [ ] Talk builds keep the same check
+- [x] `make-cv-flags.mk` defines `check-reference-docs` (share with talk flags, do not duplicate logic ad hoc)
+- [x] A CV makefile that includes `make-cv-flags.mk` + `make-docx.mk` can run `make ${BASE}.docx` without a missing-target error
+- [x] Missing `dotx` still fails fast with the existing “reference template not found” message
+- [x] Talk builds keep the same check
 
 ## Implementation Notes
 
@@ -61,3 +61,7 @@ Depends on the lists crash being fixed, or tests must use a talks tree without c
 ### 2026-10-22
 
 Confirmed in isolated copies of recent user CVs after pointing `talksdir` at an empty directory.
+
+### 2026-10-22 (Completed)
+
+Extracted `make-check-reference-docs.mk` and included it from both flag chains.

@@ -8,6 +8,7 @@ and runs the appropriate commands to convert it to the requested formats.
 
 import argparse
 import os
+import subprocess
 import sys
 from typing import Optional
 
@@ -278,7 +279,7 @@ def main() -> int:
 
     # Run the make command (this is where most of the time is spent)
     with profiler.measure("Make execution (total)"):
-        exit_code = os.system(make_cmd)
+        exit_code = subprocess.run(make_cmd, shell=True, check=False).returncode
 
     # Generate profiling report if enabled
     if args.profile:

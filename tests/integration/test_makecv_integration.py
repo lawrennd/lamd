@@ -156,6 +156,9 @@ class TestMakefileGeneration(TestMakeCVIntegration):
         assert "include $(MAKEFILESDIR)/make-cv-flags.mk" in makefile_content
         assert "include $(MAKEFILESDIR)/make-lists.mk" in makefile_content, "make-lists.mk should be included"
         assert "include $(MAKEFILESDIR)/make-cv.mk" in makefile_content
+        assert (
+            makefile_content.count("make-docx.mk") == 0
+        ), "make-docx.mk is included from make-cv.mk, not the generated makefile"
 
         # Verify the order: make-cv-flags.mk, then make-lists.mk, then make-cv.mk
         lines = makefile_content.split("\n")
@@ -330,10 +333,8 @@ class TestIncludeSystem(TestMakeCVIntegration):
         with open(makefile_path) as f:
             makefile_content = f.read()
 
-        # Verify that the makefile includes preprocessing for docx
-        # The make-docx.mk should have a rule that preprocesses before pandoc
-        # Check that the makefile includes make-docx.mk
-        assert "include" in makefile_content and "make-docx.mk" in makefile_content, "Makefile should include make-docx.mk"
+        # make-cv.mk includes make-docx.mk (preprocessing then pandoc)
+        assert "include $(MAKEFILESDIR)/make-cv.mk" in makefile_content, "Makefile should include make-cv.mk"
 
         # make-cv-flags.mk is always included and defines PP=mdpp there;
         # make-docx.mk uses ${PP} for preprocessing. Both are included files,

@@ -3,6 +3,7 @@ Unit tests for the maketalk module.
 """
 
 import os
+import subprocess
 import sys
 import tempfile
 from unittest.mock import mock_open, patch
@@ -48,11 +49,13 @@ This is a test paragraph.
     @patch("sys.argv", ["maketalk", "test.md"])
     @patch("lamd.maketalk.open", new_callable=mock_open)
     @patch("os.system")
+    @patch("lamd.maketalk.subprocess.run")
     @patch("os.path.exists")
-    def test_makefile_creation(self, mock_exists, mock_system, mock_file):
+    def test_makefile_creation(self, mock_exists, mock_run, mock_system, mock_file):
         """Test that a makefile is created with the correct content."""
         # Mock _lamd.yml exists
         mock_exists.return_value = True
+        mock_run.return_value = subprocess.CompletedProcess(["make", "all"], 0)
 
         # Mock the location of the lamd module
         with patch("lamd.__file__", "/path/to/lamd/__init__.py"):
@@ -82,17 +85,18 @@ This is a test paragraph.
                 for expected in expected_writes:
                     assert expected in calls
 
-                # Assert make all was called
-                assert mock_system.call_args_list[-1][0][0] == "make all"
+                assert mock_run.call_args_list[-1][0][0] == "make all"
 
     @patch("sys.argv", ["maketalk", "test.md", "--format", "slides"])
     @patch("lamd.maketalk.open", new_callable=mock_open)
     @patch("os.system")
+    @patch("lamd.maketalk.subprocess.run")
     @patch("os.path.exists")
-    def test_format_option(self, mock_exists, mock_system, mock_file):
+    def test_format_option(self, mock_exists, mock_run, mock_system, mock_file):
         """Test that the --format option affects the make command."""
         # Mock _lamd.yml exists
         mock_exists.return_value = True
+        mock_run.return_value = subprocess.CompletedProcess(["make", "slides"], 0)
 
         # Mock necessary dependencies
         with patch("lamd.__file__", "/path/to/lamd/__init__.py"):
@@ -103,16 +107,18 @@ This is a test paragraph.
                 main()
 
                 # Assert the correct make command was called
-                assert mock_system.call_args_list[-1][0][0] == "make slides"
+                assert mock_run.call_args_list[-1][0][0] == "make slides"
 
     @patch("sys.argv", ["maketalk", "test.md", "--to", "html"])
     @patch("lamd.maketalk.open", new_callable=mock_open)
     @patch("os.system")
+    @patch("lamd.maketalk.subprocess.run")
     @patch("os.path.exists")
-    def test_to_option(self, mock_exists, mock_system, mock_file):
+    def test_to_option(self, mock_exists, mock_run, mock_system, mock_file):
         """Test that the --to option affects the make command."""
         # Mock _lamd.yml exists
         mock_exists.return_value = True
+        mock_run.return_value = subprocess.CompletedProcess(["make", "html"], 0)
 
         # Mock necessary dependencies
         with patch("lamd.__file__", "/path/to/lamd/__init__.py"):
@@ -123,16 +129,18 @@ This is a test paragraph.
                 main()
 
                 # Assert the correct make command was called
-                assert mock_system.call_args_list[-1][0][0] == "make html"
+                assert mock_run.call_args_list[-1][0][0] == "make html"
 
     @patch("sys.argv", ["maketalk", "test.md", "--format", "notes", "--to", "pdf"])
     @patch("lamd.maketalk.open", new_callable=mock_open)
     @patch("os.system")
+    @patch("lamd.maketalk.subprocess.run")
     @patch("os.path.exists")
-    def test_format_and_to_options(self, mock_exists, mock_system, mock_file):
+    def test_format_and_to_options(self, mock_exists, mock_run, mock_system, mock_file):
         """Test that combining --format and --to options works correctly."""
         # Mock _lamd.yml exists
         mock_exists.return_value = True
+        mock_run.return_value = subprocess.CompletedProcess(["make", "test.notes.pdf"], 0)
 
         # Mock necessary dependencies
         with patch("lamd.__file__", "/path/to/lamd/__init__.py"):
@@ -143,7 +151,7 @@ This is a test paragraph.
                 main()
 
                 # Assert the correct make command was called with the combined target
-                assert mock_system.call_args_list[-1][0][0] == "make test.notes.pdf"
+                assert mock_run.call_args_list[-1][0][0] == "make test.notes.pdf"
 
     @patch("sys.argv", ["maketalk", "test.md"])
     @patch("builtins.open", new_callable=mock_open)

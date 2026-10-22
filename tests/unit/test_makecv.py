@@ -16,11 +16,12 @@ class TestMakeCV(unittest.TestCase):
 
     @patch("argparse.ArgumentParser.parse_args")
     @patch("os.system")
+    @patch("lamd.makecv.subprocess.run")
     @patch("os.path.dirname")
     @patch("lamd.config.interface.Interface.from_file")
     @patch("lynguine.util.talk.talk_field")
     @patch("os.path.exists")
-    def test_main_function(self, mock_exists, mock_talk_field, mock_from_file, mock_dirname, mock_system, mock_args):
+    def test_main_function(self, mock_exists, mock_talk_field, mock_from_file, mock_dirname, mock_run, mock_system, mock_args):
         """
         Test the main function of makecv.
         """
@@ -54,12 +55,13 @@ class TestMakeCV(unittest.TestCase):
 
     @patch("argparse.ArgumentParser.parse_args")
     @patch("os.system")
+    @patch("lamd.makecv.subprocess.run")
     @patch("os.path.dirname")
     @patch("lamd.config.interface.Interface.from_file")
     @patch("lynguine.util.talk.talk_field")
     @patch("os.path.exists")
     def test_main_function_with_talk_fields(
-        self, mock_exists, mock_talk_field, mock_from_file, mock_dirname, mock_system, mock_args
+        self, mock_exists, mock_talk_field, mock_from_file, mock_dirname, mock_run, mock_system, mock_args
     ):
         """
         Test the main function when talk_field succeeds for both fields.
@@ -92,12 +94,13 @@ class TestMakeCV(unittest.TestCase):
 
     @patch("argparse.ArgumentParser.parse_args")
     @patch("os.system")
+    @patch("lamd.makecv.subprocess.run")
     @patch("os.path.dirname")
     @patch("lamd.config.interface.Interface.from_file")
     @patch("lynguine.util.talk.talk_field")
     @patch("os.path.exists")
     def test_main_function_with_empty_field(
-        self, mock_exists, mock_talk_field, mock_from_file, mock_dirname, mock_system, mock_args
+        self, mock_exists, mock_talk_field, mock_from_file, mock_dirname, mock_run, mock_system, mock_args
     ):
         """
         Test the main function when a field is not present in the interface.
