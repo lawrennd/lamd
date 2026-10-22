@@ -33,6 +33,16 @@ The notes context is used for creating detailed documentation, lecture notes, or
     Includes a figure formatted for documentation
     Args:
         block: Figure content and caption
+
+\machinereviewlink
+    Notes-only pointer (near the start of a lecture) to the machine-review
+    section. HTML notes render it as a short aside; other notes formats use a
+    blockquote. Empty on slides.
+
+\machinereview
+    Notes-only heading ``Machine Review`` (pandoc id ``machine-review``).
+    Place at the end of the lecture, then include the review body under
+    ``\ifdef{NOTES}`` so gpp does not dump it into slides. Empty on slides.
 ```
 
 ## Example Usage
