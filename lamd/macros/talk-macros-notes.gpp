@@ -94,6 +94,16 @@
 }
 \endif}
 
+\define{\machinereviewlink}{
+> **Machine review.** A [machine review of this lecture](\#machine-review) is at the end of these notes. It fact-checks historical and technical claims. It is not assessed.
+
+}
+
+\define{\machinereview}{
+\subsection{Machine Review}
+
+}
+
 \define{\thanks}{
 \subsection{Thanks!}
 
