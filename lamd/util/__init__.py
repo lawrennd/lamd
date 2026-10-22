@@ -1,17 +1,45 @@
 # lamd.util — shared utility modules
+# pandas and lynguine are imported lazily so `import lamd` stays fast.
+from __future__ import annotations
+
 import datetime
 import os
-from typing import Any, List, Optional, Union
+from typing import TYPE_CHECKING, Any, List, Optional, Union
 
-import pandas as pd
-from lynguine.config.context import Context
-from lynguine.log import Logger
-
-cntxt = Context(name="lamd")
-log = Logger(name=__name__, level=cntxt["logging"]["level"], filename=cntxt["logging"]["filename"])
+if TYPE_CHECKING:
+    import pandas as pd
 
 # Module-level variable for tracking the since year
 SINCE_YEAR: Optional[int] = None
+
+_pd = None
+_log = None
+
+
+def _pandas():
+    """Import pandas on first use (avoids pyarrow tax at CLI startup)."""
+    global _pd
+    if _pd is None:
+        import pandas as pd
+
+        _pd = pd
+    return _pd
+
+
+def _logger():
+    """Import lynguine logging on first use."""
+    global _log
+    if _log is None:
+        from lynguine.config.context import Context
+        from lynguine.log import Logger
+
+        cntxt = Context(name="lamd")
+        _log = Logger(
+            name=__name__,
+            level=cntxt["logging"]["level"],
+            filename=cntxt["logging"]["filename"],
+        )
+    return _log
 
 
 def set_since_year(year: int) -> None:
@@ -34,6 +62,7 @@ def file_type(filename: str) -> str:
 # Preprocessors
 def convert_datetime(df: pd.DataFrame, columns: Union[str, List[str]]) -> pd.DataFrame:
     """Preprocessor to set datetime type on columns."""
+    pd = _pandas()
     if isinstance(columns, str):
         columns = [columns]
     for column in columns:
@@ -44,6 +73,7 @@ def convert_datetime(df: pd.DataFrame, columns: Union[str, List[str]]) -> pd.Dat
 
 def convert_int(df: pd.DataFrame, columns: Union[str, List[str]]) -> pd.DataFrame:
     """Preprocessor to set integer type on columns."""
+    pd = _pandas()
     if isinstance(columns, str):
         columns = [columns]
     for column in columns:
@@ -54,6 +84,7 @@ def convert_int(df: pd.DataFrame, columns: Union[str, List[str]]) -> pd.DataFram
 
 def convert_string(df: pd.DataFrame, columns: Union[str, List[str]]) -> pd.DataFrame:
     """Preprocessor to set string type on columns."""
+    pd = _pandas()
     if isinstance(columns, str):
         columns = [columns]
     for column in columns:
@@ -64,6 +95,7 @@ def convert_string(df: pd.DataFrame, columns: Union[str, List[str]]) -> pd.DataF
 
 def convert_year_iso(df: pd.DataFrame, column: str = "year", month: int = 1, day: int = 1) -> pd.DataFrame:
     """Preprocessor to set string type on columns."""
+    log = _logger()
 
     def year_to_iso(field: Union[int, str, datetime.date]) -> datetime.date:
         """Convert a year field to an iso date using the provided month and day."""
@@ -92,18 +124,21 @@ def convert_year_iso(df: pd.DataFrame, column: str = "year", month: int = 1, day
 # Augmentors
 def addmonth(df: pd.DataFrame, newcolumn: str = "month", source: str = "date") -> pd.DataFrame:
     """Add month column based on source date field."""
+    pd = _pandas()
     df[newcolumn] = df[source].apply(lambda x: x.month_name() if x is not None else pd.NA)
     return df
 
 
 def addyear(df: pd.DataFrame, newcolumn: str = "year", source: str = "date") -> pd.DataFrame:
     """Add year column and based on source date field."""
+    pd = _pandas()
     df[newcolumn] = df[source].apply(lambda x: x.year if x is not None else pd.NA)
     return df
 
 
 def augmentmonth(df: pd.DataFrame, newcolumn: str = "month", source: str = "date") -> pd.DataFrame:
     """Augment the  month column based on source date field."""
+    pd = _pandas()
     for index, entry in df.iterrows():
         if pd.isna(df.loc[index, newcolumn]) and not pd.isna(df.loc[index, source]):
             df.loc[index, newcolumn] = df.loc[index, source].month_name()
@@ -112,6 +147,7 @@ def augmentmonth(df: pd.DataFrame, newcolumn: str = "month", source: str = "date
 
 def augmentyear(df: pd.DataFrame, newcolumn: str = "year", source: str = "date") -> pd.DataFrame:
     """Augment the year column based on source date field."""
+    pd = _pandas()
     for index, entry in df.iterrows():
         if pd.isna(df.loc[index, newcolumn]) and not pd.isna(df.loc[index, source]):
             df.loc[index, newcolumn] = df.loc[index, source].year
@@ -150,6 +186,7 @@ def recent(df: pd.DataFrame, column: str = "year") -> pd.Series:
 
 def current(df: pd.DataFrame, start: str = "start", end: str = "end", current: Optional[str] = None) -> pd.Series:
     """Filter on whether item is current"""
+    pd = _pandas()
     now = pd.to_datetime(datetime.datetime.now().date())
     within = (df[start] <= now) & (pd.isna(df[end]) | (df[end] >= now))
     if current is not None:
@@ -160,6 +197,7 @@ def current(df: pd.DataFrame, start: str = "start", end: str = "end", current: O
 
 def former(df: pd.DataFrame, end: str = "end") -> pd.Series:
     """Filter on whether item is current"""
+    pd = _pandas()
     now = pd.to_datetime(datetime.datetime.now().date())
     return df[end] < now
 
