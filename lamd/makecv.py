@@ -9,6 +9,7 @@ It creates a makefile with appropriate configurations and runs build commands.
 
 import argparse
 import os
+import subprocess
 import sys
 from typing import Optional
 
@@ -125,8 +126,7 @@ def main() -> int:
             f.write("include $(MAKEFILESDIR)/make-cv-flags.mk\n")
             f.write("include $(MAKEFILESDIR)/make-lists.mk\n")
             f.write("include $(MAKEFILESDIR)/make-cv.mk\n")
-            if cv_frontmatter.get("docx", False):
-                f.write("include $(MAKEFILESDIR)/make-docx.mk\n")
+            # make-cv.mk already includes make-docx.mk; do not include it again.
 
     # Update external dependencies if needed
     with profiler.measure("Dependency git pulls"):
@@ -250,7 +250,7 @@ def main() -> int:
 
     # Final build step (this is where most of the time is spent)
     with profiler.measure("Make execution (total)"):
-        exit_code = os.system("make all")
+        exit_code = subprocess.run(["make", "all"], check=False).returncode
 
     # Generate profiling report if enabled
     if args.profile:

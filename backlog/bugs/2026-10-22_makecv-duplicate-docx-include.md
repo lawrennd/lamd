@@ -8,7 +8,7 @@ last_updated: "2026-10-22"
 owner: Neil Lawrence
 priority: Medium
 related_cips: []
-status: Proposed
+status: Completed
 tags:
 - backlog
 - bug
@@ -39,9 +39,9 @@ Harmless once the other blockers are fixed, but it hides real errors and means t
 
 ## Acceptance Criteria
 
-- [ ] Generated CV makefile includes `make-docx.mk` exactly once
-- [ ] `make ${BASE}.docx` still preprocesses then runs pandoc
-- [ ] No “overriding commands for target” warnings from `make-docx.mk` on a clean CV build
+- [x] Generated CV makefile includes `make-docx.mk` exactly once
+- [x] `make ${BASE}.docx` still preprocesses then runs pandoc
+- [x] No “overriding commands for target” warnings from `make-docx.mk` on a clean CV build
 
 ## Implementation Notes
 
@@ -57,3 +57,7 @@ Either drop the extra include from `makecv.py` (keep it in `make-cv.mk`) or stop
 ### 2026-10-22
 
 Seen on every isolated `makecv` run that got as far as Make.
+
+### 2026-10-22 (Completed)
+
+Dropped the extra include from `makecv.py`. `make-cv.mk` remains the single include.

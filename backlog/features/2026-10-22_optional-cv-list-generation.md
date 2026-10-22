@@ -9,7 +9,7 @@ last_updated: "2026-10-22"
 owner: Neil Lawrence
 priority: Medium
 related_cips: []
-status: Proposed
+status: Completed
 tags:
 - backlog
 - feature
@@ -30,10 +30,10 @@ After the colon-filename crash is fixed, list scanning should still be skipped u
 
 ## Acceptance Criteria
 
-- [ ] A CV with no list includes builds `.docx` without `gfind` over `talksdir` / `publicationsdir` / `groupdir`
-- [ ] A CV that `\include`s `publication-list.md` (or equivalent) still generates `publication-list.markdown`
-- [ ] Plain variants are not required to invent a full `_lamd.yml` data-source block solely to satisfy list rules
-- [ ] CVs that already generate publication/talk lists keep current list behaviour
+- [x] A CV with no list includes builds `.docx` without `gfind` over `talksdir` / `publicationsdir` / `groupdir`
+- [x] A CV that `\include`s `publication-list.md` (or equivalent) still generates `publication-list.markdown`
+- [x] Plain variants are not required to invent a full `_lamd.yml` data-source block solely to satisfy list rules
+- [x] CVs that already generate publication/talk lists keep current list behaviour
 
 ## Implementation Notes
 
@@ -51,3 +51,7 @@ Do not overwrite existing user pandoc makefiles as part of this task.
 ### 2026-10-22
 
 Task created from a recent user-CV probe. Those short CVs currently compile with direct pandoc on purpose.
+
+### 2026-10-22 (Completed)
+
+`make-lists.mk` is still included, but find runs only when a list target is built. Plain CVs that never depend on those targets do not scan data trees.

@@ -8,7 +8,7 @@ last_updated: "2026-10-22"
 owner: Neil Lawrence
 priority: High
 related_cips: []
-status: Proposed
+status: Completed
 tags:
 - backlog
 - bug
@@ -53,11 +53,11 @@ This became a CV blocker when `makecv` started including `make-lists.mk` (comple
 
 ## Acceptance Criteria
 
-- [ ] `make -n all` on a CV makefile succeeds even when `talksdir` contains a filename with a colon
-- [ ] Talk/publication/group list prerequisites are content files (e.g. `*.md`), not every file under the tree
-- [ ] Empty or unset `TALKSDIR` / `PUBLICATIONSDIR` / `GROUPDIR` does not make `gfind` search the CV directory
-- [ ] Existing CVs that include `publication-list.markdown` / `invited-talk-list.markdown` still have a way to rebuild those lists
-- [ ] Unit or makefile test covers a colon in a dummy talks tree
+- [x] `make -n all` on a CV makefile succeeds even when `talksdir` contains a filename with a colon
+- [x] Talk/publication/group list sources are `*.md` discovered at recipe time, not Make prerequisites
+- [x] Empty or unset `TALKSDIR` / `PUBLICATIONSDIR` / `GROUPDIR` does not make `gfind` search the CV directory
+- [x] Existing CVs that include `publication-list.markdown` / `invited-talk-list.markdown` still have a way to rebuild those lists
+- [x] Unit or makefile test covers a colon in a dummy talks tree
 
 ## Implementation Notes
 
@@ -76,3 +76,7 @@ Do not pass raw `find` output into Make's prerequisite list. Narrow the glob (ma
 ### 2026-10-22
 
 Found while compiling isolated copies of recent user CVs. Original artefacts were not overwritten.
+
+### 2026-10-22 (Completed)
+
+List rules now find `*.md` in the recipe. Empty/unset dirs skip find. Tests in `tests/unit/test_cv_makefiles.py`.

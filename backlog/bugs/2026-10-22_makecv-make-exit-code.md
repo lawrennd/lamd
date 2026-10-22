@@ -8,7 +8,7 @@ last_updated: "2026-10-22"
 owner: Neil Lawrence
 priority: High
 related_cips: []
-status: Proposed
+status: Completed
 tags:
 - backlog
 - bug
@@ -38,10 +38,10 @@ The same pattern should be checked in `maketalk` if it also uses `os.system("mak
 
 ## Acceptance Criteria
 
-- [ ] When `make all` fails, `makecv` exits non-zero (typically Make's 2)
-- [ ] When `make all` succeeds, `makecv` exits 0
-- [ ] Unit or integration test asserts a failing makefile is not reported as success
-- [ ] `maketalk` matches if it has the same `os.system` wait-status bug
+- [x] When `make all` fails, `makecv` exits non-zero (typically Make's 2)
+- [x] When `make all` succeeds, `makecv` exits 0
+- [x] Unit or integration test asserts a failing makefile is not reported as success
+- [x] `maketalk` matches if it has the same `os.system` wait-status bug
 
 ## Implementation Notes
 
@@ -57,3 +57,7 @@ Prefer `subprocess.run(..., check=False).returncode` over `os.system`. Do not `s
 ### 2026-10-22
 
 Observed during the recent-CV probe: wrapper `python_exit=0` while Make had already stopped.
+
+### 2026-10-22 (Completed)
+
+`makecv` and `maketalk` now use `subprocess.run(..., check=False).returncode`.

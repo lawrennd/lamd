@@ -47,7 +47,7 @@ That template uses `\documentclass{cvneil}`. The class currently lives in the us
 
 The template today lives outside lamd. Either vendor a copy under `lamd/` or document a `_lamd.yml` / frontmatter key for the template path. `TEXINPUTS` must include the directory that holds `cvneil.cls`.
 
-This can stay a backlog feature until the `.docx` blockers are closed.
+The `.docx` blockers are closed. `tests/unit/test_cv_makefiles.py::test_cv_compile_blockers_cleared_for_pdf_work` is the gate; `test_pdf_true_make_all_requests_cvneil_pdf` is a strict xfail for this task.
 
 ## Related
 
@@ -60,3 +60,7 @@ This can stay a backlog feature until the `.docx` blockers are closed.
 ### 2026-10-22
 
 Confirmed `make-cv.mk` never requests a CV PDF. Existing user PDFs are from their own pandoc makefiles.
+
+### 2026-10-22
+
+Docx compile blockers landed. Next: satisfy `test_pdf_true_make_all_requests_cvneil_pdf`.
