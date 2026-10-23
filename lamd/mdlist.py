@@ -12,7 +12,7 @@ from lynguine.util.liquid import load_template_env
 from lynguine.util.misc import remove_nan
 from referia import assess
 
-from lamd.util import set_since_year
+from lamd.util import get_since_year, set_since_year
 
 # Server mode support (optional dependency)
 try:
@@ -82,6 +82,199 @@ def load_cvlists_interface() -> Interface:
         directory=config_dir,
         allowed_roots=[config_dir],
     )
+
+
+def _is_year_number(value: object) -> bool:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return False
+    if pd.isna(value):
+        return False
+    return 1900 <= int(value) <= 2100
+
+
+def value_year(value: object) -> Optional[int]:
+    """Calendar year from an int year, datetime, or parseable date string."""
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return None
+    if _is_year_number(value):
+        return int(value)
+    ts = pd.to_datetime(value, errors="coerce")
+    if pd.isna(ts):
+        return None
+    return int(ts.year)
+
+
+def value_date(value: object, *, end: bool = False) -> pd.Timestamp:
+    """Timestamp for current/former comparisons. Bare years become Jan 1 or Dec 31."""
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return pd.NaT
+    if _is_year_number(value):
+        year = int(value)
+        if end:
+            return pd.Timestamp(year=year, month=12, day=31)
+        return pd.Timestamp(year=year, month=1, day=1)
+    ts = pd.to_datetime(value, errors="coerce")
+    return ts if not pd.isna(ts) else pd.NaT
+
+
+def row_year(row: pd.Series) -> Optional[int]:
+    for column in ("year", "published", "date", "start"):
+        if column in row.index:
+            year = value_year(row[column])
+            if year is not None:
+                return year
+    return None
+
+
+def compute_section(config: object) -> dict:
+    """Return the compute mapping from a list config.
+
+    ``CustomDataFrame.from_flow`` rewrites ``compute`` from a dict into a
+    one-element list. Unwrap that so filters and sorters remain reachable.
+    """
+    compute = config.get("compute") if isinstance(config, dict) else None
+    if isinstance(compute, dict):
+        return compute
+    if isinstance(compute, list):
+        merged: dict = {}
+        for item in compute:
+            if isinstance(item, dict):
+                merged.update(item)
+        return merged
+    return {}
+
+
+def _truthy_flag(value: object) -> bool:
+    if isinstance(value, bool):
+        return value
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return False
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        if pd.isna(value):
+            return False
+        return bool(value)
+    return str(value).strip().lower() in {"1", "true", "yes", "y"}
+
+
+def _as_filter_list(filt: object) -> list:
+    if filt is None:
+        return []
+    if isinstance(filt, dict):
+        return [filt]
+    if isinstance(filt, list):
+        return [item for item in filt if isinstance(item, dict)]
+    return []
+
+
+def apply_named_filter(df: pd.DataFrame, spec: dict, since_year: Optional[int], today: pd.Timestamp) -> pd.Series:
+    """Boolean mask for one cvlists.yml filter spec."""
+    function = spec.get("function")
+    args = spec.get("args") or {}
+    true = pd.Series(True, index=df.index)
+    if df.empty:
+        return true
+    if function == "recent":
+        column = args.get("column", "year")
+        years = df.apply(lambda row: value_year(row[column]) if column in row.index else row_year(row), axis=1)
+        if since_year is None:
+            return true
+        known = years.notna()
+        return ~known | (years >= since_year)
+    if function == "current":
+        current_col = args.get("current")
+        if current_col and current_col in df.columns:
+            return df[current_col].map(_truthy_flag)
+        end_col = args.get("end", "end")
+        if end_col not in df.columns:
+            return true
+        ends = df[end_col].map(lambda value: value_date(value, end=True))
+        return ends.isna() | (ends >= today)
+    if function == "former":
+        current_col = args.get("current")
+        if current_col and current_col in df.columns:
+            return ~df[current_col].map(_truthy_flag)
+        end_col = args.get("end", "end")
+        if end_col not in df.columns:
+            return pd.Series(False, index=df.index)
+        ends = df[end_col].map(lambda value: value_date(value, end=True))
+        return ends.notna() & (ends < today)
+    if function == "columnis":
+        column, expected = args.get("column"), args.get("value")
+        if column not in df.columns:
+            return pd.Series(False, index=df.index)
+        return df[column] == expected
+    if function == "columncontains":
+        column, expected = args.get("column"), args.get("value")
+        if column not in df.columns:
+            return pd.Series(False, index=df.index)
+
+        def contains(cell: object) -> bool:
+            if isinstance(cell, (list, tuple)):
+                return expected in cell
+            if cell is None or (isinstance(cell, float) and pd.isna(cell)):
+                return False
+            return expected in str(cell)
+
+        return df[column].map(contains)
+    if function == "onbool":
+        column = args.get("column")
+        invert = bool(args.get("invert", False))
+        if column not in df.columns:
+            return pd.Series(False, index=df.index)
+        mask = df[column].fillna(False).astype(bool)
+        return ~mask if invert else mask
+    return true
+
+
+def apply_list_filters(
+    df: pd.DataFrame,
+    filters: object,
+    since_year: Optional[int],
+    today: Optional[pd.Timestamp] = None,
+    *,
+    apply_since: bool = False,
+) -> pd.Series:
+    """AND together cvlists filters. Optionally also apply a since-year cut."""
+    if today is None:
+        today = pd.Timestamp(datetime.datetime.now().date())
+    mask = pd.Series(True, index=df.index)
+    specs = _as_filter_list(filters)
+    for spec in specs:
+        mask = mask & apply_named_filter(df, spec, since_year, today)
+    if apply_since or any(spec.get("function") == "recent" for spec in specs):
+        if since_year is not None:
+            years = df.apply(row_year, axis=1)
+            known = years.notna()
+            mask = mask & (~known | (years >= since_year))
+    return mask
+
+
+def coerce_yearish_dates(df: pd.DataFrame) -> pd.DataFrame:
+    """Turn bare integer years on date columns into timestamps for Liquid date filters."""
+    if df.empty:
+        return df
+    out = df.copy()
+    for column, end in (("start", False), ("end", True), ("date", False), ("published", False)):
+        if column not in out.columns:
+            continue
+        out[column] = out[column].map(lambda value, is_end=end: value_date(value, end=is_end))
+    return out
+
+
+def sort_list_frame(df: pd.DataFrame, sorter: object) -> pd.DataFrame:
+    if not isinstance(sorter, dict):
+        return df
+    args = sorter.get("args") or {}
+    by = args.get("by", sorter.get("by"))
+    if not by:
+        return df
+    if not isinstance(by, list):
+        by = [by]
+    columns = [column for column in by if column in df.columns]
+    if not columns:
+        return df
+    descending = sorter.get("function") == "descending"
+    return df.sort_values(by=columns, ascending=not descending, na_position="last")
 
 
 def main() -> int:
@@ -156,8 +349,11 @@ def main() -> int:
 
     interface = load_cvlists_interface()[args.listtype]
 
-    # Set the year filter - either from command line or default to 5 years ago
-    if args.since_year:
+    # Set the year filter - either from command line or default to 5 years ago.
+    # The default only applies when a cvlists filter is `recent`; current/former
+    # lists must not be year-cut just because we stored a default.
+    explicit_since = args.since_year is not None
+    if explicit_since:
         set_since_year(args.since_year)
     else:
         set_since_year(now_year - 5)
@@ -194,62 +390,49 @@ def main() -> int:
         sys.stderr.write("Note: Server mode for mdlist deferred to Phase 3. Using direct mode.\n")
         use_server = False
 
+    # Snapshot compute before from_flow, which may wrap the mapping in a list.
+    compute = compute_section(interface)
+    listtemplate = interface["listtemplate"]
+
     # Load data (direct mode for now)
     data = assess.data.CustomDataFrame.from_flow(interface)
+    compute = compute_section(interface) or compute
 
-    # Initialize settings dictionary from the interface
-    settings = {"lists": interface, "compute": {}, "filter": []}
+    settings = {
+        "lists": interface,
+        "compute": compute,
+        "filter": _as_filter_list(compute.get("filter")),
+    }
 
     text = ""
 
-    # Process the data through different operations (preprocessor, augmentor, sorter)
-    # Note: interface already contains the listtype-specific config from cvlists.yml
-    # Operations are nested under the "compute" key
-    for op in ["preprocessor", "augmentor", "sorter"]:
-        if "compute" in settings["lists"] and op in settings["lists"]["compute"]:
-            # Add operation to compute settings
-            comp = settings["lists"]["compute"][op]
-            if op in settings["compute"]:
-                if type(comp) is not list:
-                    comp = [comp]
-                settings["compute"][op] += comp
-            else:
-                settings["compute"][op] = comp
-
-    # Handle filters if specified
-    if "compute" in settings["lists"] and "filter" in settings["lists"]["compute"]:
-        filt = settings["lists"]["compute"]["filter"]
-        if "filter" in settings:
-            if type(filt) is not list:
-                filt = [filt]
-            settings["filter"] += filt
-        else:
-            settings["filter"] = filt
-
-    # Preprocess the data
-    # Note: preprocess() may require interface but referia's CustomDataFrame
-    # doesn't pass it through. Try without for now.
     try:
         data.preprocess()
-    except TypeError as e:
-        # Skip preprocessing if interface argument issue
-        pass
+    except TypeError as err:
+        sys.stderr.write(f"Warning: skipping lynguine preprocess ({err}). Applying pandas list filters instead.\n")
 
-    # Get the DataFrame from the data object
     df = data.to_pandas()
+    if not isinstance(df, pd.DataFrame):
+        df = pd.DataFrame()
 
-    # Apply filter function to get boolean mask
-    # This is a placeholder implementation since we don't have the actual filter functions
-    # In a real implementation, this would use the filters from settings
-    filt = pd.Series([True] * len(df), index=df.index)
+    df = coerce_yearish_dates(df)
+    df = sort_list_frame(df, settings["compute"].get("sorter"))
+    filt = apply_list_filters(
+        df,
+        settings.get("filter"),
+        get_since_year(),
+        now,
+        apply_since=explicit_since,
+    )
 
-    # Generate markdown text using the specified template
-    listtemplate = settings["lists"]["listtemplate"]
-    for index, entry in df.iterrows():
-        if not pd.isna(filt[index]) and filt[index]:
-            kwargs = remove_nan(entry.to_dict())
-            text += env.get_template(listtemplate + ext).render(**kwargs)
-            text += "\n"
+    skip_empty_title = listtemplate == "listtalk"
+    keep = filt.reindex(df.index).fillna(False).astype(bool)
+    for _, entry in df.loc[keep].iterrows():
+        kwargs = remove_nan(entry.to_dict())
+        if skip_empty_title and not kwargs.get("title"):
+            continue
+        text += env.get_template(listtemplate + ext).render(**kwargs)
+        text += "\n"
 
     # Output the generated markdown
     if args.output is not None:

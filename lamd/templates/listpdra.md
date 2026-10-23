@@ -1,1 +1,1 @@
-* {% include 'listperson' %}
+* {% include 'listperson.md' %}
