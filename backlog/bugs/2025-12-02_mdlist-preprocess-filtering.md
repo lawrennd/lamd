@@ -2,9 +2,9 @@
 category: bugs
 created: '2025-12-02'
 id: 2025-12-02_mdlist-preprocess-filtering
-last_updated: '2025-12-02'
-priority: Medium
-related_cips: []
+last_updated: '2026-10-23'
+priority: High
+related_cips: ["0015"]
 owner: "Neil Lawrence"
 status: Proposed
 title: mdlist filtering not working due to preprocess/Compute interface mismatch
@@ -104,3 +104,6 @@ Bypass the preprocess system entirely and implement basic filtering (since_year,
 
 ### 2025-12-02
 Task created. Issue discovered when testing `mdlist publications -s 2020` which returned all publications instead of just those from 2020 onwards. Currently working around with try/except in mdlist.py that skips preprocessing entirely. CV generation works but without filtering.
+
+### 2026-10-23
+Still open. A CV with `publicationsince: 2019` produced a 430-line career list starting at 1998. `mdlist grants` and `exgrants` were byte-identical. `mdlist meetings -s 2020` still included a 2018 workshop. `Compute.preprocess` still requires `interface`; referia still does not pass it; mdlist still swallows `TypeError`. CIP-0015 takes Option D (pandas filters in mdlist) so CVs are not blocked on the referia heatmap branch. Referia preprocess remains a follow-up in that CIP.
