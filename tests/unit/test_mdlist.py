@@ -12,7 +12,15 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 import pandas as pd
 
-from lamd.mdlist import cvlists_config_dir, load_cvlists_interface, main
+from lamd.mdlist import (
+    apply_list_filters,
+    coerce_yearish_dates,
+    compute_section,
+    cvlists_config_dir,
+    load_cvlists_interface,
+    main,
+    value_year,
+)
 from lamd.util import get_since_year, set_since_year
 
 
@@ -468,3 +476,140 @@ def test_load_cvlists_interface_from_other_cwd(tmp_path, monkeypatch) -> None:
     iface = load_cvlists_interface()
     assert "publications" in iface
     assert os.path.isfile(os.path.join(cvlists_config_dir(), "cvlists.yml"))
+
+
+def test_value_year_accepts_int_datetime_and_string() -> None:
+    assert value_year(1998) == 1998
+    assert value_year(pd.Timestamp("2020-06-01")) == 2020
+    assert value_year("2018-09-03") == 2018
+    assert value_year(None) is None
+
+
+def test_apply_list_filters_since_year_drops_old_publications() -> None:
+    df = pd.DataFrame({"title": ["old", "new"], "year": [1998, 2024]})
+    mask = apply_list_filters(
+        df,
+        {"function": "recent", "args": {"column": "year"}},
+        since_year=2020,
+        today=pd.Timestamp("2026-10-23"),
+    )
+    assert list(df.loc[mask, "title"]) == ["new"]
+
+
+def test_apply_list_filters_current_versus_former_grants() -> None:
+    today = pd.Timestamp("2026-10-23")
+    df = pd.DataFrame(
+        {
+            "title": ["running", "finished", "year-int-old"],
+            "end": [pd.Timestamp("2027-01-01"), pd.Timestamp("2022-12-31"), 2020],
+        }
+    )
+    current = apply_list_filters(df, {"function": "current", "args": {"end": "end"}}, None, today)
+    former = apply_list_filters(df, {"function": "former", "args": {"end": "end"}}, None, today)
+    assert list(df.loc[current, "title"]) == ["running"]
+    assert list(df.loc[former, "title"]) == ["finished", "year-int-old"]
+
+
+def test_apply_list_filters_explicit_since_without_recent_spec() -> None:
+    df = pd.DataFrame({"title": ["old", "new"], "year": [2018, 2022]})
+    mask = apply_list_filters(df, [], since_year=2020, today=pd.Timestamp("2026-10-23"), apply_since=True)
+    assert list(df.loc[mask, "title"]) == ["new"]
+
+
+def test_compute_section_unwraps_from_flow_list() -> None:
+    mapping = {"sorter": {"function": "descending"}, "filter": {"function": "former"}}
+    assert compute_section({"compute": mapping}) == mapping
+    assert compute_section({"compute": [mapping]}) == mapping
+    assert compute_section({"compute": []}) == {}
+
+
+def test_current_flag_column_overrides_end_date() -> None:
+    today = pd.Timestamp("2026-10-23")
+    df = pd.DataFrame(
+        {
+            "title": ["flagged-current", "flagged-former"],
+            "current": [True, False],
+            "end": [pd.Timestamp("2020-01-01"), pd.Timestamp("2028-01-01")],
+        }
+    )
+    spec = {"function": "current", "args": {"current": "current", "end": "end"}}
+    current = apply_list_filters(df, spec, None, today)
+    former = apply_list_filters(df, {"function": "former", "args": {"current": "current", "end": "end"}}, None, today)
+    assert list(df.loc[current, "title"]) == ["flagged-current"]
+    assert list(df.loc[former, "title"]) == ["flagged-former"]
+
+
+def test_current_keeps_open_ended_and_nan_end() -> None:
+    today = pd.Timestamp("2026-10-23")
+    df = pd.DataFrame({"title": ["open", "nan-end", "done"], "end": [pd.NaT, float("nan"), pd.Timestamp("2022-01-01")]})
+    current = apply_list_filters(df, {"function": "current", "args": {"end": "end"}}, None, today)
+    former = apply_list_filters(df, {"function": "former", "args": {"end": "end"}}, None, today)
+    assert list(df.loc[current, "title"]) == ["open", "nan-end"]
+    assert list(df.loc[former, "title"]) == ["done"]
+
+
+def test_coerce_yearish_dates_makes_liquid_safe_timestamps() -> None:
+    df = pd.DataFrame(
+        {
+            "start": [2016, pd.Timestamp("2022-02-07"), 2021],
+            "end": [2020, pd.Timestamp("2024-02-06"), float("nan")],
+        }
+    )
+    out = coerce_yearish_dates(df)
+    assert out.loc[0, "start"] == pd.Timestamp("2016-01-01")
+    assert out.loc[0, "end"] == pd.Timestamp("2020-12-31")
+    assert out.loc[1, "start"] == pd.Timestamp("2022-02-07")
+    assert pd.isna(out.loc[2, "end"])
+
+
+def test_coerce_yearish_dates_makes_mixed_dates_sortable() -> None:
+    import datetime
+
+    df = pd.DataFrame(
+        {
+            "start": [2016, datetime.date(2022, 2, 7), pd.Timestamp("2021-01-01")],
+            "end": [2020, datetime.date(2024, 2, 6), float("nan")],
+        }
+    )
+    out = coerce_yearish_dates(df)
+    sorted_df = out.sort_values(by=["start", "end"], ascending=False, na_position="last")
+    assert list(sorted_df["start"]) == [
+        pd.Timestamp("2022-02-07"),
+        pd.Timestamp("2021-01-01"),
+        pd.Timestamp("2016-01-01"),
+    ]
+
+
+def test_list_templates_render_without_reserved_with() -> None:
+    from liquid import Environment, FileSystemLoader
+    from liquid.exceptions import LiquidSyntaxError, TemplateNotFoundError
+
+    template_dir = os.path.join(os.path.dirname(os.path.abspath(__import__("lamd").__file__)), "templates")
+    env = Environment(loader=FileSystemLoader(template_dir))
+    teaching = env.get_template("listteaching.md").render(
+        title="Advanced Data Science",
+        description="Part II unit.",
+        start=pd.Timestamp("2021-10-01"),
+        end=pd.Timestamp("2024-12-10"),
+        collaborators=[{"given": "Ada", "family": "Lovelace"}],
+    )
+    assert "Advanced Data Science" in teaching
+    assert "Ada Lovelace" in teaching
+    person = env.get_template("liststudent.md").render(given="Ada", family="Lovelace")
+    assert "Ada Lovelace" in person
+    grant = env.get_template("listgrant.md").render(
+        title="Example Grant",
+        currency="£",
+        amount=100,
+        start=pd.Timestamp("2016-01-01"),
+        end=pd.Timestamp("2020-12-31"),
+        funders="EPSRC",
+        role="PI",
+    )
+    assert "2016" in grant
+    assert "1970" not in grant
+    assert "\\n" not in grant
+    try:
+        env.get_template("listteaching.md")
+    except (LiquidSyntaxError, TemplateNotFoundError) as err:
+        raise AssertionError(err) from err

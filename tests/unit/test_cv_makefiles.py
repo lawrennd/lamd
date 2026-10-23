@@ -47,6 +47,59 @@ all: invited-talk-list.markdown
     assert "multiple target patterns" not in listed.stderr
 
 
+def test_talksdir_posts_is_preferred_over_lecture_notes(tmp_path: Path) -> None:
+    """If talks/_posts exists, do not scan lecture notes beside it."""
+    talks = tmp_path / "talks"
+    posts = talks / "_posts"
+    posts.mkdir(parents=True)
+    invited = posts / "2024-01-01-invited.md"
+    invited.write_text("---\ntitle: Invited\nvenue: Somewhere\n---\n")
+    (talks / "lecture-note.md").write_text("---\ntitle: Lecture\nabstract: skip\n---\n")
+    stub = tmp_path / "mdlist"
+    stub.write_text("#!/bin/sh\nprintf '%s\\n' \"$@\" > mdlist-args.txt\n")
+    stub.chmod(0o755)
+    makefile = tmp_path / "Makefile"
+    makefile.write_text(f"""
+TALKSDIR={talks}
+TALKSINCE=2020
+MAKEFILESDIR={MAKEFILES}
+include $(MAKEFILESDIR)/make-lists.mk
+""")
+    env = os.environ.copy()
+    env["PATH"] = f"{tmp_path}:{env.get('PATH', '')}"
+    result = subprocess.run(
+        ["make", "-f", str(makefile), f"FIND={FIND}", "invited-talk-list.markdown"],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+    assert result.returncode == 0, result.stderr
+    args = (tmp_path / "mdlist-args.txt").read_text()
+    assert "2024-01-01-invited.md" in args
+    assert "lecture-note.md" not in args
+
+
+def test_empty_talks_posts_does_not_scan_cwd_or_siblings(tmp_path: Path) -> None:
+    talks = tmp_path / "talks"
+    (talks / "_posts").mkdir(parents=True)
+    (talks / "sibling.md").write_text("not a talk post")
+    (tmp_path / "stray.md").write_text("cwd")
+    makefile = tmp_path / "Makefile"
+    makefile.write_text(f"""
+TALKSDIR={talks}
+TALKSINCE=2020
+MAKEFILESDIR={MAKEFILES}
+include $(MAKEFILESDIR)/make-lists.mk
+""")
+    result = _run_make(tmp_path, "invited-talk-list.markdown")
+    assert result.returncode == 0, result.stderr
+    out = (tmp_path / "invited-talk-list.markdown").read_text()
+    assert out == ""
+    assert "sibling" not in out
+    assert "stray" not in out
+
+
 def test_empty_talksdir_does_not_find_cwd(tmp_path: Path) -> None:
     """Unset TALKSDIR must not make find search the CV directory."""
     (tmp_path / "stray.md").write_text("should-not-be-scanned")

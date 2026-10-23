@@ -17,8 +17,15 @@ define find_md
 if [ -n "$(1)" ] && [ -d "$(1)" ]; then $(FIND) "$(1)" -name '*.md' -type f; fi
 endef
 
+# Invited talks live in talks/_posts. If that directory exists (even empty),
+# do not fall back to scanning the rest of the talks tree or cwd.
+define find_talk_md
+if [ -n "$(1)" ] && [ -d "$(1)/_posts" ]; then $(FIND) "$(1)/_posts" -name '*.md' -type f; \
+elif [ -n "$(1)" ] && [ -d "$(1)" ]; then $(FIND) "$(1)" -name '*.md' -type f; fi
+endef
+
 invited-talk-list.markdown:
-	@files=`$(call find_md,$(TALKSDIR))`; \
+	@files=`$(call find_talk_md,$(TALKSDIR))`; \
 	if [ -z "$$files" ]; then : > $@; else mdlist talks $$files -o $@ -s ${TALKSINCE}; fi
 
 publication-list.markdown:
