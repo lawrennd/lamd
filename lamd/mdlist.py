@@ -4,7 +4,7 @@ import argparse
 import datetime
 import os
 import sys
-from typing import Optional
+from typing import Any, Optional
 
 import pandas as pd
 from lynguine.config.interface import Interface
@@ -84,20 +84,28 @@ def load_cvlists_interface() -> Interface:
     )
 
 
-def _is_year_number(value: object) -> bool:
+def _year_int(value: object) -> Optional[int]:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
-        return False
+        return None
     if pd.isna(value):
-        return False
-    return 1900 <= int(value) <= 2100
+        return None
+    year = int(value)
+    if 1900 <= year <= 2100:
+        return year
+    return None
+
+
+def _is_year_number(value: object) -> bool:
+    return _year_int(value) is not None
 
 
 def value_year(value: object) -> Optional[int]:
     """Calendar year from an int year, datetime, or parseable date string."""
     if value is None or (isinstance(value, float) and pd.isna(value)):
         return None
-    if _is_year_number(value):
-        return int(value)
+    year = _year_int(value)
+    if year is not None:
+        return year
     ts = pd.to_datetime(value, errors="coerce")
     if pd.isna(ts):
         return None
@@ -108,8 +116,8 @@ def value_date(value: object, *, end: bool = False) -> pd.Timestamp:
     """Timestamp for current/former comparisons. Bare years become Jan 1 or Dec 31."""
     if value is None or (isinstance(value, float) and pd.isna(value)):
         return pd.NaT
-    if _is_year_number(value):
-        year = int(value)
+    year = _year_int(value)
+    if year is not None:
         if end:
             return pd.Timestamp(year=year, month=12, day=31)
         return pd.Timestamp(year=year, month=1, day=1)
@@ -126,7 +134,7 @@ def row_year(row: pd.Series) -> Optional[int]:
     return None
 
 
-def compute_section(config: object) -> dict:
+def compute_section(config: object) -> dict[str, Any]:
     """Return the compute mapping from a list config.
 
     ``CustomDataFrame.from_flow`` rewrites ``compute`` from a dict into a
@@ -136,7 +144,7 @@ def compute_section(config: object) -> dict:
     if isinstance(compute, dict):
         return compute
     if isinstance(compute, list):
-        merged: dict = {}
+        merged: dict[str, Any] = {}
         for item in compute:
             if isinstance(item, dict):
                 merged.update(item)
@@ -156,7 +164,7 @@ def _truthy_flag(value: object) -> bool:
     return str(value).strip().lower() in {"1", "true", "yes", "y"}
 
 
-def _as_filter_list(filt: object) -> list:
+def _as_filter_list(filt: object) -> list[dict[str, Any]]:
     if filt is None:
         return []
     if isinstance(filt, dict):
@@ -166,7 +174,7 @@ def _as_filter_list(filt: object) -> list:
     return []
 
 
-def apply_named_filter(df: pd.DataFrame, spec: dict, since_year: Optional[int], today: pd.Timestamp) -> pd.Series:
+def apply_named_filter(df: pd.DataFrame, spec: dict[str, Any], since_year: Optional[int], today: pd.Timestamp) -> pd.Series:
     """Boolean mask for one cvlists.yml filter spec."""
     function = spec.get("function")
     args = spec.get("args") or {}
@@ -209,11 +217,13 @@ def apply_named_filter(df: pd.DataFrame, spec: dict, since_year: Optional[int], 
             return pd.Series(False, index=df.index)
 
         def contains(cell: object) -> bool:
+            if expected is None:
+                return False
             if isinstance(cell, (list, tuple)):
                 return expected in cell
             if cell is None or (isinstance(cell, float) and pd.isna(cell)):
                 return False
-            return expected in str(cell)
+            return str(expected) in str(cell)
 
         return df[column].map(contains)
     if function == "onbool":
