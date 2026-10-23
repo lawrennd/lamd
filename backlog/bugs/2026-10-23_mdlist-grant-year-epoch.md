@@ -56,7 +56,7 @@ Do not treat 1970 as a missing-date sentinel in the template.
 
 - CIP: 0015
 - Depends on: `2025-12-02_mdlist-preprocess-filtering` for current vs former
-- PRs: (lamd template; `lawrennd/data` grants.yaml)
+- PRs: (lamd template; grants.yaml in the data repo)
 
 ## Progress Updates
 

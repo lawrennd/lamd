@@ -33,14 +33,14 @@ liquid.exceptions.LiquidSyntaxError: expected a primitive expression, found with
 {%if with %}(with {%for name in with%}...
 ```
 
-`with` is a Liquid tag. python-liquid therefore refuses `{% if with %}`. `data/teaching.yaml` uses `with:` for co-teachers (5 of 18 rows). The ACP teaching statement and `includes/current-teaching.md` omit or cannot use the generated list because of this.
+`with` is a Liquid tag. python-liquid therefore refuses `{% if with %}`. Teaching YAML uses `with:` for co-teachers. Current-teaching includes omit or cannot use the generated list because of this.
 
 ## Acceptance Criteria
 
 - [ ] `listteaching.md` does not use the identifier `with`
-- [ ] `mdlist teaching $HOME/lawrennd/data/teaching.yaml` exits 0 and lists Cambridge modules
-- [ ] Co-teachers still render (Carl Henrik Ek, Ferenc Huszár, Nic Lane)
-- [ ] Matching YAML key in `lawrennd/data` teaching.yaml is updated in the same window (cv CIP-0006)
+- [ ] `mdlist teaching` against the teaching YAML exits 0 and lists current modules
+- [ ] Co-teachers still render from the `collaborators` field
+- [ ] Matching YAML key in the teaching data file is updated in the same window (cv reintegration CIP)
 
 ## Implementation Notes
 
@@ -52,7 +52,7 @@ Data PR is not this repo: `teaching.yaml` `with:` → `collaborators:`.
 
 - CIP: 0015
 - PRs: (lamd templates; data teaching.yaml)
-- Documentation: cv `cambridge/includes/acp12-teaching-statement.md` (workaround note)
+- Documentation: CV teaching includes that currently omit the generated list
 
 ## Progress Updates
 

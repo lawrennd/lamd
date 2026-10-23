@@ -37,13 +37,13 @@ liquid.exceptions.TemplateNotFoundError: listperson
 
 `lynguine.util.liquid.load_template_env` used to pass `FileExtensionLoader(..., ext=".md")`. Current python-liquid has no `liquid.loaders`; the fallback is `FileSystemLoader`, which looks for a file literally named `listperson`.
 
-ACP researcher-development therefore omits generated RA/PhD lists.
+CVs that need RA/PhD lists therefore omit them.
 
 ## Acceptance Criteria
 
 - [ ] `{% include 'listperson.md' %}` (or a loader that adds `.md`) resolves
-- [ ] `mdlist exstudents $HOME/lawrennd/data/students.yaml` writes names (Fariba Yousefi and the rest)
-- [ ] `mdlist expdras $HOME/lawrennd/data/ras.yaml` writes names
+- [ ] `mdlist exstudents` against the former-students YAML writes given/family names
+- [ ] `mdlist expdras` against the former-RA YAML writes names
 - [ ] Nested includes `extractperson`, `list_name`, `years`, `semester_term` still resolve
 
 ## Implementation Notes
@@ -56,7 +56,7 @@ Smallest lamd fix: suffix `.md` on includes in `liststudent.md` and `listpdra.md
 
 - CIP: 0015
 - PRs: (lamd templates; optional lynguine loader)
-- Documentation: cv `cambridge/includes/acp12-researcher-development.md`
+- Documentation: CV includes that currently omit generated group lists
 
 ## Progress Updates
 

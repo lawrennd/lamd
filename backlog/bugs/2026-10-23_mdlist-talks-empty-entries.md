@@ -24,15 +24,15 @@ title: invited-talk-list.markdown is empty bullets from the whole talks tree
 
 ## Description
 
-Cambridge ACP `make invited-talk-list.markdown` writes 1,324 lines of:
+A CV `make invited-talk-list.markdown` writes 1,324 lines of:
 
 ```
 * , **,
 ```
 
-`listtalk.md` is `* {{title}}, *{{venue}}*, {{ date | date: "%d %B %Y"}}`. The invited-talk records that belong on a CV live in `talks/_posts/` (250 files, `layout: talk`, `title`, `venue`, `date`). `_lamd.yml` sets `talksdir: $HOME/lawrennd/talks` (repo root). `make-lists.mk` runs `find $(TALKSDIR) -name '*.md'`, so lecture notes (`_accelerate/accelerator-intro.md` has `title` and `abstract` only, no `venue`/`date`) and other trees are mixed in. Combined with skipped preprocess/augmentors, the CV include is unusable.
+`listtalk.md` is `* {{title}}, *{{venue}}*, {{ date | date: "%d %B %Y"}}`. The invited-talk records that belong on a CV live in `talks/_posts/` (`layout: talk`, `title`, `venue`, `date`). `_lamd.yml` often sets `talksdir` to the talks repo root. `make-lists.mk` runs `find $(TALKSDIR) -name '*.md'`, so lecture notes (title and abstract only, no `venue`/`date`) and other trees are mixed in. Combined with skipped preprocess/augmentors, the CV include is unusable.
 
-ACP `includes/acp12-recognition.md` still `\include{../includes/invited-talks.md}`.
+CVs that `\include` the invited-talk list still ship that output.
 
 ## Acceptance Criteria
 
@@ -43,7 +43,7 @@ ACP `includes/acp12-recognition.md` still `\include{../includes/invited-talks.md
 
 ## Implementation Notes
 
-lamd makefile change is sufficient for a default talks clone. cv CIP-0006 can also set `talksdir` to `$HOME/lawrennd/talks/_posts`. Do both.
+lamd makefile change is sufficient for a default talks clone. The CV reintegration CIP can also set `talksdir` to `talks/_posts`. Do both.
 
 Do not pass the whole talks repo as invited talks.
 
