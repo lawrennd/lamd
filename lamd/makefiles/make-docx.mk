@@ -1,9 +1,11 @@
 %.notes.docx.markdown: %.md ${DEPS}
 	${PP} $< -o $@ --format notes --to docx --code sparse --snippets-path ${SNIPPETSDIR} --macros-path=$(MACROSDIR) --diagrams-dir ${DIAGRAMSDIR} --edit-links ${PPFLAGS} --replace-notation
 
-# Direct rule for CV generation with preprocessing
+# Direct rule for CV generation with preprocessing.
+# Do not pass --replace-notation or --edit-links: those dump talk-notation.tex
+# and GitHub [edit] links into a submission Word file.
 ${BASE}.preprocessed.md: ${BASE}.md ${DEPS} check-reference-docs
-	${PP} $< -o $@ --format notes --to docx --code sparse --snippets-path ${SNIPPETSDIR} --macros-path=$(MACROSDIR) --diagrams-dir ${DIAGRAMSDIR} --edit-links ${PPFLAGS} --replace-notation
+	${PP} $< -o $@ --format notes --to docx --code sparse --snippets-path ${SNIPPETSDIR} --macros-path=$(MACROSDIR) --diagrams-dir ${DIAGRAMSDIR} ${PPFLAGS}
 
 ${BASE}.docx: ${BASE}.preprocessed.md
 	pandoc -s \

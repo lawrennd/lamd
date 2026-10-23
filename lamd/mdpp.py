@@ -292,11 +292,18 @@ def process_includes(args: argparse.Namespace) -> tuple[str, str]:
         with open(args.include_before_body, "r") as fd:
             before_text = fd.read()
 
+    def _append(text: str) -> None:
+        nonlocal before_text
+        if before_text and not before_text.endswith("\n"):
+            before_text += "\n"
+        before_text += text
+        if before_text and not before_text.endswith("\n"):
+            before_text += "\n"
+
     # Handle LaTeX notation replacement
     if args.replace_notation:
-        before_text += "\n\n"
         with open(os.path.join(INCLUDES, "talk-notation.tex"), "r") as fd:
-            before_text += fd.read()
+            _append("\n" + fd.read())
 
     # Search for talk-macros.gpp in the macros path
     try:
@@ -306,7 +313,7 @@ def process_includes(args: argparse.Namespace) -> tuple[str, str]:
             if os.path.isfile(os.path.join(macros_dir, "talk-macros.gpp"))
         )
         with open(talk_macros_file) as f:
-            before_text += f.read()
+            _append(f.read())
     except StopIteration:
         raise FileNotFoundError("talk-macros.gpp not found in any directory in macros_path")
 
