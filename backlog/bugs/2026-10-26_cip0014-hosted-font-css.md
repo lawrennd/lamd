@@ -49,6 +49,7 @@ Do not put absolute `/Users/...` paths in published HTML. Site-specific copies (
 ## Related
 
 - CIP: 0014
+- PRs: https://github.com/lawrennd/lamd/pull/26
 - Related task: `2026-10-13_cip0014-jekyll-theme-talks-css` (optional theme sync; not a substitute)
 - GPSS workaround: `mlatcl/gpss` `a8dc818`
 
