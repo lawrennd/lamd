@@ -9,8 +9,12 @@
 SLIDE_SETUP_FLAG=$(if $(strip $(SLIDESETUP)),--include-after-body=${INCLUDESDIR}/${SLIDESETUP},)
 
 ${BASE}.slides.html: ${BASE}.slides.html.markdown ${BIBDEPS}
+	cp ${INCLUDESDIR}/slide-fonts.css slide-fonts.css
+	cp ${INCLUDESDIR}/slide-fontsize-*.css .
 	pandoc --template ${TEMPLATESDIR}/pandoc/pandoc-revealjs-template ${PDSFLAGS} ${SLIDEFLAGS} --include-in-header=${INCLUDESDIR}/${SLIDESHEADER} $(SLIDE_SETUP_FLAG) -t revealjs ${BIBFLAGS} -o ${BASE}.slides.html  ${BASE}.slides.html.markdown 
 	cp ${BASE}.slides.html ${SLIDESDIR}/${OUT}.slides.html
+	cp slide-fonts.css ${SLIDESDIR}/slide-fonts.css
+	cp slide-fontsize-*.css ${SLIDESDIR}/
 
 ${BASE}.pptx: ${BASE}.slides.pptx.markdown
 	pandoc  -t pptx \

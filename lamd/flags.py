@@ -63,10 +63,15 @@ def normalize_talkfontsize(value: str) -> str:
 
 
 def talkfontsize_css_args(token: str = "md") -> str:
-    """Pandoc ``--css`` flags for the CIP-0014 slide font stylesheets."""
-    base = os.path.join(_LAMD_INCLUDES, "slide-fonts.css")
-    scale = os.path.join(_LAMD_INCLUDES, f"slide-fontsize-{token}.css")
-    return f" --css {base} --css {scale}"
+    """Pandoc ``--css`` flags for the CIP-0014 slide font stylesheets.
+
+    Emit basenames, not package paths. Pandoc copies the ``--css`` string
+    into ``<link href>``. Absolute paths become
+    ``https://host/Users/.../slide-fontsize-xs.css`` on GitHub Pages and
+    404. ``make-slides.mk`` copies these files into ``SLIDESDIR`` next to
+    the published HTML.
+    """
+    return f" --css slide-fonts.css --css slide-fontsize-{token}.css"
 
 
 def resolve_reference_doc(path: str) -> str:

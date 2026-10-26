@@ -345,6 +345,9 @@ class TestTalkFontsize:
         assert "slide-fonts.css" in args
         assert "slide-fontsize-sm.css" in args
         assert args.count("--css") == 2
+        # Published HTML uses these strings as hrefs; keep them relative.
+        assert "/Users/" not in args
+        assert os.path.sep not in args.split("slide-fonts.css")[0]
 
     @patch("sys.argv", ["flags", "reveal", "test"])
     @patch("builtins.print")
