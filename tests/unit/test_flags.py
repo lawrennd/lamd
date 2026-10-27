@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 import lynguine.util.yaml as ny
 
-from lamd.flags import main, normalize_talkfontsize, resolve_reference_doc, talkfontsize_css_args
+from lamd.flags import main, normalize_talkfontsize, resolve_reference_doc, reveal_transition_arg, talkfontsize_css_args
 
 
 class TestFlags:
@@ -396,6 +396,46 @@ class TestTalkFontsize:
                 args, kwargs = mock_print.call_args
                 assert "Unknown talkfontsize" in args[0]
                 assert kwargs.get("file") is sys.stderr
+
+    @patch("sys.argv", ["flags", "reveal", "test"])
+    @patch("builtins.print")
+    def test_reveal_transition_none_from_config(self, mock_print):
+        with patch("lynguine.util.yaml.header_fields", return_value={}):
+            with patch("lynguine.util.yaml.header_field") as mock_field:
+
+                def mock_header_field(field, *args, **kwargs):
+                    if field == "layout":
+                        return "talk"
+                    if field == "talktheme":
+                        return "white"
+                    if field == "talkcss":
+                        return "path/to/custom.css"
+                    if field == "talkfontsize":
+                        return "small"
+                    if field == "revealjs_url":
+                        return "https://example.com/reveal.js"
+                    if field == "transition":
+                        return "none"
+                    raise ny.FileFormatError(f"Field not found: {field}")
+
+                mock_field.side_effect = mock_header_field
+                main()
+                output = mock_print.call_args[0][0]
+                assert "--variable transition=none" in output
+
+
+class TestRevealTransition:
+    """``_lamd.yml`` transition: \"none\" reaches pandoc as a Reveal variable."""
+
+    def test_quoted_none(self):
+        assert reveal_transition_arg("none") == " --variable transition=none"
+
+    def test_capital_none_normalised(self):
+        assert reveal_transition_arg("None") == " --variable transition=none"
+
+    def test_missing_emits_nothing(self):
+        assert reveal_transition_arg(None) == ""
+        assert reveal_transition_arg("  ") == ""
 
 
 class TestSlideFontsCssAsset:
