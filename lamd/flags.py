@@ -74,6 +74,21 @@ def talkfontsize_css_args(token: str = "md") -> str:
     return f" --css slide-fonts.css --css slide-fontsize-{token}.css"
 
 
+def reveal_transition_arg(value: object | None) -> str:
+    """Pandoc ``--variable`` for Reveal.js transition from ``_lamd.yml``.
+
+    Quote the YAML as ``transition: "none"`` so the string survives. Unquoted
+    ``None``/``none`` also map to Reveal's ``none``. Missing or empty values
+    emit nothing so pandoc keeps its default (``slide``).
+    """
+    if value is None:
+        return ""
+    token = str(value).strip().lower()
+    if not token:
+        return ""
+    return f" --variable transition={token}"
+
+
 def resolve_reference_doc(path: str) -> str:
     """Resolve a pandoc --reference-doc path.
 
@@ -203,6 +218,12 @@ def main() -> int:
     talkfontsizearg = talkfontsize_css_args(talkfontsize_token)
 
     try:
+        transition = ny.header_field("transition", fields, user_file)
+    except ny.FileFormatError:
+        transition = None
+    transitionarg = reveal_transition_arg(transition)
+
+    try:
         layout = ny.header_field("layout", fields, user_file)
     except ny.FileFormatError:
         layout = "talk"
@@ -318,7 +339,7 @@ def main() -> int:
         print(lines)
 
     elif args.output == "reveal":
-        lines += "--slide-level 2 " + revealjs_urlarg + talkthemearg + talkcssarg + talkfontsizearg
+        lines += "--slide-level 2 " + revealjs_urlarg + talkthemearg + talkcssarg + talkfontsizearg + transitionarg
         print(lines)
 
     elif args.output == "pp":
