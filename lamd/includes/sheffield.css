@@ -1,0 +1,408 @@
+/* ============================================================
+   University of Sheffield Reveal.js Theme (2005–2016 identity)
+
+   The centenary lockup introduced in 2005, still in use when Neil
+   left in 2016: redrawn arms beside "The University Of Sheffield."
+   in Stephenson, on white. Not the later violet brand.
+
+   Usage in frontmatter:
+     talktheme: white
+     talkcss:   sheffield.css
+
+   Sources:
+     Beamer class mlprojects/tex/inputs/sheffield-slides.cls
+       (full arms as sheffieldlogo.eps; azure sampled #0098D8)
+     Wayback, May 2005 DCS header lockup (crest.gif)
+     Eye 57: Stephenson (serif) and Blake (sans), 2005
+
+   Brand palette (arms + 2005 lockup, not current violet):
+     Arms azure     : #0098D8
+     Azure dark     : #006A9A
+     Crown gold     : #C9A227
+     Motto red      : #9B1B2E
+     Ink            : #1A1A1A
+     Muted          : #6A6A6A
+     Wash           : #F3F8FB
+     Page white     : #FFFFFF
+   ============================================================ */
+
+/* -- Fonts ----------------------------------------------------------------
+   Stephenson and Blake are proprietary. Libre Baskerville stands in for
+   Stephenson (Scotch/Clarendon-ish serif); Source Sans 3 for Blake
+   (Grotesque No. 6). */
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+/* -- Base slides ---------------------------------------------------------- */
+.reveal {
+    font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+    /* CIP-0014: deck size comes from talkfontsize via slide-fonts.css */
+    color: #1A1A1A;
+    background-color: #ffffff;
+}
+
+.reveal .slides {
+    text-align: left !important;
+}
+
+.reveal .slides > section {
+    text-align: left !important;
+    background: transparent;
+}
+
+/*
+ * Full-page colour + brand chrome live on .slide-background (outside the
+ * scaled slide; see https://revealjs.com/backgrounds/). That layer does not
+ * receive Reveal's scale transform, so sizes use --slide-scale (set from
+ * Reveal.getScale() in slides-header.html).
+ *
+ * Top 5px arms-azure bar. Lockup is the 2005 website crest + Stephenson
+ * wordmark (Wayback crest.gif).
+ */
+.reveal .slide-background {
+    background-color: #ffffff !important;
+    background-image:
+        url('diagrams/logos/sheffield-lockup-2005.png'),
+        linear-gradient(#0098D8, #0098D8) !important;
+    background-repeat: no-repeat, no-repeat !important;
+    background-position:
+        left calc(1.35rem * var(--slide-scale, 1)) top calc(1.45rem * var(--slide-scale, 1)),
+        left top !important;
+    background-size:
+        calc(168px * var(--slide-scale, 1)) auto,
+        100% calc(5px * var(--slide-scale, 1)) !important;
+}
+
+/* Reveal white theme sets ul/ol to inline-block, which centres them when
+   the parent is text-align:center. Force block so lists sit left. */
+.reveal ol,
+.reveal dl,
+.reveal ul {
+    display: block !important;
+    text-align: left !important;
+    margin: 0.2em 0 0.6em 0 !important;
+}
+
+/* -- Headings ------------------------------------------------------------- */
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4 {
+    font-family: 'Libre Baskerville', Palatino, 'Palatino Linotype', serif;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: -0.01em;
+    color: #006A9A;
+}
+
+.reveal h1 {
+    font-size: 1.85em;
+}
+
+.reveal h2 {
+    font-size: 1.35em;
+    color: #006A9A;
+    margin-top: 0;
+    margin-bottom: 0.55em;
+}
+
+.reveal h3 {
+    font-size: 1.05em;
+    font-weight: 400;
+    color: #1A1A1A;
+}
+
+/* -- Title slide ---------------------------------------------------------- */
+.reveal section#title-slide {
+    text-align: left !important;
+}
+
+.reveal section#title-slide h1.title {
+    font-size: 2.1em;
+    font-weight: 700;
+    font-family: 'Libre Baskerville', Palatino, 'Palatino Linotype', serif;
+    color: #006A9A;
+    text-align: left;
+    line-height: 1.15;
+    margin: 2.6rem 0 0.5rem 0;
+}
+
+.reveal section#title-slide p.subtitle {
+    font-size: 0.95em;
+    font-weight: 500;
+    color: #1A1A1A;
+    text-align: left !important;
+    margin: 0.2rem 0 1.2rem 0;
+}
+
+.reveal section#title-slide p.author,
+.reveal section#title-slide p.date,
+.reveal section#title-slide p.venue {
+    font-size: 0.72em;
+    color: #6A6A6A;
+    text-align: left !important;
+    margin: 0.15rem 0;
+}
+
+.reveal section#title-slide p.author {
+    font-weight: 600;
+    color: #1A1A1A;
+    margin-top: 1.4rem;
+}
+
+.reveal section#title-slide p.venue {
+    color: #0098D8;
+    font-weight: 500;
+}
+
+/* -- Cover slide (when cover-image is set; reuses Trent template markup) -- */
+.reveal section#title-slide.trent-cover {
+    display: grid !important;
+    grid-template-columns: 58% 42%;
+    align-items: stretch;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    text-align: left;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    background: transparent;
+}
+
+.reveal section#title-slide.trent-cover::after {
+    content: none;
+}
+
+.reveal section#title-slide.trent-cover .trent-title-content {
+    background: linear-gradient(155deg, #F3F8FB 0%, #ffffff 55%, #E7F3F9 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2.5rem 2rem 2.5rem 2.5rem;
+    position: relative;
+    min-height: 100%;
+}
+
+.reveal section#title-slide.trent-cover .trent-logo {
+    display: none;
+}
+
+.reveal section#title-slide.trent-cover h1.title {
+    font-size: 2.0em;
+    font-weight: 700;
+    color: #006A9A;
+    line-height: 1.18;
+    text-align: left;
+    text-shadow: none;
+    margin: 2.5rem 0 0.55rem 0;
+}
+
+.reveal section#title-slide.trent-cover p.subtitle {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: #1A1A1A;
+    opacity: 0.85;
+    text-align: left;
+    margin: 0.2rem 0 0.5rem 0;
+}
+
+.reveal section#title-slide.trent-cover p.date,
+.reveal section#title-slide.trent-cover p.venue {
+    font-size: 0.68em;
+    color: #6A6A6A;
+    text-align: left;
+    margin: 0.15rem 0;
+}
+
+.reveal section#title-slide.trent-cover .trent-cover-photo {
+    background: #006A9A;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.8rem;
+}
+
+.reveal section#title-slide.trent-cover .trent-photo-card {
+    width: 78%;
+    border-radius: 1.1rem;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+    margin-bottom: 0.9rem;
+    border: 3px solid #C9A227;
+}
+
+.reveal section#title-slide.trent-cover .trent-photo-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.reveal section#title-slide.trent-cover .trent-speaker-name {
+    font-size: 0.75em;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    margin: 0.2rem 0 0 0;
+}
+
+.reveal section#title-slide.trent-cover .trent-speaker-role {
+    font-size: 0.62em;
+    color: #D6EEF8;
+    text-align: center;
+    margin: 0.1rem 0;
+}
+
+/* -- Lists ---------------------------------------------------------------- */
+.reveal ul,
+.reveal ol {
+    margin-left: 0 !important;
+    padding-left: 0;
+    line-height: 1.55;
+}
+
+.reveal ul {
+    list-style: none;
+}
+
+.reveal ul li {
+    position: relative;
+    padding-left: 0;
+    margin-bottom: 0.4em;
+}
+
+.reveal ul li::before {
+    content: '';
+    display: inline-block;
+    width: 0.42em;
+    height: 0.42em;
+    margin-right: 0.55em;
+    border-radius: 50%;
+    background: #0098D8;
+    vertical-align: 0.12em;
+}
+
+/* -- Blockquotes ---------------------------------------------------------- */
+.reveal blockquote {
+    border-left: 4px solid #C9A227;
+    background: #F3F8FB;
+    color: #1A1A1A;
+    padding: 0.55em 1em;
+    font-style: italic;
+    font-weight: 400;
+    width: 92%;
+    box-shadow: none;
+    font-size: 0.92em;
+    margin: 0.5em 0;
+}
+
+/* -- Inline code & code blocks -------------------------------------------- */
+.reveal code {
+    background: #F3F8FB;
+    color: #006A9A;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    font-size: 0.82em;
+    border: 1px solid #D6EEF8;
+}
+
+.reveal pre {
+    box-shadow: none;
+    border-radius: 3px;
+    border: 1px solid #D6EEF8;
+    border-left: 4px solid #0098D8;
+    background: #F3F8FB;
+}
+
+.reveal pre code {
+    background: #F3F8FB;
+    color: #006A9A;
+    font-size: 0.75em;
+    padding: 0.8em 1em;
+    border: 0;
+}
+
+/* -- Links ---------------------------------------------------------------- */
+.reveal a {
+    color: #006A9A;
+    text-decoration: none;
+}
+
+.reveal a:hover {
+    color: #0098D8;
+    text-decoration: underline;
+}
+
+/* -- Progress bar --------------------------------------------------------- */
+.reveal .progress {
+    background: rgba(0, 106, 154, 0.12);
+    color: #0098D8;
+}
+
+.reveal .progress span {
+    background: #0098D8;
+    transition: width 0.8s cubic-bezier(0.26, 0.86, 0.44, 0.985);
+}
+
+/* -- Controls ------------------------------------------------------------- */
+.reveal .controls {
+    color: #006A9A;
+}
+
+/* -- Tables --------------------------------------------------------------- */
+.reveal table {
+    border-collapse: collapse;
+    font-size: 0.8em;
+    color: #1A1A1A;
+}
+
+.reveal table th {
+    background: #006A9A;
+    color: #ffffff;
+    padding: 0.4em 0.8em;
+    font-weight: 600;
+    border: 1px solid #006A9A;
+}
+
+.reveal table td {
+    padding: 0.35em 0.8em;
+    border: 1px solid #D6EEF8;
+}
+
+.reveal table tr:nth-child(even) td {
+    background: #F3F8FB;
+}
+
+/* -- Utility classes ------------------------------------------------------ */
+.reveal .slides section.scrollable {
+    overflow-y: auto !important;
+    height: 100% !important;
+    top: 0 !important;
+    text-align: left;
+}
+
+.reveal p {
+    text-align: left;
+}
+
+.reveal li {
+    text-align: left;
+}
+
+.reveal .sheffield-panel {
+    background: #F3F8FB;
+    color: #1A1A1A;
+    padding: 0.8em 1em;
+    border-radius: 0.2rem;
+    border-left: 4px solid #0098D8;
+    font-weight: 500;
+}
+
+.reveal .sheffield-azure {
+    color: #0098D8;
+}
+
+.reveal .sheffield-gold {
+    color: #C9A227;
+}
