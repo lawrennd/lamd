@@ -74,7 +74,7 @@ def talkfontsize_css_args(token: str = "md") -> str:
     return f" --css slide-fonts.css --css slide-fontsize-{token}.css"
 
 
-def reveal_transition_arg(value) -> str:
+def reveal_transition_arg(value: object | None) -> str:
     """Pandoc ``--variable`` for Reveal.js transition from ``_lamd.yml``.
 
     Quote the YAML as ``transition: "none"`` so the string survives. Unquoted
