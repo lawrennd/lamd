@@ -67,6 +67,7 @@ maketalk = "lamd.maketalk:main"
 makecv = "lamd.makecv:main"
 mdlist = "lamd.mdlist:main"
 mdpeople = "lamd.mdpeople:main"
+lamd-backfill-credits = "lamd.credit_backfill:main"
 
 # Note: Shell script mdfield-server is in lamd/scripts/ directory
 # and is included via 'include' directive above.
