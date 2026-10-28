@@ -58,6 +58,46 @@ The media context handles all types of media elements including figures, diagram
         align: Alignment option
 ```
 
+### Attribution (CIP-0016)
+
+Third-party diagrams store TASL metadata in a sibling `{stem}.credit.yml` next to the image (in the filesystem `diagramsdir`, not the web `diagramsurl`). A one-line `{stem}.url` file remains a source-only shorthand and never claims a Creative Commons license.
+
+```yaml
+status: third-party   # own | third-party | public-domain | unknown | fair-use | trademark
+title: "Portrait of Daniel Bernoulli"
+author: "Johann Rudolf Huber (attrib.)"
+source: https://commons.wikimedia.org/wiki/File:Daniel_Bernoulli.jpg
+license: CC-BY-SA-4.0
+license_url: https://creativecommons.org/licenses/by-sa/4.0/
+modifications: []
+```
+
+Credit is opt-in. `\includejpg` / `\includediagram` / `\includeimg` stay image-only. Place `\diagramcredit{stem}` after the figure; mdpp expands it before gpp using the filesystem diagrams root.
+
+```markdown
+\figure{\includejpg{\diagramsDir/physics/daniel-bernoulli}{35%}}{Daniel Bernoulli (1700--1782). …}{daniel-bernoulli}
+\diagramcredit{\diagramsDir/physics/daniel-bernoulli}
+```
+
+| Context | Output |
+|---|---|
+| HTML / ipynb notes | Full TASL line (`*Credit:*` Title by Author. Source. License.) |
+| Reveal HTML slides | Compact, slide-visible, right-aligned (not speaker-notes-only) |
+| TeX notes | Same Markdown credit line (pandoc turns links into `\href`) |
+| PPTX / DOCX / Manim | Empty in v1 |
+
+`status: own` emits nothing unless `show_own: true`. `fair-use`, `unknown`, and legacy `.url` files render a source link without a CC label. `trademark` emits nothing.
+
+Backfill Wikimedia sidecars (not part of the talk build):
+
+```bash
+lamd-backfill-credits --diagrams-dir /path/to/slides/diagrams --dry-run
+```
+
+Wikipedia-en uploads are classified as fair use and are never labelled CC. Other hosts stay manual.
+
+The two-argument `\credit{name}{url}` primitive is unchanged for hand-written credits.
+
 ### Additional Media Types
 
 ```markdown
@@ -146,3 +186,4 @@ The media context handles all types of media elements including figures, diagram
 4. Maintain consistent aspect ratios
 5. Include meaningful captions
 6. Use semantic figure references
+7. Credit third-party images with `\diagramcredit` and a sidecar, not by mixing TASL into the pedagogical caption

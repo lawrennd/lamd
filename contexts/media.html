@@ -54,6 +54,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#figures">Figures</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#video-content">Video Content</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#images">Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#attribution-cip-0016">Attribution (CIP-0016)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#additional-media-types">Additional Media Types</a></li>
 </ul>
 </li>
@@ -165,6 +166,52 @@
 </pre></div>
 </div>
 </section>
+<section id="attribution-cip-0016">
+<h3>Attribution (CIP-0016)<a class="headerlink" href="#attribution-cip-0016" title="Link to this heading"></a></h3>
+<p>Third-party diagrams store TASL metadata in a sibling <code class="docutils literal notranslate"><span class="pre">{stem}.credit.yml</span></code> next to the image (in the filesystem <code class="docutils literal notranslate"><span class="pre">diagramsdir</span></code>, not the web <code class="docutils literal notranslate"><span class="pre">diagramsurl</span></code>). A one-line <code class="docutils literal notranslate"><span class="pre">{stem}.url</span></code> file remains a source-only shorthand and never claims a Creative Commons license.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">third-party</span><span class="w">   </span><span class="c1"># own | third-party | public-domain | unknown | fair-use | trademark</span>
+<span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">"Portrait</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">Daniel</span><span class="nv"> </span><span class="s">Bernoulli"</span>
+<span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="s">"Johann</span><span class="nv"> </span><span class="s">Rudolf</span><span class="nv"> </span><span class="s">Huber</span><span class="nv"> </span><span class="s">(attrib.)"</span>
+<span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://commons.wikimedia.org/wiki/File:Daniel_Bernoulli.jpg</span>
+<span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC-BY-SA-4.0</span>
+<span class="nt">license_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://creativecommons.org/licenses/by-sa/4.0/</span>
+<span class="nt">modifications</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</pre></div>
+</div>
+<p>Credit is opt-in. <code class="docutils literal notranslate"><span class="pre">\includejpg</span></code> / <code class="docutils literal notranslate"><span class="pre">\includediagram</span></code> / <code class="docutils literal notranslate"><span class="pre">\includeimg</span></code> stay image-only. Place <code class="docutils literal notranslate"><span class="pre">\diagramcredit{stem}</span></code> after the figure; mdpp expands it before gpp using the filesystem diagrams root.</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\figure{\includejpg{\diagramsDir/physics/daniel-bernoulli}{35%}}{Daniel Bernoulli (1700--1782). …}{daniel-bernoulli}
+\diagramcredit{\diagramsDir/physics/daniel-bernoulli}
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Context</p></th>
+<th class="head"><p>Output</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>HTML / ipynb notes</p></td>
+<td><p>Full TASL line (<code class="docutils literal notranslate"><span class="pre">*Credit:*</span></code> Title by Author. Source. License.)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Reveal HTML slides</p></td>
+<td><p>Compact, slide-visible, right-aligned (not speaker-notes-only)</p></td>
+</tr>
+<tr class="row-even"><td><p>TeX notes</p></td>
+<td><p>Same Markdown credit line (pandoc turns links into <code class="docutils literal notranslate"><span class="pre">\href</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>PPTX / DOCX / Manim</p></td>
+<td><p>Empty in v1</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">status:</span> <span class="pre">own</span></code> emits nothing unless <code class="docutils literal notranslate"><span class="pre">show_own:</span> <span class="pre">true</span></code>. <code class="docutils literal notranslate"><span class="pre">fair-use</span></code>, <code class="docutils literal notranslate"><span class="pre">unknown</span></code>, and legacy <code class="docutils literal notranslate"><span class="pre">.url</span></code> files render a source link without a CC label. <code class="docutils literal notranslate"><span class="pre">trademark</span></code> emits nothing.</p>
+<p>Backfill Wikimedia sidecars (not part of the talk build):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lamd-backfill-credits<span class="w"> </span>--diagrams-dir<span class="w"> </span>/path/to/slides/diagrams<span class="w"> </span>--dry-run
+</pre></div>
+</div>
+<p>Wikipedia-en uploads are classified as fair use and are never labelled CC. Other hosts stay manual.</p>
+<p>The two-argument <code class="docutils literal notranslate"><span class="pre">\credit{name}{url}</span></code> primitive is unchanged for hand-written credits.</p>
+</section>
 <section id="additional-media-types">
 <h3>Additional Media Types<a class="headerlink" href="#additional-media-types" title="Link to this heading"></a></h3>
 <div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\includebbcvideo{id}{width}{height}{start}{end}
@@ -265,6 +312,7 @@
 <li><p>Maintain consistent aspect ratios</p></li>
 <li><p>Include meaningful captions</p></li>
 <li><p>Use semantic figure references</p></li>
+<li><p>Credit third-party images with <code class="docutils literal notranslate"><span class="pre">\diagramcredit</span></code> and a sidecar, not by mixing TASL into the pedagogical caption</p></li>
 </ol>
 </section>
 </section>
