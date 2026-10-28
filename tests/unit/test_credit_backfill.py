@@ -47,7 +47,12 @@ def test_classify_source_url() -> None:
     assert classify_source_url("https://commons.wikimedia.org/wiki/File:Foo.jpg") == "commons"
     assert classify_source_url("https://upload.wikimedia.org/wikipedia/commons/a/ab/Foo.jpg") == "commons"
     assert classify_source_url("https://upload.wikimedia.org/wikipedia/en/a/a0/Cover.jpg") == "wikipedia-en"
+    assert classify_source_url("https://en.wikipedia.org/wiki/File:Cover.jpg") == "wikipedia-en"
     assert classify_source_url("https://www.flickr.com/photos/x/1") == "other"
+    # Host checks must not match the hostname as a path or query substring.
+    assert classify_source_url("https://evil.example/en.wikipedia.org/wiki/File:Foo.jpg") == "other"
+    assert classify_source_url("https://evil.example/?q=https://commons.wikimedia.org/wiki/File:Foo.jpg") == "other"
+    assert classify_source_url("https://evil.example/upload.wikimedia.org/wikipedia/en/a/a0/Cover.jpg") == "other"
 
 
 def test_filename_from_url() -> None:
@@ -116,6 +121,7 @@ def test_wikipedia_en_is_fair_use_not_cc(tmp_path) -> None:  # type: ignore[no-u
     assert credit.status == "fair-use"
     assert credit.license is None
     assert urlparse(credit.source or "").hostname == "en.wikipedia.org"
+    assert urlparse(credit.source_binary or "").hostname == "upload.wikimedia.org"
 
 
 def test_run_backfill_writes_yaml_from_mocked_commons(tmp_path) -> None:  # type: ignore[no-untyped-def]

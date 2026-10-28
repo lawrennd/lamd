@@ -50,6 +50,11 @@ def strip_html(text: str) -> str:
     return html.unescape(HTML_TAG_RE.sub("", text)).strip()
 
 
+def _url_hostname(url: str) -> str:
+    """Hostname from ``url``, lowercased. Empty when the URL has no host."""
+    return (urlparse(url).hostname or "").lower()
+
+
 def classify_source_url(url: str) -> str:
     """Return ``commons``, ``wikipedia-en``, or ``other``."""
     parsed = urlparse(url)
@@ -213,7 +218,7 @@ def plan_backfill(
             credit = Credit(
                 status="fair-use",
                 source=wiki_source,
-                source_binary=source_url if "upload.wikimedia.org" in source_url else None,
+                source_binary=source_url if _url_hostname(source_url) == "upload.wikimedia.org" else None,
                 origin="yaml",
             )
             plans.append((yaml_path, credit, "write"))
