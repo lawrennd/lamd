@@ -262,7 +262,7 @@ def main() -> int:
         elif args.to == "pptx":
             make_cmd += " pptx"
         elif args.to == "pdf":
-            make_cmd += " pdf"
+            make_cmd += f" {base}.notes.pdf {base}.slides.pdf"
         elif args.to == "tex":
             make_cmd += " tex"
         elif args.to == "docx":

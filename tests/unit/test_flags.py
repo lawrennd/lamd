@@ -40,6 +40,7 @@ pptx: true
 ipynb: true
 slidesipynb: true
 notespdf: true
+slidespdf: true
 pdf: true
 ---
 
@@ -101,7 +102,7 @@ ghub:
                 return "path/to/reference.dotx"
             elif field == "potx":
                 return "path/to/presentation.potx"
-            elif field in ["docx", "pptx", "reveal", "ipynb", "slidesipynb", "notespdf", "pdf"]:
+            elif field in ["docx", "pptx", "reveal", "ipynb", "slidesipynb", "notespdf", "slidespdf", "pdf"]:
                 return True
             elif field == "assignment":
                 return True
@@ -150,6 +151,8 @@ ghub:
                 assert "--metadata pptx=2023-05-15-test.pptx" in output
                 assert "--metadata reveal=2023-05-15-test.slides.html" in output
                 assert "--metadata ipynb=2023-05-15-test.ipynb" in output
+                assert "--metadata notespdf=2023-05-15-test.notes.pdf" in output
+                assert "--metadata slidespdf=2023-05-15-test.slides.pdf" in output
                 assert "--metadata layout=talk" in output
                 assert "--metadata week=3" in output
                 assert "--metadata topic=5" in output

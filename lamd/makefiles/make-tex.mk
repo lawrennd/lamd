@@ -9,11 +9,12 @@
 ifeq ($(TEX_TEMPLATE),exercise)
 
 ${BASE}.notes.pdf: ${BASE}.notes.aux ${BASE}.notes.tex
-	pdflatex -shell-escape ${BASE}.notes.tex
+	pdflatex -interaction=nonstopmode -shell-escape ${BASE}.notes.tex
+	mkdir -p ${NOTESDIR}
 	cp ${BASE}.notes.pdf ${NOTESDIR}/${OUT}.notes.pdf
 
 ${BASE}.notes.aux: ${BASE}.notes.tex
-	pdflatex -shell-escape ${BASE}.notes.tex
+	pdflatex -interaction=nonstopmode -shell-escape ${BASE}.notes.tex
 
 ${BASE}.notes.tex: ${BASE}.notes.tex.markdown 
 	pandoc  -s \
@@ -26,14 +27,15 @@ ${BASE}.notes.tex: ${BASE}.notes.tex.markdown
 else
 
 ${BASE}.notes.pdf: ${BASE}.notes.aux ${BASE}.notes.bbl ${BASE}.notes.tex
-	pdflatex -shell-escape ${BASE}.notes.tex
+	pdflatex -interaction=nonstopmode -shell-escape ${BASE}.notes.tex
+	mkdir -p ${NOTESDIR}
 	cp ${BASE}.notes.pdf ${NOTESDIR}/${OUT}.notes.pdf
 
 ${BASE}.notes.bbl: ${BASE}.notes.aux ${BIBDEPS}
 	bibtex ${BASE}.notes
 
 ${BASE}.notes.aux: ${BASE}.notes.tex
-	pdflatex -shell-escape ${BASE}.notes.tex
+	pdflatex -interaction=nonstopmode -shell-escape ${BASE}.notes.tex
 
 ${BASE}.notes.tex: ${BASE}.notes.tex.markdown 
 	pandoc  -s \
@@ -66,3 +68,23 @@ ${BASE}.tex: ${BASE}.tex.markdown
                --to latex \
                --out ${BASE}.tex  ${BASE}.tex.markdown 
 	${SCRIPTDIR}/copy_web_diagrams.sh ${VERBOSE:+--verbose} ${BASE}.md texdiagrams ${TEXDIR}/diagrams ${SLIDESDIR} ${DIAGRAMSDIR} ${SNIPPETSDIR}
+
+# CIP-0017: Beamer slides PDF (pandoc -t beamer --slide-level 2).
+%.slides.tex.markdown: %.md ${DEPS}
+	${PP} $< -o $@ --format slides --to tex --code none --snippets-path ${SNIPPETSDIR} --macros-path=$(MACROSDIR) --diagrams-dir ${DIAGRAMSDIR} ${PPFLAGS}
+	sed -i -e 's/width=\(.*\)\%/width=0.\1\\textwidth/g' $@
+	sed -i -e 's/height=\(.*\)\%/height=0.\1\\textheight/g' $@
+
+${BASE}.slides.tex: ${BASE}.slides.tex.markdown ${TEXDEPS}
+	pandoc -s -t beamer --slide-level 2 \
+		${CITEFLAGS} \
+		-B ${INCLUDESDIR}/${NOTATION} \
+		-o ${BASE}.slides.tex \
+		${BASE}.slides.tex.markdown
+	${SCRIPTDIR}/copy_web_diagrams.sh ${VERBOSE:+--verbose} ${BASE}.md texdiagrams ${SLIDESDIR}/diagrams ${SLIDESDIR} ${DIAGRAMSDIR} ${SNIPPETSDIR}
+
+${BASE}.slides.pdf: ${BASE}.slides.tex
+	pdflatex -interaction=nonstopmode -shell-escape ${BASE}.slides.tex
+	pdflatex -interaction=nonstopmode -shell-escape ${BASE}.slides.tex
+	mkdir -p ${SLIDESDIR}
+	cp ${BASE}.slides.pdf ${SLIDESDIR}/${OUT}.slides.pdf
