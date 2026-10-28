@@ -1,5 +1,5 @@
 # Check header for which formats to create in notes and slides.
-# Create PDF of reveal slides with something like decktape https://github.com/astefanutti/decktape
+# Slides PDF is Beamer via make-tex.mk (${BASE}.slides.pdf, CIP-0017).
 
 OUT=$(PREFIX)$(BASE)
 

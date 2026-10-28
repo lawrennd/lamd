@@ -7,4 +7,28 @@
 }
 \define{\endanimation}{}
 
+<!-- Beamer / pandoc --slide-level 2 uses markdown ## as a frame title.
+     Drop Reveal attrs so they are not baked into the frame title. -->
+\define{\newslide{text}{commands}}{\ifdef{noSlideTitle}
+## {}
+
+\else
+## \text
+
+\endif}
+
+\define{\section{text}{commands}}{
+## \text
+
+}
+
+<!-- Beamer frames cannot float. Keep the image and a caption line. -->
+\define{\figure{contents}{captionContents}{reference}}{
+\begin{center}
+\contents
+
+\captionContents
+\end{center}
+}
+
 \endif
