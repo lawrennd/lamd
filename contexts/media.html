@@ -171,11 +171,12 @@
 <p>Third-party diagrams store TASL metadata in a sibling <code class="docutils literal notranslate"><span class="pre">{stem}.credit.yml</span></code> next to the image (in the filesystem <code class="docutils literal notranslate"><span class="pre">diagramsdir</span></code>, not the web <code class="docutils literal notranslate"><span class="pre">diagramsurl</span></code>). A one-line <code class="docutils literal notranslate"><span class="pre">{stem}.url</span></code> file remains a source-only shorthand and never claims a Creative Commons license.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">third-party</span><span class="w">   </span><span class="c1"># own | third-party | public-domain | unknown | fair-use | trademark</span>
 <span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">"Portrait</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">Daniel</span><span class="nv"> </span><span class="s">Bernoulli"</span>
-<span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="s">"Johann</span><span class="nv"> </span><span class="s">Rudolf</span><span class="nv"> </span><span class="s">Huber</span><span class="nv"> </span><span class="s">(attrib.)"</span>
-<span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://commons.wikimedia.org/wiki/File:Daniel_Bernoulli.jpg</span>
+<span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="s">"Unknown"</span>
+<span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://commons.wikimedia.org/wiki/File:Porträt_des_Daniel_Bernoulli_-_edit1.jpg</span>
 <span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CC-BY-SA-4.0</span>
 <span class="nt">license_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://creativecommons.org/licenses/by-sa/4.0/</span>
-<span class="nt">modifications</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="nt">modifications</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retouched</span>
 </pre></div>
 </div>
 <p>Credit is opt-in. <code class="docutils literal notranslate"><span class="pre">\includejpg</span></code> / <code class="docutils literal notranslate"><span class="pre">\includediagram</span></code> / <code class="docutils literal notranslate"><span class="pre">\includeimg</span></code> stay image-only. Place <code class="docutils literal notranslate"><span class="pre">\diagramcredit{stem}</span></code> after the figure; mdpp expands it before gpp using the filesystem diagrams root.</p>

@@ -65,11 +65,12 @@ Third-party diagrams store TASL metadata in a sibling `{stem}.credit.yml` next t
 ```yaml
 status: third-party   # own | third-party | public-domain | unknown | fair-use | trademark
 title: "Portrait of Daniel Bernoulli"
-author: "Johann Rudolf Huber (attrib.)"
-source: https://commons.wikimedia.org/wiki/File:Daniel_Bernoulli.jpg
+author: "Unknown"
+source: https://commons.wikimedia.org/wiki/File:Porträt_des_Daniel_Bernoulli_-_edit1.jpg
 license: CC-BY-SA-4.0
 license_url: https://creativecommons.org/licenses/by-sa/4.0/
-modifications: []
+modifications:
+  - retouched
 ```
 
 Credit is opt-in. `\includejpg` / `\includediagram` / `\includeimg` stay image-only. Place `\diagramcredit{stem}` after the figure; mdpp expands it before gpp using the filesystem diagrams root.
