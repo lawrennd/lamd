@@ -17,6 +17,8 @@ from typing import Any
 import frontmatter as fm
 
 from lamd.config.interface import Interface
+from lamd.credit import credit_output_context, expand_diagramcredit
+from lamd.paths import path_config_from_mapping, resolve_diagrams_filesystem
 from lamd.validation import (
     ValidationError,
     validate_code_level,
@@ -229,7 +231,7 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
         gpp_args.append("-DTESTCODE=1")
 
     # Add directory definitions
-    from lamd.paths import path_config_from_mapping, resolve_diagrams_filesystem, resolve_diagrams_web
+    from lamd.paths import resolve_diagrams_web
 
     path_config = path_config_from_mapping(iface)
     if args.to in ["html", "ipynb"]:
@@ -378,6 +380,20 @@ def process_content(args: argparse.Namespace, before_text: str, after_text: str)
     # Combine content
     writepost.content = before_text + writepost.content + after_text
     return writepost
+
+
+def apply_diagram_credits(content: str, args: argparse.Namespace, iface: dict[str, Any]) -> str:
+    """Expand ``\\diagramcredit`` using the filesystem diagrams root (CIP-0016).
+
+    HTML/ipynb set ``\\diagramsDir`` to a web URL; sidecar YAML lives on disk,
+    so lookup always uses ``resolve_diagrams_filesystem``.
+    """
+    context = credit_output_context(getattr(args, "to", None), getattr(args, "format", None))
+    fs_root = resolve_diagrams_filesystem(
+        path_config_from_mapping(iface),
+        cli=getattr(args, "diagrams_dir", None),
+    )
+    return expand_diagramcredit(content, fs_root, context)
 
 
 def main() -> int:
@@ -583,6 +599,7 @@ def main() -> int:
 
         # Process content
         writepost = process_content(args, before_text, after_text)
+        writepost.content = apply_diagram_credits(writepost.content, args, iface)
 
         # Write temporary file
         tmp_file = gpp_temp_path(args.filename, args.to)
@@ -600,6 +617,7 @@ def main() -> int:
             with open(args.filename) as f:
                 source_post = fm.load(f)
             body = source_post.content if not args.no_header else open(args.filename).read()
+            body = apply_diagram_credits(body, args, iface)
             # NOTE: We do NOT pre-process $$...$$ → \displaymath{} here.
             # Pre-processing creates \slides{\displaymath{...}} nesting when $$
             # appears inside \slides{}, causing nested r"""...""" Python strings

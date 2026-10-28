@@ -1,7 +1,7 @@
 ---
 id: "2026-10-25_diagram-source-attribution"
 title: "Incorporate diagram source URLs as attribution"
-status: "Proposed"
+status: "In Progress"
 priority: "Medium"
 created: "2026-10-25"
 last_updated: "2026-10-25"
@@ -22,8 +22,7 @@ tags:
 > **Note**: Backlog tasks are DOING the work defined in CIPs (HOW).
 > Use `related_cips` to link to CIPs. Don't link directly to requirements (bottom-up pattern).
 >
-> This item is still in design. Implementation should wait until CIP-0016 is
-> Accepted. Do not spawn further implementation tasks while the CIP is Proposed.
+> CIP-0016 is Accepted and In Progress. This task tracks the lamd implementation.
 
 ## Description
 
@@ -65,7 +64,7 @@ credits would not appear on the slide.
 - [ ] Unknown / fair-use / trademark (logos, book covers, news photos) are
       classified rather than credited as CC
 - [x] CIP opened if the macro/schema work is accepted as a design change
-      ([CIP-0016](../../cip/cip0016.md), Proposed)
+      ([CIP-0016](../../cip/cip0016.md), In Progress)
 
 ## Implementation Notes
 
@@ -108,7 +107,7 @@ files are often fair use (book covers) and must not be labelled CC.
 
 ## Related
 
-- CIP: [0016](../../cip/cip0016.md) (Proposed)
+- CIP: [0016](../../cip/cip0016.md) (In Progress)
 - Repos: `lawrennd/slides` (`.url` files), `lawrennd/snippets` (includes),
   `lawrennd/lamd` (macros)
 - Existing macro: `\credit{name}{url}` in `talk-macros-slides.gpp` /
@@ -128,3 +127,6 @@ figure/credit macros.
 CIP-0016 drafted (Proposed): sibling `.credit.yml` as the TASL sidecar, explicit
 `\diagramcredit{stem}` expanded by mdpp, `.url` kept as source-only shorthand.
 Awaiting review before Accept.
+
+CIP-0016 accepted and moved to In Progress; implementation started in lamd
+(`credit` resolver, mdpp expansion, Commons backfill helper).

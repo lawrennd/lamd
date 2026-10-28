@@ -60,6 +60,8 @@
 \define{\TK}{}
 
 \define{\credit{name}{url}}{}
+<!-- CIP-0016: mdpp expands \diagramcredit before gpp; leftover calls are empty. -->
+\define{\diagramcredit{stem}}{}
 
 \define{\caption{block}}{}
 
