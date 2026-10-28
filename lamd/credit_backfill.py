@@ -52,10 +52,13 @@ def strip_html(text: str) -> str:
 
 def classify_source_url(url: str) -> str:
     """Return ``commons``, ``wikipedia-en``, or ``other``."""
-    lowered = url.lower()
-    if "upload.wikimedia.org/wikipedia/en/" in lowered or "en.wikipedia.org" in lowered:
+    parsed = urlparse(url)
+    host = (parsed.hostname or "").lower()
+    path = parsed.path.lower()
+
+    if host == "en.wikipedia.org" or (host == "upload.wikimedia.org" and path.startswith("/wikipedia/en/")):
         return "wikipedia-en"
-    if "commons.wikimedia.org" in lowered or "upload.wikimedia.org/wikipedia/commons/" in lowered:
+    if host == "commons.wikimedia.org" or (host == "upload.wikimedia.org" and path.startswith("/wikipedia/commons/")):
         return "commons"
     return "other"
 
