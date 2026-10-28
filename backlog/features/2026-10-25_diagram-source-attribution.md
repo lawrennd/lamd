@@ -1,10 +1,10 @@
 ---
 id: "2026-10-25_diagram-source-attribution"
 title: "Incorporate diagram source URLs as attribution"
-status: "In Progress"
+status: "Completed"
 priority: "Medium"
 created: "2026-10-25"
-last_updated: "2026-10-25"
+last_updated: "2026-10-28"
 category: "features"
 related_cips: ["0016"]
 owner: "Neil Lawrence"
@@ -22,7 +22,7 @@ tags:
 > **Note**: Backlog tasks are DOING the work defined in CIPs (HOW).
 > Use `related_cips` to link to CIPs. Don't link directly to requirements (bottom-up pattern).
 >
-> CIP-0016 is Accepted and In Progress. This task tracks the lamd implementation.
+> CIP-0016 is Implemented. This task tracked the lamd implementation and the Bernoulli reference include.
 
 ## Description
 
@@ -53,18 +53,18 @@ credits would not appear on the slide.
 
 ## Acceptance Criteria
 
-- [ ] Agreed sidecar schema that can store at least: source URL, title, author,
+- [x] Agreed sidecar schema that can store at least: source URL, title, author,
       license id, license URL, and optional modifications
-- [ ] Decision recorded: keep plain `.url` and add YAML, or replace `.url` with
+- [x] Decision recorded: keep plain `.url` and add YAML, or replace `.url` with
       YAML that still contains `source`
-- [ ] Lamd can render a credit from that sidecar in notes/HTML and on slides
+- [x] Lamd can render a credit from that sidecar in notes/HTML and on slides
       without silently changing every `\includejpg` / `\includediagram`
-- [ ] Wikimedia-hosted files can be backfilled via the Commons API; other hosts
+- [x] Wikimedia-hosted files can be backfilled via the Commons API; other hosts
       remain manual
-- [ ] Unknown / fair-use / trademark (logos, book covers, news photos) are
+- [x] Unknown / fair-use / trademark (logos, book covers, news photos) are
       classified rather than credited as CC
 - [x] CIP opened if the macro/schema work is accepted as a design change
-      ([CIP-0016](../../cip/cip0016.md), In Progress)
+      ([CIP-0016](../../cip/cip0016.md), Implemented)
 
 ## Implementation Notes
 
@@ -107,12 +107,12 @@ files are often fair use (book covers) and must not be labelled CC.
 
 ## Related
 
-- CIP: [0016](../../cip/cip0016.md) (In Progress)
+- CIP: [0016](../../cip/cip0016.md) (Implemented)
 - Repos: `lawrennd/slides` (`.url` files), `lawrennd/snippets` (includes),
   `lawrennd/lamd` (macros)
 - Existing macro: `\credit{name}{url}` in `talk-macros-slides.gpp` /
-  `talk-macros-notes.gpp` (unused in snippets)
-- Example of caption-level credit:
+  `talk-macros-notes.gpp`; TASL path is `\diagramcredit`
+- Reference include:
   `snippets/_physics/includes/daniel-bernoulli-portrait.md`
 - Tenet: academic-rigor-through-tooling; also explicit-over-implicit and
   configuration-lives-with-content
@@ -130,3 +130,10 @@ Awaiting review before Accept.
 
 CIP-0016 accepted and moved to In Progress; implementation started in lamd
 (`credit` resolver, mdpp expansion, Commons backfill helper).
+
+### 2026-10-28
+
+Bernoulli portrait is the reference include: pedagogical caption only,
+`\diagramcredit{\diagramsDir/physics/daniel-bernoulli}`, sidecar YAML next to
+the JPEG from Commons (artist Unknown, CC BY-SA 4.0, retouched). CIP-0016
+marked Implemented.
