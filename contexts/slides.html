@@ -58,7 +58,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#example-usage">Example Usage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#output-formats">Output Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-formats">Output Formats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#slides-pdf-cip-0017">Slides PDF (CIP-0017)</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#tips">Tips</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#colored-math-in-pptx">Colored math in PPTX</a></li>
 </ul>
@@ -420,7 +423,7 @@ and scripting:</p>
 </tr>
 <tr class="row-odd"><td><p><strong>TeX / PDF slides</strong></p></td>
 <td><p>No-op</p></td>
-<td><p>Emits frame content</p></td>
+<td><p>Emits frame content (each Beamer frame)</p></td>
 <td><p>No-op</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>PPTX</strong></p></td>
@@ -545,7 +548,18 @@ Remember to mention real-world applications for each type
 <ul class="simple">
 <li><p>reveal.js presentations (HTML)</p></li>
 <li><p>PowerPoint (PPTX)</p></li>
+<li><p>Beamer PDF (<code class="docutils literal notranslate"><span class="pre">slidespdf:</span> <span class="pre">True</span></code>, or <code class="docutils literal notranslate"><span class="pre">maketalk</span> <span class="pre">talk.md</span> <span class="pre">--format</span> <span class="pre">slides</span> <span class="pre">--to</span> <span class="pre">pdf</span></code>)</p></li>
 </ul>
+<section id="slides-pdf-cip-0017">
+<h3>Slides PDF (CIP-0017)<a class="headerlink" href="#slides-pdf-cip-0017" title="Link to this heading"></a></h3>
+<p>Frontmatter <code class="docutils literal notranslate"><span class="pre">slidespdf:</span> <span class="pre">True</span></code> includes <code class="docutils literal notranslate"><span class="pre">${BASE}.slides.pdf</span></code> in <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">all</span></code> once lynguine <code class="docutils literal notranslate"><span class="pre">extract_all</span></code> knows the flag. Until then, build it explicitly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>maketalk<span class="w"> </span>talk.md<span class="w"> </span>--format<span class="w"> </span>slides<span class="w"> </span>--to<span class="w"> </span>pdf
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">maketalk</span> <span class="pre">talk.md</span> <span class="pre">--to</span> <span class="pre">pdf</span></code> builds both the notes PDF and the slides PDF.</p>
+<p>The slides PDF is Beamer, one frame per <code class="docutils literal notranslate"><span class="pre">\newslide</span></code>. Reveal attributes (<code class="docutils literal notranslate"><span class="pre">.scrollable</span></code>, <code class="docutils literal notranslate"><span class="pre">.font-sm</span></code>, <code class="docutils literal notranslate"><span class="pre">data-background*</span></code>) are ignored. Notes-only <code class="docutils literal notranslate"><span class="pre">\notes{}</span></code> content is dropped. The PDF is copied to <code class="docutils literal notranslate"><span class="pre">slidesdir</span></code> as <code class="docutils literal notranslate"><span class="pre">{prefix}{base}.slides.pdf</span></code>.</p>
+<p>FoilTeX is not a LaMD engine. Compare reconstructed courses on content, not 2006 chrome.</p>
+</section>
 </section>
 <section id="tips">
 <h2>Tips<a class="headerlink" href="#tips" title="Link to this heading"></a></h2>

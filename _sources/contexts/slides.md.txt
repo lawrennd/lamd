@@ -250,7 +250,7 @@ and scripting:
 | **HTML slides** | Full interactive controls + JS init | Frame div with show/hide class | Closes container |
 | **Notes** | Prints `**Animation sequence: {name}**` | Emits frame content | No-op |
 | **IPynb** | No-op (HTML macros included, then overridden) | Emits frame content | No-op |
-| **TeX / PDF slides** | No-op | Emits frame content | No-op |
+| **TeX / PDF slides** | No-op | Emits frame content (each Beamer frame) | No-op |
 | **PPTX** | No-op | Emits frame content | No-op |
 
 In non-HTML formats every frame appears in document order. Authors should write frames
@@ -337,6 +337,21 @@ Remember to mention real-world applications for each type
 
 - reveal.js presentations (HTML)
 - PowerPoint (PPTX)
+- Beamer PDF (`slidespdf: True`, or `maketalk talk.md --format slides --to pdf`)
+
+### Slides PDF (CIP-0017)
+
+Frontmatter `slidespdf: True` includes `${BASE}.slides.pdf` in `make all` once lynguine `extract_all` knows the flag. Until then, build it explicitly:
+
+```bash
+maketalk talk.md --format slides --to pdf
+```
+
+`maketalk talk.md --to pdf` builds both the notes PDF and the slides PDF.
+
+The slides PDF is Beamer, one frame per `\newslide`. Reveal attributes (`.scrollable`, `.font-sm`, `data-background*`) are ignored. Notes-only `\notes{}` content is dropped. The PDF is copied to `slidesdir` as `{prefix}{base}.slides.pdf`.
+
+FoilTeX is not a LaMD engine. Compare reconstructed courses on content, not 2006 chrome.
 
 ## Tips
 
