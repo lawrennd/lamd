@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from urllib.parse import urlparse
 
 import yaml
 
@@ -114,7 +115,7 @@ def test_wikipedia_en_is_fair_use_not_cc(tmp_path) -> None:  # type: ignore[no-u
     assert credit is not None
     assert credit.status == "fair-use"
     assert credit.license is None
-    assert "en.wikipedia.org" in (credit.source or "")
+    assert urlparse(credit.source or "").hostname == "en.wikipedia.org"
 
 
 def test_run_backfill_writes_yaml_from_mocked_commons(tmp_path) -> None:  # type: ignore[no-untyped-def]
