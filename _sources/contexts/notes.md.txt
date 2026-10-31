@@ -91,6 +91,15 @@ notespdf: True
 tex_template: exercise   # optional when assignment is true
 ```
 
+## Student blanks (CIP-0019)
+
+Frontmatter `student: true` (or `mdpp --student`) leaves `\answer{text}{blankheight}` as vertical space in notes instead of printing `text`. Lecturer builds (the default) print the answer. This flag is independent of `assignment`.
+
+```yaml
+student: True
+notespdf: True
+```
+
 ## Best Practices
 
 1. Use clear section hierarchy

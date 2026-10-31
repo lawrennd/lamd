@@ -54,6 +54,7 @@
 <li class="toctree-l2"><a class="reference internal" href="definition.html">Definition Context</a></li>
 <li class="toctree-l2"><a class="reference internal" href="people.html">People Context</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Teaching Context</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#in-place-answer-slot">In-place answer slot</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#assignment-macros">Assignment Macros</a></li>
 </ul>
 </li>
@@ -92,6 +93,25 @@
   <section id="teaching-context">
 <h1>Teaching Context<a class="headerlink" href="#teaching-context" title="Link to this heading"></a></h1>
 <p>The teaching context provides macros for creating educational content like assignments and exercises.</p>
+<section id="in-place-answer-slot">
+<h2>In-place answer slot<a class="headerlink" href="#in-place-answer-slot" title="Link to this heading"></a></h2>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\answer{text}{blankheight}
+    Prints a worked answer, or leaves blank space of that height in student notes.
+    Args:
+        text: The lecturer answer (shown in lecturer notes and in all slides)
+        blankheight: Height in centimetres for the student writing gap
+</pre></div>
+</div>
+<p>This is not an exercise wrapper. It does not number a question or attach marks. Use it inside existing notes or slides for a derivation that students write in by hand.</p>
+<p>Lecturer notes (default) and slides emit <code class="docutils literal notranslate"><span class="pre">text</span></code>. Student notes (<code class="docutils literal notranslate"><span class="pre">mdpp</span> <span class="pre">--student</span></code>, or frontmatter <code class="docutils literal notranslate"><span class="pre">student:</span> <span class="pre">true</span></code>) emit a blank of <code class="docutils literal notranslate"><span class="pre">blankheight</span></code> cm. Slides keep the answer even when <code class="docutils literal notranslate"><span class="pre">student</span></code> is set, matching lecture-slide sources that always showed worked answers.</p>
+<p><code class="docutils literal notranslate"><span class="pre">assignment:</span> <span class="pre">true</span></code> is independent: it selects worksheet chrome and <code class="docutils literal notranslate"><span class="pre">\writeassignment</span></code> numbering, not student blanks.</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>The waiting time in the queue is
+\answer{
+$$W = \frac{\lambda}{\mu(\mu-\lambda)}.$$
+}{6}
+</pre></div>
+</div>
+</section>
 <section id="assignment-macros">
 <h2>Assignment Macros<a class="headerlink" href="#assignment-macros" title="Link to this heading"></a></h2>
 <div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\writeassignment{text}{marks}{answer}

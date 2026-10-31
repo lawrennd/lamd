@@ -2,6 +2,29 @@
 
 The teaching context provides macros for creating educational content like assignments and exercises.
 
+## In-place answer slot
+
+```markdown
+\answer{text}{blankheight}
+    Prints a worked answer, or leaves blank space of that height in student notes.
+    Args:
+        text: The lecturer answer (shown in lecturer notes and in all slides)
+        blankheight: Height in centimetres for the student writing gap
+```
+
+This is not an exercise wrapper. It does not number a question or attach marks. Use it inside existing notes or slides for a derivation that students write in by hand.
+
+Lecturer notes (default) and slides emit `text`. Student notes (`mdpp --student`, or frontmatter `student: true`) emit a blank of `blankheight` cm. Slides keep the answer even when `student` is set, matching lecture-slide sources that always showed worked answers.
+
+`assignment: true` is independent: it selects worksheet chrome and `\writeassignment` numbering, not student blanks.
+
+```markdown
+The waiting time in the queue is
+\answer{
+$$W = \frac{\lambda}{\mu(\mu-\lambda)}.$$
+}{6}
+```
+
 ## Assignment Macros
 
 ```markdown

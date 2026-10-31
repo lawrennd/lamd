@@ -56,6 +56,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#example-usage">Example Usage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#output-formats">Output Formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#notes-pdf-templates-cip-0013">Notes PDF templates (CIP-0013)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#student-blanks-cip-0019">Student blanks (CIP-0019)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#best-practices">Best Practices</a></li>
 </ul>
 </li>
@@ -201,6 +202,14 @@ Start with simple architectures and gradually increase complexity as needed.
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">assignment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 <span class="nt">notespdf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 <span class="nt">tex_template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">exercise</span><span class="w">   </span><span class="c1"># optional when assignment is true</span>
+</pre></div>
+</div>
+</section>
+<section id="student-blanks-cip-0019">
+<h2>Student blanks (CIP-0019)<a class="headerlink" href="#student-blanks-cip-0019" title="Link to this heading"></a></h2>
+<p>Frontmatter <code class="docutils literal notranslate"><span class="pre">student:</span> <span class="pre">true</span></code> (or <code class="docutils literal notranslate"><span class="pre">mdpp</span> <span class="pre">--student</span></code>) leaves <code class="docutils literal notranslate"><span class="pre">\answer{text}{blankheight}</span></code> as vertical space in notes instead of printing <code class="docutils literal notranslate"><span class="pre">text</span></code>. Lecturer builds (the default) print the answer. This flag is independent of <code class="docutils literal notranslate"><span class="pre">assignment</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">student</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="nt">notespdf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 </pre></div>
 </div>
 </section>
