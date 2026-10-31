@@ -74,6 +74,8 @@ Start with simple architectures and gradually increase complexity as needed.
 
 ## Notes PDF templates (CIP-0013)
 
+Frontmatter `notespdf: True` builds the notes PDF. `flags post` also emits Jekyll `pdfnotes` metadata so lecture pages can link the file.
+
 Frontmatter field `tex_template` selects the pandoc LaTeX template for `notespdf`:
 
 | Value | Template | Use |

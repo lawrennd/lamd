@@ -349,7 +349,7 @@ maketalk talk.md --format slides --to pdf
 
 `maketalk talk.md --to pdf` builds both the notes PDF and the slides PDF.
 
-The slides PDF is Beamer, one frame per `\newslide`. Reveal attributes (`.scrollable`, `.font-sm`, `data-background*`) are ignored. Notes-only `\notes{}` content is dropped. The PDF is copied to `slidesdir` as `{prefix}{base}.slides.pdf`.
+The slides PDF is Beamer, one frame per `\newslide`. Reveal attributes (`.scrollable`, `.font-sm`, `data-background*`) are ignored. Notes-only `\notes{}` content is dropped. The PDF is copied to `slidesdir` as `{prefix}{base}.slides.pdf`. `flags post` also emits Jekyll `pdfslides` metadata so lecture pages can link the file.
 
 FoilTeX is not a LaMD engine. Compare reconstructed courses on content, not 2006 chrome.
 
