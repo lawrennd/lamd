@@ -317,8 +317,10 @@ def main() -> int:
             lines += """ --metadata slidesipynb={out}.slides.ipynb"""
         if ny.header_field("notespdf", fields, user_file):
             lines += """ --metadata notespdf={out}.notes.pdf"""
+            lines += """ --metadata pdfnotes={out}.notes.pdf"""
         if ny.header_field("slidespdf", fields, user_file):
             lines += """ --metadata slidespdf={out}.slides.pdf"""
+            lines += """ --metadata pdfslides={out}.slides.pdf"""
         if ny.header_field("pdf", fields, user_file):
             lines += """ --metadata pdf={out}.pdf"""
 
