@@ -117,6 +117,7 @@
 \define{\narration{text}}{}
 
 \define{\speakernotes{text}}{}
+\define{\answer{text}{blankheight}}{}
 
 \define{\machinereviewlink}{}
 \define{\machinereview}{}

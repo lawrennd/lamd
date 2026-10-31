@@ -50,6 +50,7 @@
 \define{\matlabblockend}{```}
 
 \define{\slides{text}}{\text}
+\define{\answer{text}{blankheight}}{\text}
 \define{\narration{text}}{}
 \define{\slidesincremental{text}}{::: incremental
 

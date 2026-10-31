@@ -203,6 +203,9 @@ def setup_gpp_arguments(args: argparse.Namespace, iface: dict[str, Any]) -> list
         gpp_args.append("-DEXERCISES=1")
     if args.assignment:
         gpp_args.append("-DASSIGNMENT=1")
+    # ``is True`` so MagicMock auto-attrs in tests do not look set.
+    if getattr(args, "student", False) is True:
+        gpp_args.append("-DSTUDENT=1")
     if args.edit_links:
         gpp_args.append("-DEDIT=1")
     if args.draft:
@@ -491,6 +494,13 @@ def main() -> int:
         default=False,
         action="store_true",
         help="Format the document as an assignment rather than regular notes",
+    )
+
+    parser.add_argument(
+        "--student",
+        default=False,
+        action="store_true",
+        help="Omit in-place answers in notes, leaving blank space of the requested height",
     )
 
     parser.add_argument("-d", "--diagrams-dir", type=str, help="Directory containing diagram files referenced in the content")

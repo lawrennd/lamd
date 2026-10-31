@@ -53,6 +53,7 @@ def test_setup_gpp_arguments():
     args.format = "slides"
     args.exercises = True
     args.assignment = False
+    args.student = False
     args.edit_links = True
     args.draft = False
     args.meta_data = ["author=John Doe"]
@@ -116,6 +117,44 @@ def test_setup_gpp_arguments():
     for req in required_args:
         if not req.startswith("-U"):
             assert req in result, f"Missing required argument: {req}"
+    assert "-DSTUDENT=1" not in result
+
+
+def test_setup_gpp_arguments_student():
+    """``--student`` defines STUDENT for GPP without implying ASSIGNMENT."""
+    args = MagicMock()
+    args.to = "html"
+    args.format = "notes"
+    args.exercises = False
+    args.assignment = False
+    args.student = True
+    args.edit_links = False
+    args.draft = False
+    args.meta_data = []
+    args.code = "none"
+    args.diagrams_dir = None
+    args.diagrams_web_dir = None
+    args.scripts_dir = None
+    args.write_diagrams_dir = None
+    args.include_path = None
+    args.snippets_path = None
+    args.macros_path = None
+    args.output = "output.md"
+    args.macros = "macros"
+    args.filename = "input.md"
+
+    iface = {
+        "diagramsurl": "http://example.com",
+        "diagramsdir": "diagrams",
+        "scriptsdir": "scripts",
+        "writediagramsdir": "diagrams",
+        "macrosdir": "macros",
+    }
+
+    result = setup_gpp_arguments(args, iface)
+    assert "-DSTUDENT=1" in result
+    assert "-DNOTES=1" in result
+    assert "-DASSIGNMENT=1" not in result
 
 
 def test_main():

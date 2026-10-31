@@ -41,14 +41,14 @@ Notes PDF remains a separate artefact. This requirement does not change how lect
 
 ## Notes (Optional)
 
-Legacy FoilTeX chrome (20pt foils, Sheffield headers) is out of scope. Student-blank answer space in notes PDFs is also out of scope.
+Legacy FoilTeX chrome (20pt foils, Sheffield headers) is out of scope. Student-blank answer space in notes PDFs is also out of scope here; see [REQ-0013](req0013_answer-slot.md).
 
 The existing `pdf:` frontmatter field is Jekyll metadata for a generic PDF link. It must not be overloaded as the slides-PDF build switch; use a dedicated `slidespdf` flag analogous to `notespdf`.
 
 ## References
 
-- **Related CIPs**: CIP-0017 (Beamer slides PDF pipeline)
-- **Related requirements**: [REQ-0011](req0011_exercise-sheet-pdf.md) (notes/exercise PDFs)
+- **Related CIPs**: CIP-0017 (Beamer slides PDF pipeline), CIP-0019 (answer slot)
+- **Related requirements**: [REQ-0011](req0011_exercise-sheet-pdf.md) (notes/exercise PDFs), [REQ-0013](req0013_answer-slot.md) (lecturer/student answer slot)
 
 ## Progress Updates
 
