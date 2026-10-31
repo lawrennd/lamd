@@ -5,6 +5,12 @@
 
 \define{\displaynotes{block}}{\notes{\block}}
 
+\define{\answer{text}{blankheight}}{\ifdef{STUDENT}
+<div class="answer-blank" style="min-height:\blankheight cm"></div>
+\else
+\text
+\endif}
+
 \define{\machinereviewlink}{
 <aside class="machine-review-link" style="border-left:4px solid #ccc;padding:0.6em 1em;margin:1em 0;background:#f7f7f7">
 <p><strong>Machine review.</strong> A <a href="#machine-review">machine review of this lecture</a> is at the end of these notes. It fact-checks historical and technical claims. It is not assessed.</p>

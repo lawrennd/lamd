@@ -14,6 +14,13 @@
 \define{\fragmentindex{text}{type}{index}}{\text}
 \define{\fragmentdiv{contents}{number}{style}}{\contents}
 \define{\notes{text}}{\text}
+\define{\answer{text}{blankheight}}{\ifdef{STUDENT}
+
+\vspace*{\blankheight cm}
+
+\else
+\text
+\endif}
 \define{\narration{text}}{}
 \define{\notesfigure{block}}{\block}
 \define{\recommendation{text}}{**Recommendation**: \text}

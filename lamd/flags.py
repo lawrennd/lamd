@@ -352,6 +352,11 @@ def main() -> int:
                 lines += """ --assignment"""
         except ny.FileFormatError:
             pass
+        try:
+            if ny.header_field("student", fields, user_file):
+                lines += """ --student"""
+        except ny.FileFormatError:
+            pass
 
         print(lines)
 

@@ -1,7 +1,7 @@
 ---
 id: "0013"
 title: "Authors can reserve lecturer answers and student blank space from one LaMD source"
-status: "Proposed"
+status: "Implemented"
 priority: "High"
 created: "2026-10-31"
 last_updated: "2026-10-31"
@@ -34,11 +34,11 @@ This is not an exercise wrapper. The surrounding question, heading, and marks st
 
 ## Acceptance Criteria
 
-- [ ] Authors can mark an in-place answer together with a blank height, without wrapping the surrounding question as an exercise.
-- [ ] Lecturer notes include the answer text.
-- [ ] Student notes omit the answer text and leave vertical space of the requested height.
-- [ ] Slides include the answer text in both lecturer and student builds.
-- [ ] Existing assignment and exercise macros keep their current behaviour.
+- [x] Authors can mark an in-place answer together with a blank height, without wrapping the surrounding question as an exercise.
+- [x] Lecturer notes include the answer text.
+- [x] Student notes omit the answer text and leave vertical space of the requested height.
+- [x] Slides include the answer text in both lecturer and student builds.
+- [x] Existing assignment and exercise macros keep their current behaviour.
 
 ## Notes (Optional)
 
@@ -55,3 +55,5 @@ Speaker notes remain a separate channel: they are presenter asides, not student 
 
 ### 2026-10-31
 Requirement drafted for the NPA notes.cls `\answer{body}{vspace}` reconstruction, alongside CIP-0019.
+
+CIP-0019 implemented `\answer{text}{blankheight}` with `mdpp --student` / frontmatter `student: true`. GPP unit tests cover lecturer notes, student notes (TeX and HTML), slides, and `\writeassignment` non-regression.

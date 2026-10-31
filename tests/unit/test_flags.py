@@ -106,6 +106,8 @@ ghub:
                 return True
             elif field == "assignment":
                 return True
+            elif field == "student":
+                return True
             elif field == "ghub":
                 return [{"organization": "testorg", "repository": "testrepo", "branch": "main", "directory": "docs"}]
             # Return None for any other field to trigger FileFormatError
@@ -235,6 +237,7 @@ ghub:
 
                 assert "--include-path ./.." in output
                 assert "--assignment" in output
+                assert "--student" in output
 
     @patch("sys.argv", ["flags", "cv", "test"])
     @patch("builtins.print")
