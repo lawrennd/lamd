@@ -54,7 +54,7 @@
 
 <!-- Class-test timer: no-op outside slides HTML (overridden in talk-macros-slides-html.gpp). -->
 \define{\classtimer{duration}}{}
-\define{\classtimer{duration}{title}}{}
+\define{\classtimertitled{duration}{title}}{}
 
 \define{\todo}{}
 \define{\tk}{}

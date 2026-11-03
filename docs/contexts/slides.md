@@ -73,7 +73,7 @@ Full-bleed class-test countdown (slides HTML only; notes get a short placeholder
 \classtimer{10:00}
 \classtimer{900}
 \classtimer{1:30:00}
-\classtimer{10:00}{Quiz 2}
+\classtimertitled{10:00}{Quiz 2}
 ```
 
 This loads `\scriptsDir/timer/index.html?duration=…` as an interactive Reveal background iframe (Start / Pause / Reset, flashes when finished).
