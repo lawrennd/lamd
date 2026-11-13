@@ -11,6 +11,8 @@
 \setupcode{import importlib.util}
 
 \helpercode{def install_command(imp):
+    import shutil
+    import sys
     packages = {
         'daft': 'daft-pgm',
         'mlai': 'git+https://github.com/lawrennd/mlai.git',
@@ -19,17 +21,44 @@
         'notutils': 'git+https://github.com/lawrennd/notutils.git',
         'pods' : 'git+https://github.com/lawrennd/ods.git',
         'lamd': 'lamd',
-        'GPy': 'gpy',
+        'GPy': 'gpy>=1.15',
 	'emukit': 'emukit',
     }
 
-    if importlib.util.find_spec(imp) is None:
-        if imp in packages:
-            return f'pip install {packages[imp]}'
-        else:
-            return f'pip install {imp}'
-    else:
-        return f'echo "Package {imp} is already installed."'}
+    def _installer():
+        if shutil.which('uv'):
+            return 'uv pip install --python "' + sys.executable + '"'
+        return '"' + sys.executable + '" -m pip install'
+
+    def _ver_tuple(v):
+        parts = []
+        for p in v.split('.')[:3]:
+            try:
+                parts.append(int(''.join(ch for ch in p if ch.isdigit()) or '0'))
+            except ValueError:
+                parts.append(0)
+        while len(parts) < 3:
+            parts.append(0)
+        return tuple(parts)
+
+    def _below_floor(spec):
+        if '>=' not in spec:
+            return False
+        name, floor = spec.split('>=', 1)
+        name = name.strip()
+        floor = floor.strip().split(',')[0].strip()
+        try:
+            import importlib.metadata as md
+            cur = md.version(name)
+        except Exception:
+            return True
+        return _ver_tuple(cur) < _ver_tuple(floor)
+
+    spec = packages[imp] if imp in packages else imp
+    missing = importlib.util.find_spec(imp) is None
+    if missing or _below_floor(spec):
+        return _installer() + ' "' + spec + '"'
+    return 'echo "Package ' + imp + ' is already installed."'}
 \endif
 \setupcode{cmd = install_command('\library')}
 \setupcode{%system {cmd}}
