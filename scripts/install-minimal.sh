@@ -134,7 +134,7 @@ You are assisting with repositories that use **LaMD** to convert markdown-with-m
 - Keep slide density low:
   - Aim for **≤ 3 bullets per slide** (or **≤ 2 formulae**).
   - Prefer multiple slides over one crowded slide.
-- Create new slides with `\newslides{Title}` (slides-only) or `\subsection{Title}` (both slides and notes).
+- Create new slides with `\newslide{Title}` (slides-only; singular — never `\newslides`) or `\subsection{Title}` (both slides and notes).
 
 ## Incremental / progressive reveal (slides)
 
@@ -146,7 +146,7 @@ LaMD supports progressive reveal patterns for HTML slides (reveal.js):
 Examples:
 
 ```markdown
-\newslides{Key points}
+\newslide{Key points}
 
 \slidesincremental{
 * First point
@@ -210,7 +210,7 @@ Key LaMD conventions:
 - `\speakernotes{}` adds presenter-only notes in reveal.js output.
 - `\slidesincremental{}` enables incremental bullet reveals in slides.
 - `\fragment{text}{type}` creates reveal.js fragments (e.g. `fade-in`).
-- `\newslides{Title}` creates a new slide (slides only).
+- `\newslide{Title}` creates a new slide (slides only; singular — never `\newslides`).
 - `\subsection{Title}` creates a section that appears in both slides and notes.
 - Keep each slide to a maximum of three bullets (or two formulae).
 
