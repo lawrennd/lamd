@@ -14,6 +14,7 @@ from pathlib import Path
 import pytest
 
 import lamd
+from lamd.timeplan import expand_timeplan
 
 FIXTURES = Path(__file__).resolve().parents[1] / "fixtures" / "cip001B"
 MACROS = Path(os.path.dirname(lamd.__file__)) / "macros"
@@ -79,5 +80,21 @@ class TestTimeplanMacros:
             body=body,
         )
         assert "<!--lamd-blocktime|10|Break|timer-->" in out
+        assert "data-background-iframe" not in out
+        assert "timer/index.html" not in out
+
+    def test_gpp_then_expand_emits_clock_table(self) -> None:
+        body = _read(FIXTURES / "timeplan-macros.md")
+        marked = _gpp(
+            ["-DNOTES=1"],
+            "talk-macros-null.gpp",
+            "talk-macros-notes.gpp",
+            body=body,
+        )
+        out = expand_timeplan(marked, warn=False)
+        assert "<!--lamd-" not in out
+        assert "| 10:05–10:15 | 10 | Quiz 3 |" in out
+        assert "| 10:15–10:35 | 20 | Exponential family |" in out
+        assert "| 10:35–10:45 | 10 | Break |" in out
         assert "data-background-iframe" not in out
         assert "timer/index.html" not in out

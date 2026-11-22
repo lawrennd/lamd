@@ -1,7 +1,7 @@
 ---
 id: "2026-11-22_cip001B-overrun-warn"
 title: "Advisory warning when blocktime sum exceeds sessionlength"
-status: "Ready"
+status: "Completed"
 priority: "Medium"
 created: "2026-11-22"
 last_updated: "2026-11-22"
@@ -25,14 +25,14 @@ When `\sessionlength` (or YAML equivalent) is set and the sum of `\blocktime` mi
 
 ## Acceptance Criteria
 
-- [ ] Sum > session length → warning on stderr (or build log); build still succeeds
-- [ ] Missing label → warning
-- [ ] No `\sessionlength` → no overrun check (or skip quietly)
-- [ ] Fixture covers the overrun case
+- [x] Sum > session length → warning on stderr (or build log); build still succeeds
+- [x] Missing label → warning
+- [x] No `\sessionlength` → no overrun check (or skip quietly)
+- [x] Fixture covers the overrun case
 
 ## Implementation Notes
 
-Strict/fail mode is out of scope for v1. Keep the warning message actionable (sum, limit, excess minutes).
+Strict/fail mode is out of scope for v1. Warnings live in `warn_timeplan` / `expand_timeplan` (`lamd/timeplan.py`).
 
 ## Related
 
@@ -43,3 +43,5 @@ Strict/fail mode is out of scope for v1. Keep the warning message actionable (su
 ### 2026-11-22
 
 Task created after CIP-001B was accepted.
+
+Completed alongside collect/emit: advisory overrun and missing-label warnings with unit coverage.
