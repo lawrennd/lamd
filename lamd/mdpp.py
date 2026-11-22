@@ -661,7 +661,19 @@ def main() -> int:
         if args.to not in _MANIM_TARGETS and args.output and os.path.isfile(args.output):
             with open(args.output, encoding="utf-8") as fd_out:
                 gpp_out = fd_out.read()
-            planned = expand_timeplan(gpp_out, warn=True, warn_stream=sys.stderr)
+            timer_mode = "none"
+            if args.format == "slides" and args.to == "html":
+                timer_mode = "slides-html"
+            elif args.format == "notes":
+                timer_mode = "notes"
+            scripts_dir = args.scripts_dir or iface.get("scriptsdir", "scripts")
+            planned = expand_timeplan(
+                gpp_out,
+                warn=True,
+                warn_stream=sys.stderr,
+                timer_mode=timer_mode,
+                scripts_dir=scripts_dir,
+            )
             if planned != gpp_out:
                 with open(args.output, "w", encoding="utf-8") as fd_out:
                     fd_out.write(planned)

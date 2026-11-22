@@ -2,7 +2,8 @@
 
 GPP macros emit HTML-comment markers; after includes expand through gpp,
 ``expand_timeplan`` collects them and replaces each ``<!--lamd-timeplan-->``
-with a markdown table. Live ``\\classtimer`` chrome is unchanged.
+with a markdown table. Optional ``timer`` flags emit CIP-0012
+``\\classtimertitled`` chrome (slides HTML iframe or notes placeholder).
 """
 
 from __future__ import annotations
@@ -10,7 +11,7 @@ from __future__ import annotations
 import re
 import sys
 from dataclasses import dataclass
-from typing import TextIO
+from typing import Literal, TextIO
 
 # Capture groups must not cross HTML-comment terminators (avoid greedy [^|]*).
 SESSIONSTART_RE = re.compile(r"<!--lamd-sessionstart\|([^|>]*)-->")
@@ -18,6 +19,8 @@ SESSIONLENGTH_RE = re.compile(r"<!--lamd-sessionlength\|([^|>]*)-->")
 BLOCKTIME_RE = re.compile(r"<!--lamd-blocktime\|([^|>]*)\|([^|]*)\|([^|>]*)-->")
 TIMEPLAN_RE = re.compile(r"<!--lamd-timeplan-->")
 ANY_MARKER_RE = re.compile(r"<!--lamd-(?:sessionstart|sessionlength|blocktime|timeplan)(?:\|[^>]*)?-->")
+
+TimerMode = Literal["none", "notes", "slides-html"]
 
 
 @dataclass(frozen=True)
@@ -107,6 +110,29 @@ def format_timeplan_table(plan: TimePlan) -> str:
     return "\n".join(lines)
 
 
+def format_classtimertitled(
+    clock: str,
+    label: str,
+    *,
+    mode: TimerMode,
+    scripts_dir: str = "scripts",
+) -> str:
+    """Emit CIP-0012 ``\\classtimertitled`` chrome for a derived wall clock."""
+    if mode == "slides-html":
+        return (
+            f'<section data-background-iframe="{scripts_dir}/timer/index.html'
+            f'?duration={clock}&title={label}" data-background-interactive></section>'
+        )
+    if mode == "notes":
+        return f"*Class test timer ({label}): {clock}*"
+    return ""
+
+
+def is_timer_flag(flag: str) -> bool:
+    """Return True when the optional third ``\\blocktime`` arg requests a live timer."""
+    return flag.strip().lower() == "timer"
+
+
 def warn_timeplan(plan: TimePlan, stream: TextIO = sys.stderr) -> None:
     """Emit advisory messages for overrun and missing labels."""
     total = sum(b.minutes for b in plan.blocks)
@@ -123,6 +149,13 @@ def warn_timeplan(plan: TimePlan, stream: TextIO = sys.stderr) -> None:
                 f"lamd timeplan: block {i} ({block.minutes} min) is missing a label",
                 file=stream,
             )
+        if is_timer_flag(block.flag) and not plan.session_start:
+            label = block.label or f"block {i}"
+            print(
+                f"lamd timeplan: {label!r} has timer flag but no \\sessionstart; "
+                "cannot derive wall clock for \\classtimertitled — skipping timer",
+                file=stream,
+            )
 
 
 def expand_timeplan(
@@ -130,8 +163,14 @@ def expand_timeplan(
     *,
     warn: bool = True,
     warn_stream: TextIO = sys.stderr,
+    timer_mode: TimerMode = "none",
+    scripts_dir: str = "scripts",
 ) -> str:
     """Replace timeplan markers with a compiled table; strip allocation markers.
+
+    When ``timer_mode`` is ``notes`` or ``slides-html``, ``\\blocktime`` rows
+    flagged ``timer`` expand to CIP-0012 classtimertitled chrome at the
+    derived block start clock (requires ``\\sessionstart``).
 
     If the content has no CIP-001B markers, return it unchanged.
     """
@@ -152,9 +191,42 @@ def expand_timeplan(
     if TIMEPLAN_RE.search(content):
         content = TIMEPLAN_RE.sub(_replace_timeplan, content)
 
+    # Replace block markers in document order so timer chrome uses cumulative clocks.
+    cursor = plan.session_start
+    pieces: list[str] = []
+    last = 0
+    for match in BLOCKTIME_RE.finditer(content):
+        pieces.append(content[last : match.start()])
+        mins_raw, label_raw, flag_raw = match.groups()
+        try:
+            minutes = int(mins_raw.strip())
+        except ValueError:
+            pieces.append("")
+            last = match.end()
+            continue
+        label = label_raw.strip()
+        flag = flag_raw.strip()
+        start_clock = cursor
+        if cursor is not None:
+            cursor = add_minutes(cursor, minutes)
+
+        replacement = ""
+        if is_timer_flag(flag) and timer_mode != "none":
+            if start_clock is not None:
+                replacement = format_classtimertitled(
+                    start_clock,
+                    label or "Timer",
+                    mode=timer_mode,
+                    scripts_dir=scripts_dir,
+                )
+            # else: warn_timeplan already advised; emit nothing
+        pieces.append(replacement)
+        last = match.end()
+    pieces.append(content[last:])
+    content = "".join(pieces)
+
     # Drop remaining allocation markers so they never leak into HTML/PDF.
     content = SESSIONSTART_RE.sub("", content)
     content = SESSIONLENGTH_RE.sub("", content)
-    content = BLOCKTIME_RE.sub("", content)
     content = TIMEPLAN_RE.sub("", content)
     return content

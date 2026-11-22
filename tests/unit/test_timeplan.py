@@ -7,6 +7,7 @@ import io
 from lamd.timeplan import (
     add_minutes,
     expand_timeplan,
+    format_classtimertitled,
     format_timeplan_table,
     parse_timeplan_markers,
     warn_timeplan,
@@ -96,3 +97,36 @@ def test_expand_emits_overrun_warning() -> None:
     buf = io.StringIO()
     expand_timeplan(content, warn=True, warn_stream=buf)
     assert "exceeding session length 15" in buf.getvalue()
+
+
+def test_timer_bridge_slides_html_uses_block_start_clock() -> None:
+    content = "\n".join(
+        [
+            "<!--lamd-sessionstart|10:05-->",
+            "<!--lamd-blocktime|10|Quiz 3|timer-->",
+            "<!--lamd-blocktime|20|Talk|-->",
+            "<!--lamd-blocktime|10|Break|timer-->",
+        ]
+    )
+    out = expand_timeplan(content, warn=False, timer_mode="slides-html", scripts_dir="SCRIPTS")
+    assert "<!--lamd-" not in out
+    assert 'data-background-iframe="SCRIPTS/timer/index.html?duration=10:05&title=Quiz 3"' in out
+    assert 'data-background-iframe="SCRIPTS/timer/index.html?duration=10:35&title=Break"' in out
+    # Unflagged Talk must not emit timer chrome.
+    assert out.count("data-background-iframe") == 2
+
+
+def test_timer_bridge_notes_placeholder() -> None:
+    content = "<!--lamd-sessionstart|10:05-->" "<!--lamd-blocktime|10|Quiz 3|timer-->"
+    out = expand_timeplan(content, warn=False, timer_mode="notes")
+    assert "*Class test timer (Quiz 3): 10:05*" in out
+    assert "data-background-iframe" not in out
+
+
+def test_timer_without_sessionstart_warns_and_skips() -> None:
+    content = "<!--lamd-blocktime|10|Quiz 3|timer-->"
+    buf = io.StringIO()
+    out = expand_timeplan(content, warn=True, warn_stream=buf, timer_mode="slides-html")
+    assert "cannot derive wall clock" in buf.getvalue()
+    assert "data-background-iframe" not in out
+    assert format_classtimertitled("10:05", "Q", mode="none") == ""

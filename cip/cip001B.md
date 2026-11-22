@@ -177,7 +177,7 @@ None linked yet. If a requirements entry is added (e.g. “authors can declare a
 - [x] Implement gpp macros (notes / slides / null) — `2026-11-22_cip001B-macros`
 - [x] Implement collection + table emission in the build path — `2026-11-22_cip001B-collect-emit`
 - [x] Advisory sum check — `2026-11-22_cip001B-overrun-warn`
-- [ ] Optional `timer` → `\classtimertitled` bridge — `2026-11-22_cip001B-timer-bridge`
+- [x] Optional `timer` → `\classtimertitled` bridge — `2026-11-22_cip001B-timer-bridge`
 - [ ] Docs + fixtures — `2026-11-22_cip001B-docs-fixtures`
 - [ ] IEI migration example (optional follow-on in the module repo) — `2026-11-22_cip001B-iei-migration`
 
@@ -196,3 +196,5 @@ Accepted. Frozen: `\sessionstart` / `\sessionlength` / `\blocktime` / `\timeplan
 Macros task completed: gpp markers in null / notes / slides-html; fixture tests pass; no timer chrome until the bridge task.
 
 Collect/emit + overrun advisory: `lamd/timeplan.py` post-gpp pass replaces `<!--lamd-timeplan-->` with a Clock|Mins|Block table and warns on overrun / missing labels.
+
+Timer bridge: `timer` flag on `\blocktime` emits CIP-0012 classtimertitled chrome (slides iframe / notes placeholder) at the derived block-start clock; without `\sessionstart`, warns and skips.

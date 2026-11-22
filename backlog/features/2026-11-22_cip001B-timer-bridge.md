@@ -1,7 +1,7 @@
 ---
 id: "2026-11-22_cip001B-timer-bridge"
 title: "Optional blocktime timer flag emits classtimertitled"
-status: "Ready"
+status: "Completed"
 priority: "Medium"
 created: "2026-11-22"
 last_updated: "2026-11-22"
@@ -26,15 +26,17 @@ When `\blocktime{minutes}{label}{timer}` is used, also emit the existing `\class
 
 ## Acceptance Criteria
 
-- [ ] `timer` flag expands to `\classtimertitled{HH:MM}{label}` (or equivalent iframe) in slides HTML
-- [ ] Blocks without `timer` never produce timer iframes
-- [ ] With `\sessionstart`, derived clock matches the plan table start for that block
-- [ ] Without `\sessionstart`, behaviour is documented and fails clearly or requires an explicit clock
-- [ ] Existing CIP-0012 classtimer fixtures still pass
+- [x] `timer` flag expands to `\classtimertitled{HH:MM}{label}` (or equivalent iframe) in slides HTML
+- [x] Blocks without `timer` never produce timer iframes
+- [x] With `\sessionstart`, derived clock matches the plan table start for that block
+- [x] Without `\sessionstart`, behaviour is documented and fails clearly or requires an explicit clock
+- [x] Existing CIP-0012 classtimer fixtures still pass
 
 ## Implementation Notes
 
 Do not invent a second timer UI. Reuse CIP-0012 chrome only.
+
+Post-gpp `expand_timeplan(..., timer_mode=…)` emits the same slides-html iframe / notes placeholder that `\classtimertitled` would have produced. Without `\sessionstart`, warns and skips the timer (no chrome).
 
 ## Related
 
@@ -46,3 +48,5 @@ Do not invent a second timer UI. Reuse CIP-0012 chrome only.
 ### 2026-11-22
 
 Task created after CIP-001B was accepted.
+
+Completed: timer bridge in `lamd/timeplan.py`; mdpp selects `slides-html` / `notes` / `none` from format+to.
