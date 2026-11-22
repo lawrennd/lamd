@@ -3,7 +3,7 @@ author: "Neil D. Lawrence"
 created: "2026-11-22"
 id: "001B"
 last_updated: "2026-11-22"
-status: "In Progress"
+status: "Implemented"
 compressed: false
 effort: medium
 priority: medium
@@ -30,7 +30,7 @@ title: "Lecture time allocation and compiled time plans"
 - [x] Proposed - Initial idea documented
 - [x] Accepted - Approved, ready to start work
 - [x] In Progress - Actively being implemented
-- [ ] Implemented - Work complete, awaiting verification
+- [x] Implemented - Work complete, awaiting verification
 - [ ] Closed - Verified and complete
 - [ ] Rejected - Will not be implemented
 - [ ] Deferred - Postponed
@@ -178,7 +178,7 @@ None linked yet. If a requirements entry is added (e.g. “authors can declare a
 - [x] Implement collection + table emission in the build path — `2026-11-22_cip001B-collect-emit`
 - [x] Advisory sum check — `2026-11-22_cip001B-overrun-warn`
 - [x] Optional `timer` → `\classtimertitled` bridge — `2026-11-22_cip001B-timer-bridge`
-- [ ] Docs + fixtures — `2026-11-22_cip001B-docs-fixtures`
+- [x] Docs + fixtures — `2026-11-22_cip001B-docs-fixtures`
 - [ ] IEI migration example (optional follow-on in the module repo) — `2026-11-22_cip001B-iei-migration`
 
 ## References
@@ -198,3 +198,5 @@ Macros task completed: gpp markers in null / notes / slides-html; fixture tests 
 Collect/emit + overrun advisory: `lamd/timeplan.py` post-gpp pass replaces `<!--lamd-timeplan-->` with a Clock|Mins|Block table and warns on overrun / missing labels.
 
 Timer bridge: `timer` flag on `\blocktime` emits CIP-0012 classtimertitled chrome (slides iframe / notes placeholder) at the derived block-start clock; without `\sessionstart`, warns and skips.
+
+Docs + fixtures: slides/notes contexts document allocation vs countdown; fixtures cover include order, overrun warning, and timer opt-in. Status → Implemented (IEI migration remains optional follow-on).

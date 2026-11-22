@@ -45,6 +45,29 @@ The notes context is used for creating detailed documentation, lecture notes, or
     ``\ifdef{NOTES}`` so gpp does not dump it into slides. Empty on slides.
 ```
 
+### Lecture time allocation (CIP-001B)
+
+Compiled pacing for speaker notes — distinct from live `\classtimer` / `\classtimertitled` countdown overlays (see slides context).
+
+```markdown
+\sessionstart{HH:MM}
+    Optional origin for a derived Clock column in the plan table.
+
+\sessionlength{minutes}
+    Optional session budget; advisory warning if allocations overrun.
+
+\timeplan
+    Explicit anchor only: replaced by a compiled Clock|Mins|Block (or Mins|Block) table.
+    No auto-insert elsewhere.
+
+\blocktime{minutes}{label}
+    Records an allocation in document order (including after ``\include``).
+    Does not insert a timer. Optional third argument ``timer`` also emits a
+    notes placeholder matching ``\classtimertitled`` at the derived start clock.
+```
+
+Prefer duration-first `\blocktime` next to the material; put a single `\timeplan` near the top of the lecture instead of hand-maintaining a parallel markdown table.
+
 ## Example Usage
 
 ```markdown

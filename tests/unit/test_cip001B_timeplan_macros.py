@@ -6,6 +6,7 @@ expand pass emits CIP-0012 chrome only for ``timer``-flagged blocks.
 
 from __future__ import annotations
 
+import io
 import os
 import shutil
 import subprocess
@@ -128,3 +129,48 @@ class TestTimeplanMacros:
         out = expand_timeplan(marked, warn=False, timer_mode="notes")
         assert "*Class test timer (Break): 10:35*" in out
         assert "data-background-iframe" not in out
+
+    def test_include_order_in_compiled_plan(self) -> None:
+        body = _read(FIXTURES / "timeplan-with-include.md")
+        # Resolve fixture-relative includes via -I on the fixtures dir.
+        chunks = [
+            "\\include{talk-macros-null.gpp}",
+            "\\include{talk-macros-notes.gpp}",
+            body,
+        ]
+        gpp_input = "\n".join(chunks)
+        result = subprocess.run(
+            [
+                "gpp",
+                "-T",
+                f"-I{MACROS}",
+                f"-I{FIXTURES}",
+                "-DNOTES=1",
+                "-DscriptsDir=SCRIPTS",
+            ],
+            input=gpp_input,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 0, result.stderr
+        out = expand_timeplan(result.stdout, warn=False, timer_mode="slides-html", scripts_dir="SCRIPTS")
+        assert "| 09:00–09:10 | 10 | Opening |" in out
+        assert "| 09:10–09:25 | 15 | From include |" in out
+        assert "| 09:25–09:45 | 20 | Closing |" in out
+        assert "duration=09:25&title=Closing" in out
+        assert out.count("data-background-iframe") == 1
+
+    def test_overrun_fixture_warns(self) -> None:
+        body = _read(FIXTURES / "timeplan-overrun.md")
+        marked = _gpp(
+            ["-DNOTES=1"],
+            "talk-macros-null.gpp",
+            "talk-macros-notes.gpp",
+            body=body,
+        )
+        buf = io.StringIO()
+        out = expand_timeplan(marked, warn=True, warn_stream=buf, timer_mode="none")
+        assert "exceeding session length 25" in buf.getvalue()
+        assert "| 10:00–10:20 | 20 | A |" in out
+        assert "| 10:20–10:40 | 20 | B |" in out

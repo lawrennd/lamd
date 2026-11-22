@@ -1,7 +1,7 @@
 ---
 id: "2026-11-22_cip001B-docs-fixtures"
 title: "Document timeplan macros and add fixtures"
-status: "Ready"
+status: "Completed"
 priority: "Medium"
 created: "2026-11-22"
 last_updated: "2026-11-22"
@@ -28,12 +28,12 @@ Document `\sessionstart`, `\sessionlength`, `\blocktime`, and `\timeplan` in sli
 
 ## Acceptance Criteria
 
-- [ ] Docs distinguish allocation/plan macros from live countdown timers
-- [ ] `\timeplan` emission rule (explicit only) is documented
-- [ ] Fixture: compiled table matches block order and minutes
-- [ ] Fixture: include-borne `\blocktime` appears in plan order
-- [ ] Fixture: unflagged blocks create no timer iframes; `timer` flag does (if bridge landed)
-- [ ] Fixture: overrun warning when sum > session length
+- [x] Docs distinguish allocation/plan macros from live countdown timers
+- [x] `\timeplan` emission rule (explicit only) is documented
+- [x] Fixture: compiled table matches block order and minutes
+- [x] Fixture: include-borne `\blocktime` appears in plan order
+- [x] Fixture: unflagged blocks create no timer iframes; `timer` flag does (if bridge landed)
+- [x] Fixture: overrun warning when sum > session length
 
 ## Implementation Notes
 
@@ -49,3 +49,5 @@ Update `docs/contexts/slides.md` and/or a short lectures/planning note. Mirror C
 ### 2026-11-22
 
 Task created after CIP-001B was accepted.
+
+Completed: slides + notes context docs; fixtures under `tests/fixtures/cip001B/` with include-order and overrun coverage.
