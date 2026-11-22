@@ -174,7 +174,7 @@ None linked yet. If a requirements entry is added (e.g. “authors can declare a
 ## Implementation Status
 
 - [x] Agree macro names and emission anchor (`\timeplan` explicit)
-- [ ] Implement gpp macros (notes / slides / null) — `2026-11-22_cip001B-macros`
+- [x] Implement gpp macros (notes / slides / null) — `2026-11-22_cip001B-macros`
 - [ ] Implement collection + table emission in the build path — `2026-11-22_cip001B-collect-emit`
 - [ ] Advisory sum check — `2026-11-22_cip001B-overrun-warn`
 - [ ] Optional `timer` → `\classtimertitled` bridge — `2026-11-22_cip001B-timer-bridge`
@@ -192,3 +192,5 @@ None linked yet. If a requirements entry is added (e.g. “authors can declare a
 ### 2026-11-22
 
 Accepted. Frozen: `\sessionstart` / `\sessionlength` / `\blocktime` / `\timeplan`; emission at explicit `\timeplan` only. Backlog tasks created; status → In Progress.
+
+Macros task completed: gpp markers in null / notes / slides-html; fixture tests pass; no timer chrome until the bridge task.

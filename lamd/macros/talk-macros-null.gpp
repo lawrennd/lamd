@@ -56,6 +56,12 @@
 \define{\classtimer{duration}}{}
 \define{\classtimertitled{duration}{title}}{}
 
+<!-- CIP-001B: lecture time allocation markers for mdpp collect/emit (no live timer chrome). -->
+\define{\sessionstart{clock}}{<!--lamd-sessionstart|\clock-->}
+\define{\sessionlength{minutes}}{<!--lamd-sessionlength|\minutes-->}
+\define{\timeplan}{<!--lamd-timeplan-->}
+\define{\blocktime{minutes}{label}{flag}}{<!--lamd-blocktime|\minutes|\label|\flag-->}
+
 \define{\todo}{}
 \define{\tk}{}
 \define{\TK}{}

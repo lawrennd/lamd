@@ -10,6 +10,12 @@
 \define{\classtimer{duration}}{<section data-background-iframe="\scriptsDir/timer/index.html?duration=\duration" data-background-interactive></section>}
 \define{\classtimertitled{duration}{title}}{<section data-background-iframe="\scriptsDir/timer/index.html?duration=\duration&title=\title" data-background-interactive></section>}
 
+<!-- CIP-001B: plan markers only; optional {timer} bridge lands in a later task. -->
+\define{\sessionstart{clock}}{<!--lamd-sessionstart|\clock-->}
+\define{\sessionlength{minutes}}{<!--lamd-sessionlength|\minutes-->}
+\define{\timeplan}{<!--lamd-timeplan-->}
+\define{\blocktime{minutes}{label}{flag}}{<!--lamd-blocktime|\minutes|\label|\flag-->}
+
 
 \define{\speakernotes{text}}{<aside class="notes">
 \text
