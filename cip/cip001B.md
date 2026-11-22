@@ -3,7 +3,7 @@ author: "Neil D. Lawrence"
 created: "2026-11-22"
 id: "001B"
 last_updated: "2026-11-22"
-status: "Implemented"
+status: "Closed"
 compressed: false
 effort: medium
 priority: medium
@@ -31,7 +31,7 @@ title: "Lecture time allocation and compiled time plans"
 - [x] Accepted - Approved, ready to start work
 - [x] In Progress - Actively being implemented
 - [x] Implemented - Work complete, awaiting verification
-- [ ] Closed - Verified and complete
+- [x] Closed - Verified and complete
 - [ ] Rejected - Will not be implemented
 - [ ] Deferred - Postponed
 
@@ -179,13 +179,14 @@ None linked yet. If a requirements entry is added (e.g. “authors can declare a
 - [x] Advisory sum check — `2026-11-22_cip001B-overrun-warn`
 - [x] Optional `timer` → `\classtimertitled` bridge — `2026-11-22_cip001B-timer-bridge`
 - [x] Docs + fixtures — `2026-11-22_cip001B-docs-fixtures`
-- [ ] IEI migration example (optional follow-on in the module repo) — `2026-11-22_cip001B-iei-migration`
+- [x] IEI migration example (optional follow-on in the module repo) — `2026-11-22_cip001B-iei-migration`
 
 ## References
 
 - Live timers today: `lamd/macros/talk-macros-slides-html.gpp` (`\classtimer`, `\classtimertitled`); `docs/contexts/slides.md`
 - CIP-0012: Reveal backgrounds / content scripts (timers are existing chrome under that testing umbrella)
 - Motivating module practice: IEI `_lamd/*.md` “Time plan” notes tables + quiz `\classtimertitled{10:05}{Quiz N}`
+- Validation forks: [`cip/cip001B/iei-validation/`](cip001B/iei-validation/) (Weeks 6–8 time plans reconstructed; `validate_forks.py`)
 
 ## Progress Updates
 
@@ -200,3 +201,5 @@ Collect/emit + overrun advisory: `lamd/timeplan.py` post-gpp pass replaces `<!--
 Timer bridge: `timer` flag on `\blocktime` emits CIP-0012 classtimertitled chrome (slides iframe / notes placeholder) at the derived block-start clock; without `\sessionstart`, warns and skips.
 
 Docs + fixtures: slides/notes contexts document allocation vs countdown; fixtures cover include order, overrun warning, and timer opt-in. Status → Implemented (IEI migration remains optional follow-on).
+
+Validated against IEI forks (Weeks 6–8): compiled clocks match original tables; quiz-only `{timer}` emits one iframe; Week 6 as-delivered sum 113>110 triggers overrun advisory. Status → Closed. Live IEI `_lamd/` apply still a teaching edit, not done here.
