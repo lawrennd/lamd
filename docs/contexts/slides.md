@@ -109,6 +109,8 @@ Separate from live countdowns: declare **how long each block should take**, and 
 
 Contract: allocations are data; the plan appears only where you put `\timeplan`; live timers are opt-in via `{timer}`. Without `\sessionstart`, a `timer` flag warns and skips the overlay.
 
+Full guide: {doc}`../guides/lecture-time-plans`.
+
 #### Typography (font size)
 
 Deck-wide and per-slide text size for **Reveal HTML** (CIP-0014). Notes / notebooks / PPTX ignore these settings in v1.

@@ -68,6 +68,8 @@ Compiled pacing for speaker notes — distinct from live `\classtimer` / `\class
 
 Prefer duration-first `\blocktime` next to the material; put a single `\timeplan` near the top of the lecture instead of hand-maintaining a parallel markdown table.
 
+Full guide: {doc}`../guides/lecture-time-plans`.
+
 ## Example Usage
 
 ```markdown

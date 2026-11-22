@@ -4,7 +4,7 @@ created: "2026-11-22"
 id: "001B"
 last_updated: "2026-11-22"
 status: "Closed"
-compressed: false
+compressed: true
 effort: medium
 priority: medium
 related_requirements: []
@@ -203,3 +203,5 @@ Timer bridge: `timer` flag on `\blocktime` emits CIP-0012 classtimertitled chrom
 Docs + fixtures: slides/notes contexts document allocation vs countdown; fixtures cover include order, overrun warning, and timer opt-in. Status → Implemented (IEI migration remains optional follow-on).
 
 Validated against IEI forks (Weeks 6–8): compiled clocks match original tables; quiz-only `{timer}` emits one iframe; Week 6 as-delivered sum 113>110 triggers overrun advisory. Status → Closed. Live IEI `_lamd/` apply still a teaching edit, not done here.
+
+Compressed into `docs/guides/lecture-time-plans.md` (plus context cross-links). `compressed: true`.
