@@ -19,6 +19,7 @@ import frontmatter as fm
 from lamd.config.interface import Interface
 from lamd.credit import credit_output_context, expand_diagramcredit
 from lamd.paths import path_config_from_mapping, resolve_diagrams_filesystem
+from lamd.timeplan import TimerMode, expand_timeplan
 from lamd.validation import (
     ValidationError,
     validate_code_level,
@@ -655,6 +656,27 @@ def main() -> int:
         if args.verbose:
             print(f"Running command: {run_command}")
         os.system(run_command)
+
+        # CIP-001B: after includes expand through gpp, compile time-plan markers.
+        if args.to not in _MANIM_TARGETS and args.output and os.path.isfile(args.output):
+            with open(args.output, encoding="utf-8") as fd_out:
+                gpp_out = fd_out.read()
+            timer_mode: TimerMode = "none"
+            if args.format == "slides" and args.to == "html":
+                timer_mode = "slides-html"
+            elif args.format == "notes":
+                timer_mode = "notes"
+            scripts_dir = args.scripts_dir or iface.get("scriptsdir", "scripts")
+            planned = expand_timeplan(
+                gpp_out,
+                warn=True,
+                warn_stream=sys.stderr,
+                timer_mode=timer_mode,
+                scripts_dir=scripts_dir,
+            )
+            if planned != gpp_out:
+                with open(args.output, "w", encoding="utf-8") as fd_out:
+                    fd_out.write(planned)
 
         # For Manim targets, strip macro-file verbatim output (HTML/TeX comments)
         # that precedes the injected Python header, leaving a clean .py file.

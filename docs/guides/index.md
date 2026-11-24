@@ -11,4 +11,5 @@ managing-people
 best-practices
 governance
 performance
+lecture-time-plans
 ```

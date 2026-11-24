@@ -82,6 +82,35 @@ This loads `\scriptsDir/timer/index.html?duration=…` as an interactive Reveal 
 
 **Pitfall:** YAML frontmatter `background:` is a *layout numbering* field, not a visual slide background.
 
+#### Lecture time allocation (compiled plan)
+
+Separate from live countdowns: declare **how long each block should take**, and compile a single plan table. Do **not** use `\classtimer` / `\classtimertitled` as an agenda.
+
+```markdown
+\sessionstart{10:05}
+\sessionlength{110}
+
+\timeplan
+
+\subsection{Quiz 3}
+\blocktime{10}{Quiz 3}{timer}
+
+###{Exponential family}
+\blocktime{20}{Exponential family}
+```
+
+| Macro | Role |
+|-------|------|
+| `\sessionstart{HH:MM}` | Optional wall-clock origin for derived Clock column |
+| `\sessionlength{minutes}` | Optional budget; build warns if `\blocktime` minutes sum past it |
+| `\blocktime{mins}{label}` | Allocation only — no Reveal timer slide |
+| `\blocktime{mins}{label}{timer}` | Same, plus emit `\classtimertitled` at the **block start** clock (needs `\sessionstart`) |
+| `\timeplan` | **Only** emission anchor for the compiled Clock\|Mins\|Block table |
+
+Contract: allocations are data; the plan appears only where you put `\timeplan`; live timers are opt-in via `{timer}`. Without `\sessionstart`, a `timer` flag warns and skips the overlay.
+
+Full guide: {doc}`../guides/lecture-time-plans`.
+
 #### Typography (font size)
 
 Deck-wide and per-slide text size for **Reveal HTML** (CIP-0014). Notes / notebooks / PPTX ignore these settings in v1.
