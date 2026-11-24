@@ -195,6 +195,48 @@
 <p><strong>Clash policy:</strong> a slide with its own <code class="docutils literal notranslate"><span class="pre">data-background*</span></code> wins; deck ambient from <code class="docutils literal notranslate"><span class="pre">slide_setup</span></code> should yield/pause on that slide. Reference: <code class="docutils literal notranslate"><span class="pre">lamd/includes/slide-setup-ambient.html</span></code>.</p>
 <p><strong>Pitfall:</strong> YAML frontmatter <code class="docutils literal notranslate"><span class="pre">background:</span></code> is a <em>layout numbering</em> field, not a visual slide background.</p>
 </section>
+<section id="lecture-time-allocation-compiled-plan">
+<h4>Lecture time allocation (compiled plan)<a class="headerlink" href="#lecture-time-allocation-compiled-plan" title="Link to this heading"></a></h4>
+<p>Separate from live countdowns: declare <strong>how long each block should take</strong>, and compile a single plan table. Do <strong>not</strong> use <code class="docutils literal notranslate"><span class="pre">\classtimer</span></code> / <code class="docutils literal notranslate"><span class="pre">\classtimertitled</span></code> as an agenda.</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\sessionstart{10:05}
+\sessionlength{110}
+
+\timeplan
+
+\subsection{Quiz 3}
+\blocktime{10}{Quiz 3}{timer}
+
+<span class="gu">###{Exponential family}</span>
+\blocktime{20}{Exponential family}
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Macro</p></th>
+<th class="head"><p>Role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">\sessionstart{HH:MM}</span></code></p></td>
+<td><p>Optional wall-clock origin for derived Clock column</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">\sessionlength{minutes}</span></code></p></td>
+<td><p>Optional budget; build warns if <code class="docutils literal notranslate"><span class="pre">\blocktime</span></code> minutes sum past it</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">\blocktime{mins}{label}</span></code></p></td>
+<td><p>Allocation only — no Reveal timer slide</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">\blocktime{mins}{label}{timer}</span></code></p></td>
+<td><p>Same, plus emit <code class="docutils literal notranslate"><span class="pre">\classtimertitled</span></code> at the <strong>block start</strong> clock (needs <code class="docutils literal notranslate"><span class="pre">\sessionstart</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">\timeplan</span></code></p></td>
+<td><p><strong>Only</strong> emission anchor for the compiled Clock|Mins|Block table</p></td>
+</tr>
+</tbody>
+</table>
+<p>Contract: allocations are data; the plan appears only where you put <code class="docutils literal notranslate"><span class="pre">\timeplan</span></code>; live timers are opt-in via <code class="docutils literal notranslate"><span class="pre">{timer}</span></code>. Without <code class="docutils literal notranslate"><span class="pre">\sessionstart</span></code>, a <code class="docutils literal notranslate"><span class="pre">timer</span></code> flag warns and skips the overlay.</p>
+<p>Full guide: <a class="reference internal" href="../guides/lecture-time-plans.html"><span class="doc">Lecture Time Plans (Compiled Allocations)</span></a>.</p>
+</section>
 <section id="typography-font-size">
 <h4>Typography (font size)<a class="headerlink" href="#typography-font-size" title="Link to this heading"></a></h4>
 <p>Deck-wide and per-slide text size for <strong>Reveal HTML</strong> (CIP-0014). Notes / notebooks / PPTX ignore these settings in v1.</p>

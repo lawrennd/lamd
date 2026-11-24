@@ -51,6 +51,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#key-macros">Key Macros</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#content-structure">Content Structure</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#special-elements">Special Elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lecture-time-allocation-cip-001b">Lecture time allocation (CIP-001B)</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#example-usage">Example Usage</a></li>
@@ -145,6 +146,28 @@
     ``\ifdef{NOTES}`` so gpp does not dump it into slides. Empty on slides.
 </pre></div>
 </div>
+</section>
+<section id="lecture-time-allocation-cip-001b">
+<h3>Lecture time allocation (CIP-001B)<a class="headerlink" href="#lecture-time-allocation-cip-001b" title="Link to this heading"></a></h3>
+<p>Compiled pacing for speaker notes — distinct from live <code class="docutils literal notranslate"><span class="pre">\classtimer</span></code> / <code class="docutils literal notranslate"><span class="pre">\classtimertitled</span></code> countdown overlays (see slides context).</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\sessionstart{HH:MM}
+    Optional origin for a derived Clock column in the plan table.
+
+\sessionlength{minutes}
+    Optional session budget; advisory warning if allocations overrun.
+
+\timeplan
+    Explicit anchor only: replaced by a compiled Clock|Mins|Block (or Mins|Block) table.
+    No auto-insert elsewhere.
+
+\blocktime{minutes}{label}
+    Records an allocation in document order (including after ``\include``).
+    Does not insert a timer. Optional third argument ``timer`` also emits a
+    notes placeholder matching ``\classtimertitled`` at the derived start clock.
+</pre></div>
+</div>
+<p>Prefer duration-first <code class="docutils literal notranslate"><span class="pre">\blocktime</span></code> next to the material; put a single <code class="docutils literal notranslate"><span class="pre">\timeplan</span></code> near the top of the lecture instead of hand-maintaining a parallel markdown table.</p>
+<p>Full guide: <a class="reference internal" href="../guides/lecture-time-plans.html"><span class="doc">Lecture Time Plans (Compiled Allocations)</span></a>.</p>
 </section>
 </section>
 <section id="example-usage">
