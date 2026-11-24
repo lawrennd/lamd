@@ -1,0 +1,12 @@
+{
+  "packages": {
+    "daft": "daft-pgm",
+    "mlai": "git+https://github.com/lawrennd/mlai.git",
+    "pods": "git+https://github.com/lawrennd/ods.git",
+    "PyDeepGP": "git+https://github.com/SheffieldML/PyDeepGP.git",
+    "notutils": "git+https://github.com/lawrennd/notutils.git",
+    "lamd": "lamd",
+    "GPy": "gpy>=1.15",
+    "emukit": "emukit"
+  }
+}
