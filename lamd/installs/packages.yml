@@ -1,0 +1,21 @@
+# Shared default install specs (package name → pip/uv requirement).
+# Consumers (talks via \installcode, SheffieldML/notebook CI, …) resolve
+# names against this catalog, then apply local overrides / profile pins.
+#
+# After changing defaults here, bump consumers that pin a branch only when
+# they still need a WIP override (e.g. pods → ods@some-cip).
+#
+# Raw URL (main):
+#   https://raw.githubusercontent.com/lawrennd/lamd/main/lamd/installs/packages.yml
+# JSON twin (stdlib-safe for talk install helpers):
+#   https://raw.githubusercontent.com/lawrennd/lamd/main/lamd/installs/packages.json
+
+packages:
+  daft: daft-pgm
+  mlai: git+https://github.com/lawrennd/mlai.git
+  pods: git+https://github.com/lawrennd/ods.git
+  PyDeepGP: git+https://github.com/SheffieldML/PyDeepGP.git
+  notutils: git+https://github.com/lawrennd/notutils.git
+  lamd: lamd
+  GPy: gpy>=1.15
+  emukit: emukit

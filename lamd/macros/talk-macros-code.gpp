@@ -11,19 +11,57 @@
 \setupcode{import importlib.util}
 
 \helpercode{def install_command(imp):
+    import json
+    import os
     import shutil
     import sys
-    packages = {
+    from pathlib import Path
+    from urllib.request import urlopen
+
+    # Keep in sync with lamd/installs/packages.yml (CIP-001C).
+    _FALLBACK = {
         'daft': 'daft-pgm',
         'mlai': 'git+https://github.com/lawrennd/mlai.git',
-        'pods': 'pods',
+        'pods': 'git+https://github.com/lawrennd/ods.git',
         'PyDeepGP': 'git+https://github.com/SheffieldML/PyDeepGP.git',
         'notutils': 'git+https://github.com/lawrennd/notutils.git',
-        'pods' : 'git+https://github.com/lawrennd/ods.git',
         'lamd': 'lamd',
         'GPy': 'gpy>=1.15',
-	'emukit': 'emukit',
+        'emukit': 'emukit',
     }
+    _JSON_URL = os.environ.get(
+        'LAMD_PACKAGES_JSON_URL',
+        'https://raw.githubusercontent.com/lawrennd/lamd/main/lamd/installs/packages.json',
+    )
+
+    def _packages():
+        try:
+            from lamd.installs import load_packages
+            return load_packages()
+        except Exception:
+            pass
+        env = os.environ.get('LAMD_PACKAGES_JSON')
+        if env:
+            try:
+                data = json.loads(Path(env).read_text(encoding='utf-8'))
+                return data.get('packages', data)
+            except Exception:
+                pass
+        try:
+            import lamd
+            path = Path(lamd.__file__).resolve().parent / 'installs' / 'packages.json'
+            data = json.loads(path.read_text(encoding='utf-8'))
+            return data.get('packages', data)
+        except Exception:
+            pass
+        try:
+            with urlopen(_JSON_URL, timeout=5) as response:
+                data = json.loads(response.read().decode('utf-8'))
+            return data.get('packages', data)
+        except Exception:
+            return dict(_FALLBACK)
+
+    packages = _packages()
 
     def _installer():
         if shutil.which('uv'):

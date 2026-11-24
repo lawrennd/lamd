@@ -12,6 +12,8 @@ include = [
 { path = "makefiles", format = ["sdist", "wheel"] },
 { path = "includes", format = ["sdist", "wheel"] },
 { path = "scripts", format = ["sdist", "wheel"] },
+{ path = "lamd/installs/*.yml", format = ["sdist", "wheel"] },
+{ path = "lamd/installs/*.json", format = ["sdist", "wheel"] },
 ]
 
 [tool.poetry.dependencies]
